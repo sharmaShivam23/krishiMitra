@@ -106,7 +106,7 @@ export default function MandiPrices() {
      UI RENDER
   ====================================================== */
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 py-8 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 py-8 px-2 sm:px-6 lg:px-8 font-sans">
       <motion.div variants={container} initial="hidden" animate="show" className="max-w-[1400px] mx-auto">
         
         {/* Header Section */}

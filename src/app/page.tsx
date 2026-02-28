@@ -24,14 +24,14 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen mt-20 bg-agri-50 font-sans selection:bg-agri-400 selection:text-agri-900">
+    <div className="min-h-screen mt-10 bg-agri-50 font-sans selection:bg-agri-400 selection:text-agri-900">
       
       {/* Glassmorphism Navbar */}
       <nav className="fixed w-full top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-gray-200/50">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="bg-agri-600 p-2 rounded-xl">
-              <Sprout className="w-6 h-6 text-white" />
+            <div className="p-2 rounded-xl">
+               <img src="/favicon.ico" className='w-16 h-16 bg-cover' alt="logo" />
             </div>
             <span className="text-2xl font-black tracking-tight text-agri-900">
               Krishi<span className="text-agri-600">Mitra</span>
@@ -79,7 +79,7 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </main>
-
+  {/* <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03]"></div> */}
       {/* Feature Grid - Clean SaaS Look */}
       <div className="max-w-7xl mx-auto px-6 py-24 -mt-10 relative z-20">
         <motion.div 
@@ -103,3 +103,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+

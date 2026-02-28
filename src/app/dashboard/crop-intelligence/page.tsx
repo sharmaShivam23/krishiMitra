@@ -242,14 +242,15 @@ export default function CropIntelligence() {
   ====================================================== */
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 py-8 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 py-8 px-1 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-[1400px] mx-auto">
         
         {/* HEADER */}
         <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200/60 pb-6">
           <div className="flex items-center gap-4">
-            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-xl shadow-lg shadow-emerald-500/20">
-              <Sprout className="w-6 h-6 text-white" />
+            <div className="bg-cover to-teal-600 p-3 rounded-xl shadow-lg shadow-emerald-500/20">
+              {/* <Sprout className="w-6 h-6 text-white" /> */}
+              <img src="/favicon.ico" className='h-16 w-16 bg-cover' alt="" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 tracking-tight">AI Crop Intelligence</h1>

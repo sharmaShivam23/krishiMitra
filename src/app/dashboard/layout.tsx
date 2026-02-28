@@ -18,8 +18,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const navLinks = [
     { name: 'Overview', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
     { name: 'Crop Intel', href: '/dashboard/crop-intelligence', icon: <Leaf className="w-5 h-5" /> },
-    { name: 'Mandi Prices', href: '/dashboard/mandi-prices', icon: <Activity className="w-5 h-5" /> },
-    { name: 'Disease AI', href: '/dashboard/disease-detection', icon: <Activity className="w-5 h-5" /> }, // Re-using Activity or Shield
+    { name: 'Mandi Prices', href: '/dashboard/mandi-prices', icon: <Activity className="w-5 h-5" /> }, // Updated href to match your folder
+    { name: 'Disease AI', href: '/dashboard/disease-detection', icon: <Activity className="w-5 h-5" /> }, 
     { name: 'Weather', href: '/dashboard/weather', icon: <CloudSun className="w-5 h-5" /> },
     { name: 'Community', href: '/dashboard/community', icon: <MessageSquare className="w-5 h-5" /> },
     { name: 'Schemes', href: '/dashboard/schemes', icon: <FileText className="w-5 h-5" /> },
@@ -43,8 +43,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* 💻 DESKTOP SIDEBAR */}
       <aside className="hidden md:flex flex-col w-72 bg-agri-900 text-agri-100 fixed h-full z-40 shadow-2xl shadow-agri-900/50">
         <div className="p-6 flex items-center space-x-3 border-b border-white/10">
-          <div className="bg-agri-600 p-2 rounded-xl shadow-inner shadow-white/20">
-            <Sprout className="w-7 h-7 text-white" />
+          <div className="p-2 rounded-xl shadow-inner shadow-white/20">
+            {/* <Sprout className="w-7 h-7 text-white" /> */}
+            <img src="/logo.png" alt="KrishiMitra Logo" className="w-7 h-7" />
           </div>
           <span className="text-2xl font-black tracking-tight text-white">
             Krishi<span className="text-agri-400">Mitra</span>
@@ -83,19 +84,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      {/* 📱 MOBILE BOTTOM NAV */}
+      {/* 📱 MOBILE BOTTOM NAV (Scrollable) */}
       <nav className="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 z-50 pb-safe">
-        <div className="flex justify-around items-center px-2 py-3">
-          {navLinks.slice(0, 5).map((link) => { // Only show top 5 links on mobile to avoid crowding
+        {/* Added overflow-x-auto, whitespace-nowrap, and custom-scrollbar hiding classes */}
+        <div className="flex items-center gap-4 px-2 py-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+          {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
-              <Link key={link.name} href={link.href} className="flex flex-col items-center space-y-1 p-2">
+              <Link 
+                key={link.name} 
+                href={link.href} 
+                className="flex flex-col items-center space-y-1 p-2 min-w-[72px] snap-center"
+              >
                 <div className={`p-1.5 rounded-xl transition-all duration-300 ${
                   isActive ? 'bg-agri-100 text-agri-600' : 'text-gray-400 hover:text-agri-600'
                 }`}>
                   {link.icon}
                 </div>
-                <span className={`text-[10px] font-bold ${isActive ? 'text-agri-600' : 'text-gray-400'}`}>
+                <span className={`text-[10px] font-bold whitespace-nowrap ${isActive ? 'text-agri-600' : 'text-gray-400'}`}>
                   {link.name.split(' ')[0]} {/* Shorten name for mobile */}
                 </span>
               </Link>
@@ -105,15 +111,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </nav>
 
       {/* 📦 MAIN CONTENT AREA */}
-      <main className="flex-1 md:ml-72 w-full pb-20 md:pb-0 overflow-hidden relative">
+      <main className="flex-1 md:ml-72 w-full pb-24 md:pb-0 overflow-hidden relative">
         {/* Mobile Header */}
-        <header className="md:hidden flex items-center justify-between p-5 bg-white border-b border-gray-100 sticky top-0 z-30">
+        <header className="md:hidden flex items-center justify-between p-5 bg-white border-b border-gray-100 sticky top-0 z-30 shadow-sm">
           <div className="flex items-center space-x-2">
-            <Sprout className="w-6 h-6 text-agri-600" />
+            {/* <Sprout className="w-6 h-6 text-agri-600" />
+             */}
+             <img src="/favicon.ico" className='h-16 w-16 bg-cover' alt="" />
             <span className="text-xl font-black text-agri-900 tracking-tight">KrishiMitra</span>
           </div>
-          <button onClick={handleLogout} className="text-gray-400 hover:text-red-500">
-            <LogOut className="w-5 h-5" />
+          <button onClick={handleLogout} className="text-gray-400 hover:text-red-500 transition-colors p-2 bg-gray-50 rounded-full">
+            <LogOut className="w-4 h-4" />
           </button>
         </header>
 
@@ -132,6 +140,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </AnimatePresence>
       </main>
       
+      {/* Hide Scrollbar Global Style Injection just for this component */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+      `}} />
     </div>
   );
 }

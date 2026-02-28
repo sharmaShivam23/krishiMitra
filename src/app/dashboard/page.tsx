@@ -305,7 +305,7 @@ export default function DashboardOverview() {
   }, []);
 
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 max-w-7xl mx-auto">
+    <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 overflow-x-hidden max-w-7xl mx-auto">
       
       {/* Header Section */}
       <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-4">
