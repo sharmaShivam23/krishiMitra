@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+@theme {
+  /* Premium Agri-Tech Palette */
+  --color-agri-50: #F4FBF7;   /* Ultra light mint for backgrounds */
+  --color-agri-100: #E0F5E9;
+  --color-agri-400: #34D399;  /* Vibrant neon green for accents/buttons */
+  --color-agri-600: #059669;  /* Primary brand color - Trust & Growth */
+  --color-agri-800: #065F46;  /* Deep tech green */
+  --color-agri-900: #022C22;  /* Almost black-green for crisp typography */
+  
+  --color-harvest-400: #FBBF24; /* Golden wheat for warnings/highlights */
+  --color-harvest-500: #F59E0B; 
+}
+
+@layer base {
+  body {
+    background-color: var(--color-agri-50);
+    color: var(--color-agri-900);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
