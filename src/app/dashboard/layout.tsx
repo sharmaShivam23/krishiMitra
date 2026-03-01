@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sprout, LayoutDashboard, Leaf, CloudSun, 
-  Activity, MessageSquare, FileText, LogOut, Loader2
+  Activity, MessageSquare, FileText, LogOut, Loader2 , Briefcase , Bot
 } from 'lucide-react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -19,7 +19,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { name: 'Overview', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
     { name: 'Crop Intel', href: '/dashboard/crop-intelligence', icon: <Leaf className="w-5 h-5" /> },
     { name: 'Mandi Prices', href: '/dashboard/mandi-prices', icon: <Activity className="w-5 h-5" /> }, // Updated href to match your folder
-    { name: 'Disease AI', href: '/dashboard/disease-detection', icon: <Activity className="w-5 h-5" /> }, 
+    { name: 'Disease AI', href: '/dashboard/disease-detection', icon: <Bot className="w-5 h-5" /> }, 
+    { name: 'Services', href: '/dashboard/Services', icon: <Briefcase className="w-5 h-5" /> }, 
     { name: 'Weather', href: '/dashboard/weather', icon: <CloudSun className="w-5 h-5" /> },
     { name: 'Community', href: '/dashboard/community', icon: <MessageSquare className="w-5 h-5" /> },
     { name: 'Schemes', href: '/dashboard/schemes', icon: <FileText className="w-5 h-5" /> },

@@ -145,10 +145,33 @@ export default function MandiPrices() {
   }, [selectedState, selectedCommodity, debouncedDistrict, isLocating]);
 
   /* ======================================================
-     LOCAL SEARCH FILTER
+     LOCAL SEARCH FILTER & BULLETPROOF DATE SORTING
   ====================================================== */
   const filteredData = useMemo(() => {
-    return prices.filter(entry => {
+    // 1. Bulletproof Date Parser
+    const parseDate = (dateStr: string) => {
+      if (!dateStr) return 0;
+      
+      try {
+        const dateOnly = dateStr.split(' ')[0];
+
+        if (dateOnly.includes('/')) {
+          const [day, month, year] = dateOnly.split('/');
+          if (year && month && day) {
+             const timestamp = new Date(`${year}-${month}-${day}`).getTime();
+             if (!isNaN(timestamp)) return timestamp;
+          }
+        }
+        
+        const fallback = new Date(dateStr).getTime();
+        return isNaN(fallback) ? 0 : fallback;
+      } catch (err) {
+        return 0; 
+      }
+    };
+
+    // 2. Filter by search query
+    const filtered = prices.filter(entry => {
       const matchesSearch = !searchQuery || 
         entry.commodity.toLowerCase().includes(searchQuery.toLowerCase()) || 
         entry.market.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -157,6 +180,9 @@ export default function MandiPrices() {
 
       return matchesSearch;
     });
+
+    // 3. Sort from Latest to Oldest
+    return filtered.sort((a, b) => parseDate(b.date) - parseDate(a.date));
   }, [searchQuery, prices]);
 
   /* ======================================================
@@ -175,7 +201,6 @@ export default function MandiPrices() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 py-8 px-2 sm:px-6 lg:px-8 font-sans relative overflow-hidden">
       
-      {/* AI Advisor Button */}
       <button 
         onClick={() => router.push('/dashboard/mandi-prices/mandi-advisor')} 
         className="fixed bottom-8 right-8 z-50 group flex items-center cursor-pointer border-none outline-none bg-transparent"
@@ -195,7 +220,6 @@ export default function MandiPrices() {
 
       <motion.div variants={container} initial="hidden" animate="show" className="max-w-[1400px] mx-auto">
         
-        {/* Header */}
         <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 border-b border-gray-200/60 pb-6">
           <div className="flex items-center gap-4">
             <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-xl shadow-lg shadow-emerald-500/20">
@@ -218,7 +242,6 @@ export default function MandiPrices() {
           </button>
         </motion.div>
    
-        {/* Filters */}
         <motion.div variants={item} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           
           <div className="relative">
@@ -266,7 +289,6 @@ export default function MandiPrices() {
 
         </motion.div>
 
-        {/* Data View */}
         <motion.div variants={item} className="bg-white rounded-2xl shadow-sm border border-gray-200/60 overflow-hidden min-h-[500px] flex flex-col relative z-10">
           
           <div className="hidden md:grid grid-cols-12 gap-4 bg-gray-50/80 border-b border-gray-200/60 p-6 text-xs font-bold text-gray-500 uppercase tracking-wider items-center">

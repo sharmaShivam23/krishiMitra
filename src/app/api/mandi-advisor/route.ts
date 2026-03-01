@@ -1,20 +1,26 @@
+
 import { NextResponse } from "next/server";
 
-const BASE_URL = "https://api.data.gov.in/resource/35985678-0d79-46b4-9ed6-6f13308a1d24";
+// 🛠️ THE FIX: Updated to the new live API endpoint
+const BASE_URL = "https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070";
 
-// Helper to format user input
+// Helper to format user input (e.g., "uttar pradesh" -> "Uttar Pradesh")
 const formatInput = (str: string) => 
   str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
-// 🛠️ THE FIX: Safely parse DD/MM/YYYY dates from the Government API
+// 🛠️ THE FIX: Safely parse DD/MM/YYYY dates and strip out hidden times
 const parseMandiDate = (dateStr: string) => {
   if (!dateStr) return new Date(0);
-  const parts = dateStr.split('/');
+  
+  // Strip out time if the API sneaks it in
+  const dateOnly = dateStr.split(' ')[0];
+  const parts = dateOnly.split('/');
+  
   if (parts.length === 3) {
     // Reorder to YYYY-MM-DD for standard JS parsing
     return new Date(`${parts[2]}-${parts[1]}-${parts[0]}T00:00:00Z`);
   }
-  return new Date(dateStr); 
+  return new Date(dateOnly); 
 };
 
 export async function POST(req: Request) {
@@ -28,12 +34,14 @@ export async function POST(req: Request) {
     const params = new URLSearchParams({
       "api-key": process.env.DATA_GOV_API_KEY!,
       format: "json",
-      limit: "50",
+      // 🛠️ THE FIX: Increased limit to 2000 to ensure the AI gets enough historical points
+      limit: "2000", 
     });
 
-    params.append("filters[Commodity]", formatInput(commodity));
-    params.append("filters[State]", formatInput(state));
-    if (district) params.append("filters[District]", formatInput(district));
+    // 🛠️ THE FIX: API requires lowercase keys inside the brackets
+    params.append("filters[commodity]", formatInput(commodity));
+    params.append("filters[state]", formatInput(state));
+    if (district) params.append("filters[district]", formatInput(district));
 
     const response = await fetch(`${BASE_URL}?${params.toString()}`, { cache: "no-store" });
     
@@ -47,10 +55,11 @@ export async function POST(req: Request) {
     // Parse, filter, and sort prices safely
     const prices = data.records
       .map((item: any) => ({
-        modalPrice: Number(item.Modal_Price),
-        date: parseMandiDate(item.Arrival_Date),
+        // 🛠️ THE FIX: API returns lowercase keys
+        modalPrice: Number(item.modal_price),
+        date: parseMandiDate(item.arrival_date), 
       }))
-      // 🛠️ Make sure the price is a valid number and the date successfully parsed
+      // Make sure the price is a valid number and the date successfully parsed
       .filter((p: any) => !isNaN(p.modalPrice) && p.modalPrice > 0 && !isNaN(p.date.getTime()))
       .sort((a: any, b: any) => a.date.getTime() - b.date.getTime());
 

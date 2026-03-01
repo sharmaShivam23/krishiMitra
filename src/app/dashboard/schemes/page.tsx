@@ -128,7 +128,7 @@ export default function GovernmentSchemes() {
             placeholder="Search schemes by name or benefit..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="block w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-agri-400 font-medium transition-all"
+            className="block w-full pl-11 pr-4 py-3.5 bg-white border text-black border-gray-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-agri-400 font-medium transition-all"
           />
         </div>
         

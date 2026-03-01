@@ -298,10 +298,11 @@ export default function DashboardOverview() {
               )}
             </div>
           </div>
-
+     <Link href="/dashboard/mandi-prices/mandi-advisor">
           <button className="relative z-10 mt-8 w-full bg-emerald-400 text-emerald-950 font-bold py-4 rounded-xl hover:bg-white transition-colors shadow-[0_0_20px_-5px_rgba(52,211,153,0.4)] flex justify-center items-center active:scale-95">
             Acknowledge System Status
           </button>
+          </Link>
         </motion.div>
       </div>
 
