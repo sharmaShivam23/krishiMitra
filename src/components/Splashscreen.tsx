@@ -4,10 +4,14 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sprout, Sun, CloudRain, Leaf, ArrowRight } from 'lucide-react';
 import Logo from './common/Logo';
+
 export default function SplashScreen() {
   const [progress, setProgress] = useState(0);
   const [loadingText, setLoadingText] = useState('Initializing Systems...');
   const [isFinished, setIsFinished] = useState(false);
+  
+  // 🛠️ FIX: Track if the component has mounted on the client
+  const [isMounted, setIsMounted] = useState(false);
 
   // Agricultural loading sequence messages
   const loadingSteps = [
@@ -20,6 +24,9 @@ export default function SplashScreen() {
   ];
 
   useEffect(() => {
+    // 🛠️ FIX: Tell React the component is safely in the browser now
+    setIsMounted(true);
+
     // Simulate loading progress
     const duration = 4000; // 4 seconds total loading time
     const intervalTime = 50;
@@ -70,8 +77,8 @@ export default function SplashScreen() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-emerald-600/20 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-teal-600/20 rounded-full blur-[100px] pointer-events-none"></div>
         
-        {/* Animated Floating Particles (Seeds/Pollen) */}
-        {particles.map((_, i) => (
+        {/* 🛠️ FIX: Only render random particles IF isMounted is true */}
+        {isMounted && particles.map((_, i) => (
           <motion.div
             key={i}
             initial={{ 
@@ -131,17 +138,16 @@ export default function SplashScreen() {
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="relative w-28 h-28  border-b border-r border-black/20 rounded-[2rem] shadow-[0_20px_40px_rgba(4,47,46,0.8),inset_0_4px_10px_rgba(255,255,255,0.4),inset_0_-4px_10px_rgba(16,185,129,0.2)] flex items-center justify-center group"
-            style={{ transformStyle: 'preserve-3d' }} // Allows children to pop out in 3D
+            className="relative w-28 h-28 border-b border-r border-black/20 rounded-[2rem] shadow-[0_20px_40px_rgba(4,47,46,0.8),inset_0_4px_10px_rgba(255,255,255,0.4),inset_0_-4px_10px_rgba(16,185,129,0.2)] flex items-center justify-center group"
+            style={{ transformStyle: 'preserve-3d' }} 
           >
-            <div className="absolute inset-0   group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] -z-10"></div>
+            <div className="absolute inset-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] -z-10"></div>
             
             {/* The icon popping out in the Z-axis */}
             <motion.div 
-              style={{ transform: 'translateZ(40px)' }} // Physically pushes the icon outward
+              style={{ transform: 'translateZ(40px)' }} 
               className="flex items-center justify-center"
             >
-              {/* <Sprout className="w-14 h-14 text-emerald-400 drop-shadow-[0_15px_15px_rgba(16,185,129,0.5)]" /> */}
               <Logo/>
             </motion.div>
           </motion.div>

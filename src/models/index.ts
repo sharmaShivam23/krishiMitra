@@ -196,6 +196,15 @@ const ListingSchema = new Schema({
   images: [{ type: String }], 
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
+// Add this to your models.ts file
+const SubscriberSchema = new mongoose.Schema({
+  phone: { type: String, required: true, unique: true },
+  district: { type: String }, // To send them localized data
+  state: { type: String },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+
 
 ListingSchema.index({ 'location.state': 1, 'location.district': 1, listingType: 1 });
 ListingSchema.index({ title: 'text', description: 'text', category: 'text' });
@@ -211,3 +220,4 @@ export const Post = mongoose.models.Post || mongoose.model('Post', PostSchema);
 export const Comment = mongoose.models.Comment || mongoose.model('Comment', CommentSchema);
 export const Scheme = mongoose.models.Scheme || mongoose.model('Scheme', SchemeSchema);
 export const Listing = mongoose.models.Listing || mongoose.model('Listing', ListingSchema);
+export const Subscriber = mongoose.models.Subscriber || mongoose.model('Subscriber', SubscriberSchema);

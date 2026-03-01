@@ -1,16 +1,23 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
-import { Listing } from '@/models';
+// 🛠️ FIX 1: Added 'User' to imports to prevent MissingSchemaError on .populate()
+import { Listing, User } from '@/models'; 
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 
 // ==========================================
 // GET SINGLE LISTING
 // ==========================================
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  req: Request, 
+  { params }: { params: Promise<{ id: string }> } // 🛠️ FIX 2: params is now a Promise
+) {
   try {
+    // 🛠️ FIX 2: Await the params before using the ID
+    const { id } = await params; 
+    
     await connectDB();
-    const listing = await Listing.findById(params.id).populate('providerId', 'name phone profileImage state district');
+    const listing = await Listing.findById(id).populate('providerId', 'name phone profileImage state district');
     
     if (!listing) return NextResponse.json({ success: false, message: 'Listing not found' }, { status: 404 });
     
@@ -23,8 +30,14 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 // ==========================================
 // DELETE LISTING (Secure)
 // ==========================================
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  req: Request, 
+  { params }: { params: Promise<{ id: string }> } // 🛠️ FIX 2: params is now a Promise
+) {
   try {
+    // 🛠️ FIX 2: Await the params before using the ID
+    const { id } = await params;
+
     await connectDB();
     
     const cookieStore = await cookies();
@@ -34,7 +47,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
     const userId = decoded.userId;
 
-    const listing = await Listing.findById(params.id);
+    const listing = await Listing.findById(id);
     if (!listing) return NextResponse.json({ success: false, message: 'Not found' }, { status: 404 });
 
     // Security Check: Only the owner (or an admin) can delete
@@ -42,7 +55,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
     }
 
-    await Listing.findByIdAndDelete(params.id);
+    await Listing.findByIdAndDelete(id);
     
     return NextResponse.json({ success: true, message: 'Listing removed successfully' }, { status: 200 });
   } catch (error) {
