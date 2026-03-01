@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sprout, Sun, CloudRain, Leaf, ArrowRight } from 'lucide-react';
-
+import Logo from './common/Logo';
 export default function SplashScreen() {
   const [progress, setProgress] = useState(0);
   const [loadingText, setLoadingText] = useState('Initializing Systems...');
@@ -131,17 +131,18 @@ export default function SplashScreen() {
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="relative w-28 h-28 bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-xl border-t border-l border-white/40 border-b border-r border-black/20 rounded-[2rem] shadow-[0_20px_40px_rgba(4,47,46,0.8),inset_0_4px_10px_rgba(255,255,255,0.4),inset_0_-4px_10px_rgba(16,185,129,0.2)] flex items-center justify-center group"
+            className="relative w-28 h-28  border-b border-r border-black/20 rounded-[2rem] shadow-[0_20px_40px_rgba(4,47,46,0.8),inset_0_4px_10px_rgba(255,255,255,0.4),inset_0_-4px_10px_rgba(16,185,129,0.2)] flex items-center justify-center group"
             style={{ transformStyle: 'preserve-3d' }} // Allows children to pop out in 3D
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/20 to-teal-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] -z-10"></div>
+            <div className="absolute inset-0   group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] -z-10"></div>
             
             {/* The icon popping out in the Z-axis */}
             <motion.div 
               style={{ transform: 'translateZ(40px)' }} // Physically pushes the icon outward
               className="flex items-center justify-center"
             >
-              <Sprout className="w-14 h-14 text-emerald-400 drop-shadow-[0_15px_15px_rgba(16,185,129,0.5)]" />
+              {/* <Sprout className="w-14 h-14 text-emerald-400 drop-shadow-[0_15px_15px_rgba(16,185,129,0.5)]" /> */}
+              <Logo/>
             </motion.div>
           </motion.div>
         </motion.div>

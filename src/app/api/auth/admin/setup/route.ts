@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const { name, phone, password, adminSecret } = await req.json();
 
     // Prevent anyone from creating an admin without a special secret key
-    if (adminSecret !== 'KRISHI_MASTER_KEY_2026') {
+    if (adminSecret !== process.env.adminSecret) {
       return NextResponse.json({ success: false, message: 'Unauthorized setup attempt' }, { status: 403 });
     }
 
