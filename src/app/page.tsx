@@ -1,8 +1,10 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { Sprout, CloudSun, LineChart, Users, ChevronRight, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import SplashScreen from '@/components/Splashscreen';
 
 export default function LandingPage() {
   const features = [
@@ -11,6 +13,18 @@ export default function LandingPage() {
     { icon: <ShieldCheck className="w-6 h-6" />, title: 'Automated Disease Detection', desc: 'Upload computer vision scans of foliage for instant pathogen identification.' },
     { icon: <Users className="w-6 h-6" />, title: 'Verified Agronomist Network', desc: 'Direct access to a vetted community of farming experts and real-time market data.' },
   ];
+  
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Timer to hide splash screen after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 4000);
+
+    // Cleanup the timer if the component unmounts early
+    return () => clearTimeout(timer);
+  }, []);
 
   // Properly typed for Framer Motion to remove TypeScript errors
   const containerVariants: Variants = {
@@ -22,6 +36,11 @@ export default function LandingPage() {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 10 } }
   };
+
+  // Conditionally render the splash screen
+  if (showSplash) {
+    return <SplashScreen />;
+  }
 
   return (
     <div className="min-h-screen mt-10 bg-agri-50 font-sans selection:bg-agri-400 selection:text-agri-900">
@@ -79,7 +98,7 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </main>
-  {/* <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03]"></div> */}
+      
       {/* Feature Grid - Clean SaaS Look */}
       <div className="max-w-7xl mx-auto px-6 py-24 -mt-10 relative z-20">
         <motion.div 
@@ -103,5 +122,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-
