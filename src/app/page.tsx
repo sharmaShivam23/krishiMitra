@@ -132,6 +132,7 @@ import Navbar from '@/components/common/Navbar';
 import Hero from '@/components/landing/HeroSection';
 import Features from '@/components/landing/Features';
 import TrustSection from '@/components/landing/TrustSection';
+import Footer from '../components/common/Footer';
 
 export default function LandingPage() {
   const [showSplash, setShowSplash] = useState(true);
@@ -151,6 +152,7 @@ export default function LandingPage() {
       <Hero />
       <Features />
       <TrustSection />
+      <Footer/>
     </div>
   );
 }
