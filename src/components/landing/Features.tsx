@@ -34,9 +34,7 @@ export default function Features() {
           >
             <div 
               className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
-              // style={{ backgroundImage: `url('${feat.img}')` }} 
-              // style = {{ backgroundImage : feat.img}}
-              // style={{ backgroundImage: `url(${feat.img})` }}
+              
               style={{ backgroundImage: `url(${feat.img.src})` }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#06241b] via-[#06241b]/60 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-80" />

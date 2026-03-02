@@ -31,9 +31,9 @@ export default function Hero() {
           </motion.div>
           
           <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] mb-8 text-white">
-            Desh Ke Kisanon<br />
+            Desh Ke Kisano<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-green-300 to-amber-200 drop-shadow-sm">
-              Ka Digital Saathi
+              Ka Digital Mitra
             </span>
           </motion.h1>
           

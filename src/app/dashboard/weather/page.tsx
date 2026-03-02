@@ -5,9 +5,12 @@ import { motion, Variants } from 'framer-motion';
 import { 
   CloudSun, CloudRain, Sun, Wind, Droplets, 
   ThermometerSun, AlertTriangle, CheckCircle2, 
-  MapPin, CalendarDays, ArrowRight, Activity, 
-  Loader2, CloudLightning, Cloud, Search, X
+  MapPin, CalendarDays, Activity, 
+  Loader2, CloudLightning, Cloud, Search, X, Volume2
 } from 'lucide-react';
+
+// 🔊 IMPORT THE SPEECH HOOK
+import { useSpeech } from '@/hooks/useSpeech';
 
 // Interfaces
 interface WeatherData {
@@ -44,18 +47,22 @@ interface GeoLocation {
 
 // Helper: Translate WMO Weather Codes to Text and Icons
 const getWeatherDetails = (code: number) => {
-  if (code === 0) return { text: 'Clear Sky', icon: <Sun className="w-8 h-8 text-amber-400" /> };
-  if (code >= 1 && code <= 3) return { text: 'Partly Cloudy', icon: <CloudSun className="w-8 h-8 text-gray-200" /> };
-  if (code === 45 || code === 48) return { text: 'Foggy', icon: <Cloud className="w-8 h-8 text-gray-400" /> };
-  if (code >= 51 && code <= 55) return { text: 'Drizzle', icon: <CloudRain className="w-8 h-8 text-blue-300" /> };
-  if (code >= 61 && code <= 65) return { text: 'Rain', icon: <CloudRain className="w-8 h-8 text-blue-500" /> };
-  if (code >= 71 && code <= 77) return { text: 'Snow', icon: <CloudRain className="w-8 h-8 text-white" /> };
-  if (code >= 80 && code <= 82) return { text: 'Heavy Rain', icon: <CloudRain className="w-8 h-8 text-blue-700" /> };
-  if (code >= 95) return { text: 'Thunderstorm', icon: <CloudLightning className="w-8 h-8 text-purple-500" /> };
-  return { text: 'Unknown', icon: <CloudSun className="w-8 h-8 text-gray-400" /> };
+  if (code === 0) return { text: 'Clear Sky', hindiText: 'saaf aasman', icon: <Sun className="w-8 h-8 text-amber-400" /> };
+  if (code >= 1 && code <= 3) return { text: 'Partly Cloudy', hindiText: 'halke baadal', icon: <CloudSun className="w-8 h-8 text-gray-200" /> };
+  if (code === 45 || code === 48) return { text: 'Foggy', hindiText: 'kohra', icon: <Cloud className="w-8 h-8 text-gray-400" /> };
+  if (code >= 51 && code <= 55) return { text: 'Drizzle', hindiText: 'boondabandi', icon: <CloudRain className="w-8 h-8 text-blue-300" /> };
+  if (code >= 61 && code <= 65) return { text: 'Rain', hindiText: 'baarish', icon: <CloudRain className="w-8 h-8 text-blue-500" /> };
+  if (code >= 71 && code <= 77) return { text: 'Snow', hindiText: 'baraf', icon: <CloudRain className="w-8 h-8 text-white" /> };
+  if (code >= 80 && code <= 82) return { text: 'Heavy Rain', hindiText: 'bhari baarish', icon: <CloudRain className="w-8 h-8 text-blue-700" /> };
+  if (code >= 95) return { text: 'Thunderstorm', hindiText: 'toofan aur bijli', icon: <CloudLightning className="w-8 h-8 text-purple-500" /> };
+  return { text: 'Unknown', hindiText: 'samanya', icon: <CloudSun className="w-8 h-8 text-gray-400" /> };
 };
 
 export default function WeatherIntelligence() {
+  // 🔊 INITIALIZE TEXT-TO-SPEECH
+  const { speak } = useSpeech();
+  const [isInitialSpeakDone, setIsInitialSpeakDone] = useState(false);
+
   const [currentWeather, setCurrentWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastDay[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
@@ -66,6 +73,9 @@ export default function WeatherIntelligence() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Store the raw weather code for precise Hindi translation
+  const [weatherCode, setWeatherCode] = useState<number>(0);
 
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -116,6 +126,8 @@ export default function WeatherIntelligence() {
 
         const current = weatherData.current;
         const daily = weatherData.daily;
+
+        setWeatherCode(current.weather_code);
 
         setCurrentWeather({
           temp: Math.round(current.temperature_2m),
@@ -198,6 +210,34 @@ export default function WeatherIntelligence() {
     }
   }, [activeLocation]);
 
+  /* ======================================================
+     🔊 AUTO-SPEAK WEATHER ON INITIAL LOAD
+  ====================================================== */
+  const readWeatherOutLoud = () => {
+    if (!currentWeather) return;
+
+    const conditionHindi = getWeatherDetails(weatherCode).hindiText;
+    const rainText = currentWeather.precipitationChance < 30 ? 'baarish hone ki sambhavna kam hai' : 'baarish hone ki aashanka hai';
+    
+    // Construct exact Hinglish string
+    const hinglishText = `Aaj ${activeLocation.name} mein mausam ${currentWeather.temp} degree hai. Aasman mein ${conditionHindi} rahegi. Hawa ki raftar ${currentWeather.windSpeed} kilometer prati ghanta hai, aur ${rainText}.`;
+    
+    speak(hinglishText);
+  };
+
+  useEffect(() => {
+    // Only speak automatically on the very first load after getting location
+    if (currentWeather && !isLoading && !isInitialSpeakDone) {
+      // Small delay so the user sees the UI render first
+      const timer = setTimeout(() => {
+        readWeatherOutLoud();
+        setIsInitialSpeakDone(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentWeather, isLoading, isInitialSpeakDone]);
+
+
   // 3. Debounced City Search
   useEffect(() => {
     if (searchQuery.trim().length < 2) {
@@ -216,7 +256,7 @@ export default function WeatherIntelligence() {
       } finally {
         setIsSearching(false);
       }
-    }, 500); // Wait 500ms after user stops typing
+    }, 500);
 
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
@@ -225,12 +265,12 @@ export default function WeatherIntelligence() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setSearchResults([]);
+        searchResults.length > 0 && setSearchResults([]);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [searchResults.length]);
 
   const handleCitySelect = (city: any) => {
     setActiveLocation({
@@ -276,7 +316,7 @@ export default function WeatherIntelligence() {
             <div className="flex flex-col justify-between flex-1 pr-0 md:pr-8">
               
               <div>
-                {/* 🚀 NEW: Search Bar & Location Badge Component */}
+                {/* Search Bar & Location Badge Component */}
                 <div className="relative mb-6" ref={searchRef}>
                   <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-md w-full max-w-sm px-1 py-1 rounded-xl border border-white/20 transition-all focus-within:bg-white/20 focus-within:border-white/40">
                     <MapPin className="w-5 h-5 text-blue-100 ml-2 flex-shrink-0" />
@@ -316,12 +356,25 @@ export default function WeatherIntelligence() {
                     </div>
                   )}
                 </div>
-                {/* End Search Component */}
                 
                 <h2 className="text-7xl font-black tracking-tighter mb-2">
                   {currentWeather?.temp}°<span className="text-5xl text-blue-200">C</span>
                 </h2>
-                <p className="text-2xl font-bold text-blue-100 mb-8">{currentWeather?.condition}</p>
+                
+                {/* Condition and Manual Speak Button */}
+                <div className="flex items-center mb-8">
+                  <p className="text-2xl font-bold text-blue-100">{currentWeather?.condition}</p>
+                  
+                  {/* 🔊 MANUAL LISTEN BUTTON */}
+                  <button 
+                    onClick={readWeatherOutLoud}
+                    title="मौसम की जानकारी सुनें (Listen)"
+                    className="ml-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors border border-white/20"
+                  >
+                    <Volume2 className="w-5 h-5 text-white" />
+                  </button>
+                </div>
+
               </div>
 
               <div className="text-sm font-medium text-blue-200 flex items-center">
