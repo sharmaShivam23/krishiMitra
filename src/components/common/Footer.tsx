@@ -42,6 +42,7 @@ export default function Footer() {
       const res = await fetch('/api/cron/send-alerts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        // We pass the mode (subscribe/unsubscribe) to the backend API here
         body: JSON.stringify({ phone, action: mode }) 
       });
 
