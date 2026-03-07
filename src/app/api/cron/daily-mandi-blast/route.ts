@@ -15,6 +15,15 @@ const GOV_BASE_URL = process.env.BASE_URL;
 
 export async function GET(req: Request) {
   try {
+    // --- SECURITY CHECK: ONLY VERCEL CAN RUN THIS ---
+    const authHeader = req.headers.get('authorization');
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized: Invalid or missing Cron Secret." }, 
+        { status: 401 }
+      );
+    }
+
     // 1. Verify Twilio is setup
     if (!client || !twilioPhone) {
       return NextResponse.json({ success: false, message: "Twilio not configured" }, { status: 500 });
@@ -54,14 +63,12 @@ export async function GET(req: Request) {
     let messageBody = `🌾 KrishiMitra Top 10 Prices (${today}):\n\n`;
 
     data.records.forEach((item: any, index: number) => {
-      // Example format: "1. Wheat (Meerut): ₹2250"
-      // Using modal_price as it's the most common trading price
       messageBody += `${index + 1}. ${item.commodity} (${item.market}): ₹${item.modal_price}/qtl\n`;
     });
 
     messageBody += `\nReply STOP to unsubscribe.`;
 
-    // 5. Send the SMS to all active subscribers
+    // 5. Send the SMS to all active subscribers using parallel processing
     let successCount = 0;
     let failCount = 0;
 
