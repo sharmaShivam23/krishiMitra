@@ -16,7 +16,8 @@ Weather: ${data.weather}
 Soil: ${data.soil}
 
 Give short farming recommendations in bullet points.
-Simple language for farmers.
+Use simple language that is easy for farmers to understand.
+IMPORTANT: You MUST write your entire response strictly in ${data.language || 'English'}. Do not use English if another language is requested.
 `;
 
   const result = await model.generateContent(prompt);

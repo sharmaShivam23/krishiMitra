@@ -4,12 +4,16 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ChevronRight, Leaf } from 'lucide-react';
 import ThreeBackground from './ThreeBackground';
+import { useTranslations } from 'next-intl';
 
 export default function Hero() {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
   };
+
+  // The hook is already perfectly set up pointing to the 'Hero' section!
+  const t = useTranslations('Hero');
 
   const itemVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
@@ -31,24 +35,28 @@ export default function Hero() {
           </motion.div>
           
           <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] mb-8 text-white">
-            Desh Ke Kisano<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-green-300 to-amber-200 drop-shadow-sm">
-              Ka Digital Mitra
+            {/* 🛠️ FIX: Replaced hardcoded text with dynamic translations */}
+            {t('title1')}<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-green-300 to-green-500 drop-shadow-sm">
+              {t('title2')}
             </span>
           </motion.h1>
           
           <motion.p variants={itemVariants} className="text-lg md:text-xl text-stone-300 mb-12 leading-relaxed max-w-2xl mx-auto font-medium">
-            Enterprise-grade crop intelligence, real-time APMC mandi telemetry, and precision predictive modeling built specifically for the next generation of Indian farmers.
+            {/* 🛠️ FIX: Replaced the long hardcoded paragraph */}
+            {t('subtitle')}
           </motion.p>
           
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center gap-4">
             <a href="/dashboard/mandi-prices/mandi-advisor" className="flex items-center justify-center px-8 py-4 bg-amber-400 text-stone-950 rounded-2xl font-black text-lg hover:bg-amber-300 transition-all shadow-[0_0_40px_-10px_rgba(251,191,36,0.6)] group">
-              Launch AI Advisor
+              {/* 🛠️ FIX: Replaced button text */}
+              {t('btnAdvisor')}
               <ChevronRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </a>
             <a href="/register" className="flex items-center justify-center px-8 py-4 bg-white/5 border border-white/10 text-white backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/10 transition-all group">
               <Leaf className="w-5 h-5 mr-2 text-emerald-400" />
-              Initialize Farm Profile
+              {/* 🛠️ FIX: Replaced button text */}
+              {t('btnProfile')}
             </a>
           </motion.div>
         </motion.div>
@@ -56,3 +64,4 @@ export default function Hero() {
     </main>
   );
 }
+
