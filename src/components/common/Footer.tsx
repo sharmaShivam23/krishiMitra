@@ -26,6 +26,7 @@ export default function Footer() {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | '', message: string }>({ type: '', message: '' });
+  const [mode, setMode] = useState<'subscribe' | 'unsubscribe'>('subscribe');
 
   // --- Handlers ---
   const handleSubscribe = async () => {
@@ -41,13 +42,13 @@ export default function Footer() {
       const res = await fetch('/api/cron/send-alerts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone }) 
+        body: JSON.stringify({ phone, action: mode }) 
       });
 
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data.message || 'Subscription failed.');
+        throw new Error(data.message || `${mode === 'subscribe' ? 'Subscription' : 'Unsubscription'} failed.`);
       }
 
       setStatus({ type: 'success', message: data.message });
@@ -139,7 +140,11 @@ export default function Footer() {
               <button 
                 onClick={handleSubscribe}
                 disabled={loading || status.type === 'success' || phone.length !== 10}
-                className="absolute right-2 top-2 bottom-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl px-6 font-bold flex items-center transition-colors shadow-lg shadow-emerald-900/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`absolute right-2 top-2 bottom-2 text-white rounded-xl px-4 sm:px-6 font-bold flex items-center transition-colors shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  mode === 'subscribe' 
+                    ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20' 
+                    : 'bg-red-600 hover:bg-red-500 shadow-red-900/20'
+                }`}
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin mx-auto" />
@@ -147,13 +152,36 @@ export default function Footer() {
                   <CheckCircle2 className="w-5 h-5" />
                 ) : (
                   <>
-                    <span className="hidden sm:inline-block mr-2">{t('smsButton')}</span>
+                    <span className="hidden sm:inline-block mr-2">
+                      {mode === 'subscribe' ? t('smsButton') : 'Unsubscribe'}
+                    </span>
                     <Send className="w-4 h-4" />
                   </>
                 )}
               </button>
             </div>
-            <p className="text-[10px] text-emerald-900/60 mt-2 font-medium text-right">{t('smsDisclaimer')}</p>
+            
+            {/* Disclaimer & Mode Toggle */}
+            <div className="flex justify-between items-start mt-2 px-1">
+              <p className="text-[10px] text-emerald-900/60 font-medium max-w-[60%]">
+                {t('smsDisclaimer')}
+              </p>
+              <button 
+                onClick={() => {
+                  setMode(mode === 'subscribe' ? 'unsubscribe' : 'subscribe');
+                  setStatus({ type: '', message: '' }); 
+                  setPhone('');
+                }}
+                className={`text-[11px] font-bold underline transition-colors ${
+                  mode === 'subscribe' 
+                    ? 'text-red-500/80 hover:text-red-400' 
+                    : 'text-emerald-500/80 hover:text-emerald-400'
+                }`}
+              >
+                {mode === 'subscribe' ? 'Need to unsubscribe?' : 'Subscribe to alerts'}
+              </button>
+            </div>
+
           </div>
         </motion.div>
 

@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/daily-mandi-blast",
+      "schedule": "12 18 * * *"
+    }
+  ]
+}

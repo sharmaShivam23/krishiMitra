@@ -1,60 +1,76 @@
+// app/api/cron/send-alerts/route.ts (or wherever your route is)
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { Subscriber } from '@/models';
 import twilio from 'twilio';
 
-// Initialize Twilio
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioPhone = process.env.TWILIO_PHONE_NUMBER;
 
-// Only initialize client if credentials exist (prevents crashes if missing)
 const client = (accountSid && authToken) ? twilio(accountSid, authToken) : null;
 
 export async function POST(req: Request) {
   try {
     await connectDB();
     const body = await req.json();
-    const phone = body.phone;
+    // Default to 'subscribe' if no action is provided
+    const { phone, action = 'subscribe' } = body; 
 
     // 1. Validate Input
     if (!phone || phone.length !== 10) {
       return NextResponse.json({ success: false, message: "Invalid 10-digit number." }, { status: 400 });
     }
 
-    // 2. Check if already subscribed
+    const formattedPhone = phone.startsWith('+91') ? phone : `+91${phone}`;
+
+    // --- UNSUBSCRIBE LOGIC ---
+    if (action === 'unsubscribe') {
+      const deletedSubscriber = await Subscriber.findOneAndDelete({ phone });
+      
+      if (!deletedSubscriber) {
+        return NextResponse.json({ success: false, message: "This number is not subscribed." }, { status: 404 });
+      }
+      return NextResponse.json({ success: true, message: "Successfully unsubscribed from alerts." }, { status: 200 });
+    }
+
+    // --- SUBSCRIBE LOGIC ---
     const existing = await Subscriber.findOne({ phone });
     if (existing) {
       return NextResponse.json({ success: false, message: "This number is already subscribed!" }, { status: 400 });
     }
 
-    // 3. Save to Database
-    await Subscriber.create({ 
+    // Save to Database first
+    const newSubscriber = await Subscriber.create({ 
       phone, 
       district: 'General', 
       state: 'General',
       isActive: true
     });
 
-    // 4. Send Welcome SMS via Twilio (Optional, but good for hackathons)
+    // Send Welcome SMS
     if (client && twilioPhone) {
       try {
-        const formattedPhone = phone.startsWith('+91') ? phone : `+91${phone}`;
-        const messageBody = `🌾 KrishiMitra: Welcome! You are now subscribed to daily Mandi price alerts for your region.`;
-
         await client.messages.create({
-          body: messageBody,
+          body: `🌾 KrishiMitra: Welcome! You are now subscribed to daily Mandi price alerts for your region.`,
           from: twilioPhone,
           to: formattedPhone
         });
-        
-        console.log(`Welcome SMS sent to ${formattedPhone}`);
       } catch (smsError: any) {
-        console.error(`Twilio Error (DB save succeeded):`, smsError.message);
-        // We don't fail the whole request if SMS fails, since they are saved in DB
+        console.error(`Twilio Error:`, smsError.message);
+        // Rollback DB entry if SMS fails so they aren't stuck in a broken state
+        await Subscriber.findByIdAndDelete(newSubscriber._id);
+        
+        return NextResponse.json({ 
+          success: false, 
+          message: `SMS failed: ${smsError.message}` // This exposes the exact Twilio error to your UI
+        }, { status: 500 });
       }
     } else {
-      console.warn("Twilio credentials missing. Subscriber saved to DB, but no SMS sent.");
+      return NextResponse.json({ 
+        success: false, 
+        message: "Server config error: Twilio credentials missing." 
+      }, { status: 500 });
     }
 
     return NextResponse.json({ 
