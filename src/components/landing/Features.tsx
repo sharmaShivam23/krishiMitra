@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { features } from '@/app/Data/Tools';
+import { useTranslations } from 'next-intl';
 
 export default function Features() {
   const containerVariants = {
@@ -15,12 +16,16 @@ export default function Features() {
     visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 70, damping: 15 } }
   };
 
+  // 1. Initialize translation hook for Features section
+  const t = useTranslations('Features');
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-24 relative z-20">
       <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-5xl font-black text-stone-900 mb-6">Tools for maximum yield.</h2>
-        <p className="text-stone-600 font-medium max-w-2xl mx-auto text-lg">Stop guessing. Start harvesting with data-backed confidence using our entire suite of advanced agronomic intelligence tools tailored for Indian agriculture.</p>
+        {/* 🛠️ Dynamic Heading */}
+        <h2 className="text-3xl md:text-5xl font-black text-stone-900 mb-6">{t('heading')}</h2>
+        {/* 🛠️ Dynamic Subheading */}
+        <p className="text-stone-600 font-medium max-w-2xl mx-auto text-lg">{t('subheading')}</p>
       </div>
 
       <motion.div 
@@ -34,7 +39,6 @@ export default function Features() {
           >
             <div 
               className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
-              
               style={{ backgroundImage: `url(${feat.img.src})` }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#06241b] via-[#06241b]/60 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-80" />
@@ -43,8 +47,16 @@ export default function Features() {
               <div className="w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-amber-300 mb-4 transform group-hover:-translate-y-2 transition-transform duration-300 shadow-xl">
                 {feat.icon}
               </div>
-              <h3 className="text-2xl font-black mb-2 text-white drop-shadow-md transform group-hover:-translate-y-1 transition-transform duration-300 delay-75">{feat.title}</h3>
-              <p className="text-sm text-stone-200 font-medium leading-relaxed drop-shadow-sm transform group-hover:-translate-y-1 transition-transform duration-300 delay-100 line-clamp-2 md:line-clamp-3">{feat.desc}</p>
+              
+              {/* 🛠️ Dynamically fetch the Title using the ID from the array */}
+              <h3 className="text-2xl font-black mb-2 text-white drop-shadow-md transform group-hover:-translate-y-1 transition-transform duration-300 delay-75">
+                {t(`items.${feat.id}.title`)}
+              </h3>
+              
+              {/* 🛠️ Dynamically fetch the Description using the ID from the array */}
+              <p className="text-sm text-stone-200 font-medium leading-relaxed drop-shadow-sm transform group-hover:-translate-y-1 transition-transform duration-300 delay-100 line-clamp-2 md:line-clamp-3">
+                {t(`items.${feat.id}.desc`)}
+              </p>
             </div>
           </motion.div>
         ))}

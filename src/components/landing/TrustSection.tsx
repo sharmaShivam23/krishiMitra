@@ -1,9 +1,13 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck, MapPin, IndianRupee, Tractor } from 'lucide-react';
+import { ShieldCheck, MapPin, IndianRupee } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function TrustSection() {
+  // 1. Initialize translation hook
+  const t = useTranslations('TrustSection');
+
   return (
     <div className="max-w-7xl mx-auto px-6 pb-32">
       <div className="relative rounded-[3rem] overflow-hidden bg-[#06241b] shadow-2xl border border-emerald-900/50">
@@ -16,16 +20,19 @@ export default function TrustSection() {
         <div className="relative z-10 p-12 lg:p-24 flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="max-w-xl">
             <h2 className="text-3xl md:text-5xl font-black text-white leading-tight mb-6">
-              Empowering your farm with <span className="text-amber-400">technology</span> and community.
+              {/* 🛠️ FIX: Split the heading to keep the amber styling on the middle word */}
+              {t('heading1')} <span className="text-amber-400">{t('heading2')}</span>{t('heading3')}
             </h2>
             <p className="text-stone-300 font-medium text-lg mb-8">
-              From live APMC market rates and daily SMS alerts to renting heavy machinery locally, KrishiMitra brings the power of digital agriculture directly to your smartphone.
+              {/* 🛠️ FIX: Dynamic description */}
+              {t('description')}
             </p>
             <ul className="space-y-4 mb-8">
+              {/* 🛠️ FIX: Mapped the array directly to the translation keys */}
               {[
-                'Live APMC Mandi prices with local SMS alerts', 
-                'Peer-to-peer equipment and farming service exchange', 
-                'AI-powered assistant & verified government schemes'
+                t('list1'), 
+                t('list2'), 
+                t('list3')
               ].map((item, i) => (
                  <li key={i} className="flex items-center text-emerald-100 font-medium">
                    <div className="p-1.5 rounded-full bg-emerald-500/20 mr-4 border border-emerald-500/30">
@@ -39,20 +46,20 @@ export default function TrustSection() {
 
           <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl w-full max-w-sm shadow-2xl">
              
-             {/* Replaced fake +24.5% yield with actual Mandi Tracking feature */}
              <div className="flex items-center justify-between mb-8 pb-8 border-b border-emerald-800/50">
                <div>
-                 <p className="text-amber-400 text-sm font-bold uppercase tracking-wider mb-1">Mandi Pricing</p>
-                 <p className="text-3xl font-black text-white">Real-Time</p>
+                 {/* 🛠️ FIX: Dynamic Stat 1 */}
+                 <p className="text-amber-400 text-sm font-bold uppercase tracking-wider mb-1">{t('stat1Label')}</p>
+                 <p className="text-3xl font-black text-white">{t('stat1Value')}</p>
                </div>
                <IndianRupee className="w-12 h-12 text-emerald-500 opacity-50" />
              </div>
              
-             {/* Kept regions context but made it accurate to the Govt API coverage */}
              <div className="flex items-center justify-between">
                <div>
-                 <p className="text-amber-400 text-sm font-bold uppercase tracking-wider mb-1">Platform Coverage</p>
-                 <p className="text-2xl font-black text-white">Pan-India</p>
+                 {/* 🛠️ FIX: Dynamic Stat 2 */}
+                 <p className="text-amber-400 text-sm font-bold uppercase tracking-wider mb-1">{t('stat2Label')}</p>
+                 <p className="text-2xl font-black text-white">{t('stat2Value')}</p>
                </div>
                <MapPin className="w-10 h-10 text-emerald-500 opacity-50" />
              </div>

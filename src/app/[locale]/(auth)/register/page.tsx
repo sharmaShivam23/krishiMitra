@@ -1,0 +1,157 @@
+'use client';
+
+import { useState } from 'react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { 
+  Loader2, User, Phone, MapPin, 
+  Lock, ArrowRight, ShieldCheck, 
+  ChevronDown, Leaf, Sun, Droplets
+} from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
+import Link from 'next/link';
+
+export default function RegisterPage() {
+  const t = useTranslations('Register');
+  const locale = useLocale();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    password: '',
+    state: '',
+  });
+
+  const handleChange = (e: any) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (error) setError('');
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Registration failed');
+
+      // Redirect to login with language prefix
+      window.location.href = `/${locale}/login?registered=true`;
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const itemVariant: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+  };
+
+  return (
+    <div className="min-h-screen bg-white flex font-sans selection:bg-emerald-200 selection:text-emerald-900 overflow-hidden">
+      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:flex-none lg:w-[45%] relative z-10 bg-white">
+        <div className="mx-auto w-full max-w-md relative z-10">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-8">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-4">
+              {t('title')}
+            </h2>
+            <p className="text-base text-gray-500 font-medium">
+              {t('switchText')}{' '}
+              <Link href={`/${locale}/login`} className="text-emerald-600 font-bold hover:underline">
+                {t('switchLink')}
+              </Link>
+            </p>
+          </motion.div>
+
+          <motion.form variants={staggerContainer} initial="hidden" animate="show" className="space-y-5" onSubmit={handleSubmit}>
+            <AnimatePresence mode="wait">
+              {error && (
+                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="p-4 rounded-xl bg-red-50 text-red-700 text-sm border border-red-100 flex items-start">
+                  <ShieldCheck className="w-5 h-5 mr-3 text-red-500 flex-shrink-0 mt-0.5" />
+                  <span>{error}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <motion.div variants={itemVariant}>
+              <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('fullName')}</label>
+              <div className="relative group">
+                <User className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
+                <input name="name" type="text" required value={formData.name} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Ram Singh" />
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariant}>
+              <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('phone')}</label>
+              <div className="relative group">
+                <Phone className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
+                <span className="absolute left-11 top-3.5 text-gray-500 font-medium">+91</span>
+                <input name="phone" type="tel" required maxLength={10} value={formData.phone} onChange={handleChange} className="block w-full pl-20 pr-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="98765 43210" />
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariant}>
+              <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('region')}</label>
+              <div className="relative group">
+                <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
+                <select name="state" required value={formData.state} onChange={handleChange} className="block w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none appearance-none cursor-pointer">
+                  <option value="" disabled>{t('regionPlaceholder')}</option>
+                  {['Punjab', 'Haryana', 'Uttar Pradesh', 'Rajasthan', 'Gujarat', 'Maharashtra'].map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+                <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariant}>
+              <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('password')}</label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
+                <input name="password" type="password" required value={formData.password} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none" placeholder={t('passwordPlaceholder')} />
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariant} className="pt-2">
+              <button type="submit" disabled={loading} className="w-full flex justify-center items-center py-4 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all disabled:opacity-70">
+                {loading ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {t('loading')}</> : <>{t('button')} <ArrowRight className="w-5 h-5 ml-2" /></>}
+              </button>
+            </motion.div>
+            
+            <p className="text-center text-xs text-gray-500 mt-2">{t('terms')}</p>
+          </motion.form>
+        </div>
+      </div>
+
+      <div className="hidden lg:flex flex-1 relative bg-emerald-950 items-end justify-center">
+        <div className="absolute inset-0 bg-cover bg-center opacity-40" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1586771107445-d3afeb0dece5?q=80&w=2069&auto=format&fit=crop')" }} />
+        <div className="relative z-10 w-full max-w-2xl p-12 mb-8">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 shadow-2xl">
+            <h3 className="text-3xl font-black text-white mb-6">{t('featureTitle')}</h3>
+            <ul className="space-y-4">
+              {[t('feature1'), t('feature2'), t('feature3')].map((text, i) => (
+                <li key={i} className="flex items-center text-emerald-50 text-lg font-medium">
+                  <Leaf className="w-5 h-5 text-emerald-400 mr-4" /> {text}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 text-white font-bold text-sm border-t border-white/10 pt-6">{t('trusted')}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
