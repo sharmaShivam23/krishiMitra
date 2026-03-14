@@ -1,3 +1,5 @@
+
+        
 name: Deploy KrishiMitra to Amazon Linux
 
 on:
@@ -31,15 +33,20 @@ jobs:
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          # Pull the latest image
           docker pull ${{ secrets.DOCKER_USERNAME }}/krishimitra:latest
+          
+          # Stop and remove the old container if it exists
           docker stop krishimitra || true
           docker rm krishimitra || true
-          # Maps port 80 (HTTP) to your app's port 3000 and injects your .env file
-          # docker run -d -p 3000:3000 --name krishimitra --env-file /home/ec2-user/.env ${{ secrets.DOCKER_USERNAME }}/
-          docker run -d --restart unless-stopped -p 3000:3000 --name krishimitra --env-file /home/ec2-user/.env ${{ secrets.DOCKER_USERNAME }}/krishimitra:latest
-          krishimitra:latest
+          
+          # Run the new container with the restart policy
+          docker run -d \
+            --restart unless-stopped \
+            -p 3000:3000 \
+            --name krishimitra \
+            --env-file /home/ec2-user/.env \
+            ${{ secrets.DOCKER_USERNAME }}/krishimitra:latest
+          
+          # Cleanup old unused images to save EC2 disk space
           docker system prune -af
-
-
-
-        
