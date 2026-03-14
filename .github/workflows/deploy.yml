@@ -35,5 +35,6 @@ jobs:
           docker stop krishimitra || true
           docker rm krishimitra || true
           # Maps port 80 (HTTP) to your app's port 3000 and injects your .env file
-          docker run -d -p 80:3000 --name krishimitra --env-file /home/ec2-user/.env ${{ secrets.DOCKER_USERNAME }}/krishimitra:latest
+          docker run -d -p 3000:3000 --name krishimitra --env-file /home/ec2-user/.env ${{ secrets.DOCKER_USERNAME }}/
+          krishimitra:latest
           docker system prune -af
