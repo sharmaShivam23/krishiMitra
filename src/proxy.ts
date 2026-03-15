@@ -4,71 +4,77 @@ import createMiddleware from 'next-intl/middleware';
 
 const locales = ['en', 'hi', 'pa'];
 
-// 1. Setup the next-intl middleware
+
 const intlMiddleware = createMiddleware({
   locales: locales,
   defaultLocale: 'en',
-  localePrefix: 'always' // Ensures /[locale] is always present for consistent parsing
+  localePrefix: 'always'
 });
+
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 2. Define Public Assets to skip entirely
-  const isPublicFile = /\.(.*)$/.test(pathname);
-  if (isPublicFile) return NextResponse.next();
+ 
+  if (
+    pathname.includes('.') || 
+    pathname.startsWith('/api') || 
+    pathname.startsWith('/_next')
+  ) {
+    return NextResponse.next();
+  }
 
-  // 3. Normalize Path (Remove locale to check auth logic)
-  // Example: "/hi/login" -> "/login"
+  
+  const currentLocale = locales.find(loc => pathname.startsWith(`/${loc}`)) || 'en';
+
+  
   const pathWithoutLocale = pathname.replace(new RegExp(`^/(${locales.join('|')})`), '') || '/';
 
   // 4. Extract Auth Tokens
-  const farmerToken = request.cookies.get('auth_token')?.value || '';
-  const adminToken = request.cookies.get('admin_token')?.value || '';
+  const rawAuthToken = request.cookies.get('auth_token')?.value;
+  const rawAdminToken = request.cookies.get('admin_token')?.value;
+
+  // STRICT CHECK: Ensure tokens exist and are not broken string values
+  const hasFarmerAuth = !!rawAuthToken && rawAuthToken !== 'undefined' && rawAuthToken !== 'null';
+  const hasAdminAuth = !!rawAdminToken && rawAdminToken !== 'undefined' && rawAdminToken !== 'null';
 
   // 5. Define Route Categories
   const isAdminPath = pathWithoutLocale.startsWith('/admin');
   const isAdminLogin = pathWithoutLocale === '/admin/login';
   const isUserAuthPath = pathWithoutLocale === '/login' || pathWithoutLocale === '/register';
   const isPublicLanding = pathWithoutLocale === '/';
-  
-  // Identify the current locale for redirecting
-  const currentLocale = locales.find(loc => pathname.startsWith(`/${loc}`)) || 'en';
 
-  /* ======================================================
-      ADMIN AUTH LOGIC
-  ====================================================== */
+
   if (isAdminPath) {
-    // Already logged in? Don't show login page
-    if (isAdminLogin && adminToken) {
+   
+    if (isAdminLogin && hasAdminAuth) {
       return NextResponse.redirect(new URL(`/${currentLocale}/admin/dashboard`, request.url));
     }
-    // Not logged in? Force login (except on the login page itself)
-    if (!isAdminLogin && !adminToken) {
+  
+    if (!isAdminLogin && !hasAdminAuth) {
       return NextResponse.redirect(new URL(`/${currentLocale}/admin/login`, request.url));
+    }
+  } 
+  
+  
+  else {
+   
+    if (isUserAuthPath && hasFarmerAuth) {
+      return NextResponse.redirect(new URL(`/${currentLocale}/dashboard`, request.url));
+    }
+
+    
+    const isProtectedRoute = !isPublicLanding && !isUserAuthPath;
+    if (isProtectedRoute && !hasFarmerAuth) {
+      return NextResponse.redirect(new URL(`/${currentLocale}/login`, request.url));
     }
   }
 
-  /* ======================================================
-      FARMER / USER AUTH LOGIC
-  ====================================================== */
-  // Redirect logged-in users away from /login or /register
-  if (isUserAuthPath && farmerToken) {
-    return NextResponse.redirect(new URL(`/${currentLocale}/dashboard`, request.url));
-  }
-
-  // Protect /dashboard and other private routes
-  // We exclude the landing page, auth pages, and admin paths (handled above)
-  const isProtectedRoute = !isPublicLanding && !isUserAuthPath && !isAdminPath;
-  if (isProtectedRoute && !farmerToken) {
-    return NextResponse.redirect(new URL(`/${currentLocale}/login`, request.url));
-  }
-
-  // 6. Final step: Let next-intl handle the response
+  // 6. Final step: Let next-intl handle the response translation
   return intlMiddleware(request);
 }
 
 export const config = {
-  // 🛠️ Matcher updated to ignore internal Next.js paths and static files
+ 
   matcher: ['/((?!api|_next|.*\\..*).*)']
 };

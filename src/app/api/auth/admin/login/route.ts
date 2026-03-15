@@ -48,11 +48,11 @@ export async function POST(req: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      maxAge: 7 * 24 * 60 * 60, 
       path: '/',
     });
 
-    // 7. Return success without sending the password back
+    
     return NextResponse.json({
       success: true,
       message: 'Admin login successful',

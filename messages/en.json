@@ -173,7 +173,12 @@
     "feature1": "Real-time Mandi market prices",
     "feature2": "AI-driven crop disease detection",
     "feature3": "Personalized weather & harvest alerts",
-    "trusted": "Trusted by 50,000+ farmers"
+    "trusted": "Trusted by 50,000+ farmers",
+    "getOtp": "Get OTP",
+    "enterOtp": "Enter 6-Digit Code",
+    "verifyBtn": "Verify & Register",
+    "otpSentTo": "Code sent via SMS to",
+    "back": "Back"
   },
   "Login": {
     "title": "Welcome back.",

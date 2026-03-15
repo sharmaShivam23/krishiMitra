@@ -18,7 +18,7 @@ function LoginForm() {
     password: '',
   });
 
-  // Safely grab URL parameters without relying on next/navigation to avoid build errors
+  
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);

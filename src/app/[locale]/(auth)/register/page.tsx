@@ -5,7 +5,7 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { 
   Loader2, User, Phone, MapPin, 
   Lock, ArrowRight, ShieldCheck, 
-  ChevronDown, Leaf, Sun, Droplets
+  ChevronDown, Leaf, KeyRound, ArrowLeft , CheckCircle2
 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
@@ -13,6 +13,8 @@ import Link from 'next/link';
 export default function RegisterPage() {
   const t = useTranslations('Register');
   const locale = useLocale();
+  
+  const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -22,14 +24,44 @@ export default function RegisterPage() {
     password: '',
     state: '',
   });
+  
+  const [otp, setOtp] = useState('');
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (error) setError('');
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: formData.phone }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
+
+      setStep(2);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyAndRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otp.length !== 6) {
+      setError('Please enter a valid 6-digit OTP');
+      return;
+    }
+    
     setLoading(true);
     setError('');
 
@@ -37,13 +69,12 @@ export default function RegisterPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, preferredLanguage: locale, otp }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Registration failed');
 
-      // Redirect to login with language prefix
       window.location.href = `/${locale}/login?registered=true`;
     } catch (err: any) {
       setError(err.message);
@@ -78,61 +109,86 @@ export default function RegisterPage() {
             </p>
           </motion.div>
 
-          <motion.form variants={staggerContainer} initial="hidden" animate="show" className="space-y-5" onSubmit={handleSubmit}>
-            <AnimatePresence mode="wait">
-              {error && (
-                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="p-4 rounded-xl bg-red-50 text-red-700 text-sm border border-red-100 flex items-start">
-                  <ShieldCheck className="w-5 h-5 mr-3 text-red-500 flex-shrink-0 mt-0.5" />
-                  <span>{error}</span>
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mb-5 p-4 text-black rounded-xl bg-red-50 text-red-700 text-sm border border-red-100 flex items-start">
+                <ShieldCheck className="w-5 h-5 mr-3 text-red-500 flex-shrink-0 mt-0.5" />
+                <span>{error}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence mode="wait">
+            {step === 1 ? (
+              <motion.form key="step1" variants={staggerContainer} initial="hidden" animate="show" exit={{ opacity: 0, x: -20 }} className="space-y-5" onSubmit={handleRequestOtp}>
+                <motion.div variants={itemVariant}>
+                  <label className="block text-sm font-bold text-black mb-1.5">{t('fullName')}</label>
+                  <div className="relative group">
+                    <User className="absolute left-4 top-3.5 h-5 w-5 text-black group-focus-within:text-emerald-500" />
+                    <input name="name" type="text" required value={formData.name} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-black outline-none" placeholder="Ram Singh" />
+                  </div>
                 </motion.div>
-              )}
-            </AnimatePresence>
 
-            <motion.div variants={itemVariant}>
-              <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('fullName')}</label>
-              <div className="relative group">
-                <User className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
-                <input name="name" type="text" required value={formData.name} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Ram Singh" />
-              </div>
-            </motion.div>
+                <motion.div variants={itemVariant}>
+                  <label className="block text-sm font-bold text-black mb-1.5">{t('phone')}</label>
+                  <div className="relative group">
+                    <Phone className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
+                    <span className="absolute left-11 top-3.5 text-gray-400 font-medium">+91</span>
+                    <input name="phone" type="tel" required maxLength={10} value={formData.phone} onChange={handleChange} className="block w-full pl-20 pr-4 py-3.5 border border-gray-200 rounded-xl text-black focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="98765 43210" />
+                  </div>
+                </motion.div>
 
-            <motion.div variants={itemVariant}>
-              <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('phone')}</label>
-              <div className="relative group">
-                <Phone className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
-                <span className="absolute left-11 top-3.5 text-gray-500 font-medium">+91</span>
-                <input name="phone" type="tel" required maxLength={10} value={formData.phone} onChange={handleChange} className="block w-full pl-20 pr-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="98765 43210" />
-              </div>
-            </motion.div>
+                <motion.div variants={itemVariant}>
+                  <label className="block text-sm font-bold text-black mb-1.5">{t('region')}</label>
+                  <div className="relative group">
+                    <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-black group-focus-within:text-emerald-500" />
+                    <select name="state" required value={formData.state} onChange={handleChange} className="block w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer">
+                      <option value="" disabled>{t('regionPlaceholder')}</option>
+                      {['Punjab', 'Haryana', 'Uttar Pradesh', 'Rajasthan', 'Gujarat', 'Maharashtra', 'Madhya Pradesh'].map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                    <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                  </div>
+                </motion.div>
 
-            <motion.div variants={itemVariant}>
-              <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('region')}</label>
-              <div className="relative group">
-                <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
-                <select name="state" required value={formData.state} onChange={handleChange} className="block w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none appearance-none cursor-pointer">
-                  <option value="" disabled>{t('regionPlaceholder')}</option>
-                  {['Punjab', 'Haryana', 'Uttar Pradesh', 'Rajasthan', 'Gujarat', 'Maharashtra'].map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-                <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
-              </div>
-            </motion.div>
+                <motion.div variants={itemVariant}>
+                  <label className="block text-sm font-bold text-black mb-1.5">{t('password')}</label>
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-3.5 h-5 w-5 text-black group-focus-within:text-emerald-500" />
+                    <input name="password" type="password" required value={formData.password} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 text-black rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none" placeholder={t('passwordPlaceholder')} />
+                  </div>
+                </motion.div>
 
-            <motion.div variants={itemVariant}>
-              <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('password')}</label>
-              <div className="relative group">
-                <Lock className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
-                <input name="password" type="password" required value={formData.password} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none" placeholder={t('passwordPlaceholder')} />
-              </div>
-            </motion.div>
+                <motion.div variants={itemVariant} className="pt-2">
+                  <button type="submit" disabled={loading || formData.phone.length !== 10} className="w-full flex justify-center items-center py-4 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all disabled:opacity-70">
+                    {loading ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {t('loading')}</> : <>{t('getOtp')} <ArrowRight className="w-5 h-5 ml-2" /></>}
+                  </button>
+                </motion.div>
+                
+                <p className="text-center text-xs text-gray-500 mt-2">{t('terms')}</p>
+              </motion.form>
+            ) : (
+              <motion.form key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6" onSubmit={handleVerifyAndRegister}>
+                <div>
+                  <button type="button" onClick={() => { setStep(1); setOtp(''); setError(''); }} className="flex items-center text-sm font-bold text-emerald-600 mb-6 hover:text-emerald-700">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> {t('back')}
+                  </button>
+                  <label className="block text-sm font-bold text-black mb-1.5">{t('enterOtp')}</label>
+                  <p className="text-sm text-gray-500 mb-4">{t('otpSentTo')} <span className="font-bold text-gray-900">+91 {formData.phone}</span></p>
+                  
+                  <div className="relative group">
+                    <KeyRound className="absolute left-4 top-3.5 h-5 w-5 text-black group-focus-within:text-emerald-500" />
+                    <input type="text" required maxLength={6} value={otp} onChange={(e) => { setOtp(e.target.value.replace(/\D/g, '')); setError(''); }} className="block w-full pl-11 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-black outline-none font-bold text-lg tracking-[0.5em]" placeholder="------" />
+                  </div>
+                </div>
 
-            <motion.div variants={itemVariant} className="pt-2">
-              <button type="submit" disabled={loading} className="w-full flex justify-center items-center py-4 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all disabled:opacity-70">
-                {loading ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {t('loading')}</> : <>{t('button')} <ArrowRight className="w-5 h-5 ml-2" /></>}
-              </button>
-            </motion.div>
-            
-            <p className="text-center text-xs text-gray-500 mt-2">{t('terms')}</p>
-          </motion.form>
+                <div className="pt-2">
+                  <button type="submit" disabled={loading || otp.length !== 6} className="w-full flex justify-center items-center py-4 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all disabled:opacity-70">
+                    {loading ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {t('loading')}</> : <>{t('verifyBtn')} <CheckCircle2 className="w-5 h-5 ml-2" /></>}
+                  </button>
+                </div>
+              </motion.form>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

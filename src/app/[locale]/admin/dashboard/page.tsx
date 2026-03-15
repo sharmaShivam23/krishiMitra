@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion , Variants } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { 
   Users, Activity, ShieldCheck, ShoppingCart, 
   MessageSquare, Leaf, MapPin, Smartphone, Loader2, TrendingUp, Sprout
@@ -11,7 +11,6 @@ import {
   BarChart, Bar, PieChart, Pie, Cell, Legend
 } from 'recharts';
 
-// --- Types ---
 interface DashboardData {
   summaryCards: {
     totalFarmers: number;
@@ -67,9 +66,8 @@ export default function AdminDashboard() {
 
   const { summaryCards, charts } = data;
 
-  // Animation variants
-  const container : Variants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
-  const item : Variants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 120 } } };
+  const container: Variants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
+  const item: Variants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 120 } } };
 
   return (
     <div className="min-h-screen bg-[#f4f7f5] p-6 lg:p-10 font-sans">
@@ -98,12 +96,12 @@ export default function AdminDashboard() {
 
         <motion.div variants={container} initial="hidden" animate="show" className="space-y-8">
           
-          {/* 🌟 TOP METRICS ROW (Primary Stats) */}
+          {/* 🌟 TOP METRICS ROW */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <MetricCard title="Total Farmers" value={summaryCards.totalFarmers} icon={<Users />} color="emerald" trend="+12% this week" />
-            <MetricCard title="Active Today" value={summaryCards.activeUsersToday} icon={<Activity />} color="blue" trend="High engagement" />
-            <MetricCard title="AI Scans Run" value={summaryCards.totalScans} icon={<ShieldCheck />} color="amber" trend="System nominal" />
-            <MetricCard title="SMS Alerts Sent" value={summaryCards.smsSentToday} icon={<Smartphone />} color="purple" trend="Delivered instantly" />
+            <MetricCard title="Total Farmers" value={summaryCards.totalFarmers} icon={<Users />} color="emerald" trend="Verified" />
+            <MetricCard title="Active Today" value={summaryCards.activeUsersToday} icon={<Activity />} color="blue" trend="Live Data" />
+            <MetricCard title="AI Scans Run" value={summaryCards.totalScans} icon={<ShieldCheck />} color="amber" trend="Real-time" />
+            <MetricCard title="Daily SMS Sent" value={summaryCards.smsSentToday} icon={<Smartphone />} color="purple" trend="Active Subs" />
           </div>
 
           {/* 🌟 CHARTS ROW */}
@@ -165,19 +163,18 @@ export default function AdminDashboard() {
           {/* 🌟 BOTTOM METRICS ROW & BAR CHART */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Secondary Insights */}
             <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:col-span-1">
-              <InsightCard title="Most Searched Crop" value={summaryCards.mostSearchedCrop} icon={<Leaf className="text-emerald-500" />} />
+              <InsightCard title="Top Listed Crop" value={summaryCards.mostSearchedCrop} icon={<Leaf className="text-emerald-500" />} />
               <InsightCard title="Top Active State" value={summaryCards.topState} icon={<MapPin className="text-blue-500" />} />
               <InsightCard title="Community Posts" value={summaryCards.communityPosts.toString()} icon={<MessageSquare className="text-amber-500" />} />
               <InsightCard title="Market Listings" value={summaryCards.totalListings.toString()} icon={<ShoppingCart className="text-purple-500" />} />
             </motion.div>
 
-            {/* Bar Chart: Mandi Views */}
+            {/* Bar Chart: Market Listings */}
             <motion.div variants={item} className="bg-white p-6 rounded-[2rem] shadow-sm border border-stone-100 lg:col-span-2">
                <div className="mb-6">
-                <h3 className="text-xl font-black text-emerald-950">Mandi Market Engagement</h3>
-                <p className="text-sm font-medium text-stone-500">Most viewed APMC locations</p>
+                <h3 className="text-xl font-black text-emerald-950">Market Activity</h3>
+                <p className="text-sm font-medium text-stone-500">Top districts by number of active listings</p>
               </div>
               <div className="h-[200px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -198,10 +195,6 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
-/* =========================================
-   UI SUB-COMPONENTS
-========================================= */
 
 function MetricCard({ title, value, icon, color, trend }: { title: string, value: number, icon: React.ReactNode, color: 'emerald'|'blue'|'amber'|'purple', trend: string }) {
   const colorMap = {

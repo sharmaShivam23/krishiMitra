@@ -1,164 +1,204 @@
 // import { NextResponse } from 'next/server';
-// import { verifyToken } from '@/lib/auth';
-// import { cookies } from 'next/headers';
 // import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 // export async function POST(req: Request) {
 //   try {
-//     const cookieStore = await cookies();
-//     const token = cookieStore.get('auth_token')?.value;
+//     const { imageUrl, imageBase64, audioBase64, audioMimeType, language } = await req.json();
 
-//     if (!token || !verifyToken(token)) {
-//       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+//     if (!imageUrl && !imageBase64) {
+//       return NextResponse.json({ error: 'No image provided' }, { status: 400 });
 //     }
 
-//     const body = await req.json();
-//     const { imageUrl } = body;
+//     let finalBase64Image = imageBase64;
+//     let imageMimeType = 'image/jpeg';
 
-//     if (!imageUrl) {
-//       return NextResponse.json({ error: "Image URL required" }, { status: 400 });
+//     // If it's an uploaded Cloudinary URL, fetch it and convert to Base64
+//     if (imageUrl) {
+//       const imageResp = await fetch(imageUrl);
+//       const arrayBuffer = await imageResp.arrayBuffer();
+//       finalBase64Image = Buffer.from(arrayBuffer).toString('base64');
+//       imageMimeType = imageResp.headers.get('content-type') || 'image/jpeg';
+//     } else if (finalBase64Image) {
+//       // FOOLPROOF STRIP: Grab everything after the comma
+//       finalBase64Image = finalBase64Image.substring(finalBase64Image.indexOf(',') + 1);
 //     }
 
-//     if (!process.env.GEMINI_API_KEY) {
-//       throw new Error("GEMINI_API_KEY is missing in .env.local");
-//     }
+//     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-//     const imageResponse = await fetch(imageUrl);
-//     if (!imageResponse.ok) {
-//       throw new Error("Failed to fetch the uploaded image from Cloudinary.");
-//     }
-    
-//     const arrayBuffer = await imageResponse.arrayBuffer();
-//     const base64Image = Buffer.from(arrayBuffer).toString('base64');
-//     const mimeType = imageResponse.headers.get('content-type') || 'image/jpeg';
-
-//     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
-//     // 🚀 NEW PROMPT: Forces Gemini to explain the harm and provide an array of solutions
 //     const prompt = `
-//       You are an expert agronomist and botanist AI. Analyze the provided image of a crop leaf.
-//       You must reply ONLY with a valid, raw JSON object. Do not include markdown tags like \`\`\`json.
-//       The JSON object must strictly match this structure:
+//       You are an expert agricultural plant pathologist. 
+//       Look at this image of a plant leaf. If the user has provided an audio question, listen to it carefully and address their specific concern. If there is no audio, just do a general analysis.
+
+//       CRITICAL INSTRUCTION: 
+//       You MUST write all of your analysis, explanations, and solutions strictly in ${language || 'English'}.
+
+//       Return a raw JSON object where the KEYS remain in English exactly as shown below. 
+//       Do NOT wrap the response in markdown blocks like \`\`\`json.
+
+//       Structure:
 //       {
-//         "disease": "Name of the disease (or 'Healthy Crop' if no pathogen is detected)",
-//         "confidence": 0.98,
-//         "harm": "Explain in 1-2 sentences exactly how this disease harms the plant (e.g., blocks photosynthesis, rots roots, causes yield loss). If the plant is healthy, state 'No harm detected. The crop is in optimal condition.'",
+//         "disease": "[Write the disease name or 'Healthy Crop' in ${language || 'English'}]",
+//         "confidence": [A number between 0.0 and 1.0],
+//         "harm": "[Write a 2-3 sentence explanation of the threat/harm in ${language || 'English'}]",
 //         "solutions": [
-//           "First highly actionable step (e.g., Specific fungicide to use)",
-//           "Second highly actionable step (e.g., Pruning or watering changes)",
-//           "Third highly actionable step (e.g., Future preventative measure)"
+//           "[Solution step 1 in ${language || 'English'}]",
+//           "[Solution step 2 in ${language || 'English'}]"
 //         ]
 //       }
 //     `;
 
-//     const imagePart = {
-//       inlineData: {
-//         data: base64Image,
-//         mimeType: mimeType,
+//     // Construct the payload dynamically
+//     const payloadParts: any[] = [
+//       prompt,
+//       {
+//         inlineData: {
+//           data: finalBase64Image,
+//           mimeType: imageMimeType,
+//         },
 //       },
-//     };
+//     ];
 
-//     const result = await model.generateContent([prompt, imagePart]);
+//     // If the user spoke, clean the audio base64 and attach it
+//     if (audioBase64) {
+//       // FOOLPROOF STRIP: Grab everything after the comma
+//       const cleanAudioBase64 = audioBase64.substring(audioBase64.indexOf(',') + 1);
+      
+//       // Clean the MIME type (e.g., convert "audio/webm;codecs=opus" to just "audio/webm")
+//       const cleanMimeType = audioMimeType ? audioMimeType.split(';')[0] : 'audio/webm';
+
+//       payloadParts.push({
+//         inlineData: {
+//           data: cleanAudioBase64,
+//           mimeType: cleanMimeType,
+//         },
+//       });
+//     }
+
+//     const result = await model.generateContent(payloadParts);
 //     const responseText = result.response.text();
-    
-//     const cleanJsonString = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
-//     const analysis = JSON.parse(cleanJsonString);
 
-//     // Return the new detailed structure
-//     return NextResponse.json({
-//       success: true,
-//       analysis: {
-//         disease: analysis.disease,
-//         confidence: analysis.confidence,
-//         harm: analysis.harm,
-//         solutions: analysis.solutions,
-//       }
-//     });
+//     const cleanedText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
+//     const analysisData = JSON.parse(cleanedText);
+
+//     return NextResponse.json({ success: true, analysis: analysisData }, { status: 200 });
 
 //   } catch (error: any) {
-//     console.error("🚨 AI Route Error:", error);
+//     console.error("AI Disease Detection Error:", error);
 //     return NextResponse.json(
-//       { error: error.message || "AI processing failed. Please try a clearer image." },
+//       { error: error.message || 'Failed to analyze image and audio' }, 
 //       { status: 500 }
 //     );
 //   }
 // }
 
-
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { connectDB } from '@/lib/mongodb'; // Added
+import { Scan } from '@/models'; // Added
 
-// Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: Request) {
   try {
-    //  Extract the requested language from the frontend
-    const { imageUrl, language } = await req.json();
+    const { imageUrl, imageBase64, audioBase64, audioMimeType, language } = await req.json();
 
-    if (!imageUrl) {
-      return NextResponse.json({ error: 'No image URL provided' }, { status: 400 });
+    if (!imageUrl && !imageBase64) {
+      return NextResponse.json({ error: 'No image provided' }, { status: 400 });
     }
 
-    // Download the image from Cloudinary to send it to Gemini
-    const imageResp = await fetch(imageUrl);
-    const arrayBuffer = await imageResp.arrayBuffer();
-    const base64Image = Buffer.from(arrayBuffer).toString('base64');
-    const mimeType = imageResp.headers.get('content-type') || 'image/jpeg';
+    let finalBase64Image = imageBase64;
+    let imageMimeType = 'image/jpeg';
 
-    // Use Gemini 1.5 Flash or Gemini 2.5 Flash for multimodal (image + text) tasks
+    // If it's an uploaded Cloudinary URL, fetch it and convert to Base64
+    if (imageUrl) {
+      const imageResp = await fetch(imageUrl);
+      const arrayBuffer = await imageResp.arrayBuffer();
+      finalBase64Image = Buffer.from(arrayBuffer).toString('base64');
+      imageMimeType = imageResp.headers.get('content-type') || 'image/jpeg';
+    } else if (finalBase64Image) {
+      // FOOLPROOF STRIP: Grab everything after the comma
+      finalBase64Image = finalBase64Image.substring(finalBase64Image.indexOf(',') + 1);
+    }
+
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    //  The Multilingual Prompt
     const prompt = `
-      You are an expert agricultural plant pathologist. Analyze this image of a plant leaf.
-      Identify any diseases, pests, or deficiencies.
+      You are an expert agricultural plant pathologist. 
+      Look at this image of a plant leaf. If the user has provided an audio question, listen to it carefully and address their specific concern. If there is no audio, just do a general analysis.
 
       CRITICAL INSTRUCTION: 
       You MUST write all of your analysis, explanations, and solutions strictly in ${language || 'English'}.
-      Do not use English for the values if another language is requested.
 
-      HOWEVER, you must return a raw JSON object where the KEYS remain in English exactly as shown below. 
-      Do NOT wrap the response in markdown blocks like \`\`\`json. Just return the raw JSON.
+      Return a raw JSON object where the KEYS remain in English exactly as shown below. 
+      Do NOT wrap the response in markdown blocks like \`\`\`json.
 
       Structure:
       {
         "disease": "[Write the disease name or 'Healthy Crop' in ${language || 'English'}]",
-        "confidence": [A number between 0.0 and 1.0 representing your confidence],
+        "confidence": [A number between 0.0 and 1.0],
         "harm": "[Write a 2-3 sentence explanation of the threat/harm in ${language || 'English'}]",
         "solutions": [
           "[Solution step 1 in ${language || 'English'}]",
-          "[Solution step 2 in ${language || 'English'}]",
-          "[Solution step 3 in ${language || 'English'}]"
+          "[Solution step 2 in ${language || 'English'}]"
         ]
       }
     `;
 
-    // Send the prompt and the image to Gemini
-    const result = await model.generateContent([
+    // Construct the payload dynamically
+    const payloadParts: any[] = [
       prompt,
       {
         inlineData: {
-          data: base64Image,
-          mimeType: mimeType,
+          data: finalBase64Image,
+          mimeType: imageMimeType,
         },
       },
-    ]);
+    ];
 
+    // If the user spoke, clean the audio base64 and attach it
+    if (audioBase64) {
+      const cleanAudioBase64 = audioBase64.substring(audioBase64.indexOf(',') + 1);
+      const cleanMimeType = audioMimeType ? audioMimeType.split(';')[0] : 'audio/webm';
+
+      payloadParts.push({
+        inlineData: {
+          data: cleanAudioBase64,
+          mimeType: cleanMimeType,
+        },
+      });
+    }
+
+    const result = await model.generateContent(payloadParts);
     const responseText = result.response.text();
 
-    // Safely parse the JSON (removing any accidental markdown backticks Gemini might add)
     const cleanedText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
     const analysisData = JSON.parse(cleanedText);
+
+    // ==========================================
+    // 🌟 NEW: SAVE TO DATABASE FOR ADMIN ANALYTICS
+    // ==========================================
+    try {
+      await connectDB();
+      await Scan.create({
+        disease: analysisData.disease,
+        confidence: analysisData.confidence,
+        language: language || 'English',
+        hasAudio: !!audioBase64
+        // Note: If you have a logged-in user system, you can pass userId: decodedToken.id here too!
+      });
+    } catch (dbErr) {
+      // We log the error but don't fail the user's scan just because the analytics save failed
+      console.error("Failed to save scan telemetry to database:", dbErr);
+    }
 
     return NextResponse.json({ success: true, analysis: analysisData }, { status: 200 });
 
   } catch (error: any) {
     console.error("AI Disease Detection Error:", error);
     return NextResponse.json(
-      { error: error.message || 'Failed to analyze image' }, 
+      { error: error.message || 'Failed to analyze image and audio' }, 
       { status: 500 }
     );
   }
