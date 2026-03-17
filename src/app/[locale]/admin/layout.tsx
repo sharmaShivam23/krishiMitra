@@ -27,7 +27,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   
   const isLoginPage = pathname.endsWith('/admin/login');
 
-  // 🌟 NEW: If it's the login page, render ONLY the children (the login form) with no sidebar
   if (isLoginPage) {
     return <main className="min-h-screen bg-[#f4f7f5] font-sans">{children}</main>;
   }

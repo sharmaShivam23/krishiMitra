@@ -22,7 +22,7 @@ export default function AdminLogin() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    // Clear error when user starts typing
+   
     if (error) setError('');
   };
 

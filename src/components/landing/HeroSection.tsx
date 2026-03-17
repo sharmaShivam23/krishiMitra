@@ -12,7 +12,7 @@ export default function Hero() {
     visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
   };
 
-  // The hook is already perfectly set up pointing to the 'Hero' section!
+  
   const t = useTranslations('Hero');
 
   const itemVariants: Variants = {

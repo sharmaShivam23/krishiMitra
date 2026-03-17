@@ -62,15 +62,13 @@ const LANGUAGES = [
   { code: 'Tamil', name: 'தமிழ் (Tamil)' },
 ];
 
-/* ======================================================
-   COMPONENT
-====================================================== */
+
 
 export default function CropIntelligence() {
   const t = useTranslations('CropIntelligence');
   const locale = useLocale();
 
-  // Set default language name based on current Next.js locale
+
   const defaultLangMap: Record<string, string> = { en: 'English', hi: 'Hindi', pa: 'Punjabi' };
   const initialLang = defaultLangMap[locale] || 'English';
 
@@ -87,7 +85,7 @@ export default function CropIntelligence() {
     stateRegion: '', 
     weather: '',
     soil: '',
-    language: initialLang // 🌟 Language state
+    language: initialLang //  Language state
   });
 
   const [isCropDropdownOpen, setIsCropDropdownOpen] = useState(false);
@@ -362,7 +360,7 @@ export default function CropIntelligence() {
                 </div>
               </div>
 
-              {/* 🌟 NEW: Output Language Selection */}
+            
               <div>
                 <label className="text-sm font-semibold text-gray-700 mb-1.5 block">{t('language')}</label>
                 <div className="relative">
@@ -389,11 +387,11 @@ export default function CropIntelligence() {
             </form>
           </div>
 
-          {/* ================= RIGHT PANEL ================= */}
+        
           <div className="lg:col-span-8 h-full min-h-[600px]">
             <AnimatePresence mode="wait">
 
-              {/* 1. DATABASE DIRECTORY GRID */}
+            
               {!result && !isAnalyzing && !error && (
                 <motion.div key="db-grid" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col bg-white rounded-2xl p-6 shadow-sm border border-gray-200/60">
                   <div className="flex items-center justify-between mb-6">
@@ -464,7 +462,7 @@ export default function CropIntelligence() {
                 </motion.div>
               )}
 
-              {/* 2. LOADING STATE */}
+           
               {isAnalyzing && (
                 <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-[600px] flex flex-col justify-center items-center bg-gray-900 text-white rounded-2xl p-8 text-center relative overflow-hidden shadow-2xl">
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
@@ -478,7 +476,6 @@ export default function CropIntelligence() {
                 </motion.div>
               )}
 
-              {/* 3. ERROR STATE */}
               {error && (
                 <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-[600px] flex flex-col justify-center items-center bg-red-50 border border-red-100 rounded-2xl p-8 text-center">
                   <div className="bg-white p-4 rounded-full shadow-sm mb-4">
@@ -489,11 +486,11 @@ export default function CropIntelligence() {
                 </motion.div>
               )}
 
-              {/* 4. RESULT STATE */}
+        
               {result && (
                 <motion.div key="result" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
                   
-                  {/* Crop Stats Dashboard */}
+                  
                   <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200/60 relative overflow-hidden">
                     <div className="absolute top-0 right-0 bg-emerald-50 text-emerald-700 font-bold text-xs px-4 py-2 rounded-bl-xl flex items-center border-b border-l border-emerald-100">
                       <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" /> {t('dbMatch')}

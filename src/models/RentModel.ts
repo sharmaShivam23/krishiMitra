@@ -7,7 +7,7 @@ const ListingSchema = new mongoose.Schema({
     required: true 
   },
   
-  // CORE IDENTIFIER: 'rent' (equipment only) or 'service' (equipment + operator)
+
   listingType: { 
     type: String, 
     enum: ['rent', 'service'], 
@@ -16,7 +16,7 @@ const ListingSchema = new mongoose.Schema({
   
   title: { type: String, required: true, trim: true },
   description: { type: String, required: true },
-  category: { type: String, required: true }, // e.g., 'Tractor', 'Harvester', 'Sprayer'
+  category: { type: String, required: true },'
   
   // PRICING LOGIC
   pricing: {
