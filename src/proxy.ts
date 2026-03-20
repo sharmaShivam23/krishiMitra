@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
-const locales = ['en', 'hi', 'pa'];
+const locales = ['en', 'hi', 'pa', 'mr', 'bn', 'te', 'ta'];
 
 
 const intlMiddleware = createMiddleware({
@@ -30,15 +30,15 @@ export function proxy(request: NextRequest) {
   
   const pathWithoutLocale = pathname.replace(new RegExp(`^/(${locales.join('|')})`), '') || '/';
 
-  // 4. Extract Auth Tokens
+  
   const rawAuthToken = request.cookies.get('auth_token')?.value;
   const rawAdminToken = request.cookies.get('admin_token')?.value;
 
-  // STRICT CHECK: Ensure tokens exist and are not broken string values
+
   const hasFarmerAuth = !!rawAuthToken && rawAuthToken !== 'undefined' && rawAuthToken !== 'null';
   const hasAdminAuth = !!rawAdminToken && rawAdminToken !== 'undefined' && rawAdminToken !== 'null';
 
-  // 5. Define Route Categories
+
   const isAdminPath = pathWithoutLocale.startsWith('/admin');
   const isAdminLogin = pathWithoutLocale === '/admin/login';
   const isUserAuthPath = pathWithoutLocale === '/login' || pathWithoutLocale === '/register';
@@ -70,7 +70,7 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // 6. Final step: Let next-intl handle the response translation
+ 
   return intlMiddleware(request);
 }
 

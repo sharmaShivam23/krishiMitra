@@ -1,0 +1,198 @@
+{
+  "Navigation": {
+    "farmerLogin": "কৃষক লগইন",
+    "joinNetwork": "নেটওয়ার্কে যোগ দিন"
+  },
+  "Hero": {
+    "title1": "দেশের কৃষক",
+    "title2": "কা ডিজিটাল মিত্র",
+    "subtitle": "স্মার্ট ফার্মিং টুল, লাইভ মান্ডির দাম, এবং ভারতীয় কৃষকদের আরও বৃদ্ধি পেতে এবং আরও উপার্জন করতে সাহায্য করার জন্য তৈরি আবহাওয়ার আপডেট।",
+    "btnAdvisor": "স্মার্ট অ্যাডভাইজার শুরু করুন",
+    "btnProfile": "খামার প্রোফাইল সেট আপ করুন"
+  },
+  "Features": {
+    "heading": "একটি ভাল ফসলের জন্য সরঞ্জাম.",
+    "subheading": "অনুমান করা বন্ধ করুন। ভারতীয় কৃষির জন্য তৈরি আমাদের সহজে ব্যবহারযোগ্য কৃষি সরঞ্জাম ব্যবহার করে আত্মবিশ্বাসের সাথে বেড়ে উঠুন।",
+    "items": {
+      "cropIntel": {
+        "title": "Smart Crop Guide",
+        "desc": "Find out the best time to sow and harvest based on your local soil and weather."
+      },
+      "sellPredictor": {
+        "title": "Best Time to Sell",
+        "desc": "Find out the right time to sell your crops for the highest profit."
+      },
+      "diseaseVision": {
+        "title": "Crop Disease Scanner",
+        "desc": "Take a photo of a sick plant. Instantly find out the disease and how to treat it."
+      },
+      "microClimate": {
+        "title": "7-Day Local Weather",
+        "desc": "Get accurate 7-day weather forecasts for your exact farm location."
+      },
+      "mandiRates": {
+        "title": "Live Mandi Prices",
+        "desc": "Check daily, live APMC Mandi prices for your crops across India."
+      },
+      "community": {
+        "title": "Farmer Community",
+        "desc": "Connect with other farmers. Ask questions, share advice, and help each other."
+      },
+      "schemes": {
+        "title": "Govt. Schemes Locator",
+        "desc": "Easily find government subsidies and farming schemes you are eligible for."
+      },
+      "yieldAnalytics": {
+        "title": "Harvest Tracker",
+        "desc": "Keep a record of your past harvests to plan better for the next season."
+      }
+    }
+  },
+  "TrustSection": {
+    "heading1": "সঙ্গে আপনার খামার ক্ষমতায়ন",
+    "heading2": "প্রযুক্তি",
+    "heading3": "এবং সম্প্রদায়।",
+    "description": "লাইভ মান্ডির দাম এবং প্রতিদিনের এসএমএস সতর্কতা থেকে শুরু করে স্থানীয়ভাবে ট্রাক্টর ভাড়া করা পর্যন্ত, কৃষিমিত্র সরাসরি আপনার ফোনে কৃষি সরঞ্জাম রাখে।",
+    "list1": "স্থানীয় এসএমএস সতর্কতার সাথে লাইভ APMC মান্ডি দাম",
+    "list2": "স্থানীয় ট্রাক্টর, সরঞ্জাম, এবং কৃষি শ্রমিক ভাড়া করুন",
+    "list3": "স্মার্ট কৃষি উপদেষ্টা এবং যাচাইকৃত সরকারী প্রকল্প",
+    "stat1Label": "মান্ডি প্রাইসিং",
+    "stat1Value": "রিয়েল-টাইম",
+    "stat2Label": "প্ল্যাটফর্ম কভারেজ",
+    "stat2Value": "প্যান-ইন্ডিয়া"
+  },
+  "Footer": {
+    "smsHeading1": "এর মাধ্যমে দৈনিক মান্ডি রেট পান",
+    "smsHeading2": "এসএমএস।",
+    "smsDesc": "স্থানীয় বাজারের আপডেট পেতে সদস্যতা নিন। আপনার ফসলের জন্য সঠিক মূল্য মিস করবেন না.",
+    "smsPlaceholder": "10-সংখ্যার মোবাইল নম্বর লিখুন",
+    "smsButton": "আমাকে সতর্ক করুন",
+    "smsDisclaimer": "স্ট্যান্ডার্ড এসএমএস রেট প্রযোজ্য হতে পারে। যেকোনো সময় বাতিল করুন।",
+    "brandDesc": "স্মার্ট পরামর্শ, লাইভ বাজার মূল্য এবং সহজ চাষের সরঞ্জামগুলির মাধ্যমে ভারতীয় কৃষকদের আরও ভালভাবে বেড়ে উঠতে সাহায্য করা।",
+    "helpline": "24/7 কিষাণ হেল্পলাইন",
+    "platformHeading": "প্ল্যাটফর্ম",
+    "platformLinks": {
+      "intel": "স্মার্ট ক্রপ গাইড",
+      "mandi": "লাইভ মান্ডি রেট",
+      "disease": "রোগ স্ক্যানার",
+      "weather": "৭ দিনের আবহাওয়া",
+      "schemes": "সরকারি স্কিম ম্যাচ"
+    },
+    "resourcesHeading": "সম্পদ",
+    "resourcesLinks": {
+      "community": "কৃষক সম্প্রদায়",
+      "guides": "কৃষি নির্দেশিকা",
+      "market": "বাজার রিপোর্ট",
+      "success": "সাফল্যের গল্প",
+      "help": "কিষাণ সহায়তা কেন্দ্র"
+    },
+    "connectHeading": "সংযোগ করুন",
+    "emailTitle": "ইমেল সমর্থন",
+    "hqTitle": "সদর দপ্তর",
+    "hqAddress1": "এগ্রিটেক হাব, সেক্টর 4",
+    "hqAddress2": "নয়াদিল্লি, ভারত 110001",
+    "rights": "কৃষিমিত্র টেকনোলজিস। সর্বস্বত্ব সংরক্ষিত",
+    "privacy": "গোপনীয়তা নীতি",
+    "terms": "পরিষেবার শর্তাবলী",
+    "madeFor": "ভারত 🇮🇳 এর জন্য তৈরি"
+  },
+  "Dashboard": {
+    "nav": {
+      "overview": "ওভারভিউ",
+      "cropIntel": "ক্রপ গাইড",
+      "mandi": "মান্ডির দাম",
+      "disease": "রোগ স্ক্যানার",
+      "services": "ভাড়া",
+      "weather": "আবহাওয়া",
+      "community": "সম্প্রদায়",
+      "schemes": "স্কিম"
+    },
+    "actions": {
+      "signOut": "সাইন আউট",
+      "loggingOut": "সাইন আউট হচ্ছে..."
+    },
+    "brand": "কৃষি মিত্র"
+  },
+  "DashboardOverview": {
+    "welcome": "আবার স্বাগতম, {name}",
+    "defaultName": "কৃষক",
+    "systemStatus": "খামারের অবস্থা",
+    "online": "অনলাইন",
+    "runScan": "স্ক্যান ক্রপ",
+    "weather": {
+      "title": "লাইভ স্থানীয় আবহাওয়া",
+      "loading": "আবহাওয়া পরীক্ষা করা হচ্ছে...",
+      "conditions": {
+        "clear": "Clear Sky",
+        "cloudy": "Partly Cloudy",
+        "foggy": "Foggy",
+        "rain": "Rain",
+        "heavyRain": "Heavy Rain",
+        "thunder": "Thunderstorm"
+      }
+    },
+    "deployment": {
+      "title": "বর্তমান ফসল",
+      "subtitle": "আপনার চাষের অগ্রগতি",
+      "dayTracker": "{total}-এর {চলতি} দিন",
+      "cropName": "গম (HD 3086)",
+      "healthLabel": "ফসল স্বাস্থ্য",
+      "healthValue": "ভাল",
+      "harvestProgress": "ফসল কাটার জন্য {percent}%"
+    },
+    "mandi": {
+      "title": "স্থানীয় মান্ডির দাম",
+      "viewAll": "সব দেখুন",
+      "loading": "লাইভ মূল্য পাওয়া যাচ্ছে...",
+      "noData": "এই মুহূর্তে কোন লাইভ মার্কেট ডেটা উপলব্ধ।"
+    },
+    "aiAssistant": {
+      "title": "কৃষি উপদেষ্টা",
+      "monitoring": "আপনার ফসল নিরাপদ রাখতে আমরা আপনার স্থানীয় আবহাওয়ার উপর নজর রাখছি।",
+      "fungalWarningTitle": "রোগ সতর্কতা: উচ্চ আর্দ্রতা",
+      "fungalWarningDesc": "আর্দ্রতা বর্তমানে {আর্দ্রতা}। ইউরিয়া প্রয়োগ করার আগে অপেক্ষা করুন এবং নীচের পাতাগুলি কোন রোগের জন্য পরীক্ষা করুন।",
+      "optimalTitle": "ভালো আবহাওয়া",
+      "optimalDesc": "বর্তমান আবহাওয়া আপনার ফসলের জন্য নিরাপদ। আপনি স্বাভাবিক হিসাবে আপনার ক্ষেত জল দিতে পারেন.",
+      "button": "বুঝেছি"
+    }
+  },
+  "Register": {
+    "title": "কৃষিকাজের ভবিষ্যৎ যোগদান করুন।",
+    "switchText": "ইতিমধ্যে একজন সদস্য?",
+    "switchLink": "এখানে সাইন ইন করুন",
+    "fullName": "পুরো নাম",
+    "phone": "ফোন নম্বর",
+    "region": "কৃষি অঞ্চল",
+    "regionPlaceholder": "আপনার রাজ্য নির্বাচন করুন",
+    "password": "পাসওয়ার্ড",
+    "passwordPlaceholder": "একটি শক্তিশালী পাসওয়ার্ড তৈরি করুন",
+    "button": "অ্যাকাউন্ট তৈরি করুন",
+    "loading": "অ্যাকাউন্ট তৈরি করা হচ্ছে...",
+    "terms": "যোগদান করে, আপনি আমাদের পরিষেবার শর্তাবলী এবং গোপনীয়তা নীতিতে সম্মত হন।",
+    "featureTitle": "কৃষিকাজ সহজ এবং স্মার্ট করে তুলেছে।",
+    "feature1": "লাইভ মান্ডি বাজারের দাম",
+    "feature2": "ফসলের রোগ খুঁজে পেতে পাতা স্ক্যান করুন",
+    "feature3": "দৈনিক আবহাওয়া এবং ফসল কাটার সতর্কতা",
+    "trusted": "50,000+ কৃষকদের দ্বারা বিশ্বস্ত",
+    "getOtp": "OTP পান",
+    "enterOtp": "6-ডিজিটের কোড লিখুন",
+    "verifyBtn": "যাচাই করুন এবং নিবন্ধন করুন",
+    "otpSentTo": "এসএমএসের মাধ্যমে কোড পাঠানো হয়েছে",
+    "back": "ব্যাক"
+  },
+  "Login": {
+    "title": "Welcome back.",
+    "switchText": "New to KrishiMitra?",
+    "switchLink": "Create an account",
+    "phone": "Phone Number",
+    "password": "Password",
+    "forgot": "Forgot password?",
+    "placeholder": "Enter your password",
+    "button": "Sign In",
+    "loading": "Signing in...",
+    "success": "Account created successfully! Please sign in.",
+    "featureTitle": "Grow smarter, harvest better.",
+    "featureDesc": "Check your weather, keep your crops healthy, and get real-time market prices all in one place.",
+    "systemStatus": "SYSTEM ONLINE"
+  }
+}

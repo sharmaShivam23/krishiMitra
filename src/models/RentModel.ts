@@ -21,21 +21,19 @@ const ListingSchema = new mongoose.Schema({
   // PRICING LOGIC
   pricing: {
     rate: { type: Number, required: true },
-    // Rent units: 'per day', 'per hour' | Service units: 'per acre', 'per hectare', 'per ton'
     unit: { type: String, required: true } 
   },
 
-  // EQUIPMENT DETAILS (Used for both)
   equipment: {
-    name: { type: String, required: true }, // e.g., 'Mahindra 575 DI'
+    name: { type: String, required: true }, 
     condition: { type: String, enum: ['Excellent', 'Good', 'Fair'], default: 'Good' },
   },
 
-  // SERVICE SPECIFIC DETAILS (Only populated if listingType === 'service')
+  
   serviceDetails: {
-    operatorIncluded: { type: Boolean, default: false }, // Always true for 'service'
-    jobType: { type: String }, // e.g., 'Ploughing', 'Harvesting', 'Sowing'
-    estimatedCapacity: { type: String } // e.g., '10 acres per day'
+    operatorIncluded: { type: Boolean, default: false }, 
+    jobType: { type: String },
+    estimatedCapacity: { type: String } 
   },
 
   // LOCATION
@@ -45,12 +43,11 @@ const ListingSchema = new mongoose.Schema({
     village: { type: String },
   },
   
-  images: [{ type: String }], // Array of image URLs
+  images: [{ type: String }], 
   isActive: { type: Boolean, default: true },
   
 }, { timestamps: true });
 
-// Indexing for high-performance location and type-based searches
 ListingSchema.index({ 'location.state': 1, 'location.district': 1, listingType: 1 });
 ListingSchema.index({ title: 'text', description: 'text', category: 'text' });
 

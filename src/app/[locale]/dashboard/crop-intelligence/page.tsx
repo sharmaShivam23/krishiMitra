@@ -57,7 +57,7 @@ const LANGUAGES = [
   { code: 'Hindi', name: 'हिन्दी (Hindi)' },
   { code: 'Punjabi', name: 'ਪੰਜਾਬੀ (Punjabi)' },
   { code: 'Marathi', name: 'मराठी (Marathi)' },
-  { code: 'Gujarati', name: 'ગુજરાતી (Gujarati)' },
+  { code: 'Bengali', name: 'বাংলা (Bengali)' },
   { code: 'Telugu', name: 'తెలుగు (Telugu)' },
   { code: 'Tamil', name: 'தமிழ் (Tamil)' },
 ];

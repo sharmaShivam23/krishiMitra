@@ -38,17 +38,22 @@ export default function RegisterPage() {
     setError('');
 
     try {
+      // console.log(formData.phone);
       const res = await fetch('/api/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: formData.phone }),
       });
+      // console.log(res);
+      
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
 
       setStep(2);
     } catch (err: any) {
+      // console.log(err);
+      
       setError(err.message);
     } finally {
       setLoading(false);

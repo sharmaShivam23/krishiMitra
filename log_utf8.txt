@@ -1,0 +1,14 @@
+﻿
+=== Starting translation for hi ===
+Finished translating hi.json
+
+=== Starting translation for pa ===
+Finished translating pa.json
+
+=== Starting translation for mr ===
+Finished translating mr.json
+
+=== Starting translation for bn ===
+Translating section: DashboardOverview
+Translating section: Register
+Translating section: Login

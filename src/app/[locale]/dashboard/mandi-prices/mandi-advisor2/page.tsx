@@ -11,7 +11,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
 
-// --- Comprehensive ML Response Type ---
+
 interface PredictionResponse {
   commodity: string;
   current_rate: number;

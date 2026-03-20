@@ -36,11 +36,11 @@ export default function KrishiVani() {
       
       // Simple routing logic based on Hindi/English keywords
       setTimeout(() => {
-        if (speechToText.includes('tractor') || speechToText.includes('machine') || speechToText.includes('ट्रैक्टर')) {
+        if (speechToText.includes('tractor') || speechToText.includes('machine') || speechToText.includes('ट्रैक्टर') || speechToText.includes('ट्रॅक्टर') || speechToText.includes('ট্র্যাক্টর') || speechToText.includes('ట్రాక్టర్') || speechToText.includes('டிராக்டர்')) {
           router.push('/dashboard/Services?category=Tractor');
-        } else if (speechToText.includes('mandi') || speechToText.includes('price') || speechToText.includes('भाव')) {
+        } else if (speechToText.includes('mandi') || speechToText.includes('price') || speechToText.includes('भाव') || speechToText.includes('मंडी') || speechToText.includes('মান্ডি') || speechToText.includes('మండి') || speechToText.includes('மண்டி')) {
           router.push('/dashboard/mandi-prices');
-        } else if (speechToText.includes('yojana') || speechToText.includes('scheme') || speechToText.includes('योजना')) {
+        } else if (speechToText.includes('yojana') || speechToText.includes('scheme') || speechToText.includes('योजना') || speechToText.includes('স্কিম') || speechToText.includes('పధకం') || speechToText.includes('திட்டம்')) {
           router.push('/dashboard/schemes');
         } else {
           setTranscript('क्षमा करें, समझ नहीं आया। (Sorry, didn\'t catch that)');

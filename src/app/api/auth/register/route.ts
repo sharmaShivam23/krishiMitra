@@ -54,6 +54,7 @@ export async function POST(req: Request) {
       role: newUser.role,
     };
 
+    
     return NextResponse.json({ 
       message: 'User verified and registered successfully', 
       user: userResponse, 

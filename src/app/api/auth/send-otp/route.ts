@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     await Otp.findOneAndUpdate(
       { phone },
       { otp: generatedOtp, createdAt: Date.now() },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after' }
     );
 
     // 5. Send SMS via Twilio
@@ -55,6 +55,11 @@ export async function POST(req: Request) {
       from: process.env.TWILIO_PHONE_NUMBER,
       to: `+91${phone}`
     });
+
+    console.log(`\n🚜 --- KRISHIMITRA DEV MODE ---`);
+    console.log(`📲 Phone: +91${phone}`);
+    console.log(`🔑 OTP Code: ${generatedOtp}`);
+    console.log(`-------------------------------\n`);
 
     return NextResponse.json({ message: 'OTP sent successfully' }, { status: 200 });
 

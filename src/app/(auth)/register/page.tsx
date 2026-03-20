@@ -26,7 +26,7 @@ export default function RegisterPage() {
     if (error) setError('');
   };
 
-  // API Fetching kept exactly the same
+  
   const handleSubmit = async (e : any) => {
     e.preventDefault();
     setLoading(true);

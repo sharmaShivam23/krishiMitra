@@ -2,7 +2,11 @@ import {notFound} from 'next/navigation';
 import {getRequestConfig} from 'next-intl/server';
  
 // Can be imported from a shared config
-const locales = ['en', 'hi', 'pa']; // English, Hindi, Punjabi
+const locales = [
+  'en', 'hi', 'pa', 'mr', 'bn', 'te', 'ta',
+  'as', 'gu', 'kn', 'ml', 'or', 'ur', 'sa', 'sd',
+  'ne', 'mai', 'doi', 'gom', 'sat', 'ks', 'mni'
+]; // English + 21 Indian languages
  
 export default getRequestConfig(async ({requestLocale}) => {
   // 1. Await the requestLocale promise

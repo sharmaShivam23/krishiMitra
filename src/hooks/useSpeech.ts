@@ -33,6 +33,10 @@ export const useSpeech = () => {
     // The Magic Hierarchy: Look for Hindi -> then Indian English -> then any Google Voice -> then Default
     const bestVoice = 
       currentVoices.find(v => v.lang === 'hi-IN' || v.lang === 'hi') || 
+      currentVoices.find(v => v.lang === 'mr-IN' || v.lang === 'mr') || 
+      currentVoices.find(v => v.lang === 'bn-IN' || v.lang === 'bn') || 
+      currentVoices.find(v => v.lang === 'te-IN' || v.lang === 'te') || 
+      currentVoices.find(v => v.lang === 'ta-IN' || v.lang === 'ta') || 
       currentVoices.find(v => v.lang === 'en-IN') || 
       currentVoices.find(v => v.name.includes('Google हिन्दी')) ||
       currentVoices[0];

@@ -43,6 +43,25 @@ export default function LanguageSwitcher() {
         <option value="en">English</option>
         <option value="hi">हिंदी (Hindi)</option>
         <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+        <option value="mr">मराठी (Marathi)</option>
+        <option value="bn">বাংলা (Bengali)</option>
+        <option value="te">తెలుగు (Telugu)</option>
+        <option value="ta">தமிழ் (Tamil)</option>
+        <option value="as">অসমীয়া (Assamese)</option>
+        <option value="gu">ગુજરાતી (Gujarati)</option>
+        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+        <option value="ml">മലയാളം (Malayalam)</option>
+        <option value="or">ଓଡ଼ିଆ (Odia)</option>
+        <option value="ur">اردو (Urdu)</option>
+        <option value="sa">संस्कृत (Sanskrit)</option>
+        <option value="sd">सिन्धी (Sindhi)</option>
+        <option value="ne">नेपाली (Nepali)</option>
+        <option value="mai">मैथिली (Maithili)</option>
+        <option value="doi">डोगरी (Dogri)</option>
+        <option value="gom">कोंकणी (Konkani)</option>
+        <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santali)</option>
+        <option value="ks">کٲشُر (Kashmiri)</option>
+        <option value="mni">মৈতৈলোন্ (Manipuri)</option>
       </select>
       
     </div>
