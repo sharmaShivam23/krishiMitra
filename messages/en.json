@@ -105,7 +105,9 @@
       "services": "Rentals",
       "weather": "Weather",
       "community": "Community",
-      "schemes": "Schemes"
+      "schemes": "Schemes",
+      "products": "Products",
+      "providerPanel": "Provider Panel"
     },
     "actions": {
       "signOut": "Sign Out",

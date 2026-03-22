@@ -10,6 +10,7 @@ import {
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import ListingContactFooter from '@/components/ListingContactFooter';
+import { STATES_DISTRICTS } from '@/utils/indiaStates';
 
 interface Provider {
   _id: string;
@@ -46,7 +47,25 @@ export default function EquipmentExchange() {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Equipment');
+  const [stateFilter, setStateFilter] = useState('');
   const [districtFilter, setDistrictFilter] = useState('');
+
+  useEffect(() => {
+    const savedState = localStorage.getItem('userState');
+    const savedDistrict = localStorage.getItem('userDistrict');
+    if (savedState) setStateFilter(savedState);
+    if (savedDistrict) setDistrictFilter(savedDistrict);
+
+    const handleLocationUpdated = () => {
+      const newState = localStorage.getItem('userState');
+      const newDistrict = localStorage.getItem('userDistrict');
+      if (newState) setStateFilter(newState);
+      if (newDistrict) setDistrictFilter(newDistrict);
+    };
+
+    window.addEventListener('locationUpdated', handleLocationUpdated);
+    return () => window.removeEventListener('locationUpdated', handleLocationUpdated);
+  }, []);
 
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedSearch(searchQuery), 500);
@@ -62,6 +81,7 @@ export default function EquipmentExchange() {
         const params = new URLSearchParams({ type: activeTab });
         if (debouncedSearch) params.append('search', debouncedSearch);
         if (selectedCategory !== 'All Equipment') params.append('category', selectedCategory);
+        if (stateFilter) params.append('state', stateFilter);
         if (districtFilter) params.append('district', districtFilter);
 
         const res = await fetch(`/api/listing?${params.toString()}`);
@@ -87,7 +107,7 @@ export default function EquipmentExchange() {
     };
 
     fetchListings();
-  }, [activeTab, debouncedSearch, selectedCategory, districtFilter]);
+  }, [activeTab, debouncedSearch, selectedCategory, stateFilter, districtFilter]);
 
   return (
     <div className="min-h-screen bg-gray-50/50 pb-20 font-sans selection:bg-emerald-400 selection:text-emerald-950">
@@ -119,8 +139,8 @@ export default function EquipmentExchange() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
-        <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 p-2 flex flex-col sm:flex-row items-center justify-between mb-8 border border-gray-100">
-          <div className="flex w-full sm:w-auto bg-gray-100 p-1.5 rounded-xl">
+        <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 p-4 sm:p-5 flex flex-col mb-8 border border-gray-100 gap-4">
+          <div className="flex w-full sm:w-max bg-gray-100 p-1.5 rounded-xl self-start">
             <button
               onClick={() => setActiveTab('rent')}
               className={`flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg font-bold text-sm transition-all ${
@@ -143,22 +163,45 @@ export default function EquipmentExchange() {
             </button>
           </div>
 
-          <div className="w-full sm:w-auto mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3 pr-2">
-             <div className="relative">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+             <div className="relative w-full">
                 <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
                 <input 
                   type="text" placeholder={t('searchPlaceholder')} 
                   value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full sm:w-64 pl-9 pr-4 py-2.5 bg-gray-50 border text-black border-gray-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                  className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border text-black border-gray-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                 />
              </div>
-             <div className="relative">
+             <div className="relative w-full">
                 <Filter className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
                 <select 
                   value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full sm:w-48 pl-9 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 focus:ring-2 focus:ring-emerald-500/20 outline-none appearance-none cursor-pointer"
+                  className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 focus:ring-2 focus:ring-emerald-500/20 outline-none appearance-none cursor-pointer transition-all"
                 >
                   {CATEGORIES.map(c => <option key={c} value={c}>{t(`categories.${c}`)}</option>)}
+                </select>
+             </div>
+             <div className="relative w-full">
+                <MapPin className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                <select 
+                  value={stateFilter} 
+                  onChange={(e) => { setStateFilter(e.target.value); setDistrictFilter(''); }}
+                  className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 focus:ring-2 focus:ring-emerald-500/20 outline-none appearance-none cursor-pointer text-ellipsis transition-all"
+                >
+                  <option value="">All States</option>
+                  {Object.keys(STATES_DISTRICTS).map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+             </div>
+             <div className="relative w-full">
+                <MapPin className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                <select 
+                  value={districtFilter} 
+                  onChange={(e) => setDistrictFilter(e.target.value)}
+                  disabled={!stateFilter}
+                  className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 focus:ring-2 focus:ring-emerald-500/20 outline-none appearance-none cursor-pointer disabled:opacity-50 text-ellipsis transition-all"
+                >
+                  <option value="">All Districts</option>
+                  {stateFilter && (STATES_DISTRICTS as any)[stateFilter]?.map((d: string) => <option key={d} value={d}>{d}</option>)}
                 </select>
              </div>
           </div>

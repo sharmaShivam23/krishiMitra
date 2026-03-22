@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogOut, Loader2 } from 'lucide-react';
+import { LogOut, Loader2, Store } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
-import { getNavLinks } from '@/app/Data/NavLinks'; // Adjust path as needed
+import { getNavLinks } from '@/app/Data/NavLinks'; 
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useAutoLocation } from '@/hooks/useAutoLocation';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,8 +16,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const locale = useLocale();
   const t = useTranslations('Dashboard');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-  const navLinks = getNavLinks(t);
+  useAutoLocation();
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.user) {
+          setUserRole(data.user.role);
+        }
+      })
+      .catch(err => console.error("Failed to fetch user role", err));
+  }, []);
+
+  let navLinks = getNavLinks(t);
+  
+  if (userRole === 'provider') {
+    navLinks.push({
+      id: 'provider-panel',
+      // ✅ FIX: Added translation support here!
+      name: t('nav.providerPanel') || 'Provider Panel', 
+      href: '/dashboard/provider-panel',
+      icon: <Store className="w-5 h-5" />
+    });
+  }
 
   const handleLogout = async () => {
     setIsLoggingOut(true);

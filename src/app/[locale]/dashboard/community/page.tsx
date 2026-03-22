@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { STATES_DISTRICTS } from '@/utils/indiaStates';
 
 interface Reply {
   _id: string;
@@ -21,6 +22,7 @@ interface Post {
   _id: string;
   author: string;
   state: string;
+  district: string; // <-- New Field
   title: string;
   content: string;
   upvotes: number;
@@ -35,6 +37,8 @@ export default function CommunityForum() {
   const t = useTranslations('CommunityForum');
   const [posts, setPosts] = useState<Post[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStateFilter, setSelectedStateFilter] = useState('All');
+  const [selectedDistrictFilter, setSelectedDistrictFilter] = useState('All'); // <-- New Filter State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,6 +51,7 @@ export default function CommunityForum() {
   const [newTitle, setNewTitle] = useState('');
   const [newContent, setNewContent] = useState('');
   const [newState, setNewState] = useState('');
+  const [newDistrict, setNewDistrict] = useState(''); // <-- New District Input State
   const [newTags, setNewTags] = useState('');
 
   const [playingId, setPlayingId] = useState<string | null>(null);
@@ -109,7 +114,7 @@ export default function CommunityForum() {
 
   const handleSubmitPost = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTitle.trim() || !newContent.trim() || !newState) return;
+    if (!newTitle.trim() || !newContent.trim() || !newState || !newDistrict.trim()) return;
     setIsSubmitting(true);
     
     const tagsArray = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
@@ -118,13 +123,14 @@ export default function CommunityForum() {
       const res = await fetch('/api/community', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: newTitle, content: newContent, state: newState, tags: tagsArray })
+        // Sending District to Backend
+        body: JSON.stringify({ title: newTitle, content: newContent, state: newState, district: newDistrict, tags: tagsArray })
       });
       const data = await res.json();
       if (data.success) {
         setPosts([data.post, ...posts]);
         setIsModalOpen(false);
-        setNewTitle(''); setNewContent(''); setNewState(''); setNewTags('');
+        setNewTitle(''); setNewContent(''); setNewState(''); setNewDistrict(''); setNewTags('');
       }
     } catch (error) {
       console.error(error);
@@ -180,11 +186,24 @@ export default function CommunityForum() {
     }
   };
 
-  const filteredPosts = posts.filter(post => 
-    post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  // Get Unique Districts for the Filter Dropdown
+  const uniqueDistricts = useMemo(() => {
+    const districts = posts.map(p => p.district).filter(Boolean);
+    return ['All', ...Array.from(new Set(districts))].sort();
+  }, [posts]);
+
+  // Combined Filter Logic (Search + State + District)
+  const filteredPosts = posts.filter(post => {
+    const matchesSearch = 
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    const matchesState = selectedStateFilter === 'All' || post.state === selectedStateFilter;
+    const matchesDistrict = selectedDistrictFilter === 'All' || post.district === selectedDistrictFilter;
+
+    return matchesSearch && matchesState && matchesDistrict;
+  });
 
   const trendingTags = useMemo(() => {
     const tagCounts: Record<string, number> = {};
@@ -233,9 +252,50 @@ export default function CommunityForum() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 text-black space-y-6">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="h-5 w-5 text-black" /></div>
-            <input type="text" placeholder={t('searchPlaceholder')} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="block w-full pl-11 pr-4 py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-medium transition-all outline-none" />
+          
+          {/* SEARCH, STATE AND DISTRICT FILTER BAR */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-[2]">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input 
+                type="text" 
+                placeholder={t('searchPlaceholder')} 
+                value={searchQuery} 
+                onChange={(e) => setSearchQuery(e.target.value)} 
+                className="block w-full pl-11 pr-4 py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-medium transition-all outline-none" 
+              />
+            </div>
+            
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <MapPin className="h-5 w-5 text-agri-500" />
+              </div>
+              <select
+                value={selectedStateFilter}
+                onChange={(e) => { setSelectedStateFilter(e.target.value); setSelectedDistrictFilter('All'); }}
+                className="block w-full pl-11 pr-10 py-4 bg-white text-agri-900 border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-bold transition-all outline-none appearance-none cursor-pointer text-ellipsis"
+              >
+                <option value="All">All States</option>
+                {Object.keys(STATES_DISTRICTS).map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <MapPin className="h-5 w-5 text-agri-500" />
+              </div>
+              <select
+                value={selectedDistrictFilter}
+                onChange={(e) => setSelectedDistrictFilter(e.target.value)}
+                disabled={selectedStateFilter === 'All'}
+                className="block w-full pl-11 pr-10 py-4 bg-white text-agri-900 border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-bold transition-all outline-none appearance-none cursor-pointer disabled:opacity-50 text-ellipsis"
+              >
+                <option value="All">All Districts</option>
+                {selectedStateFilter !== 'All' && (STATES_DISTRICTS as any)[selectedStateFilter]?.map((d: string) => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -262,7 +322,11 @@ export default function CommunityForum() {
                           <div className="flex flex-wrap items-center gap-2 mb-2 text-xs font-bold text-gray-500">
                             <span className="flex items-center text-agri-900"><div className="w-5 h-5 rounded-full bg-agri-200 mr-1.5 flex items-center justify-center text-[10px] text-agri-800 uppercase">{post.author.charAt(0)}</div>{post.author}</span>
                             <span>•</span>
-                            <span className="flex items-center"><MapPin className="w-3.5 h-3.5 mr-0.5 text-agri-400" /> {post.state}</span>
+                            <span className="flex items-center">
+                              <MapPin className="w-3.5 h-3.5 mr-0.5 text-agri-400" /> 
+                              {/* Display District along with State */}
+                              {post.district ? `${post.district}, ${post.state}` : post.state}
+                            </span>
                             <span>•</span>
                             <span className="flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5" /> {new Date(post.createdAt).toLocaleDateString()}</span>
                           </div>
@@ -296,10 +360,10 @@ export default function CommunityForum() {
                         </div>
                       </div>
 
+                      {/* Replies Section */}
                       <AnimatePresence>
                         {expandedPostId === post._id && (
                           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden mt-4 pt-4 border-t text-black border-gray-100">
-                            
                             <div className="pl-12 pr-4 space-y-4 mb-4">
                               {loadingReplies[post._id] ? (
                                 <Loader2 className="w-5 h-5 animate-spin text-gray-400 mx-auto my-4" />
@@ -349,6 +413,7 @@ export default function CommunityForum() {
           </div>
         </div>
 
+        {/* Right Sidebar */}
         <div className="space-y-6">
           <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl shadow-orange-500/20 relative overflow-hidden">
             <div className="absolute -right-6 -top-6 text-white/10 pointer-events-none">
@@ -437,6 +502,7 @@ export default function CommunityForum() {
         </div>
       </div>
 
+      {/* New Post Modal */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
@@ -452,24 +518,30 @@ export default function CommunityForum() {
                     <label className="block text-sm font-bold text-agri-900 mb-1.5">{t('qTitle')}</label>
                     <input type="text" required placeholder={t('qPlaceholder')} value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full px-4 py-3 bg-gray-50 text-black border border-gray-200 rounded-xl focus:ring-2 focus:ring-agri-400 font-medium outline-none" />
                   </div>
+                  
+                  {/* Updated Form Grid with District */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-sm font-bold text-agri-900 mb-1.5">{t('state')}</label>
-                      <select required value={newState} onChange={(e) => setNewState(e.target.value)} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-agri-400 text-black font-medium outline-none cursor-pointer">
+                      <select required value={newState} onChange={(e) => { setNewState(e.target.value); setNewDistrict(''); }} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-agri-400 text-black font-medium outline-none cursor-pointer">
                         <option value="" disabled>{t('selectState')}</option>
-                        <option value="Uttar Pradesh">Uttar Pradesh</option>
-                        <option value="Punjab">Punjab</option>
-                        <option value="Haryana">Haryana</option>
-                        <option value="Maharashtra">Maharashtra</option>
-                        <option value="Madhya Pradesh">Madhya Pradesh</option>
-                        <option value="Gujarat">Gujarat</option>
+                        {Object.keys(STATES_DISTRICTS).map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-agri-900 mb-1.5">{t('tags')}</label>
-                      <input type="text" placeholder={t('tagsPlaceholder')} value={newTags} onChange={(e) => setNewTags(e.target.value)} className="w-full px-4 py-3 bg-gray-50 text-black border border-gray-200 rounded-xl focus:ring-2 focus:ring-agri-400 font-medium outline-none" />
+                      <label className="block text-sm font-bold text-agri-900 mb-1.5">District</label>
+                      <select required value={newDistrict} disabled={!newState} onChange={(e) => setNewDistrict(e.target.value)} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-agri-400 text-black font-medium outline-none cursor-pointer disabled:opacity-50">
+                        <option value="" disabled>Select District</option>
+                        {newState && (STATES_DISTRICTS as any)[newState]?.map((d: string) => <option key={d} value={d}>{d}</option>)}
+                      </select>
                     </div>
                   </div>
+                  
+                  <div>
+                    <label className="block text-sm font-bold text-agri-900 mb-1.5">{t('tags')}</label>
+                    <input type="text" placeholder={t('tagsPlaceholder')} value={newTags} onChange={(e) => setNewTags(e.target.value)} className="w-full px-4 py-3 bg-gray-50 text-black border border-gray-200 rounded-xl focus:ring-2 focus:ring-agri-400 font-medium outline-none" />
+                  </div>
+
                   <div>
                     <label className="block text-sm font-bold text-agri-900 mb-1.5">{t('desc')}</label>
                     <textarea required rows={5} placeholder={t('descPlaceholder')} value={newContent} onChange={(e) => setNewContent(e.target.value)} className="w-full px-4 py-3 bg-gray-50 text-black border border-gray-200 rounded-xl focus:ring-2 focus:ring-agri-400 font-medium outline-none resize-none"></textarea>

@@ -105,7 +105,8 @@
       "services": "किराया",
       "weather": "मौसम",
       "community": "समुदाय",
-      "schemes": "योजनाएं"
+      "schemes": "योजनाएं",
+       "products": "उत्पाद"
     },
     "actions": {
       "signOut": "लॉग आउट करें",

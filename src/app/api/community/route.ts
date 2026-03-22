@@ -20,6 +20,7 @@ export async function GET() {
       _id: post._id.toString(),
       author: post.author?.name || 'Anonymous Farmer', // Safely extract the populated name
       state: post.state,
+      district: post.district,
       title: post.title,
       content: post.content,
       upvotes: post.upvotes,
@@ -50,7 +51,7 @@ export async function POST(req: Request) {
     const userId = (decoded as any).userId || (decoded as any).id;
 
     const body = await req.json();
-    const { title, content, state, tags } = body;
+    const { title, content, state, district, tags } = body;
 
     await connectDB();
 
@@ -58,6 +59,7 @@ export async function POST(req: Request) {
     const newPost = await Post.create({
       author: userId, 
       state,
+      district,
       title,
       content,
       tags: tags || ['General']
@@ -70,6 +72,7 @@ export async function POST(req: Request) {
       _id: populatedPost._id.toString(),
       author: populatedPost.author.name,
       state: populatedPost.state,
+      district: populatedPost.district,
       title: populatedPost.title,
       content: populatedPost.content,
       upvotes: populatedPost.upvotes,

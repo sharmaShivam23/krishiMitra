@@ -17,10 +17,11 @@ import {
   AlertCircle
 } from 'lucide-react';
 import Logo from './Logo';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function Footer() {
   const t = useTranslations('Footer');
+  const locale = useLocale();
 
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,6 +48,13 @@ export default function Footer() {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
+        if (data.notRegistered) {
+          setStatus({ type: 'error', message: 'Sign in to subscribe. Redirecting to login...' });
+          setTimeout(() => {
+            window.location.href = `/${locale}/login`;
+          }, 2000);
+          return;
+        }
         throw new Error(data.message || `${mode === 'subscribe' ? 'Subscription' : 'Unsubscription'} failed.`);
       }
 

@@ -1,30 +1,21 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-// 🛠️ Updated to import from your unified models file
 import { SellingPool } from '@/models';
-
-const MONGODB_URI = process.env.MONGODB_URI || '';
-
-const connectDB = async () => {
-  if (mongoose.connection.readyState >= 1) return;
-  await mongoose.connect(MONGODB_URI);
-};
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    await connectDB();
-    const body = await req.json();
-    const { farmerName, phone, quantity } = body;
     const { id } = await params;
+    const body = await req.json();
+    const { farmerName, phone, quantity, district, state } = body;
 
     const pool = await SellingPool.findById(id);
     if (!pool) return NextResponse.json({ success: false, error: 'Pool not found' }, { status: 404 });
 
-    pool.members.push({ farmerName, phone, quantity });
+    pool.members.push({ farmerName, phone, quantity, district, state });
     pool.currentQuantity += Number(quantity);
     
     if (pool.currentQuantity >= pool.targetQuantity) {
-        pool.status = 'Closed';
+        pool.status = 'Closed'; // 100% हो गया!
     }
 
     await pool.save();

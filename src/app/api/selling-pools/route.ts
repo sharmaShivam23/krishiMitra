@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-// 🛠️ Updated to import from your unified models file
-import { SellingPool } from '@/models';
+import { SellingPool } from '@/models'; 
 
 const MONGODB_URI = process.env.MONGODB_URI || '';
 
@@ -13,7 +12,7 @@ const connectDB = async () => {
 export async function GET() {
   try {
     await connectDB();
-    const pools = await SellingPool.find({ status: 'Open' }).sort({ createdAt: -1 });
+    const pools = await SellingPool.find().sort({ createdAt: -1 });
     return NextResponse.json({ success: true, pools }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch pools' }, { status: 500 });
@@ -31,8 +30,11 @@ export async function POST(req: Request) {
       members: [{
         farmerName: body.creatorName,
         phone: body.creatorPhone,
-        quantity: body.initialQuantity
-      }]
+        quantity: body.initialQuantity,
+        district: body.district, // <-- District added
+        state: body.state        // <-- State added
+      }],
+      transports: []
     });
 
     await newPool.save();

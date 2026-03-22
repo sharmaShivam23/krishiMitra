@@ -39,9 +39,11 @@ export async function POST(req: Request) {
       path: '/',
     });
 
+    // 5. 🔥 FIX: Return the token in the JSON body so frontend localStorage can grab it!
     return NextResponse.json({ 
       message: 'Login successful',
-      user: { id: user._id, name: user.name, role: user.role }
+      user: { id: user._id, name: user.name, role: user.role },
+      token: token 
     }, { status: 200 });
 
   } catch (error: any) {

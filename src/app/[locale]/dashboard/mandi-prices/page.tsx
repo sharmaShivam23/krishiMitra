@@ -66,42 +66,23 @@ export default function MandiPrices() {
   const [debouncedDistrict, setDebouncedDistrict] = useState('');
 
   /* ======================================================
-     AUTO-GEOLOCATION EFFECT
+     GLOBAL AUTO-GEOLOCATION SYNC
   ====================================================== */
   useEffect(() => {
-    const fetchLocation = async (lat: number, lon: number) => {
-      try {
-        const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
-        const geoData = await geoRes.json();
-        
-        if (geoData.principalSubdivision) {
-          const foundState = INDIAN_STATES.find(s => s.toLowerCase() === geoData.principalSubdivision.toLowerCase());
-          if (foundState) setSelectedState(foundState);
-        }
-        
-        if (geoData.city || geoData.locality) {
-          let districtClean = (geoData.city || geoData.locality).replace(' District', '');
-          setDistrictQuery(districtClean);
-        }
-      } catch (err) {
-        console.warn("Location fetch failed, defaulting to All States");
-      } finally {
-        setIsLocating(false);
-      }
+    const savedState = localStorage.getItem('userState');
+    
+    if (savedState) setSelectedState(savedState);
+    
+    setIsLocating(false);
+
+    const handleLocationUpdated = () => {
+      const newState = localStorage.getItem('userState');
+      if (newState) setSelectedState(newState);
+      setIsLocating(false);
     };
 
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => fetchLocation(position.coords.latitude, position.coords.longitude),
-        () => {
-          console.warn("User denied geolocation");
-          setIsLocating(false);
-        },
-        { timeout: 5000 }
-      );
-    } else {
-      setIsLocating(false);
-    }
+    window.addEventListener('locationUpdated', handleLocationUpdated);
+    return () => window.removeEventListener('locationUpdated', handleLocationUpdated);
   }, []);
 
   /* ======================================================

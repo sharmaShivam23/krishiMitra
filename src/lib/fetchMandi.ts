@@ -1,5 +1,4 @@
-const BASE_URL =
-  "https://api.data.gov.in/resource/35985678-0d79-46b4-9ed6-6f13308a1d24";
+const BASE_URL = process.env.DATA_GOV_BASE_URL
 
 export async function fetchMandiPrices({
   commodity,

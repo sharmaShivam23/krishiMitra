@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
+import { STATES_DISTRICTS } from '@/utils/indiaStates';
 
 export default function RegisterPage() {
   const t = useTranslations('Register');
@@ -23,6 +24,9 @@ export default function RegisterPage() {
     phone: '',
     password: '',
     state: '',
+    district: '',
+    preferredLanguage: locale || 'hi',
+    role: 'farmer',
   });
   
   const [otp, setOtp] = useState('');
@@ -74,7 +78,7 @@ export default function RegisterPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, preferredLanguage: locale, otp }),
+        body: JSON.stringify({ ...formData, otp }),
       });
 
       const data = await res.json();
@@ -143,15 +147,61 @@ export default function RegisterPage() {
                   </div>
                 </motion.div>
 
-                <motion.div variants={itemVariant}>
-                  <label className="block text-sm font-bold text-black mb-1.5">{t('region')}</label>
-                  <div className="relative group">
-                    <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-black group-focus-within:text-emerald-500" />
-                    <select name="state" required value={formData.state} onChange={handleChange} className="block w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer">
-                      <option value="" disabled>{t('regionPlaceholder')}</option>
-                      {['Punjab', 'Haryana', 'Uttar Pradesh', 'Rajasthan', 'Gujarat', 'Maharashtra', 'Madhya Pradesh'].map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                    <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                <motion.div variants={itemVariant} className="flex flex-col sm:flex-row gap-5">
+                  <div className="flex-1">
+                    <label className="block text-sm font-bold text-black mb-1.5">{t('region')}</label>
+                    <div className="relative group">
+                      <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-black group-focus-within:text-emerald-500" />
+                      <select name="state" required value={formData.state} onChange={(e) => {
+                        setFormData(prev => ({ ...prev, state: e.target.value, district: '' }));
+                        if (error) setError('');
+                      }} className="block w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer">
+                        <option value="" disabled>{t('regionPlaceholder')}</option>
+                        {Object.keys(STATES_DISTRICTS).map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  <div className="flex-1">
+                    <label className="block text-sm font-bold text-black mb-1.5">District</label>
+                    <div className="relative group">
+                      <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-black group-focus-within:text-emerald-500" />
+                      <select name="district" required disabled={!formData.state} value={formData.district} onChange={handleChange} className="block w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer disabled:opacity-50 disabled:bg-gray-100">
+                        <option value="" disabled>Select District</option>
+                        {formData.state && STATES_DISTRICTS[formData.state]?.map((d: string) => <option key={d} value={d}>{d}</option>)}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div variants={itemVariant} className="flex flex-col sm:flex-row gap-5">
+                  <div className="flex-1">
+                    <label className="block text-sm font-bold text-black mb-1.5">Role</label>
+                    <div className="relative group">
+                      <select name="role" required value={formData.role} onChange={handleChange} className="block w-full pl-4 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer">
+                        <option value="farmer">Farmer</option>
+                        <option value="provider">Provider (Seller)</option>
+                      </select>
+                      <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  <div className="flex-1">
+                    <label className="block text-sm font-bold text-black mb-1.5">Preferred Language</label>
+                    <div className="relative group">
+                      <select name="preferredLanguage" required value={formData.preferredLanguage} onChange={handleChange} className="block w-full pl-4 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer">
+                        <option value="en">English (English)</option>
+                        <option value="hi">Hindi (हिंदी)</option>
+                        <option value="mr">Marathi (मराठी)</option>
+                        <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+                        <option value="bn">Bengali (বাংলা)</option>
+                        <option value="te">Telugu (తెలుగు)</option>
+                        <option value="ta">Tamil (தமிழ்)</option>
+                      </select>
+                      <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                    </div>
                   </div>
                 </motion.div>
 
