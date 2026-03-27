@@ -4,7 +4,7 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ChevronRight, Leaf } from 'lucide-react';
 import ThreeBackground from './ThreeBackground';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function Hero() {
   const containerVariants = {
@@ -14,6 +14,7 @@ export default function Hero() {
 
   
   const t = useTranslations('Hero');
+  const locale = useLocale();
 
   const itemVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
@@ -48,12 +49,12 @@ export default function Hero() {
           </motion.p>
           
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center gap-4">
-            <a href="/dashboard/mandi-prices/mandi-advisor" className="flex items-center justify-center px-8 py-4 bg-amber-400 text-stone-950 rounded-2xl font-black text-lg hover:bg-amber-300 transition-all shadow-[0_0_40px_-10px_rgba(251,191,36,0.6)] group">
+            <a href={`/${locale}/dashboard/mandi-prices/mandi-advisor`} className="flex items-center justify-center px-8 py-4 bg-amber-400 text-stone-950 rounded-2xl font-black text-lg hover:bg-amber-300 transition-all shadow-[0_0_40px_-10px_rgba(251,191,36,0.6)] group">
               {/* 🛠️ FIX: Replaced button text */}
               {t('btnAdvisor')}
               <ChevronRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </a>
-            <a href="/register" className="flex items-center justify-center px-8 py-4 bg-white/5 border border-white/10 text-white backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/10 transition-all group">
+            <a href={`/${locale}/register`} className="flex items-center justify-center px-8 py-4 bg-white/5 border border-white/10 text-white backdrop-blur-sm rounded-2xl font-bold text-lg hover:bg-white/10 transition-all group">
               <Leaf className="w-5 h-5 mr-2 text-emerald-400" />
               {/* 🛠️ FIX: Replaced button text */}
               {t('btnProfile')}

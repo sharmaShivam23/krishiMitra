@@ -106,7 +106,8 @@
       "weather": "मौसम",
       "community": "समुदाय",
       "schemes": "योजनाएं",
-       "products": "उत्पाद"
+      "products": "उत्पाद",
+      "providerPanel": "प्रोवाइडर पैनल"
     },
     "actions": {
       "signOut": "लॉग आउट करें",

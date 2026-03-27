@@ -105,7 +105,9 @@
       "services": "ਕਿਰਾਏ 'ਤੇ ਲਓ",
       "weather": "ਮੌਸਮ",
       "community": "ਭਾਈਚਾਰਾ",
-      "schemes": "ਯੋਜਨਾਵਾਂ"
+      "schemes": "ਯੋਜਨਾਵਾਂ",
+      "products": "ਉਤਪਾਦ",
+      "providerPanel": "ਪ੍ਰੋਵਾਈਡਰ ਪੈਨਲ"
     },
     "actions": {
       "signOut": "ਲੌਗ ਆਉਟ ਕਰੋ",

@@ -1,26 +1,43 @@
 import {notFound} from 'next/navigation';
 import {getRequestConfig} from 'next-intl/server';
- 
-// Can be imported from a shared config
-const locales = [
-  'en', 'hi', 'pa', 'mr', 'bn', 'te', 'ta',
-  'as', 'gu', 'kn', 'ml', 'or', 'ur', 'sa', 'sd',
-  'ne', 'mai', 'doi', 'gom', 'sat', 'ks', 'mni'
-]; // English + 21 Indian languages
+import {DEFAULT_LOCALE, SUPPORTED_LOCALES} from './locales';
+
+type Messages = Record<string, unknown>;
+
+const isObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const deepMerge = (base: Messages, override: Messages): Messages => {
+  const result: Messages = {...base};
+
+  for (const [key, value] of Object.entries(override)) {
+    const baseValue = result[key];
+
+    if (isObject(baseValue) && isObject(value)) {
+      result[key] = deepMerge(baseValue, value);
+      continue;
+    }
+
+    result[key] = value;
+  }
+
+  return result;
+};
  
 export default getRequestConfig(async ({requestLocale}) => {
-  // 1. Await the requestLocale promise
   let locale = await requestLocale;
 
-  // 2. Validate that the incoming `locale` parameter is valid
-  // (We also check if locale is undefined just to be safe)
-  if (!locale || !locales.includes(locale as any)) {
+  if (!locale || !SUPPORTED_LOCALES.includes(locale as (typeof SUPPORTED_LOCALES)[number])) {
     notFound();
   }
+
+  const baseMessages = (await import(`../../messages/${DEFAULT_LOCALE}.json`)).default as Messages;
+  const localeMessages = locale === DEFAULT_LOCALE
+    ? baseMessages
+    : (await import(`../../messages/${locale}.json`)).default as Messages;
  
   return {
-    // 3. You must now explicitly return the locale alongside messages
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default
+    messages: deepMerge(baseMessages, localeMessages)
   };
 });

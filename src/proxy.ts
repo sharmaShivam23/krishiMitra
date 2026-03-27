@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
+import {DEFAULT_LOCALE, SUPPORTED_LOCALES} from '@/i18n/locales';
 
-const locales = ['en', 'hi', 'pa', 'mr', 'bn', 'te', 'ta'];
+const locales = [...SUPPORTED_LOCALES];
 
 
 const intlMiddleware = createMiddleware({
   locales: locales,
-  defaultLocale: 'en',
+  defaultLocale: DEFAULT_LOCALE,
   localePrefix: 'always'
 });
 
@@ -25,7 +26,7 @@ export function proxy(request: NextRequest) {
   }
 
   
-  const currentLocale = locales.find(loc => pathname.startsWith(`/${loc}`)) || 'en';
+  const currentLocale = locales.find(loc => pathname.startsWith(`/${loc}`)) || DEFAULT_LOCALE;
 
   
   const pathWithoutLocale = pathname.replace(new RegExp(`^/(${locales.join('|')})`), '') || '/';

@@ -9,6 +9,7 @@ import {
   MapPin, CalendarDays, Activity, 
   Loader2, CloudLightning, Cloud, Search, X, Volume2, VolumeX
 } from 'lucide-react';
+import { requestKrishiSarthi } from '@/lib/krishiSarthi';
 
 interface WeatherData {
   temp: number;
@@ -59,7 +60,6 @@ export default function WeatherIntelligence() {
   const t = useTranslations('WeatherIntelligence');
   
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isInitialSpeakDone, setIsInitialSpeakDone] = useState(false);
 
   const [currentWeather, setCurrentWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastDay[]>([]);
@@ -235,25 +235,6 @@ export default function WeatherIntelligence() {
   };
 
   useEffect(() => {
-    if (currentWeather && !isLoading && !isInitialSpeakDone && ('speechSynthesis' in window)) {
-      const timer = setTimeout(() => {
-        const conditionHindi = getWeatherDetails(weatherCode).hindiText;
-        const rainText = currentWeather.precipitationChance < 30 ? 'baarish hone ki sambhavna kam hai' : 'baarish hone ki aashanka hai';
-        const hinglishText = `Aaj ${activeLocation.name} mein mausam ${currentWeather.temp} degree hai. Aasman mein ${conditionHindi} rahegi. Hawa ki raftar ${currentWeather.windSpeed} kilometer prati ghanta hai, aur ${rainText}.`;
-        
-        const utterance = new SpeechSynthesisUtterance(hinglishText);
-        utterance.onend = () => setIsPlaying(false);
-        utterance.onerror = () => setIsPlaying(false);
-        
-        window.speechSynthesis.speak(utterance);
-        setIsPlaying(true);
-        setIsInitialSpeakDone(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [currentWeather, isLoading, isInitialSpeakDone, weatherCode, activeLocation.name]);
-
-  useEffect(() => {
     if (searchQuery.trim().length < 2) {
       setSearchResults([]);
       return;
@@ -306,14 +287,30 @@ export default function WeatherIntelligence() {
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="max-w-7xl mx-auto">
-      <motion.div variants={item} className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-black text-agri-900 tracking-tight flex items-center">
+      <motion.div variants={item} className="mb-6 md:mb-8">
+        <h1 className="text-[2.05rem] leading-[1.05] md:text-4xl font-black text-agri-900 tracking-tight flex items-center">
           <CloudSun className="w-8 h-8 mr-3 text-agri-600" />
           {t('title')}
         </h1>
-        <p className="text-gray-500 mt-2 font-medium max-w-2xl">
+        <p className="text-gray-600 mt-2 font-semibold max-w-2xl">
           {t('subtitle')}
         </p>
+        <button
+          type="button"
+          onClick={() =>
+            requestKrishiSarthi({
+              prompt: 'KrishiSarthi, aaj ke mausam ke hisaab se kheti salah do.',
+              context: {
+                module: 'weather',
+                summary: 'User is checking weather conditions and needs farming action advice based on forecast.'
+              }
+            })
+          }
+          className="mt-4 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-agri-300 bg-agri-100 text-agri-900 font-black hover:bg-agri-200 transition shadow-sm"
+        >
+          <Activity className="w-4 h-4" />
+          Ask KrishiSarthi
+        </button>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">

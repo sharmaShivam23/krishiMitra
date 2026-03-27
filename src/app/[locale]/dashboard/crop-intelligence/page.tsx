@@ -35,6 +35,15 @@ interface IntelligenceResult {
   aiAdvice: string;
 }
 
+interface RegionSuggestion {
+  id: number;
+  name: string;
+  admin1?: string;
+  country?: string;
+  latitude: number;
+  longitude: number;
+}
+
 // Real regional soil mapping for the Indian Subcontinent
 const regionalSoilMap: Record<string, string> = {
   "Uttar Pradesh": "Alluvial Soil, well-drained",
@@ -61,6 +70,28 @@ const LANGUAGES = [
   { code: 'Telugu', name: 'తెలుగు (Telugu)' },
   { code: 'Tamil', name: 'தமிழ் (Tamil)' },
 ];
+
+const weatherCodeMap: Record<number, string> = {
+  0: 'Clear',
+  1: 'Mainly clear',
+  2: 'Partly cloudy',
+  3: 'Overcast',
+  45: 'Foggy',
+  48: 'Foggy',
+  51: 'Light drizzle',
+  53: 'Drizzle',
+  55: 'Heavy drizzle',
+  61: 'Light rain',
+  63: 'Rain',
+  65: 'Heavy rain',
+  71: 'Light snow',
+  73: 'Snow',
+  75: 'Heavy snow',
+  80: 'Rain showers',
+  81: 'Rain showers',
+  82: 'Heavy showers',
+  95: 'Thunderstorm'
+};
 
 
 
@@ -97,6 +128,7 @@ export default function CropIntelligence() {
   const suggestionRef = useRef<HTMLDivElement>(null);
 
   const [isDetectingSoil, setIsDetectingSoil] = useState(false);
+  const [isAutoFillingRegionData, setIsAutoFillingRegionData] = useState(false);
 
   useEffect(() => {
     async function fetchCrops() {
@@ -124,7 +156,7 @@ export default function CropIntelligence() {
       try {
         const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${formData.location}&count=5&language=en&format=json`);
         const data = await res.json();
-        setRegionSuggestions(data.results || []);
+        setRegionSuggestions((data.results || []) as RegionSuggestion[]);
       } catch (err) { console.error("Geocoding error:", err); } 
       finally { setIsSearchingRegion(false); }
     }, 400);
@@ -145,14 +177,103 @@ export default function CropIntelligence() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleRegionSelect = (city: any) => {
+  const autoFillRegionDetails = async (
+    cityName: string,
+    stateRegion: string,
+    latitude?: number,
+    longitude?: number
+) => {
+    const matchedState = Object.keys(regionalSoilMap).find((state) =>
+      (stateRegion || '').includes(state) || cityName.includes(state)
+    );
+
+    setFormData((prev) => ({
+      ...prev,
+      soil: matchedState ? regionalSoilMap[matchedState] : (prev.soil || 'Mixed Loam / Regional Variant')
+    }));
+
+    if (typeof latitude !== 'number' || typeof longitude !== 'number') return;
+
+    try {
+      const weatherRes = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`
+      );
+      const weatherData = await weatherRes.json();
+      const current = weatherData?.current;
+
+      if (!current) return;
+
+      const condition = weatherCodeMap[current.weather_code as number] || 'Weather update available';
+      const temp = typeof current.temperature_2m === 'number' ? `${Math.round(current.temperature_2m)}C` : '';
+      const humidity = typeof current.relative_humidity_2m === 'number' ? `humidity ${current.relative_humidity_2m}%` : '';
+      const wind = typeof current.wind_speed_10m === 'number' ? `wind ${Math.round(current.wind_speed_10m)} km/h` : '';
+      const weatherSummary = [condition, temp, humidity, wind].filter(Boolean).join(', ');
+
+      setFormData((prev) => ({
+        ...prev,
+        weather: weatherSummary || prev.weather
+      }));
+    } catch (err) {
+      console.error('Weather auto-fill failed:', err);
+    }
+  };
+
+  const handleRegionSelect = async (city: RegionSuggestion) => {
+    setIsAutoFillingRegionData(true);
     setFormData(prev => ({ 
       ...prev, 
       location: `${city.name}, ${city.admin1 ? city.admin1 + ', ' : ''}${city.country}`,
       stateRegion: city.admin1 || ''
     }));
     setShowSuggestions(false);
+    await autoFillRegionDetails(
+      `${city.name}, ${city.admin1 ? city.admin1 + ', ' : ''}${city.country || ''}`,
+      city.admin1 || '',
+      city.latitude,
+      city.longitude
+    );
+    setIsAutoFillingRegionData(false);
   };
+
+  useEffect(() => {
+    const autoFillFromSavedRegion = async () => {
+      if (typeof window === 'undefined') return;
+      if (formData.location.trim()) return;
+
+      const savedState = localStorage.getItem('userState') || '';
+      const savedDistrict = localStorage.getItem('userDistrict') || '';
+      if (!savedState) return;
+
+      const locationLabel = savedDistrict ? `${savedDistrict}, ${savedState}, India` : `${savedState}, India`;
+      setFormData((prev) => ({
+        ...prev,
+        location: locationLabel,
+        stateRegion: savedState
+      }));
+
+      setIsAutoFillingRegionData(true);
+      try {
+        const geoRes = await fetch(
+          `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(locationLabel)}&count=1&language=en&format=json`
+        );
+        const geoData = await geoRes.json();
+        const first = geoData?.results?.[0] as RegionSuggestion | undefined;
+
+        await autoFillRegionDetails(
+          locationLabel,
+          savedState,
+          first?.latitude,
+          first?.longitude
+        );
+      } catch (err) {
+        console.error('Saved region auto-fill failed:', err);
+      } finally {
+        setIsAutoFillingRegionData(false);
+      }
+    };
+
+    void autoFillFromSavedRegion();
+  }, []);
 
   const handleCropSelect = (cropName: string) => {
     setFormData(prev => ({ ...prev, crop: cropName }));
@@ -218,7 +339,7 @@ export default function CropIntelligence() {
           initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} key={i} 
           className="bg-white p-4 rounded-2xl shadow-sm border border-emerald-50 flex items-start gap-4"
         >
-          <div className="bg-emerald-100 p-2 rounded-full flex-shrink-0 mt-0.5">
+          <div className="bg-emerald-100 p-2 rounded-full shrink-0 mt-0.5">
             <Sparkles className="w-4 h-4 text-emerald-600" />
           </div>
           <p className="text-gray-700 font-medium leading-relaxed">
@@ -230,7 +351,7 @@ export default function CropIntelligence() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 py-8 px-1 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-[1400px] mx-auto">
+      <div className="max-w-350 mx-auto">
         
         {/* HEADER */}
         <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200/60 pb-6">
@@ -330,6 +451,12 @@ export default function CropIntelligence() {
                   </div>
                   <input required type="text" name="weather" placeholder={t('weatherPlaceholder')} value={formData.weather} onChange={handleInputChange} className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm font-medium" />
                 </div>
+                {isAutoFillingRegionData && (
+                  <p className="mt-1.5 text-xs font-semibold text-emerald-700 inline-flex items-center gap-1.5">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Auto fetching weather from selected region...
+                  </p>
+                )}
               </div>
 
               {/* Soil Input */}
@@ -346,7 +473,7 @@ export default function CropIntelligence() {
                     placeholder={t('soilPlaceholder')} 
                     value={formData.soil} 
                     onChange={handleInputChange} 
-                    className="w-full pl-11 pr-[110px] py-3 bg-white border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm font-medium" 
+                    className="w-full pl-11 pr-27.5 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm font-medium" 
                   />
                   <button 
                     type="button"
@@ -358,6 +485,9 @@ export default function CropIntelligence() {
                     {t('detectBtn')}
                   </button>
                 </div>
+                {isAutoFillingRegionData && (
+                  <p className="mt-1.5 text-xs font-semibold text-emerald-700">Soil type is being auto detected from region.</p>
+                )}
               </div>
 
             
@@ -388,7 +518,7 @@ export default function CropIntelligence() {
           </div>
 
         
-          <div className="lg:col-span-8 h-full min-h-[600px]">
+          <div className="lg:col-span-8 h-full min-h-150">
             <AnimatePresence mode="wait">
 
             
@@ -405,12 +535,12 @@ export default function CropIntelligence() {
                   </div>
 
                   {isLoadingCrops ? (
-                    <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 min-h-[400px]">
+                    <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 min-h-100">
                       <Loader2 className="w-8 h-8 animate-spin text-emerald-500 mb-3" />
                       <p className="text-gray-500 font-medium text-sm">{t('loadingDb')}</p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px] overflow-y-auto custom-scrollbar pr-2 pb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-150 overflow-y-auto custom-scrollbar pr-2 pb-4">
                       {availableCrops.map((crop) => (
                         <div key={crop._id} onClick={() => setFormData({...formData, crop: crop.name})} className="bg-gray-50 p-5 rounded-xl border border-gray-200/60 hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden">
                           <div className="absolute top-0 left-0 w-1 h-full bg-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -422,7 +552,7 @@ export default function CropIntelligence() {
                               </h4>
                               {crop.localName && <p className="text-xs font-semibold text-gray-400 mt-0.5">{crop.localName}</p>}
                             </div>
-                            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:bg-emerald-100 transition-colors flex-shrink-0 shadow-sm">
+                            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:bg-emerald-100 transition-colors shrink-0 shadow-sm">
                               <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-emerald-600" />
                             </div>
                           </div>
@@ -464,7 +594,7 @@ export default function CropIntelligence() {
 
            
               {isAnalyzing && (
-                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-[600px] flex flex-col justify-center items-center bg-gray-900 text-white rounded-2xl p-8 text-center relative overflow-hidden shadow-2xl">
+                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-150 flex flex-col justify-center items-center bg-gray-900 text-white rounded-2xl p-8 text-center relative overflow-hidden shadow-2xl">
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
                   <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="bg-emerald-500/20 p-6 rounded-full backdrop-blur-md mb-6 relative z-10 border border-emerald-500/30">
                     <Loader2 className="w-12 h-12 animate-spin text-emerald-400" />
@@ -477,7 +607,7 @@ export default function CropIntelligence() {
               )}
 
               {error && (
-                <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-[600px] flex flex-col justify-center items-center bg-red-50 border border-red-100 rounded-2xl p-8 text-center">
+                <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-150 flex flex-col justify-center items-center bg-red-50 border border-red-100 rounded-2xl p-8 text-center">
                   <div className="bg-white p-4 rounded-full shadow-sm mb-4">
                     <AlertCircle className="w-10 h-10 text-red-500" />
                   </div>
@@ -545,7 +675,7 @@ export default function CropIntelligence() {
                   </div>
 
                   {/* AI Advice Section */}
-                  <div className="bg-gradient-to-br from-emerald-50 to-teal-50/50 rounded-2xl p-6 md:p-8 border border-emerald-100 shadow-inner">
+                  <div className="bg-linear-to-br from-emerald-50 to-teal-50/50 rounded-2xl p-6 md:p-8 border border-emerald-100 shadow-inner">
                     <h4 className="font-bold text-emerald-900 mb-6 flex items-center text-lg">
                       <Sparkles className="w-5 h-5 mr-2 text-emerald-600" />
                       {t('aiPlanTitle')}
