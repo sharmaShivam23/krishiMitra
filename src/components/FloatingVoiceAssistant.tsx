@@ -1,58 +1,776 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, Loader2 } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Bot, Mic, MicOff, Send, X, Loader2, ArrowUpRight } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { useVoiceAssistant } from '@/hooks/useVoiceAssistant';
+import { IntentResult, processVoiceCommand } from '@/lib/intentEngine';
+import { KRISHI_SARTHI_START_EVENT, KrishiSarthiPageContext, KrishiSarthiStartDetail } from '@/lib/krishiSarthi';
+
+type MessageRole = 'user' | 'assistant' | 'system';
+
+interface ChatMessage {
+  id: string;
+  role: MessageRole;
+  content: string;
+  actionPath?: string;
+}
+
+const ListeningWave = () => (
+  <div className="flex items-end gap-1 h-4" aria-hidden="true">
+    {[0, 1, 2, 3, 4].map((index) => (
+      <motion.span
+        key={index}
+        className="w-1 rounded-full bg-current"
+        animate={{
+          height: ['20%', '100%', '35%', '80%', '25%']
+        }}
+        transition={{
+          duration: 0.9,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay: index * 0.08
+        }}
+      />
+    ))}
+  </div>
+);
+
+const greetingByLocale: Record<string, string> = {
+  en: 'Namaste! I am KrishiSarthi. Ask me about mandi prices, weather, diseases, or schemes.',
+  hi: 'नमस्ते! मैं KrishiSarthi हूँ। आप मुझसे मंडी भाव, मौसम, बीमारी या योजनाओं के बारे में पूछ सकते हैं।',
+  pa: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ KrishiSarthi ਹਾਂ। ਮੰਡੀ ਭਾਵ, ਮੌਸਮ, ਬਿਮਾਰੀ ਜਾਂ ਯੋਜਨਾ ਬਾਰੇ ਪੁੱਛੋ।',
+  mr: 'नमस्कार! मी KrishiSarthi आहे. मंडी भाव, हवामान, रोग किंवा योजना विचारा.',
+  bn: 'নমস্কার! আমি KrishiSarthi। আপনি বাজারদর, আবহাওয়া, রোগ বা স্কিম নিয়ে জানতে পারেন।',
+  te: 'నమస్కారం! నేను KrishiSarthi. మార్కెట్ ధరలు, వాతావరణం, వ్యాధులు, పథకాల గురించి అడగండి.',
+  ta: 'வணக்கம்! நான் KrishiSarthi. சந்தை விலை, வானிலை, நோய், திட்டங்கள் பற்றி கேளுங்கள்.'
+};
+
+const fallbackPromptByLocale: Record<string, string> = {
+  en: 'Try saying: Mandi, Weather, Schemes, Disease Scan, Community.',
+  hi: 'ऐसे बोलकर देखें: मंडी, मौसम, योजना, बीमारी स्कैन, कम्युनिटी।',
+  pa: 'ਇਹ ਕਹਿ ਕੇ ਵੇਖੋ: ਮੰਡੀ, ਮੌਸਮ, ਯੋਜਨਾ, ਬਿਮਾਰੀ ਸਕੈਨ, ਕਮਿਊਨਿਟੀ।'
+};
+
+const quickPromptsByLocale: Record<string, string[]> = {
+  en: ['Today mandi prices', 'Today weather', 'Best government schemes', 'Crop disease help'],
+  hi: ['आज का मंडी भाव', 'आज का मौसम', 'सरकारी योजनाएं बताओ', 'फसल बीमारी में मदद'],
+  pa: ['ਅੱਜ ਦਾ ਮੰਡੀ ਭਾਅ', 'ਅੱਜ ਦਾ ਮੌਸਮ', 'ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ ਦੱਸੋ', 'ਫਸਲ ਬਿਮਾਰੀ ਵਿੱਚ ਮਦਦ']
+};
 
 export default function FloatingVoiceAssistant() {
-  const { isListening, transcript, startListening, stopListening } = useVoiceAssistant();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const listRef = useRef<HTMLDivElement>(null);
+  const normalizedPathname = pathname?.toLowerCase() || '';
+  const hideLauncherOnMobile =
+    normalizedPathname.includes('/dashboard/schemes') ||
+    normalizedPathname.includes('/dashboard/community');
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [isVoiceRecording, setIsVoiceRecording] = useState(false);
+  const [isTypingVisible, setIsTypingVisible] = useState(false);
+  const [input, setInput] = useState('');
+  const shouldAutoListenAfterGreetingRef = useRef(false);
+  const greetedInCurrentOpenRef = useRef(false);
+  const pageContextOverrideRef = useRef<KrishiSarthiPageContext | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [
+    {
+      id: `greet-${Date.now()}`,
+      role: 'assistant',
+      content: greetingByLocale[locale] || greetingByLocale.hi
+    }
+  ]);
+
+  const {
+    speak,
+    speakAndWait,
+    stopSpeaking,
+    activeLocale
+  } = useVoiceAssistant();
+
+  const localizeText = useCallback((messagesByLocale: { en: string; hi: string; pa: string }) => {
+    if (activeLocale === 'en') return messagesByLocale.en;
+    if (activeLocale === 'pa') return messagesByLocale.pa;
+    return messagesByLocale.hi;
+  }, [activeLocale]);
+
+  const isVoiceInputSupported = typeof window !== 'undefined'
+    && typeof MediaRecorder !== 'undefined'
+    && !!navigator.mediaDevices?.getUserMedia;
+
+  useEffect(() => {
+    setMessages([
+      {
+        id: `greet-${Date.now()}`,
+        role: 'assistant',
+        content: greetingByLocale[locale] || greetingByLocale.hi
+      }
+    ]);
+    // Debug: log when locale changes
+    console.log(`[FloatingVoiceAssistant] Locale changed to: ${locale}, activeLocale: ${activeLocale}`);
+  }, [locale, activeLocale, speak]);
+
+  useEffect(() => {
+    if (!listRef.current) return;
+    listRef.current.scrollTop = listRef.current.scrollHeight;
+  }, [messages, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      greetedInCurrentOpenRef.current = false;
+      shouldAutoListenAfterGreetingRef.current = false;
+    }
+  }, [isOpen]);
+
+  const lastHistory = useMemo(
+    () =>
+      messages
+        .filter((m) => m.role === 'user' || m.role === 'assistant')
+        .slice(-8)
+        .map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content })),
+    [messages]
+  );
+
+  const appendMessage = useCallback((message: ChatMessage) => {
+    setMessages((prev) => [...prev, message]);
+  }, []);
+
+  const cleanupRecorder = useCallback(() => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.ondataavailable = null;
+      mediaRecorderRef.current.onstop = null;
+      mediaRecorderRef.current.onerror = null;
+      mediaRecorderRef.current = null;
+    }
+
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current = null;
+    }
+
+    audioChunksRef.current = [];
+  }, []);
+
+  const inferredPageContext = useMemo<KrishiSarthiPageContext>(() => {
+    const route = pathname || '/';
+    const normalizedRoute = route.toLowerCase();
+
+    if (normalizedRoute.includes('/disease-detection')) {
+      return {
+        module: 'disease-detection',
+        route,
+        summary: 'User is in disease detection workflow. Prioritize plant symptom, image, and treatment guidance.'
+      };
+    }
+
+    if (normalizedRoute.includes('/mandi-prices')) {
+      return {
+        module: 'mandi-prices',
+        route,
+        summary: 'User is on mandi prices page. Prioritize rates, trend interpretation, and sell/hold suggestions.'
+      };
+    }
+
+    if (normalizedRoute.includes('/weather')) {
+      return {
+        module: 'weather',
+        route,
+        summary: 'User is on weather page. Prioritize irrigation/spray timing and weather-risk advice.'
+      };
+    }
+
+    if (normalizedRoute.includes('/schemes')) {
+      return {
+        module: 'schemes',
+        route,
+        summary: 'User is on schemes page. Prioritize eligibility, documents, and application steps.'
+      };
+    }
+
+    if (normalizedRoute.includes('/community')) {
+      return {
+        module: 'community',
+        route,
+        summary: 'User is on community page. Prioritize community support and how to ask/share details.'
+      };
+    }
+
+    if (normalizedRoute.includes('/selling-pool')) {
+      return {
+        module: 'selling-pool',
+        route,
+        summary: 'User is on selling pool page. Prioritize collective selling strategy and negotiation guidance.'
+      };
+    }
+
+    return {
+      module: 'general-dashboard',
+      route,
+      summary: 'User is in the KrishiMitra app. Provide practical guidance with app-navigation hints when useful.'
+    };
+  }, [pathname]);
+
+  const effectivePageContext = useMemo<KrishiSarthiPageContext>(() => {
+    return {
+      ...inferredPageContext,
+      ...(pageContextOverrideRef.current || {})
+    };
+  }, [inferredPageContext]);
+
+  const resolveIntentFirst = useCallback(
+    (text: string): IntentResult => processVoiceCommand(text, activeLocale),
+    [activeLocale]
+  );
+
+  const getAssistantReply = useCallback(async (text: string) => {
+    const intent = resolveIntentFirst(text);
+
+    if (intent.action === 'navigate' && intent.path) {
+      const intentMessage: ChatMessage = {
+        id: `intent-${Date.now()}`,
+        role: 'assistant',
+        content: intent.responseSpeech,
+        actionPath: intent.path
+      };
+      appendMessage(intentMessage);
+      speak(intent.responseSpeech);
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      const response = await fetch('/api/krishisarthi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          locale: activeLocale,
+          history: lastHistory,
+          pageContext: effectivePageContext
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        const errorText = typeof errorData?.error === 'string'
+          ? errorData.error
+          : activeLocale === 'pa'
+            ? 'KrishiSarthi ਨੂੰ ਤਕਨੀਕੀ ਸਮੱਸਿਆ ਆ ਰਹੀ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।'
+            : activeLocale === 'en'
+              ? 'KrishiSarthi is facing a technical issue. Please try again.'
+              : 'KrishiSarthi अभी तकनीकी समस्या में है. कृपया दोबारा कोशिश करें।';
+        
+        appendMessage({
+          id: `assistant-error-${Date.now()}`,
+          role: 'assistant',
+          content: errorText
+        });
+        speak(errorText);
+        return;
+      }
+
+      const data = await response.json();
+      const replyText = typeof data?.reply === 'string'
+        ? data.reply
+        : fallbackPromptByLocale[activeLocale] || fallbackPromptByLocale.hi;
+
+      appendMessage({
+        id: `assistant-${Date.now()}`,
+        role: 'assistant',
+        content: replyText
+      });
+
+      speak(replyText);
+    } catch (error) {
+      console.error('KrishiSarthi fetch error:', error);
+      appendMessage({
+        id: `assistant-error-${Date.now()}`,
+        role: 'assistant',
+        content: activeLocale === 'pa'
+          ? 'नेटवर्क error आया। कनेक्शन चेक करें।'
+          : activeLocale === 'en'
+            ? 'Network error occurred. Please check your connection.'
+            : 'Network error. Connection check karein.'
+      });
+    } finally {
+      setIsSending(false);
+    }
+  }, [activeLocale, appendMessage, effectivePageContext, lastHistory, resolveIntentFirst, speak]);
+
+  const submitText = useCallback(async (rawText: string) => {
+    const text = rawText.trim();
+    if (!text || isSending) return;
+
+    appendMessage({ id: `user-${Date.now()}`, role: 'user', content: text });
+    await getAssistantReply(text);
+  }, [appendMessage, getAssistantReply, isSending]);
+
+  const handleSend = async () => {
+    const text = input.trim();
+    if (!text || isSending) return;
+    setInput('');
+    await submitText(text);
+  };
+
+  const transcribeAudio = useCallback(async (blob: Blob): Promise<string> => {
+    const rawMimeType = (blob.type || '').toLowerCase();
+    const baseMimeType = rawMimeType.split(';')[0].trim();
+    const normalizedMimeType = baseMimeType === 'video/webm'
+      ? 'audio/webm'
+      : (baseMimeType || 'audio/webm');
+    const extension = normalizedMimeType.includes('ogg')
+      ? 'ogg'
+      : normalizedMimeType.includes('mp4') || normalizedMimeType.includes('m4a')
+        ? 'm4a'
+        : normalizedMimeType.includes('mpeg') || normalizedMimeType.includes('mp3')
+          ? 'mp3'
+          : normalizedMimeType.includes('wav')
+            ? 'wav'
+            : 'webm';
+
+    const normalizedBlob = new Blob([blob], { type: normalizedMimeType });
+    const formData = new FormData();
+    formData.append('file', normalizedBlob, `voice.${extension}`);
+    formData.append('locale', activeLocale);
+
+    const response = await fetch('/api/stt', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(typeof data?.error === 'string' ? data.error : 'Speech recognition failed.');
+    }
+
+    return typeof data?.transcript === 'string' ? data.transcript.trim() : '';
+  }, [activeLocale]);
+
+  const stopVoiceSession = useCallback(() => {
+    const recorder = mediaRecorderRef.current;
+    if (!recorder || recorder.state === 'inactive') {
+      setIsVoiceRecording(false);
+      cleanupRecorder();
+      return;
+    }
+
+    try {
+      recorder.stop();
+    } catch {
+      setIsVoiceRecording(false);
+      cleanupRecorder();
+    }
+  }, [cleanupRecorder]);
+
+  const startVoiceSession = useCallback(async () => {
+    if (isVoiceRecording) {
+      stopVoiceSession();
+      return;
+    }
+
+    if (!isVoiceInputSupported) {
+      appendMessage({
+        id: `system-${Date.now()}`,
+        role: 'system',
+        content: localizeText({
+          en: 'Voice input is not supported in this browser. Use typing mode.',
+          hi: 'इस ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है। टाइपिंग मोड का उपयोग करें।',
+          pa: 'ਇਸ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਵੌਇਸ ਇਨਪੁੱਟ ਸਹਾਇਕ ਨਹੀਂ ਹੈ। ਟਾਈਪਿੰਗ ਮੋਡ ਵਰਤੋ।'
+        })
+      });
+      return;
+    }
+
+    stopSpeaking();
+    setIsOpen(true);
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
+
+      const mimeTypes = ['audio/webm', 'audio/mp4', 'audio/ogg'];
+      const selectedMimeType = mimeTypes.find((type) => MediaRecorder.isTypeSupported(type));
+      const recorder = selectedMimeType
+        ? new MediaRecorder(stream, { mimeType: selectedMimeType })
+        : new MediaRecorder(stream);
+
+      audioChunksRef.current = [];
+      mediaRecorderRef.current = recorder;
+
+      recorder.ondataavailable = (event: BlobEvent) => {
+        if (event.data && event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      recorder.onerror = () => {
+        appendMessage({
+          id: `system-${Date.now()}`,
+          role: 'system',
+          content: localizeText({
+            en: 'Could not capture voice. Please try again.',
+            hi: 'आवाज़ कैप्चर नहीं हो पाई। कृपया फिर से कोशिश करें।',
+            pa: 'ਆਵਾਜ਼ ਕੈਪਚਰ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।'
+          })
+        });
+        setIsVoiceRecording(false);
+        cleanupRecorder();
+      };
+
+      recorder.onstop = async () => {
+        setIsVoiceRecording(false);
+        const blob = new Blob(audioChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+        cleanupRecorder();
+
+        if (!blob.size || blob.size < 1000) {
+          appendMessage({
+            id: `system-${Date.now()}`,
+            role: 'system',
+            content: localizeText({
+              en: 'I could not hear that clearly. Please try again.',
+              hi: 'मैं स्पष्ट रूप से सुन नहीं पाया। कृपया फिर से बोलें।',
+              pa: 'ਮੈਂ ਸਾਫ਼ ਨਹੀਂ ਸੁਣ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਬੋਲੋ।'
+            })
+          });
+          return;
+        }
+
+        setIsSending(true);
+        try {
+          const spokenText = await transcribeAudio(blob);
+          if (!spokenText) {
+            appendMessage({
+              id: `system-${Date.now()}`,
+              role: 'system',
+              content: localizeText({
+                en: 'I could not hear that clearly. Please try again.',
+                hi: 'मैं स्पष्ट रूप से सुन नहीं पाया। कृपया फिर से बोलें।',
+                pa: 'ਮੈਂ ਸਾਫ਼ ਨਹੀਂ ਸੁਣ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਬੋਲੋ।'
+              })
+            });
+            return;
+          }
+
+          appendMessage({ id: `voice-user-${Date.now()}`, role: 'user', content: spokenText });
+          await getAssistantReply(spokenText);
+        } catch (error) {
+          console.error('Voice transcription error:', error);
+          appendMessage({
+            id: `assistant-error-${Date.now()}`,
+            role: 'assistant',
+            content: activeLocale === 'pa'
+              ? 'KrishiSarthi ਨੂੰ ਤਕਨੀਕੀ ਸਮੱਸਿਆ ਆ ਰਹੀ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।'
+              : activeLocale === 'en'
+                ? 'KrishiSarthi is facing a technical issue. Please try again.'
+                : 'KrishiSarthi अभी तकनीकी समस्या में है. कृपया दोबारा कोशिश करें।'
+          });
+        } finally {
+          setIsSending(false);
+        }
+      };
+
+      recorder.start();
+      setIsVoiceRecording(true);
+    } catch (error) {
+      console.error('Microphone access error:', error);
+      appendMessage({
+        id: `system-${Date.now()}`,
+        role: 'system',
+        content: localizeText({
+          en: 'Microphone access denied. Please allow microphone permission.',
+          hi: 'माइक्रोफोन की अनुमति नहीं मिली। कृपया माइक्रोफोन परमिशन दें।',
+          pa: 'ਮਾਈਕ੍ਰੋਫੋਨ ਐਕਸੈੱਸ ਮਨਜ਼ੂਰ ਨਹੀਂ ਹੋਇਆ। ਕਿਰਪਾ ਕਰਕੇ ਮਾਈਕ੍ਰੋਫੋਨ ਪਰਮਿਸ਼ਨ ਦਿਓ।'
+        })
+      });
+      setIsVoiceRecording(false);
+      cleanupRecorder();
+    }
+  }, [activeLocale, appendMessage, cleanupRecorder, getAssistantReply, isVoiceInputSupported, isVoiceRecording, localizeText, stopSpeaking, stopVoiceSession, transcribeAudio]);
+
+  // Speak greeting when widget opens and optionally start listening after it finishes
+  useEffect(() => {
+    if (isOpen && messages.length === 1 && messages[0]?.role === 'assistant' && !greetedInCurrentOpenRef.current) {
+      greetedInCurrentOpenRef.current = true;
+      const greetingMsg = messages[0]?.content;
+      if (greetingMsg) {
+        setTimeout(async () => {
+          console.log('[FloatingVoiceAssistant] Speaking greeting message');
+          await speakAndWait(greetingMsg);
+
+          if (shouldAutoListenAfterGreetingRef.current && isVoiceInputSupported && !isVoiceRecording) {
+            shouldAutoListenAfterGreetingRef.current = false;
+            await startVoiceSession();
+          }
+        }, 300);
+      }
+    }
+  }, [isOpen, isVoiceInputSupported, isVoiceRecording, messages, speakAndWait, startVoiceSession]);
+
+  const handleActionNavigate = (path?: string) => {
+    if (!path) return;
+    router.push(path);
+    stopVoiceSession();
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    if (!isVoiceInputSupported) {
+      setIsTypingVisible(true);
+    }
+  }, [isVoiceInputSupported]);
+
+  useEffect(() => {
+    return () => {
+      cleanupRecorder();
+    };
+  }, [cleanupRecorder]);
+
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const customEvent = event as CustomEvent<KrishiSarthiStartDetail>;
+      const prompt = customEvent.detail?.prompt;
+      const context = customEvent.detail?.context;
+
+      pageContextOverrideRef.current = context || null;
+
+      setIsOpen(true);
+
+      if (prompt) {
+        setIsTypingVisible(true);
+        setInput(prompt);
+      }
+
+      if (isVoiceInputSupported && !isVoiceRecording) {
+        shouldAutoListenAfterGreetingRef.current = true;
+      }
+    };
+
+    window.addEventListener(KRISHI_SARTHI_START_EVENT, handler);
+    return () => window.removeEventListener(KRISHI_SARTHI_START_EVENT, handler);
+  }, [isVoiceInputSupported, isVoiceRecording]);
+
+  const quickPrompts = quickPromptsByLocale[activeLocale] || quickPromptsByLocale.en;
+  const hasConversation = messages.length > 1;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      
-      {/* Transcript Bubble */}
+    <>
+      <div className={`${hideLauncherOnMobile ? 'hidden md:block' : 'block'} fixed right-4 bottom-[calc(env(safe-area-inset-bottom)+6.25rem)] md:right-5 md:bottom-5 z-40`}>
+        <button
+          onClick={() => {
+            setIsOpen((prev) => {
+              const next = !prev;
+              if (!next) {
+                shouldAutoListenAfterGreetingRef.current = false;
+                stopVoiceSession();
+              }
+              return next;
+            });
+          }}
+          className="relative w-14 h-14 rounded-full bg-agri-600 hover:bg-agri-800 text-white shadow-2xl flex items-center justify-center active:scale-95 transition"
+          aria-label={isOpen ? 'Close KrishiSarthi' : 'Open KrishiSarthi'}
+        >
+          {isOpen ? <X className="w-6 h-6" /> : <Bot className="w-6 h-6" />}
+          {!isOpen && (
+            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-agri-900 text-[10px] font-bold tracking-wide text-agri-100 whitespace-nowrap">
+              KrishiSarthi AI
+            </span>
+          )}
+        </button>
+      </div>
+
       <AnimatePresence>
-        {isListening && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10, scale: 0.9 }} 
-            animate={{ opacity: 1, y: 0, scale: 1 }} 
-            exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            className="mb-4 bg-gray-900/90 backdrop-blur-md text-white px-4 py-3 rounded-2xl shadow-xl border border-gray-700 max-w-xs"
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed z-50 right-2 left-2 bottom-[calc(env(safe-area-inset-bottom)+8rem)] md:bottom-24 md:left-auto md:right-5 md:w-104 w-auto h-[76vh] md:h-[74vh] bg-white border border-agri-100 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
           >
-            <div className="flex items-center space-x-2 mb-1">
-              <Loader2 className="w-3 h-3 animate-spin text-emerald-400" />
-              <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-400">Listening...</span>
+            <div className="px-4 py-3 border-b border-agri-100 bg-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-full bg-agri-100 text-agri-800 flex items-center justify-center">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-black text-agri-900">KrishiSarthi</p>
+                  <p className="text-[11px] text-agri-800/65 font-semibold">Farmer AI Assistant</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  stopVoiceSession();
+                  setIsOpen(false);
+                }}
+                className="p-2 rounded-full hover:bg-agri-100 text-agri-800"
+                aria-label="Close chat"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            <p className="text-sm font-medium leading-snug">
-              {transcript || "Speak now..."}
-            </p>
+
+            <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-agri-50/30">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-3 py-2.5 text-sm leading-relaxed ${
+                      message.role === 'user'
+                        ? 'bg-agri-600 text-white rounded-br-md shadow-sm'
+                        : message.role === 'system'
+                          ? 'bg-amber-100 text-amber-900 rounded-bl-md'
+                          : 'bg-white text-agri-900 border border-agri-100 rounded-bl-md shadow-sm'
+                    }`}
+                  >
+                    {message.content}
+                    {message.actionPath && (
+                      <button
+                        type="button"
+                        onClick={() => handleActionNavigate(message.actionPath)}
+                        className="mt-2 inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold bg-agri-50 text-agri-800 border border-agri-200 hover:bg-agri-100"
+                      >
+                        Open Page <ArrowUpRight className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {!hasConversation && !isSending && (
+                <>
+                  <div className="bg-white border border-agri-100 rounded-2xl p-3 text-xs text-agri-800/80">
+                    Tap the green button below and speak in your language.
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {quickPrompts.map((prompt) => (
+                      <button
+                        key={prompt}
+                        type="button"
+                        onClick={() => submitText(prompt)}
+                        disabled={isSending}
+                        className="text-left px-3 py-2.5 rounded-xl text-xs font-semibold border border-agri-100 bg-white text-agri-800 hover:bg-agri-50 disabled:opacity-50"
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {isSending && (
+                <div className="flex justify-start">
+                  <div className="bg-white border border-agri-100 text-agri-800 rounded-2xl rounded-bl-md px-3 py-2 text-sm flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" /> Thinking...
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-agri-100 p-3 bg-white space-y-2.5">
+              <button
+                type="button"
+                onClick={isVoiceRecording ? stopVoiceSession : startVoiceSession}
+                className={`w-full h-12 rounded-xl font-bold transition flex items-center justify-center gap-2 border ${
+                  isVoiceRecording
+                    ? 'bg-red-50 text-red-700 border-red-200'
+                    : 'bg-agri-600 text-white border-agri-600 hover:bg-agri-800'
+                }`}
+                title={isVoiceRecording ? 'Stop voice chat' : 'Start voice chat'}
+              >
+                {isVoiceRecording ? (
+                  <>
+                    <ListeningWave />
+                    <span>Listening... Tap again to send</span>
+                    <MicOff className="w-5 h-5" />
+                  </>
+                ) : (
+                  <>
+                    <Mic className="w-5 h-5" />
+                    <span>Tap to start speaking</span>
+                  </>
+                )}
+              </button>
+
+              <div className="flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsTypingVisible((prev) => !prev)}
+                  className="h-9 px-3 rounded-lg text-xs font-bold border border-agri-200 text-agri-800 bg-agri-50 hover:bg-agri-100"
+                >
+                  {isTypingVisible ? 'Hide typing' : 'Type instead'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMessages([
+                      {
+                        id: `greet-${Date.now()}`,
+                        role: 'assistant',
+                        content: greetingByLocale[locale] || greetingByLocale.hi
+                      }
+                    ]);
+                  }}
+                  className="h-9 px-3 rounded-lg text-xs font-semibold text-agri-900/60 hover:text-agri-800"
+                >
+                  Clear
+                </button>
+              </div>
+
+              {isTypingVisible && (
+                <div className="flex items-end gap-2">
+                  <textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSend();
+                      }
+                    }}
+                    placeholder="Type if needed..."
+                    className="flex-1 resize-none rounded-xl border border-agri-200 px-3 py-2.5 text-sm text-agri-900 outline-none focus:ring-2 focus:ring-agri-400 min-h-11 max-h-28"
+                    rows={1}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={handleSend}
+                    disabled={!input.trim() || isSending}
+                    className="h-11 w-11 rounded-xl bg-agri-600 text-white flex items-center justify-center disabled:opacity-50"
+                    title="Send"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              {!isTypingVisible && isSending && (
+                <div className="text-[11px] text-agri-900/60 font-medium flex items-center gap-1">
+                  <Loader2 className="w-3 h-3 animate-spin" /> KrishiSarthi is responding...
+                </div>
+              )}
+
+              {!isVoiceInputSupported && (
+                <p className="text-[11px] font-medium text-amber-700">
+                  Voice input is not supported in this browser. Use typing mode.
+                </p>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Floating Mic Button */}
-      <div className="relative">
-        {/* Pulse Animation Ring */}
-        {isListening && (
-          <motion.div 
-            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-            className="absolute inset-0 bg-emerald-500 rounded-full"
-          />
-        )}
-        
-        <button
-          onClick={isListening ? stopListening : startListening}
-          className={`relative w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all active:scale-90 ${
-            isListening 
-              ? 'bg-red-500 text-white hover:bg-red-600' 
-              : 'bg-emerald-600 text-white hover:bg-emerald-700'
-          }`}
-        >
-          {isListening ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-        </button>
-      </div>
-    </div>
+    </>
   );
 }

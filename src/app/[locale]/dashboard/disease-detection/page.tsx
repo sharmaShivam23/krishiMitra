@@ -5,9 +5,10 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import { 
   Upload, ShieldCheck, AlertTriangle, 
-  Loader2, CheckCircle, Leaf, Activity, X, Info, Languages, ChevronDown, Camera, Mic, Store, ArrowRight
+  Loader2, CheckCircle, Leaf, Activity, X, Info, Languages, ChevronDown, Camera, Store, ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
+import { requestKrishiSarthi } from '@/lib/krishiSarthi';
 
 interface ScanResult {
   disease: string;
@@ -263,12 +264,12 @@ export default function DiseaseDetection() {
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="max-w-5xl mx-auto">
-      <motion.div variants={item} className="mb-8 text-center md:text-left">
-        <h1 className="text-3xl md:text-4xl font-black text-agri-900 tracking-tight flex items-center justify-center md:justify-start">
+      <motion.div variants={item} className="mb-6 md:mb-8 text-center md:text-left">
+        <h1 className="text-[2.05rem] leading-[1.05] md:text-4xl font-black text-agri-900 tracking-tight flex items-center justify-center md:justify-start">
           <ShieldCheck className="w-8 h-8 mr-3 text-agri-600" />
           {t('title')}
         </h1>
-        <p className="text-gray-500 mt-2 font-medium">{t('subtitle')}</p>
+        <p className="text-gray-600 mt-2 font-semibold">{t('subtitle')}</p>
       </motion.div>
 
       <motion.div variants={item} className="flex space-x-2 mb-6 bg-gray-100 p-1 rounded-xl inline-flex">
@@ -335,9 +336,26 @@ export default function DiseaseDetection() {
               {isScanning ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : "Analyze Image"}
             </button>
           ) : (
-            <button onMouseDown={startRecording} onMouseUp={stopRecording} onTouchStart={startRecording} onTouchEnd={stopRecording} disabled={isScanning || !!result} className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center select-none ${isRecording ? 'bg-red-500 scale-95 shadow-inner' : 'bg-agri-900 hover:bg-agri-800'} disabled:opacity-50`}>
-              {isScanning ? <Loader2 className="w-6 h-6 animate-spin" /> : isRecording ? <>Release to Send</> : <><Mic className="w-5 h-5 mr-2" /> Hold to Ask Question</>}
-            </button>
+            <div className="space-y-2">
+              <button onMouseDown={startRecording} onMouseUp={stopRecording} onTouchStart={startRecording} onTouchEnd={stopRecording} disabled={isScanning || !!result} className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center select-none ${isRecording ? 'bg-red-500 scale-95 shadow-inner' : 'bg-agri-900 hover:bg-agri-800'} disabled:opacity-50`}>
+                {isScanning ? <Loader2 className="w-6 h-6 animate-spin" /> : isRecording ? <>Release to Send to KrishiSarthi</> : <>Hold to Talk to KrishiSarthi</>}
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  requestKrishiSarthi({
+                    prompt: 'KrishiSarthi, disease scan mein madad karo.',
+                    context: {
+                      module: 'disease-detection',
+                      summary: 'User is checking crop disease from image/voice and needs symptom + remedy guidance.'
+                    }
+                  })
+                }
+                className="w-full py-3 rounded-xl border border-agri-300 text-agri-900 bg-agri-100 hover:bg-agri-200 font-black shadow-sm"
+              >
+                Ask KrishiSarthi (Voice)
+              </button>
+            </div>
           )}
         </motion.div>
 

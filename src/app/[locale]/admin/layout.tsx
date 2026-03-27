@@ -94,22 +94,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* 📱 MOBILE BOTTOM NAV */}
-      <nav className="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 z-50 pb-safe">
-        <div className="flex items-center gap-4 px-2 py-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+      <nav className="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 z-50 pb-safe shadow-[0_-10px_30px_rgba(7,40,26,0.08)]">
+        <div className="mx-2 mb-2 mt-1 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-hide rounded-2xl border border-agri-100/70 bg-white/95 px-1.5 py-1.5">
           {MENU_ITEMS.map((link) => {
             const isActive = pathname.endsWith(link.path);
             return (
               <Link 
                 key={link.name} 
                 href={link.path} 
-                className="flex flex-col items-center space-y-1 p-2 min-w-[76px] snap-center"
+                className="flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 min-w-20 min-h-16 snap-center transition-colors"
               >
-                <div className={`p-1.5 rounded-xl transition-all duration-300 ${
+                <div className={`p-2 rounded-xl transition-all duration-300 ${
                   isActive ? 'bg-agri-100 text-agri-600' : 'text-gray-400 hover:text-agri-600'
                 }`}>
                   {link.icon}
                 </div>
-                <span className={`text-[10px] font-bold whitespace-nowrap ${isActive ? 'text-agri-600' : 'text-gray-400'}`}>
+                <span className={`text-[11px] leading-none font-bold whitespace-nowrap tracking-tight ${isActive ? 'text-agri-600' : 'text-gray-400'}`}>
                   {link.name.split(' ')[0]} 
                 </span>
               </Link>
@@ -119,10 +119,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </nav>
 
       {/* 📦 MAIN CONTENT AREA */}
-      <main className="flex-1 md:ml-72 w-full pb-24 md:pb-0 overflow-hidden relative">
+      <main className="flex-1 md:ml-72 w-full pb-36 md:pb-0 overflow-hidden relative">
         
         {/* Mobile Header */}
-        <header className="md:hidden flex items-center justify-between p-5 bg-white border-b border-gray-100 sticky top-0 z-30 shadow-sm">
+        <header className="md:hidden flex items-center justify-between px-4 py-3.5 bg-white border-b border-gray-100 sticky top-0 z-30 shadow-sm">
           <div className="flex items-center space-x-2">
             <img src="/logo.png" className='h-8 w-8' alt="Logo" />
             <span className="text-xl font-black text-agri-900 tracking-tight">Krishi<span className="text-agri-400">Admin</span></span>
@@ -140,7 +140,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="p-6 md:p-10 max-w-7xl mx-auto"
+            className="p-4 sm:p-5 md:p-10 max-w-7xl mx-auto"
           >
             {children}
           </motion.div>

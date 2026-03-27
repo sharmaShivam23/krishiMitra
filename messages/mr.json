@@ -105,7 +105,9 @@
       "services": "भाड्याने",
       "weather": "हवामान",
       "community": "समुदाय",
-      "schemes": "योजना"
+      "schemes": "योजना",
+      "products": "उत्पादने",
+      "providerPanel": "प्रोव्हायडर पॅनेल"
     },
     "actions": {
       "signOut": "साइन आउट करा",

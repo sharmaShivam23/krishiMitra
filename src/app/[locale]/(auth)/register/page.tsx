@@ -55,10 +55,10 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
 
       setStep(2);
-    } catch (err: any) {
+    } catch (err: unknown) {
       // console.log(err);
       
-      setError(err.message);
+      setError(err instanceof Error ? err.message : 'Failed to send OTP');
     } finally {
       setLoading(false);
     }
@@ -85,8 +85,8 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(data.error || 'Registration failed');
 
       window.location.href = `/${locale}/login?registered=true`;
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -120,8 +120,8 @@ export default function RegisterPage() {
 
           <AnimatePresence mode="wait">
             {error && (
-              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mb-5 p-4 text-black rounded-xl bg-red-50 text-red-700 text-sm border border-red-100 flex items-start">
-                <ShieldCheck className="w-5 h-5 mr-3 text-red-500 flex-shrink-0 mt-0.5" />
+              <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mb-5 p-4 rounded-xl bg-red-50 text-red-700 text-sm border border-red-100 flex items-start">
+                <ShieldCheck className="w-5 h-5 mr-3 text-red-500 shrink-0 mt-0.5" />
                 <span>{error}</span>
               </motion.div>
             )}
@@ -143,7 +143,7 @@ export default function RegisterPage() {
                   <div className="relative group">
                     <Phone className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500" />
                     <span className="absolute left-11 top-3.5 text-gray-400 font-medium">+91</span>
-                    <input name="phone" type="tel" required maxLength={10} value={formData.phone} onChange={handleChange} className="block w-full pl-20 pr-4 py-3.5 border border-gray-200 rounded-xl text-black focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="98765 43210" />
+                    <input name="phone" type="tel" inputMode="numeric" pattern="[0-9]{10}" required maxLength={10} value={formData.phone} onChange={handleChange} className="block w-full pl-20 pr-4 py-3.5 border border-gray-200 rounded-xl text-black focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="98765 43210" />
                   </div>
                 </motion.div>
 
@@ -168,7 +168,7 @@ export default function RegisterPage() {
                     <div className="relative group">
                       <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-black group-focus-within:text-emerald-500" />
                       <select name="district" required disabled={!formData.state} value={formData.district} onChange={handleChange} className="block w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer disabled:opacity-50 disabled:bg-gray-100">
-                        <option value="" disabled>Select District</option>
+                        <option value="" disabled>District</option>
                         {formData.state && STATES_DISTRICTS[formData.state]?.map((d: string) => <option key={d} value={d}>{d}</option>)}
                       </select>
                       <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
@@ -232,7 +232,7 @@ export default function RegisterPage() {
                   
                   <div className="relative group">
                     <KeyRound className="absolute left-4 top-3.5 h-5 w-5 text-black group-focus-within:text-emerald-500" />
-                    <input type="text" required maxLength={6} value={otp} onChange={(e) => { setOtp(e.target.value.replace(/\D/g, '')); setError(''); }} className="block w-full pl-11 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-black outline-none font-bold text-lg tracking-[0.5em]" placeholder="------" />
+                    <input type="text" inputMode="numeric" pattern="[0-9]{6}" required maxLength={6} value={otp} onChange={(e) => { setOtp(e.target.value.replace(/\D/g, '')); setError(''); }} className="block w-full pl-11 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 text-black outline-none font-bold text-lg tracking-[0.5em]" placeholder="------" />
                   </div>
                 </div>
 

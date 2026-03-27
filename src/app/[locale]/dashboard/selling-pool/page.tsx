@@ -7,6 +7,7 @@ import {
   TrendingUp, IndianRupee, Clock, Phone, MessageCircle, Volume2, VolumeX, Trash2, Calendar
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { requestKrishiSarthi } from '@/lib/krishiSarthi';
 
 // --- INTERFACES ---
 interface PoolMember {
@@ -336,12 +337,29 @@ export default function SellingPoolsPage() {
           </div>
           
           <div className="flex-shrink-0">
-            <button onClick={() => setIsCreateModalOpen(true)} className="group relative flex items-center justify-center bg-amber-400 text-stone-950 px-8 py-4 rounded-2xl font-black text-lg hover:bg-amber-300 shadow-[0_0_40px_-10px_rgba(251,191,36,0.5)] active:scale-95 transition-all w-full md:w-auto overflow-hidden">
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-              <span className="relative flex items-center">
-                <Plus className="w-6 h-6 mr-2" /> {t('startBtn') || 'Start a Pool'}
-              </span>
-            </button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  requestKrishiSarthi({
+                    prompt: 'KrishiSarthi, selling pool ka best rate aur strategy batao.',
+                    context: {
+                      module: 'selling-pool',
+                      summary: 'User is in selling pool and needs collective selling, pricing, and negotiation strategy guidance.'
+                    }
+                  })
+                }
+                className="group relative flex items-center justify-center bg-emerald-100 text-emerald-900 px-6 py-4 rounded-2xl font-black text-base hover:bg-emerald-200 active:scale-95 transition-all w-full md:w-auto border border-emerald-300/60"
+              >
+                <Users className="w-5 h-5 mr-2" /> Ask KrishiSarthi
+              </button>
+              <button onClick={() => setIsCreateModalOpen(true)} className="group relative flex items-center justify-center bg-amber-400 text-stone-950 px-8 py-4 rounded-2xl font-black text-lg hover:bg-amber-300 shadow-[0_0_40px_-10px_rgba(251,191,36,0.5)] active:scale-95 transition-all w-full md:w-auto overflow-hidden">
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <span className="relative flex items-center">
+                  <Plus className="w-6 h-6 mr-2" /> {t('startBtn') || 'Start a Pool'}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
