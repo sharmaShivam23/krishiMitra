@@ -7,7 +7,12 @@ const UserSchema = new Schema({
   role: { type: String, enum: ['farmer', 'provider', 'admin'], default: 'farmer' }, // <-- UPDATED
   state: { type: String },
   district: { type: String },
-  preferredLanguage: { type: String, default: 'hi' }
+  preferredLanguage: { type: String, default: 'hi' },
+  shopName: { type: String },
+  licenseNumber: { type: String },
+  gstNumber: { type: String },
+  licenseImage: { type: String },
+  isVerifiedProvider: { type: Boolean, default: false }
 }, { timestamps: true });
 
 const CropSchema = new Schema({

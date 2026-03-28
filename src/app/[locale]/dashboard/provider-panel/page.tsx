@@ -14,6 +14,7 @@ export default function ProviderPanel() {
   
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
   const [isAddingMode, setIsAddingMode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -30,7 +31,10 @@ export default function ProviderPanel() {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
       const data = await res.json();
-      if (data.success) setProducts(data.products);
+      if (data.success) {
+        setProducts(data.products);
+        setIsVerified(data.isVerifiedProvider);
+      }
     } catch (err: any) {
       console.error("Failed to fetch products", err);
     } finally {
@@ -110,14 +114,26 @@ export default function ProviderPanel() {
           <p className="text-gray-500 font-medium mt-1">Manage your agricultural products & listings.</p>
         </div>
         <button 
-          onClick={() => setIsAddingMode(!isAddingMode)}
-          className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-700 transition flex items-center shadow-lg shadow-emerald-600/20"
+          onClick={() => isVerified && setIsAddingMode(!isAddingMode)}
+          disabled={!isVerified}
+          className={`px-5 py-2.5 rounded-xl font-bold transition flex items-center shadow-lg ${
+            isVerified 
+              ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-600/20' 
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-75'
+          }`}
         >
           {isAddingMode ? 'Cancel' : <><Plus className="w-5 h-5 mr-1" /> Add New Product</>}
         </button>
       </div>
 
-      {isAddingMode && (
+      {!isVerified && !isLoading && (
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-center shadow-sm">
+          <AlertTriangle className="w-6 h-6 text-amber-500 mr-3 flex-shrink-0" />
+          <p className="text-amber-800 font-medium font-sans">⏳ Your account is under review. Our team is verifying your license. You cannot list products yet.</p>
+        </motion.div>
+      )}
+
+      {isAddingMode && isVerified && (
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100">
           <h2 className="text-xl font-bold text-gray-900 mb-6 border-b pb-4">Create New Product Listing</h2>
           {error && (
