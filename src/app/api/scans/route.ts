@@ -23,6 +23,7 @@ export async function POST(req: Request) {
     }
 
     const detectedDisease = aiResult.diseaseName;
+    // const severity = 'HIGH';
     const severity = aiResult.severity || 'HIGH';
     const userDistrict = currentUser.district;
 
@@ -79,6 +80,9 @@ export async function POST(req: Request) {
         console.error("CRITICAL ERROR: N8N_BIORADAR_WEBHOOK_URL missing in .env");
       }
     }
+
+    // console.log(severity);
+    
 
     // 5. Return success to the frontend
     return NextResponse.json({ 

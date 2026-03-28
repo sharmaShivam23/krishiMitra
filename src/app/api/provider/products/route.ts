@@ -35,11 +35,14 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
+    const user = await User.findById(decoded.userId);
+    const isVerifiedProvider = user?.isVerifiedProvider || false;
+
     const products = await PesticideProduct.find({
       providerId: decoded.userId,
     }).sort({ createdAt: -1 });
 
-    return NextResponse.json({ success: true, products }, { status: 200 });
+    return NextResponse.json({ success: true, products, isVerifiedProvider }, { status: 200 });
   } catch (error: any) {
     console.error("Fetch products error:", error);
     return NextResponse.json(

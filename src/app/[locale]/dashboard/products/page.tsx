@@ -236,7 +236,17 @@ export default function ProductsMarketplace() {
                   <div className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between mb-8 border border-gray-100">
                     <div className="flex items-center">
                        <div className="w-10 h-10 bg-emerald-200 text-emerald-800 rounded-full flex items-center justify-center font-bold text-lg mr-3">{selectedProduct.providerId.name.charAt(0)}</div>
-                       <div><p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Sold By</p><p className="font-bold text-emerald-950">{selectedProduct.providerId.name}</p></div>
+                       <div>
+                         <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Sold By</p>
+                         <p className="font-bold text-emerald-950 flex items-center">
+                           {selectedProduct.providerId.name}
+                           {selectedProduct.providerId.isVerifiedProvider && (
+                             <span title="Verified Provider" className="flex items-center">
+                               <ShieldCheck className="w-4 h-4 ml-1.5 text-emerald-600" />
+                             </span>
+                           )}
+                         </p>
+                       </div>
                     </div>
                     <a href={`tel:${selectedProduct.providerId.phone}`} className="text-emerald-600 font-bold bg-emerald-100 px-4 py-2 rounded-lg flex items-center"><Phone className="w-4 h-4 mr-2" /> Call Now</a>
                   </div>
