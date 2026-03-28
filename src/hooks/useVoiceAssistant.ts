@@ -316,11 +316,18 @@ export const useVoiceAssistant = () => {
         speak(result.responseSpeech);
       }
 
+      // if (autoNavigate && result.action === 'navigate' && result.path) {
+      //   setTimeout(() => {
+      //     router.push(result.path);
+      //   }, 1100);
+      // }
       if (autoNavigate && result.action === 'navigate' && result.path) {
-        setTimeout(() => {
-          router.push(result.path);
-        }, 1100);
-      }
+  setTimeout(() => {
+    if (result.path) {
+      router.push(result.path);
+    }
+  }, 1100);
+}
 
       if (keepAlive && recognitionRef.current) {
         recognitionRef.current.stop();
