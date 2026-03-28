@@ -4,6 +4,21 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sprout, Sun, CloudRain, Leaf, ArrowRight } from 'lucide-react';
 import Logo from './common/Logo';
+import {DEFAULT_LOCALE, SUPPORTED_LOCALES} from '@/i18n/locales';
+
+const SUPPORTED_LOCALE_SET = new Set(SUPPORTED_LOCALES);
+
+const getPreferredLocale = () => {
+  if (typeof window === 'undefined') return DEFAULT_LOCALE;
+
+  const pathLocale = window.location.pathname.split('/').filter(Boolean)[0];
+  if (pathLocale && SUPPORTED_LOCALE_SET.has(pathLocale as (typeof SUPPORTED_LOCALES)[number])) return pathLocale;
+
+  const storedLocale = localStorage.getItem('preferredLocale');
+  if (storedLocale && SUPPORTED_LOCALE_SET.has(storedLocale as (typeof SUPPORTED_LOCALES)[number])) return storedLocale;
+
+  return DEFAULT_LOCALE;
+};
 
 export default function SplashScreen() {
   const [progress, setProgress] = useState(0);
@@ -40,7 +55,8 @@ export default function SplashScreen() {
           setIsFinished(true);
           // Redirect after a brief pause when reaching 100%
           setTimeout(() => {
-            window.location.href = '/login';
+            const locale = getPreferredLocale();
+            window.location.href = `/${locale}/login`;
           }, 800);
           return 100;
         }
@@ -215,7 +231,10 @@ export default function SplashScreen() {
         className="absolute bottom-8 z-20"
       >
         <button 
-          onClick={() => window.location.href = '/login'}
+          onClick={() => {
+            const locale = getPreferredLocale();
+            window.location.href = `/${locale}/login`;
+          }}
           className="group flex items-center space-x-2 text-emerald-500/60 hover:text-emerald-400 transition-colors text-sm font-semibold"
         >
           <span>Skip Initialization</span>

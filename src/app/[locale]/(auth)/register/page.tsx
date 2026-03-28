@@ -123,8 +123,8 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(data.error || 'Registration failed');
 
       window.location.href = `/${locale}/login?registered=true`;
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
     } finally {
       setLoading(false);
     }

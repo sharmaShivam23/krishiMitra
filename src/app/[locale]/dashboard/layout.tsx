@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogOut, Loader2, Store } from 'lucide-react';
+import { LogOut, Loader2, Store, Menu, X } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { getNavLinks } from '@/app/Data/NavLinks'; 
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -17,6 +17,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const t = useTranslations('Dashboard');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [showMobileMore, setShowMobileMore] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useAutoLocation();
 
@@ -31,17 +33,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       .catch(err => console.error("Failed to fetch user role", err));
   }, []);
 
-  let navLinks = getNavLinks(t);
-  
-  if (userRole === 'provider') {
-    navLinks.push({
+  const navLinks = [
+    ...getNavLinks(t),
+    ...(userRole === 'provider'
+      ? [{
       id: 'provider-panel',
       // ✅ FIX: Added translation support here!
       name: t('nav.providerPanel') || 'Provider Panel', 
       href: '/dashboard/provider-panel',
       icon: <Store className="w-5 h-5" />
-    });
-  }
+    }]
+      : [])
+  ];
+
+  const mobilePrimaryIds = new Set(['overview', 'mandi', 'weather', 'disease']);
+  const mobilePrimaryLinks = navLinks.filter((link) => mobilePrimaryIds.has(link.id));
+  const mobileSecondaryLinks = navLinks.filter((link) => !mobilePrimaryIds.has(link.id));
+  const isSchemesPage = pathname?.toLowerCase().includes('/dashboard/schemes');
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -55,8 +63,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   };
 
+  const requestLogout = () => {
+    if (isLoggingOut) return;
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = async () => {
+    setShowLogoutConfirm(false);
+    await handleLogout();
+  };
+
   return (
-    <div className="min-h-screen bg-agri-50 flex font-sans selection:bg-agri-400 selection:text-agri-900">
+    <div className="min-h-screen bg-linear-to-b from-[#f5fbf7] to-[#edf6f1] flex font-sans selection:bg-agri-400 selection:text-agri-900">
       
       {/* 💻 DESKTOP SIDEBAR */}
       <aside className="hidden md:flex flex-col w-72 bg-agri-900 text-agri-100 fixed h-full z-40 shadow-2xl shadow-agri-900/50">
@@ -95,7 +113,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <div className="p-4 border-t border-white/10">
           <button 
-            onClick={handleLogout}
+            onClick={requestLogout}
             disabled={isLoggingOut}
             className="flex items-center w-full space-x-3 px-4 py-3.5 rounded-xl font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all duration-300"
           >
@@ -106,42 +124,111 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* 📱 MOBILE BOTTOM NAV */}
-      <nav className="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 z-50 pb-safe">
-        <div className="flex items-center gap-4 px-2 py-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-          {navLinks.map((link) => {
+      <nav className="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 z-50 pb-safe shadow-[0_-10px_30px_rgba(7,40,26,0.08)]">
+        <div className="mx-2 mb-2 mt-1 grid grid-cols-5 gap-1 rounded-2xl border border-agri-100/70 bg-white/95 px-1.5 py-1.5">
+          {mobilePrimaryLinks.map((link) => {
             const localizedHref = `/${locale}${link.href}`;
             const isActive = pathname === localizedHref;
             return (
               <Link 
                 key={link.id} 
                 href={localizedHref} 
-                className="flex flex-col items-center space-y-1 p-2 min-w-[72px] snap-center"
+                onClick={() => setShowMobileMore(false)}
+                className="flex flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 min-h-16 transition-colors"
               >
-                <div className={`p-1.5 rounded-xl transition-all duration-300 ${
+                <div className={`p-2 rounded-xl transition-all duration-300 ${
                   isActive ? 'bg-agri-100 text-agri-600' : 'text-gray-400 hover:text-agri-600'
                 }`}>
                   {link.icon}
                 </div>
-                <span className={`text-[10px] font-bold whitespace-nowrap ${isActive ? 'text-agri-600' : 'text-gray-400'}`}>
+                <span className={`text-[11px] leading-none font-bold whitespace-nowrap tracking-tight ${isActive ? 'text-agri-600' : 'text-gray-400'}`}>
                   {link.name.split(' ')[0]}
                 </span>
               </Link>
             );
           })}
+
+          <button
+            type="button"
+            onClick={() => setShowMobileMore((prev) => !prev)}
+            className={`flex flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 min-h-16 transition-colors ${showMobileMore ? 'text-agri-600' : 'text-gray-400'}`}
+          >
+            <div className={`p-2 rounded-xl transition-all duration-300 ${showMobileMore ? 'bg-agri-100' : ''}`}>
+              {showMobileMore ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </div>
+            <span className={`text-[11px] leading-none font-bold whitespace-nowrap tracking-tight ${showMobileMore ? 'text-agri-600' : 'text-gray-400'}`}>
+              More
+            </span>
+          </button>
         </div>
+
+        <AnimatePresence>
+          {showMobileMore && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ duration: 0.18 }}
+              className="mx-2 mb-2 rounded-2xl border border-gray-200 bg-white p-3 shadow-xl"
+            >
+              <div className="grid grid-cols-3 gap-2">
+                {mobileSecondaryLinks.map((link) => {
+                  const localizedHref = `/${locale}${link.href}`;
+                  const isActive = pathname === localizedHref;
+
+                  return (
+                    <Link
+                      key={link.id}
+                      href={localizedHref}
+                      onClick={() => setShowMobileMore(false)}
+                      className={`rounded-xl border px-2 py-3 flex flex-col items-center text-center gap-1 ${
+                        isActive
+                          ? 'border-agri-200 bg-agri-50 text-agri-700'
+                          : 'border-gray-200 text-gray-600 hover:border-agri-200 hover:text-agri-700'
+                      }`}
+                    >
+                      <div>{link.icon}</div>
+                      <span className="text-[11px] font-semibold leading-tight">{link.name}</span>
+                    </Link>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowMobileMore(false);
+                    requestLogout();
+                  }}
+                  className="rounded-xl border border-red-200 bg-red-50 px-2 py-3 flex flex-col items-center text-center gap-1 text-red-600 hover:bg-red-100 transition"
+                >
+                  <div>
+                    <LogOut className="w-4.5 h-4.5" />
+                  </div>
+                  <span className="text-[11px] font-semibold leading-tight">
+                    {isLoggingOut ? t('actions.loggingOut') : t('actions.signOut')}
+                  </span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* 📦 MAIN CONTENT AREA */}
-      <main className="flex-1 md:ml-72 w-full pb-24 md:pb-0 overflow-hidden relative">
-        <header className="md:hidden flex items-center justify-between p-5 bg-white border-b border-gray-100 sticky top-0 z-30 shadow-sm">
-          <div className="flex items-center space-x-2">
-            <img src="/favicon.ico" className='h-12 w-12' alt="Logo" />
-            <span className="text-xl font-black text-agri-900 tracking-tight">KrishiMitra</span>
-          </div>
-          <button onClick={handleLogout} className="text-gray-400 hover:text-red-500 transition-colors p-2 bg-gray-50 rounded-full">
-            <LogOut className="w-4 h-4" />
-          </button>
-        </header>
+      <main className={`flex-1 md:ml-72 w-full ${isSchemesPage ? 'pb-24 md:pb-0' : 'pb-36 md:pb-0'} overflow-hidden relative`}>
+        {!isSchemesPage && (
+          <header className="md:hidden flex items-center justify-between px-3.5 py-3 bg-white/95 backdrop-blur-md border-b border-agri-100 sticky top-0 z-30 shadow-[0_6px_24px_rgba(2,44,34,0.08)]">
+            <div className="flex items-center space-x-2 min-w-0">
+              <div className="h-10 w-10 rounded-full border border-agri-200 bg-white p-0.5 shadow-sm shrink-0">
+                <img src="/favicon.ico" className='h-full w-full rounded-full object-contain' alt="Logo" />
+              </div>
+              <span className="text-[1.65rem] leading-none font-black text-agri-900 tracking-[-0.02em] truncate">KrishiMitra</span>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <LanguageSwitcher compact />
+            </div>
+          </header>
+        )}
 
         <AnimatePresence mode="wait">
           <motion.div
@@ -150,12 +237,56 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="p-6 md:p-10 max-w-7xl mx-auto"
+            className={`${isSchemesPage ? 'p-0 md:p-10 max-w-none md:max-w-7xl' : 'p-4 sm:p-5 md:p-10 max-w-7xl'} mx-auto`}
           >
             {children}
           </motion.div>
         </AnimatePresence>
       </main>
+
+      <AnimatePresence>
+        {showLogoutConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-70 bg-black/45 backdrop-blur-[1px] flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 12, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.98 }}
+              transition={{ duration: 0.18 }}
+              className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-5 shadow-2xl"
+            >
+              <h3 className="text-lg font-black text-gray-900">Confirm Sign Out</h3>
+              <p className="mt-2 text-sm font-medium text-gray-600">
+                Are you sure you want to quit and sign out?
+              </p>
+
+              <div className="mt-5 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowLogoutConfirm(false)}
+                  disabled={isLoggingOut}
+                  className="flex-1 rounded-xl border border-gray-300 px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-50 transition disabled:opacity-60"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmLogout}
+                  disabled={isLoggingOut}
+                  className="flex-1 rounded-xl border border-red-300 bg-red-50 px-3 py-2.5 text-sm font-black text-red-600 hover:bg-red-100 transition disabled:opacity-60 inline-flex items-center justify-center gap-2"
+                >
+                  {isLoggingOut ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
+                  <span>{isLoggingOut ? t('actions.loggingOut') : t('actions.signOut')}</span>
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style dangerouslySetInnerHTML={{__html: `
         .scrollbar-hide::-webkit-scrollbar { display: none; }

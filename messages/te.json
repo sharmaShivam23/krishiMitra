@@ -105,7 +105,9 @@
       "services": "అద్దెలు",
       "weather": "వాతావరణం",
       "community": "సంఘం",
-      "schemes": "పథకాలు"
+      "schemes": "పథకాలు",
+      "products": "ఉత్పత్తులు",
+      "providerPanel": "ప్రొవైడర్ ప్యానెల్"
     },
     "actions": {
       "signOut": "సైన్ అవుట్",
