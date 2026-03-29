@@ -2,13 +2,17 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence  , Variants} from 'framer-motion';
+import { useTranslations, useLocale } from 'next-intl';
+import Link from 'next/link';
 import { 
   Sprout, Loader2, Phone, Lock, ArrowRight, 
-  ShieldCheck, CheckCircle2, Leaf, Sun, Droplets,
+  ShieldCheck, Leaf,
   Tractor
 } from 'lucide-react';
 
 function LoginForm() {
+  const t = useTranslations('Login');
+  const locale = useLocale();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -23,17 +27,17 @@ function LoginForm() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('registered') === 'true') {
-        setSuccessMsg('Account created successfully! Please sign in.');
+        setSuccessMsg(t('success'));
       }
     }
-  }, []);
+  }, [t]);
 
-  const handleChange = (e :any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (error) setError('');
   };
 
-  const handleSubmit = async (e :any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -53,10 +57,10 @@ function LoginForm() {
       }
 
       // Redirect using standard web API
-      window.location.href = '/dashboard';
+      window.location.href = `/${locale}/dashboard`;
       
-    } catch (err : any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Authentication failed');
     } finally {
       setLoading(false);
     }
@@ -105,14 +109,14 @@ function LoginForm() {
             exit={{ opacity: 0, height: 0, y: -10 }}
             className="p-4 rounded-xl bg-red-50 text-red-700 text-sm border border-red-100 font-semibold flex items-start"
           >
-            <ShieldCheck className="w-5 h-5 mr-3 text-red-500 flex-shrink-0 mt-0.5" />
+            <ShieldCheck className="w-5 h-5 mr-3 text-red-500 shrink-0 mt-0.5" />
             <span>{error}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.div variants={itemVariant}>
-        <label htmlFor="phone" className="block text-sm font-bold text-gray-700 mb-1.5">Phone Number</label>
+        <label htmlFor="phone" className="block text-sm font-bold text-gray-700 mb-1.5">{t('phone')}</label>
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <Phone className="h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
@@ -120,7 +124,7 @@ function LoginForm() {
           <div className="absolute inset-y-0 left-11 flex items-center pointer-events-none">
             <span className="text-gray-500 font-medium pl-1">+91</span>
           </div>
-          <input id="phone" name="phone" type="tel" required value={formData.phone} onChange={handleChange}
+          <input id="phone" name="phone" type="tel" inputMode="numeric" pattern="[0-9]{10}" required value={formData.phone} onChange={handleChange}
             className="block w-full pl-20 pr-4 py-3.5 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-medium transition-all bg-white hover:border-gray-300 text-gray-900"
             placeholder="98765 43210"
             maxLength={10}
@@ -130,9 +134,9 @@ function LoginForm() {
 
       <motion.div variants={itemVariant}>
         <div className="flex justify-between items-center mb-1.5">
-          <label htmlFor="password" className="block text-sm font-bold text-gray-700">Password</label>
+          <label htmlFor="password" className="block text-sm font-bold text-gray-700">{t('password')}</label>
           <a href="#" className="text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline">
-            Forgot password?
+            {t('forgot')}
           </a>
         </div>
         <div className="relative group">
@@ -141,7 +145,7 @@ function LoginForm() {
           </div>
           <input id="password" name="password" type="password" required value={formData.password} onChange={handleChange}
             className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-medium transition-all bg-white hover:border-gray-300 text-gray-900"
-            placeholder="Enter your password"
+            placeholder={t('placeholder')}
           />
         </div>
       </motion.div>
@@ -153,9 +157,9 @@ function LoginForm() {
           <div className="absolute inset-0 w-full h-full bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
           <span className="relative flex items-center">
             {loading ? (
-              <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Authenticating...</>
+              <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {t('loading')}</>
             ) : (
-              <>Sign In <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" /></>
+              <>{t('button')} <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" /></>
             )}
           </span>
         </button>
@@ -165,6 +169,9 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
+  const t = useTranslations('Login');
+  const locale = useLocale();
+
   return (
     <div className="min-h-screen bg-white flex font-sans selection:bg-emerald-200 selection:text-emerald-900 overflow-hidden">
       
@@ -183,7 +190,7 @@ export default function LoginPage() {
             transition={{ duration: 0.5 }}
             className="mb-8 lg:mb-12"
           >
-            <a href="/" className="inline-flex items-center space-x-2.5 group">
+            <Link href={`/${locale}`} className="inline-flex items-center space-x-2.5 group">
               <div className="p-2.5 rounded-xl shadow-lg shadow-emerald-600/20 group-hover:bg-emerald-700 transition-colors">
                 {/* <Sprout className="w-6 h-6 text-white" />
                  */}
@@ -192,7 +199,7 @@ export default function LoginPage() {
               <span className="text-2xl font-black tracking-tight text-gray-900">
                 Krishi<span className="text-emerald-600">Mitra</span>
               </span>
-            </a>
+            </Link>
           </motion.div>
 
           {/* Header */}
@@ -203,13 +210,13 @@ export default function LoginPage() {
             className="mb-8"
           >
             <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
-              Welcome back.
+              {t('title')}
             </h2>
             <p className="text-base text-gray-500 font-medium">
-              New to KrishiMitra?{' '}
-              <a href="/register" className="text-emerald-600 font-bold hover:text-emerald-700 transition-colors underline-offset-2 hover:underline">
-                Create an account
-              </a>
+              {t('switchText')}{' '}
+              <Link href={`/${locale}/register`} className="text-emerald-600 font-bold hover:text-emerald-700 transition-colors underline-offset-2 hover:underline">
+                {t('switchLink')}
+              </Link>
             </p>
           </motion.div>
 
@@ -254,16 +261,16 @@ export default function LoginPage() {
             </div>
 
             <h3 className="text-3xl lg:text-5xl font-black text-white leading-tight mb-6">
-              Grow smarter, <br/><span className="text-emerald-400">harvest better.</span>
+              {t('featureTitle')}
             </h3>
             
             <p className="text-emerald-50 text-lg font-medium mb-10 max-w-lg mx-auto leading-relaxed">
-              Access your personalized dashboard to track weather, monitor crop health, and get real-time market insights all in one place.
+              {t('featureDesc')}
             </p>
 
             <div className="inline-flex items-center space-x-2 bg-emerald-950/50 rounded-full px-5 py-2 border border-emerald-500/30 backdrop-blur-sm">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span className="text-emerald-100 text-sm font-bold tracking-wide">SYSTEM ONLINE & SECURE</span>
+              <span className="text-emerald-100 text-sm font-bold tracking-wide">{t('systemStatus')}</span>
             </div>
             
           </div>

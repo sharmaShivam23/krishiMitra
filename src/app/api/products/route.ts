@@ -27,7 +27,7 @@ export async function GET(req: Request) {
     }
 
     const products = await PesticideProduct.find(query)
-      .populate('providerId', 'name phone')
+      .populate('providerId', 'name phone isVerifiedProvider')
       .sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, products }, { status: 200 });

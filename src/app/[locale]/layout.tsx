@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import {SUPPORTED_LOCALES} from '@/i18n/locales';
 import "../globals.css";
 import FloatingVoiceAssistant from "@/components/FloatingVoiceAssistant";
 
@@ -21,12 +22,6 @@ export const metadata: Metadata = {
   description: "Empowering the Modern Farmer",
 };
 
-const locales = [
-  'en', 'hi', 'pa', 'mr', 'bn', 'te', 'ta',
-  'as', 'gu', 'kn', 'ml', 'or', 'ur', 'sa', 'sd',
-  'ne', 'mai', 'doi', 'gom', 'sat', 'ks', 'mni'
-];
-
 export default async function RootLayout({
   children,
   params,
@@ -37,7 +32,7 @@ export default async function RootLayout({
   
   const { locale } = await params;
 
-  if (!locales.includes(locale as any)) notFound();
+  if (!SUPPORTED_LOCALES.includes(locale as (typeof SUPPORTED_LOCALES)[number])) notFound();
 
   const messages = await getMessages();
 

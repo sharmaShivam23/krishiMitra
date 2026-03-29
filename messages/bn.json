@@ -4,7 +4,7 @@
     "joinNetwork": "নেটওয়ার্কে যোগ দিন"
   },
   "Hero": {
-    "title1": "দেশের কৃষক",
+    "title1": "দেশ কে কিসানো",
     "title2": "কা ডিজিটাল মিত্র",
     "subtitle": "স্মার্ট ফার্মিং টুল, লাইভ মান্ডির দাম, এবং ভারতীয় কৃষকদের আরও বৃদ্ধি পেতে এবং আরও উপার্জন করতে সাহায্য করার জন্য তৈরি আবহাওয়ার আপডেট।",
     "btnAdvisor": "স্মার্ট অ্যাডভাইজার শুরু করুন",
@@ -15,36 +15,36 @@
     "subheading": "অনুমান করা বন্ধ করুন। ভারতীয় কৃষির জন্য তৈরি আমাদের সহজে ব্যবহারযোগ্য কৃষি সরঞ্জাম ব্যবহার করে আত্মবিশ্বাসের সাথে বেড়ে উঠুন।",
     "items": {
       "cropIntel": {
-        "title": "Smart Crop Guide",
-        "desc": "Find out the best time to sow and harvest based on your local soil and weather."
+        "title": "স্মার্ট ক্রপ গাইড",
+        "desc": "আপনার স্থানীয় মাটি এবং আবহাওয়ার উপর ভিত্তি করে বপন এবং ফসল কাটার সর্বোত্তম সময় খুঁজুন।"
       },
       "sellPredictor": {
-        "title": "Best Time to Sell",
-        "desc": "Find out the right time to sell your crops for the highest profit."
+        "title": "বিক্রি করার সেরা সময়",
+        "desc": "সর্বোচ্চ লাভের জন্য আপনার ফসল বিক্রি করার সঠিক সময় খুঁজে বের করুন।"
       },
       "diseaseVision": {
-        "title": "Crop Disease Scanner",
-        "desc": "Take a photo of a sick plant. Instantly find out the disease and how to treat it."
+        "title": "ফসলের রোগ স্ক্যানার",
+        "desc": "একটি অসুস্থ উদ্ভিদ একটি ছবি তুলুন. তাত্ক্ষণিকভাবে রোগটি এবং কীভাবে এটি চিকিত্সা করা যায় তা খুঁজে বের করুন।"
       },
       "microClimate": {
-        "title": "7-Day Local Weather",
-        "desc": "Get accurate 7-day weather forecasts for your exact farm location."
+        "title": "7 দিনের স্থানীয় আবহাওয়া",
+        "desc": "আপনার সঠিক খামার অবস্থানের জন্য সঠিক 7-দিনের আবহাওয়ার পূর্বাভাস পান।"
       },
       "mandiRates": {
-        "title": "Live Mandi Prices",
-        "desc": "Check daily, live APMC Mandi prices for your crops across India."
+        "title": "লাইভ মান্ডি দাম",
+        "desc": "সারা ভারত জুড়ে আপনার ফসলের জন্য প্রতিদিন, লাইভ APMC মান্ডির দাম দেখুন।"
       },
       "community": {
-        "title": "Farmer Community",
-        "desc": "Connect with other farmers. Ask questions, share advice, and help each other."
+        "title": "কৃষক সম্প্রদায়",
+        "desc": "অন্যান্য কৃষকদের সাথে সংযোগ করুন। প্রশ্ন জিজ্ঞাসা করুন, পরামর্শ ভাগ করুন এবং একে অপরকে সাহায্য করুন।"
       },
       "schemes": {
-        "title": "Govt. Schemes Locator",
-        "desc": "Easily find government subsidies and farming schemes you are eligible for."
+        "title": "সরকার স্কিম লোকেটার",
+        "desc": "সহজে সরকারী ভর্তুকি এবং কৃষি প্রকল্পগুলি সন্ধান করুন যার জন্য আপনি যোগ্য৷"
       },
       "yieldAnalytics": {
-        "title": "Harvest Tracker",
-        "desc": "Keep a record of your past harvests to plan better for the next season."
+        "title": "ফসল ট্র্যাকার",
+        "desc": "পরবর্তী মৌসুমের জন্য আরও ভাল পরিকল্পনা করতে আপনার অতীতের ফসলের একটি রেকর্ড রাখুন।"
       }
     }
   },
@@ -56,7 +56,7 @@
     "list1": "স্থানীয় এসএমএস সতর্কতার সাথে লাইভ APMC মান্ডি দাম",
     "list2": "স্থানীয় ট্রাক্টর, সরঞ্জাম, এবং কৃষি শ্রমিক ভাড়া করুন",
     "list3": "স্মার্ট কৃষি উপদেষ্টা এবং যাচাইকৃত সরকারী প্রকল্প",
-    "stat1Label": "মান্ডি প্রাইসিং",
+    "stat1Label": "মান্ডি মূল্য",
     "stat1Value": "রিয়েল-টাইম",
     "stat2Label": "প্ল্যাটফর্ম কভারেজ",
     "stat2Value": "প্যান-ইন্ডিয়া"
@@ -81,7 +81,7 @@
     "resourcesHeading": "সম্পদ",
     "resourcesLinks": {
       "community": "কৃষক সম্প্রদায়",
-      "guides": "কৃষি নির্দেশিকা",
+      "guides": "চাষ নির্দেশিকা",
       "market": "বাজার রিপোর্ট",
       "success": "সাফল্যের গল্প",
       "help": "কিষাণ সহায়তা কেন্দ্র"
@@ -105,13 +105,15 @@
       "services": "ভাড়া",
       "weather": "আবহাওয়া",
       "community": "সম্প্রদায়",
-      "schemes": "স্কিম"
+      "schemes": "স্কিম",
+      "products": "পণ্য",
+      "providerPanel": "প্রদানকারী প্যানেল"
     },
     "actions": {
       "signOut": "সাইন আউট",
       "loggingOut": "সাইন আউট হচ্ছে..."
     },
-    "brand": "কৃষি মিত্র"
+    "brand": "কৃষিমিত্র"
   },
   "DashboardOverview": {
     "welcome": "আবার স্বাগতম, {name}",
@@ -123,22 +125,22 @@
       "title": "লাইভ স্থানীয় আবহাওয়া",
       "loading": "আবহাওয়া পরীক্ষা করা হচ্ছে...",
       "conditions": {
-        "clear": "Clear Sky",
-        "cloudy": "Partly Cloudy",
-        "foggy": "Foggy",
-        "rain": "Rain",
-        "heavyRain": "Heavy Rain",
-        "thunder": "Thunderstorm"
+        "clear": "পরিষ্কার আকাশ",
+        "cloudy": "আংশিক মেঘলা",
+        "foggy": "কুয়াশাচ্ছন্ন",
+        "rain": "বৃষ্টি",
+        "heavyRain": "প্রবল বৃষ্টি",
+        "thunder": "বজ্রপাত"
       }
     },
     "deployment": {
       "title": "বর্তমান ফসল",
       "subtitle": "আপনার চাষের অগ্রগতি",
-      "dayTracker": "{total}-এর {চলতি} দিন",
+      "dayTracker": "{total} এর {current} দিন",
       "cropName": "গম (HD 3086)",
       "healthLabel": "ফসল স্বাস্থ্য",
       "healthValue": "ভাল",
-      "harvestProgress": "ফসল কাটার জন্য {percent}%"
+      "harvestProgress": "{percent}% ফসল কাটাতে"
     },
     "mandi": {
       "title": "স্থানীয় মান্ডির দাম",
@@ -150,7 +152,7 @@
       "title": "কৃষি উপদেষ্টা",
       "monitoring": "আপনার ফসল নিরাপদ রাখতে আমরা আপনার স্থানীয় আবহাওয়ার উপর নজর রাখছি।",
       "fungalWarningTitle": "রোগ সতর্কতা: উচ্চ আর্দ্রতা",
-      "fungalWarningDesc": "আর্দ্রতা বর্তমানে {আর্দ্রতা}। ইউরিয়া প্রয়োগ করার আগে অপেক্ষা করুন এবং নীচের পাতাগুলি কোন রোগের জন্য পরীক্ষা করুন।",
+      "fungalWarningDesc": "আর্দ্রতা বর্তমানে {humidity}। ইউরিয়া প্রয়োগ করার আগে অপেক্ষা করুন এবং নীচের পাতাগুলি কোন রোগের জন্য পরীক্ষা করুন।",
       "optimalTitle": "ভালো আবহাওয়া",
       "optimalDesc": "বর্তমান আবহাওয়া আপনার ফসলের জন্য নিরাপদ। আপনি স্বাভাবিক হিসাবে আপনার ক্ষেত জল দিতে পারেন.",
       "button": "বুঝেছি"
@@ -178,21 +180,314 @@
     "enterOtp": "6-ডিজিটের কোড লিখুন",
     "verifyBtn": "যাচাই করুন এবং নিবন্ধন করুন",
     "otpSentTo": "এসএমএসের মাধ্যমে কোড পাঠানো হয়েছে",
-    "back": "ব্যাক"
+    "back": "ফিরে"
   },
   "Login": {
-    "title": "Welcome back.",
-    "switchText": "New to KrishiMitra?",
-    "switchLink": "Create an account",
-    "phone": "Phone Number",
-    "password": "Password",
-    "forgot": "Forgot password?",
-    "placeholder": "Enter your password",
-    "button": "Sign In",
-    "loading": "Signing in...",
-    "success": "Account created successfully! Please sign in.",
-    "featureTitle": "Grow smarter, harvest better.",
-    "featureDesc": "Check your weather, keep your crops healthy, and get real-time market prices all in one place.",
-    "systemStatus": "SYSTEM ONLINE"
+    "title": "আবার স্বাগতম।",
+    "switchText": "কৃষিমিত্রে নতুন?",
+    "switchLink": "একটি অ্যাকাউন্ট তৈরি করুন",
+    "phone": "ফোন নম্বর",
+    "password": "পাসওয়ার্ড",
+    "forgot": "পাসওয়ার্ড ভুলে গেছেন?",
+    "placeholder": "আপনার পাসওয়ার্ড লিখুন",
+    "button": "সাইন ইন করুন",
+    "loading": "সাইন ইন করা হচ্ছে...",
+    "success": "অ্যাকাউন্ট সফলভাবে তৈরি করা হয়েছে! অনুগ্রহ করে সাইন ইন করুন।",
+    "featureTitle": "বুদ্ধিমান হও, ভাল ফসল কাটাও।",
+    "featureDesc": "আপনার আবহাওয়া পরীক্ষা করুন, আপনার ফসল সুস্থ রাখুন এবং এক জায়গায় রিয়েল-টাইম বাজার মূল্য পান।",
+    "systemStatus": "সিস্টেম অনলাইন"
+  },
+  "SellingPools": {
+    "title": "গ্রুপ সেলিং",
+    "subtitle": "আপনার ফসল একসাথে বিক্রি করতে স্থানীয় কৃষকদের সাথে হাত মেলান। সরাসরি মান্ডিতে বাল্ক বিক্রি করে ভালো দাম পান।",
+    "startBtn": "একটি গ্রুপ শুরু করুন",
+    "activePools": "সক্রিয় বিক্রয় গ্রুপ",
+    "syncing": "মান্ডি রেকর্ড পরীক্ষা করা হচ্ছে...",
+    "noPools": "এই মুহূর্তে কোনো সক্রিয় গ্রুপ নেই। একটি শুরু প্রথম হতে!",
+    "expected": "প্রত্যাশিত: ₹{price}/q",
+    "quintals": "{current} / {target} কুইন্টাল",
+    "farmers": "{count} কৃষক",
+    "closes": "বন্ধ: {date}",
+    "pledgeBtn": "আমার ফসল যোগ করুন",
+    "viewMembers": "সদস্যদের দেখুন",
+    "targetReached": "লক্ষ্যে পৌঁছেছে",
+    "targetRate": "লক্ষ্য হার",
+    "currentVolume": "বর্তমান ভলিউম",
+    "network": "নেটওয়ার্ক",
+    "closing": "বন্ধ হচ্ছে",
+    "poolClosed": "গ্রুপ বন্ধ",
+    "membersModal": {
+      "title": "গ্রুপের সদস্যরা",
+      "subtitle": "পরিবহন এবং বিক্রয় ব্যবস্থা করার জন্য সদস্যদের কল বা বার্তা.",
+      "creator": "গ্রুপ লিডার",
+      "member": "সদস্য",
+      "call": "কল",
+      "whatsapp": "হোয়াটসঅ্যাপ"
+    },
+    "createModal": {
+      "title": "সেলিং গ্রুপ তৈরি করুন",
+      "commodity": "ফসলের নাম",
+      "mandi": "মান্ডি/বাজার",
+      "target": "লক্ষ্য পরিমাণ (কুইন্টাল)",
+      "pledge": "আপনার ফসলের পরিমাণ (কুইন্টাল)",
+      "price": "প্রত্যাশিত মূল্য (₹/কুইন্টাল)",
+      "date": "বন্ধের তারিখ",
+      "submit": "গ্রুপ তৈরি করুন"
+    },
+    "joinModal": {
+      "title": "গ্রুপে ফসল যোগ করুন",
+      "quantity": "যোগ করার পরিমাণ (কুইন্টাল)",
+      "submit": "পরিমাণ নিশ্চিত করুন"
+    }
+  },
+  "CropIntelligence": {
+    "title": "স্মার্ট ক্রপ গাইড",
+    "subtitle": "আপনার খামারের আউটপুট বাড়ানোর জন্য সর্বোত্তম পরামর্শ পান",
+    "viewDirectory": "ক্রপ তালিকা দেখুন",
+    "formTitle": "আপনার খামার বিবরণ",
+    "targetCrop": "আপনি কোন ফসল ক্রমবর্ধমান?",
+    "selectCrop": "ক্রপ নির্বাচন করুন...",
+    "region": "অঞ্চল",
+    "regionPlaceholder": "যেমন, মিরাট, উত্তরপ্রদেশ",
+    "weather": "বর্তমান আবহাওয়া",
+    "weatherPlaceholder": "যেমন, উচ্চ আর্দ্রতা, বর্ষা",
+    "soil": "মাটির ধরন",
+    "soilPlaceholder": "যেমন, পাললিক, সুনিষ্কাশিত",
+    "detectBtn": "সেরা পরামর্শ চেক করুন",
+    "detectingBtn": "পরীক্ষা করা হচ্ছে...",
+    "language": "পরামর্শের ভাষা",
+    "runAnalysis": "চাষ পরিকল্পনা পান",
+    "analyzing": "পরিকল্পনা তৈরি করা হচ্ছে...",
+    "directoryTitle": "ফসল তথ্য তালিকা",
+    "registered": "পাওয়া যায়",
+    "loadingDb": "ক্রপ বিশদ লোড হচ্ছে...",
+    "cycle": "বড় হওয়ার সময়",
+    "estYield": "প্রত্যাশিত ফলন",
+    "waterNeed": "জল প্রয়োজন",
+    "compatibleSoil": "সেরা মাটির ধরন",
+    "loadingAiTitle": "সর্বোত্তম অনুশীলন পরীক্ষা করা হচ্ছে",
+    "loadingAiDesc": "{crop} এর জন্য স্থানীয় মাটি এবং আবহাওয়ার মিল দেখছি...",
+    "errorTitle": "পরিকল্পনা লোড করা যায়নি",
+    "dbMatch": "রেকর্ডে পাওয়া গেছে",
+    "localName": "স্থানীয় নাম",
+    "aiPlanTitle": "আপনার কৃষি পরিকল্পনা"
+  },
+  "DiseaseDetection": {
+    "title": "পাতার রোগ স্ক্যানার",
+    "subtitle": "একটি অসুস্থ পাতার একটি পরিষ্কার ছবি আপলোড করুন. আমরা আপনাকে রোগটি এবং এটি কীভাবে চিকিত্সা করতে হবে তা বলব।",
+    "imageInputTitle": "ছবি আপলোড করুন",
+    "uploadPrompt": "একটি ছবি আপলোড বা ড্রপ করতে এখানে ক্লিক করুন",
+    "uploadSub": "JPG বা PNG (সর্বোচ্চ 5MB)",
+    "uploadingStatus": "আপলোড এবং পরীক্ষা করা হচ্ছে...",
+    "errorSize": "ছবি অনেক বড়। অনুগ্রহ করে 5MB এর চেয়ে ছোট একটি ছবি আপলোড করুন৷",
+    "btnAnalyzing": "ছবি পরীক্ষা করা হচ্ছে...",
+    "btnComplete": "স্ক্যান শেষ",
+    "btnInitialize": "এই ফটো স্ক্যান করুন",
+    "systemNotice": "গুরুত্বপূর্ণ বিজ্ঞপ্তি",
+    "awaitingTelemetry": "ছবির জন্য অপেক্ষা করছি",
+    "awaitingDesc": "রোগের বিশদ বিবরণ এবং চিকিত্সার পরিকল্পনা দেখতে এখানে একটি ছবি আপলোড করুন।",
+    "analysisComplete": "স্ক্যান সম্পূর্ণ",
+    "confidenceTitle": "আমরা কতটা নিশ্চিত?",
+    "detectedCondition": "রোগ পাওয়া গেছে",
+    "cropStatus": "ফসলের অবস্থা",
+    "potentialHarm": "বিপদের স্তর",
+    "actionPlan": "কিভাবে এটি চিকিত্সা",
+    "scanAnotherBtn": "আরেকটি পাতা স্ক্যান করুন",
+    "language": "প্রতিক্রিয়ার ভাষা"
+  },
+  "EquipmentExchange": {
+    "badge": "কৃষি এক্সচেঞ্জ",
+    "title1": "ট্রাক্টর ভাড়া",
+    "title2": "খামার সেবা",
+    "subtitle": "ভাল মানের কৃষি মেশিন ভাড়া করুন বা আপনার ক্ষেত্রের জন্য স্থানীয় শ্রমিকদের ভাড়া করুন।",
+    "postListingBtn": "ভাড়া রাখুন",
+    "tabRent": "ভাড়া সরঞ্জাম",
+    "tabService": "শ্রমিক নিয়োগ করুন",
+    "searchPlaceholder": "ট্রাক্টর, শ্রমিকদের সন্ধান করুন...",
+    "loading": "তালিকা লোড হচ্ছে...",
+    "errorTitle": "তালিকা লোড করা যায়নি",
+    "emptyTitle": "এখানে কিছুই পাওয়া যায়নি",
+    "emptyDesc": "আমরা এই এলাকায় আপনার অনুসন্ধানের সাথে মিলে যাওয়া কোনো {type} খুঁজে পাইনি।",
+    "typeEquipment": "সরঞ্জাম",
+    "typeServices": "সেবা",
+    "condition": "অবস্থা",
+    "operatorIncluded": "ড্রাইভার অন্তর্ভুক্ত",
+    "owner": "মালিক",
+    "verifiedFarmer": "যাচাইকৃত কৃষক",
+    "equipmentLabel": "মেশিন:",
+    "jobTypeLabel": "কাজের ধরন:",
+    "generalJob": "সাধারণ কাজ",
+    "categories": {
+      "All Equipment": "সমস্ত সরঞ্জাম",
+      "Tractor": "ট্রাক্টর",
+      "Harvester": "হারভেস্টার",
+      "Sprayer": "স্প্রেয়ার",
+      "Cultivator": "চাষী",
+      "Seeder": "সিডার",
+      "Other": "অন্যান্য"
+    }
+  },
+  "PostListing": {
+    "back": "তালিকায় ফিরে যান",
+    "title": "একটি নতুন বিজ্ঞাপন তৈরি করুন",
+    "subtitle": "ভাড়ার জন্য আপনার মেশিনগুলি অফার করুন বা অন্যদের কাছে আপনার খামার পরিষেবাগুলি অফার করুন।",
+    "rentEquipment": "রেন্ট আউট মেশিন",
+    "offerService": "খামারের কাজ অফার করুন",
+    "basicDetails": "মৌলিক বিবরণ",
+    "listingTitle": "বিজ্ঞাপনের শিরোনাম *",
+    "titlePlaceholderRent": "যেমন Mahindra 575 DI ভাড়া",
+    "titlePlaceholderService": "যেমন ট্র্যাক্টর চাষ পরিষেবা",
+    "category": "বিভাগ *",
+    "condition": "শর্ত *",
+    "condExcellent": "চমৎকার (নতুনের মতো)",
+    "condGood": "ভাল (নিখুঁতভাবে কাজ করে)",
+    "condFair": "ন্যায্য (ছোট সংশোধন প্রয়োজন)",
+    "description": "বিস্তারিত",
+    "descPlaceholder": "যন্ত্রের বর্ণনা, ভাড়ার নিয়ম বা আপনি কী কাজ করবেন...",
+    "technicalDetails": "মেশিনের বিবরণ",
+    "equipName": "মেশিনের নাম/মডেল*",
+    "equipPlaceholder": "যেমন জন ডিয়ার 5310 55HP",
+    "jobType": "কাজের ধরন",
+    "jobPlaceholder": "যেমন চাষ করা, বপন করা",
+    "estCapacity": "দৈনিক আউটপুট",
+    "capPlaceholder": "যেমন প্রতিদিন 10 একর",
+    "pricingLocation": "মূল্য এবং অবস্থান",
+    "ratePrice": "রেট / মূল্য *",
+    "perDay": "প্রতিদিন",
+    "perHour": "প্রতি ঘন্টা",
+    "perAcre": "প্রতি একর",
+    "perHectare": "প্রতি হেক্টর",
+    "state": "রাজ্য*",
+    "selectState": "রাজ্য নির্বাচন করুন",
+    "district": "জেলা*",
+    "districtPlaceholder": "যেমন মিরাট",
+    "village": "গ্রাম / এলাকা (ঐচ্ছিক)",
+    "villagePlaceholder": "যেমন মোদিনগর",
+    "cancel": "বাতিল করুন",
+    "publishing": "বিজ্ঞাপন পোস্ট করা হচ্ছে...",
+    "publishListing": "বিজ্ঞাপন পোস্ট করুন",
+    "errFillAll": "সমস্ত প্রয়োজনীয় বাক্স পূরণ করুন.",
+    "errApi": "সার্ভার সমস্যা। পরে আবার চেষ্টা করুন.",
+    "errFailed": "বিজ্ঞাপন তৈরি করতে ব্যর্থ হয়েছে৷",
+    "successMsg": "বিজ্ঞাপন সফলভাবে পোস্ট করা হয়েছে! তোমাকে ফিরিয়ে নিয়ে যাচ্ছে...",
+    "categories": {
+      "Tractor": "ট্রাক্টর",
+      "Harvester": "হারভেস্টার",
+      "Sprayer": "স্প্রেয়ার",
+      "Cultivator": "চাষী",
+      "Seeder": "সিডার",
+      "Other": "অন্যান্য"
+    },
+    "states": {
+      "Uttar Pradesh": "উত্তরপ্রদেশ",
+      "Punjab": "পাঞ্জাব",
+      "Haryana": "হরিয়ানা",
+      "Maharashtra": "মহারাষ্ট্র",
+      "Madhya Pradesh": "মধ্যপ্রদেশ",
+      "Gujarat": "গুজরাট",
+      "Rajasthan": "রাজস্থান"
+    }
+  },
+  "WeatherIntelligence": {
+    "locating": "আপনার অবস্থান খোঁজা হচ্ছে...",
+    "calibrating": "স্থানীয় আবহাওয়া স্টেশন পরীক্ষা করা হচ্ছে...",
+    "connecting": "লাইভ আবহাওয়ার আপডেট পাওয়া যাচ্ছে...",
+    "title": "স্থানীয় আবহাওয়ার আপডেট",
+    "subtitle": "আপনার খামার এবং ফসল রক্ষা করার জন্য লাইভ আবহাওয়ার বিবরণ এবং পরামর্শ।",
+    "liveReading": "এখানে লাইভ রিডিং:",
+    "synchronizing": "আপডেট হচ্ছে...",
+    "humidity": "আর্দ্রতা",
+    "wind": "বাতাস",
+    "rainRisk": "বৃষ্টির সম্ভাবনা",
+    "uvIndex": "সূর্যালোক (UV)",
+    "actionPlan": "কৃষি পরামর্শ",
+    "recalculating": "কৃষি পরামর্শ আপডেট করা হচ্ছে...",
+    "stableConditions": "আবহাওয়া স্বাভাবিক। আজ কোন বিশেষ পদক্ষেপের প্রয়োজন নেই।",
+    "predictionModel": "7-দিনের আবহাওয়ার পূর্বাভাস",
+    "today": "আজ",
+    "weather": {
+      "clearSky": "পরিষ্কার আকাশ",
+      "partlyCloudy": "আংশিক মেঘলা",
+      "foggy": "কুয়াশাচ্ছন্ন",
+      "drizzle": "হালকা বৃষ্টি",
+      "rain": "বৃষ্টি",
+      "snow": "তুষার",
+      "heavyRain": "প্রবল বৃষ্টি",
+      "thunderstorm": "বজ্রপাত",
+      "unknown": "অজানা"
+    },
+    "recs": {
+      "delayIrrigationTitle": "আজ জল দেওয়া বন্ধ করুন",
+      "delayIrrigationDesc": "আগামী ৪৮ ঘণ্টায় বৃষ্টির উচ্চ সম্ভাবনা রয়েছে। বন্যা থেকে রোধ করতে আপনার ক্ষেতে জল দেওয়ার আগে অপেক্ষা করুন।",
+      "irrigationOpenTitle": "জল ক্ষেত্র নিরাপদ",
+      "irrigationOpenDesc": "শীঘ্রই কোনো ভারী বৃষ্টির সম্ভাবনা নেই। যথারীতি আপনার ফসলে জল দেওয়া নিরাপদ।",
+      "poorSprayTitle": "কীটনাশক স্প্রে করবেন না",
+      "poorSprayDesc": "এই মুহূর্তে খুব দ্রুত বাতাস বইছে ({windSpeed} কিমি/ঘণ্টা)। রাসায়নিক স্প্রে এখন আপনার ফসল থেকে দূরে উড়িয়ে দেবে.",
+      "optimalSprayTitle": "স্প্রে করার জন্য ভাল সময়",
+      "optimalSprayDesc": "কম বাতাস এবং বৃষ্টিপাত না হওয়ায় আজকে সার বা কীটনাশক স্প্রে করার উপযুক্ত সময় হয়ে উঠেছে।",
+      "fungalRiskTitle": "ফসলের রোগের উচ্চ বিপদ",
+      "fungalRiskDesc": "উষ্ণ আবহাওয়া এবং {humidity}% আর্দ্রতা ফসলের জন্য খারাপ। রোগের কোনো লক্ষণের জন্য পাতাগুলিকে ঘনিষ্ঠভাবে পরীক্ষা করুন।"
+    }
+  },
+  "CommunityForum": {
+    "title": "কৃষক সম্প্রদায়",
+    "subtitle": "অন্যান্য কৃষকদের সাথে সংযোগ করুন। প্রশ্ন জিজ্ঞাসা করুন, পরামর্শ ভাগ করুন এবং একসাথে বেড়ে উঠুন।",
+    "newDiscussion": "একটি প্রশ্ন জিজ্ঞাসা করুন",
+    "searchPlaceholder": "ক্রপ বা বিষয় অনুসারে প্রশ্ন অনুসন্ধান করুন...",
+    "loading": "আলোচনা লোড হচ্ছে...",
+    "noPosts": "কোন আলোচনা পাওয়া যায়নি. একটি প্রশ্ন জিজ্ঞাসা প্রথম হতে!",
+    "replies": "উত্তর",
+    "resolved": "সমাধান করা হয়েছে",
+    "noReplies": "এখনো কোন উত্তর নেই. এই কৃষককে সাহায্য করুন!",
+    "replyPlaceholder": "আপনার পরামর্শ এখানে লিখুন...",
+    "mandiPool": "মান্ডিতে গ্রুপ সেলিং",
+    "groupPower": "কেন একসাথে বিক্রি?",
+    "sellAlone": "একা বিক্রি: আপনি উচ্চ পরিবহন খরচ প্রদান করেন এবং ব্যবসায়ী আপনাকে যে মূল্য দেয় তা গ্রহণ করতে হবে।",
+    "sellTogether": "একসাথে বিক্রি করা: মান্ডিতে প্রচুর পরিমাণে ফসল আনুন। ব্যবসায়ীরা কিনতে প্রতিদ্বন্দ্বিতা করে, আপনি একটি উচ্চ মূল্য পাচ্ছেন।",
+    "startPool": "একটি স্থানীয় গ্রুপ শুরু করুন",
+    "trending": "জনপ্রিয় বিষয়",
+    "posts": "পোস্ট",
+    "noData": "জনপ্রিয় বিষয়গুলি দেখানোর জন্য এখনও পর্যাপ্ত পোস্ট নেই৷",
+    "topContributors": "সবচেয়ে সহায়ক কৃষক",
+    "discussions": "প্রশ্ন",
+    "beFirst": "একটি প্রশ্ন জিজ্ঞাসা প্রথম হতে!",
+    "modalTitle": "একটি প্রশ্ন জিজ্ঞাসা করুন",
+    "qTitle": "প্রশ্নের শিরোনাম *",
+    "qPlaceholder": "যেমন, কোনটি সবচেয়ে ভালো সার...",
+    "state": "আপনার রাজ্য / অঞ্চল *",
+    "selectState": "একটি রাজ্য নির্বাচন করুন...",
+    "tags": "কীওয়ার্ড (কমা দ্বারা পৃথক করা)",
+    "tagsPlaceholder": "যেমন, গম, রোগ, বীজ",
+    "desc": "সম্পূর্ণ বিবরণ *",
+    "descPlaceholder": "আপনার সমস্যা পরিষ্কারভাবে ব্যাখ্যা করুন...",
+    "cancel": "বাতিল করুন",
+    "publishing": "পোস্ট করা হচ্ছে...",
+    "publish": "প্রশ্ন পোস্ট করুন"
+  },
+  "GovernmentSchemes": {
+    "title": "সরকারী স্কিম",
+    "subtitle": "সরকারী ভর্তুকি, বীমা, এবং আর্থিক সাহায্য খুঁজুন আপনি সহজেই আবেদন করতে পারেন।",
+    "searchPlaceholder": "নাম বা প্রকার দ্বারা স্কিম অনুসন্ধান করুন...",
+    "syncing": "সরকারী পোর্টাল পরীক্ষা করা হচ্ছে...",
+    "errorTitle": "স্কিমগুলি লোড করা যায়নি৷",
+    "noSchemes": "আপনি যা অনুসন্ধান করেছেন তার জন্য কোনো স্কিম পাওয়া যায়নি।",
+    "unnamed": "নামহীন স্কিম",
+    "general": "সাধারণ সাহায্য",
+    "allStates": "সমস্ত রাজ্য",
+    "primaryBenefits": "প্রধান সুবিধা",
+    "noDetails": "বিস্তারিত প্রদান করা হয়নি.",
+    "eligibility": "কে আবেদন করতে পারেন?",
+    "noEligibility": "কোন নির্দিষ্ট নিয়ম তালিকাভুক্ত.",
+    "deadline": "আবেদনের শেষ তারিখ",
+    "ongoing": "সর্বদা খুলুন",
+    "applyNow": "এখনই আবেদন করুন",
+    "checkLocal": "অফিসিয়াল ওয়েবসাইট চেক করুন",
+    "categories": {
+      "All": "সব",
+      "Financial Support": "অর্থ সহায়তা",
+      "Insurance": "ফসল বীমা",
+      "Credit & Loans": "কৃষি ঋণ",
+      "Other": "অন্যান্য"
+    }
   }
 }

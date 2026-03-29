@@ -1,12 +1,35 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useLocale } from 'next-intl';
+
+const LANG_MAP: Record<string, string> = {
+  en: 'en-IN',
+  hi: 'hi-IN',
+  pa: 'pa-IN',
+  mr: 'mr-IN',
+  bn: 'bn-IN',
+  te: 'te-IN',
+  ta: 'ta-IN',
+  gu: 'gu-IN',
+  kn: 'kn-IN',
+  ml: 'ml-IN',
+  or: 'or-IN',
+  ur: 'ur-IN'
+};
 
 export const useSpeech = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const locale = useLocale();
+
+  const getActiveLocale = () => {
+    if (typeof window === 'undefined') return locale;
+    return window.localStorage.getItem('preferredLocale') || locale;
+  };
 
   useEffect(() => {
-    // Fetch voices immediately, and also listen for them to load
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
     const loadVoices = () => setVoices(window.speechSynthesis.getVoices());
     loadVoices();
     
@@ -16,34 +39,35 @@ export const useSpeech = () => {
   }, []);
 
   const speak = (textToRead: string) => {
-    if (!window.speechSynthesis) {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       alert("Text-to-speech not supported in this browser.");
       return;
     }
 
-    window.speechSynthesis.cancel(); // Stop any current audio
+    if (!textToRead.trim()) return;
+
+    window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(textToRead);
-    utterance.rate = 0.85; // Slower speed so farmers can understand clearly
+    utterance.rate = 0.9;
     utterance.pitch = 1;
+    const activeLocale = getActiveLocale();
+    const preferredLang = LANG_MAP[activeLocale] || 'hi-IN';
+    const preferredBase = preferredLang.split('-')[0];
 
-    // Get fresh voices just in case
     const currentVoices = voices.length > 0 ? voices : window.speechSynthesis.getVoices();
 
-    // The Magic Hierarchy: Look for Hindi -> then Indian English -> then any Google Voice -> then Default
     const bestVoice = 
-      currentVoices.find(v => v.lang === 'hi-IN' || v.lang === 'hi') || 
-      currentVoices.find(v => v.lang === 'mr-IN' || v.lang === 'mr') || 
-      currentVoices.find(v => v.lang === 'bn-IN' || v.lang === 'bn') || 
-      currentVoices.find(v => v.lang === 'te-IN' || v.lang === 'te') || 
-      currentVoices.find(v => v.lang === 'ta-IN' || v.lang === 'ta') || 
+      currentVoices.find(v => v.lang === preferredLang) ||
+      currentVoices.find(v => v.lang.toLowerCase().startsWith(preferredBase.toLowerCase())) ||
       currentVoices.find(v => v.lang === 'en-IN') || 
-      currentVoices.find(v => v.name.includes('Google हिन्दी')) ||
       currentVoices[0];
 
     if (bestVoice) {
       utterance.voice = bestVoice;
-      utterance.lang = bestVoice.lang; // Force utterance to match the voice's native language
+      utterance.lang = bestVoice.lang;
+    } else {
+      utterance.lang = preferredLang;
     }
 
     utterance.onstart = () => setIsPlaying(true);

@@ -5,11 +5,12 @@ import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { 
   MessageSquare, ChevronUp, Search, PenSquare, 
   Clock, MapPin, CheckCircle2, TrendingUp, Users, X, Loader2, Send,
-  Truck, IndianRupee, Volume2, VolumeX
+  Truck, IndianRupee, Volume2, VolumeX, SlidersHorizontal, FilterX
 } from 'lucide-react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { STATES_DISTRICTS } from '@/utils/indiaStates';
+import { requestKrishiSarthi } from '@/lib/krishiSarthi';
 
 interface Reply {
   _id: string;
@@ -35,6 +36,7 @@ interface Post {
 
 export default function CommunityForum() {
   const t = useTranslations('CommunityForum');
+  const locale = useLocale();
   const [posts, setPosts] = useState<Post[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStateFilter, setSelectedStateFilter] = useState('All');
@@ -46,13 +48,15 @@ export default function CommunityForum() {
   const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
   const [replies, setReplies] = useState<{ [key: string]: Reply[] }>({});
   const [loadingReplies, setLoadingReplies] = useState<{ [key: string]: boolean }>({});
-  const [newReplyText, setNewReplyText] = useState('');
+  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
+  const [submittingReplyId, setSubmittingReplyId] = useState<string | null>(null);
 
   const [newTitle, setNewTitle] = useState('');
   const [newContent, setNewContent] = useState('');
   const [newState, setNewState] = useState('');
   const [newDistrict, setNewDistrict] = useState(''); // <-- New District Input State
   const [newTags, setNewTags] = useState('');
+  const [sortBy, setSortBy] = useState<'recent' | 'upvotes' | 'resolved'>('recent');
 
   const [playingId, setPlayingId] = useState<string | null>(null);
 
@@ -164,13 +168,15 @@ export default function CommunityForum() {
   };
 
   const handleSubmitReply = async (postId: string) => {
-    if (!newReplyText.trim()) return;
+    const draft = replyDrafts[postId]?.trim() || '';
+    if (!draft) return;
+    setSubmittingReplyId(postId);
 
     try {
       const res = await fetch('/api/community/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ postId, text: newReplyText })
+        body: JSON.stringify({ postId, text: draft })
       });
       
       const data = await res.json();
@@ -179,31 +185,50 @@ export default function CommunityForum() {
         setPosts(currentPosts => currentPosts.map(post => 
           post._id === postId ? { ...post, comments: post.comments + 1 } : post
         ));
-        setNewReplyText('');
+        setReplyDrafts(prev => ({ ...prev, [postId]: '' }));
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setSubmittingReplyId(null);
     }
   };
 
-  // Get Unique Districts for the Filter Dropdown
-  const uniqueDistricts = useMemo(() => {
-    const districts = posts.map(p => p.district).filter(Boolean);
-    return ['All', ...Array.from(new Set(districts))].sort();
+  const communityStats = useMemo(() => {
+    const resolved = posts.filter((post) => post.isResolved).length;
+    const authors = new Set(posts.map((post) => post.author)).size;
+    return {
+      totalPosts: posts.length,
+      resolved,
+      activeAuthors: authors
+    };
   }, [posts]);
 
-  // Combined Filter Logic (Search + State + District)
-  const filteredPosts = posts.filter(post => {
-    const matchesSearch = 
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesState = selectedStateFilter === 'All' || post.state === selectedStateFilter;
-    const matchesDistrict = selectedDistrictFilter === 'All' || post.district === selectedDistrictFilter;
+  const filteredPosts = useMemo(() => {
+    const base = posts.filter(post => {
+      const matchesSearch = 
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      
+      const matchesState = selectedStateFilter === 'All' || post.state === selectedStateFilter;
+      const matchesDistrict = selectedDistrictFilter === 'All' || post.district === selectedDistrictFilter;
 
-    return matchesSearch && matchesState && matchesDistrict;
-  });
+      return matchesSearch && matchesState && matchesDistrict;
+    });
+
+    if (sortBy === 'upvotes') {
+      return [...base].sort((a, b) => b.upvotes - a.upvotes);
+    }
+
+    if (sortBy === 'resolved') {
+      return [...base].sort((a, b) => Number(b.isResolved) - Number(a.isResolved) || b.upvotes - a.upvotes);
+    }
+
+    return [...base].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }, [posts, searchQuery, selectedStateFilter, selectedDistrictFilter, sortBy]);
+
+  const hasActiveFilters = Boolean(searchQuery.trim()) || selectedStateFilter !== 'All' || selectedDistrictFilter !== 'All';
 
   const trendingTags = useMemo(() => {
     const tagCounts: Record<string, number> = {};
@@ -237,25 +262,79 @@ export default function CommunityForum() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-7xl mx-auto relative">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black text-agri-900 tracking-tight flex items-center">
+          <h1 className="text-[2.05rem] leading-[1.05] md:text-4xl font-black text-agri-900 tracking-tight flex items-center">
             <Users className="w-8 h-8 mr-3 text-agri-600" />
             {t('title')}
           </h1>
-          <p className="text-gray-500 mt-2 font-medium">{t('subtitle')}</p>
+          <p className="text-gray-600 mt-2 font-semibold">{t('subtitle')}</p>
         </div>
-        <button onClick={() => setIsModalOpen(true)} className="flex items-center justify-center space-x-2 bg-agri-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-agri-700 transition shadow-lg shadow-agri-600/30 w-full md:w-auto">
-          <PenSquare className="w-5 h-5" /><span>{t('newDiscussion')}</span>
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+          <button
+            onClick={() =>
+              requestKrishiSarthi({
+                prompt: 'KrishiSarthi, community mein sawal kaise poochna hai batao.',
+                context: {
+                  module: 'community',
+                  summary: 'User is in farmer community section and needs help asking or engaging in discussions.'
+                }
+              })
+            }
+            className="flex items-center justify-center space-x-2 bg-agri-100 border border-agri-300 text-agri-900 px-6 py-3 rounded-xl font-black hover:bg-agri-200 transition shadow-sm w-full md:w-auto"
+          >
+            <Users className="w-5 h-5" /><span>Ask KrishiSarthi</span>
+          </button>
+          <button onClick={() => setIsModalOpen(true)} className="flex items-center justify-center space-x-2 bg-agri-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-agri-700 transition shadow-lg shadow-agri-600/30 w-full md:w-auto">
+            <PenSquare className="w-5 h-5" /><span>{t('newDiscussion')}</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6">
+        <div className="rounded-2xl border border-agri-200 bg-agri-50 px-3 py-3">
+          <p className="text-[11px] font-black uppercase tracking-wide text-agri-700">Discussions</p>
+          <p className="mt-1 text-xl md:text-2xl font-black text-agri-900">{communityStats.totalPosts}</p>
+        </div>
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-3">
+          <p className="text-[11px] font-black uppercase tracking-wide text-emerald-700">Resolved</p>
+          <p className="mt-1 text-xl md:text-2xl font-black text-emerald-800">{communityStats.resolved}</p>
+        </div>
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-3">
+          <p className="text-[11px] font-black uppercase tracking-wide text-amber-700">Contributors</p>
+          <p className="mt-1 text-xl md:text-2xl font-black text-amber-800">{communityStats.activeAuthors}</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 text-black space-y-6">
           
           {/* SEARCH, STATE AND DISTRICT FILTER BAR */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-[2]">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-black text-agri-900 inline-flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4 text-agri-600" />
+                Smart Filters
+              </p>
+
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedStateFilter('All');
+                    setSelectedDistrictFilter('All');
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:text-agri-700 hover:border-agri-300 hover:bg-agri-50 transition"
+                >
+                  <FilterX className="w-3.5 h-3.5" />
+                  Clear
+                </button>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-2">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
               </div>
@@ -296,6 +375,28 @@ export default function CommunityForum() {
                 {selectedStateFilter !== 'All' && (STATES_DISTRICTS as any)[selectedStateFilter]?.map((d: string) => <option key={d} value={d}>{d}</option>)}
               </select>
             </div>
+
+            <div className="relative sm:w-40">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'recent' | 'upvotes' | 'resolved')}
+                className="block w-full px-4 py-4 bg-white text-agri-900 border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-bold transition-all outline-none appearance-none cursor-pointer"
+              >
+                <option value="recent">Recent</option>
+                <option value="upvotes">Top Voted</option>
+                <option value="resolved">Resolved First</option>
+              </select>
+            </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="md:hidden w-full h-11 rounded-xl bg-agri-600 text-white font-black inline-flex items-center justify-center gap-2 shadow-lg shadow-agri-600/30"
+            >
+              <PenSquare className="w-4 h-4" />
+              <span>{t('newDiscussion')}</span>
+            </button>
           </div>
 
           <div className="space-y-4">
@@ -309,7 +410,7 @@ export default function CommunityForum() {
                   </motion.div>
                 ) : (
                   filteredPosts.map((post) => (
-                    <motion.div key={post._id} layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/40 border border-gray-100 flex flex-col transition-all hover:border-agri-300">
+                    <motion.div key={post._id} layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-3xl p-5 md:p-6 shadow-xl shadow-gray-200/40 border border-gray-100 flex flex-col transition-all hover:border-agri-300">
                       <div className="flex gap-4">
                         <div className="flex flex-col items-center space-y-2">
                           <button onClick={() => handleUpvote(post._id)} className={`p-2 rounded-xl transition-colors border ${post.userHasUpvoted ? 'bg-agri-100 text-agri-600 border-agri-200 shadow-sm' : 'bg-gray-50 text-gray-400 hover:bg-agri-50 hover:text-agri-500 border-gray-100'}`}>
@@ -331,11 +432,11 @@ export default function CommunityForum() {
                             <span className="flex items-center"><Clock className="w-3.5 h-3.5 mr-0.5" /> {new Date(post.createdAt).toLocaleDateString()}</span>
                           </div>
 
-                          <div className="flex justify-between items-start mb-2">
-                            <h3 className="text-xl font-bold text-agri-900 leading-tight pr-2">{post.title}</h3>
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <h3 className="text-lg md:text-xl font-black text-agri-900 leading-tight pr-2">{post.title}</h3>
                             <button 
                               onClick={() => toggleAudio(post._id, post.title, post.content)}
-                              className={`p-1.5 rounded-full transition-colors flex-shrink-0 ${playingId === post._id ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-400 hover:bg-agri-50 hover:text-agri-600'}`}
+                              className={`p-1.5 rounded-full transition-colors shrink-0 ${playingId === post._id ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-400 hover:bg-agri-50 hover:text-agri-600'}`}
                             >
                               {playingId === post._id ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                             </button>
@@ -388,18 +489,18 @@ export default function CommunityForum() {
                             <div className="pl-12 pr-4 flex gap-2">
                               <input 
                                 type="text" 
-                                value={newReplyText}
-                                onChange={(e) => setNewReplyText(e.target.value)}
+                                value={replyDrafts[post._id] || ''}
+                                onChange={(e) => setReplyDrafts(prev => ({ ...prev, [post._id]: e.target.value }))}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSubmitReply(post._id)}
                                 placeholder={t('replyPlaceholder')}
                                 className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-agri-400 outline-none"
                               />
                               <button 
                                 onClick={() => handleSubmitReply(post._id)}
-                                disabled={!newReplyText.trim()}
+                                disabled={!(replyDrafts[post._id] || '').trim() || submittingReplyId === post._id}
                                 className="bg-agri-600 text-white p-2.5 rounded-xl hover:bg-agri-700 transition disabled:opacity-50"
                               >
-                                <Send className="w-4 h-4" />
+                                {submittingReplyId === post._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                               </button>
                             </div>
                           </motion.div>
@@ -415,7 +516,7 @@ export default function CommunityForum() {
 
         {/* Right Sidebar */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl shadow-orange-500/20 relative overflow-hidden">
+          <div className="bg-linear-to-br from-amber-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl shadow-orange-500/20 relative overflow-hidden">
             <div className="absolute -right-6 -top-6 text-white/10 pointer-events-none">
               <Truck className="w-32 h-32" />
             </div>
@@ -433,15 +534,15 @@ export default function CommunityForum() {
               
               <div className="space-y-3 mb-6">
                 <div className="flex items-start text-amber-50 text-sm bg-black/10 p-3 rounded-xl border border-white/10">
-                  <X className="w-4 h-4 text-red-300 mr-2 flex-shrink-0 mt-0.5" />
+                  <X className="w-4 h-4 text-red-300 mr-2 shrink-0 mt-0.5" />
                   <p className="leading-relaxed">{t('sellAlone')}</p>
                 </div>
                 <div className="flex items-start text-amber-50 text-sm bg-black/10 p-3 rounded-xl border border-white/10">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-300 mr-2 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300 mr-2 shrink-0 mt-0.5" />
                   <p className="leading-relaxed">{t('sellTogether')}</p>
                 </div>
               </div>
-              <Link href="/dashboard/selling-pool">
+              <Link href={`/${locale}/dashboard/selling-pool`}>
               <button className="w-full bg-white text-orange-600 font-bold py-3.5 rounded-xl hover:bg-amber-50 hover:shadow-lg transition-all flex items-center justify-center active:scale-95 group">
                 <IndianRupee className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" /> {t('startPool')}
               </button>
@@ -477,7 +578,7 @@ export default function CommunityForum() {
              <div className="space-y-4">
                {topContributors.length > 0 ? topContributors.map((contributor, idx) => (
                  <div key={idx} className="flex items-center space-x-3 cursor-pointer group">
-                   <div className="w-10 h-10 rounded-full bg-agri-100 border border-agri-200 flex items-center justify-center font-bold text-agri-700 group-hover:bg-agri-600 group-hover:text-white transition-colors flex-shrink-0 uppercase">
+                   <div className="w-10 h-10 rounded-full bg-agri-100 border border-agri-200 flex items-center justify-center font-bold text-agri-700 group-hover:bg-agri-600 group-hover:text-white transition-colors shrink-0 uppercase">
                      {contributor.name.charAt(0)}
                    </div>
                    <div className="flex-1 overflow-hidden">

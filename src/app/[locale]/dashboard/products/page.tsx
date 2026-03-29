@@ -105,13 +105,13 @@ export default function ProductsMarketplace() {
   const clearFilters = () => { setFilters({ state: '', district: '', crop: '', disease: '' }); fetchProducts('', '', '', ''); setShowFilters(false); };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-12">
+    <div className="space-y-6 md:space-y-8 max-w-7xl mx-auto pb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-black text-emerald-900 flex items-center">
+          <h1 className="text-[2.05rem] leading-[1.05] md:text-4xl font-black text-emerald-900 flex items-center">
             <Store className="w-8 h-8 mr-3 text-emerald-600" /> Agricultural Products
           </h1>
-          <p className="text-gray-500 font-medium mt-1">Discover pesticides and herbicides from local providers.</p>
+          <p className="text-gray-600 font-semibold mt-2">Discover pesticides and herbicides from local providers.</p>
         </div>
         
         <div className="flex gap-3">
@@ -124,7 +124,7 @@ export default function ProductsMarketplace() {
             </Link>
           )}
 
-          <button onClick={() => setShowFilters(true)} className="bg-white border-2 border-emerald-100 text-emerald-700 px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-50 transition flex items-center shadow-sm">
+          <button onClick={() => setShowFilters(true)} className="bg-emerald-100 border border-emerald-300 text-emerald-900 px-5 py-2.5 rounded-xl font-black hover:bg-emerald-200 transition flex items-center shadow-sm">
             <Filter className="w-5 h-5 mr-2" /> Filter Products
           </button>
         </div>
@@ -236,7 +236,17 @@ export default function ProductsMarketplace() {
                   <div className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between mb-8 border border-gray-100">
                     <div className="flex items-center">
                        <div className="w-10 h-10 bg-emerald-200 text-emerald-800 rounded-full flex items-center justify-center font-bold text-lg mr-3">{selectedProduct.providerId.name.charAt(0)}</div>
-                       <div><p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Sold By</p><p className="font-bold text-emerald-950">{selectedProduct.providerId.name}</p></div>
+                       <div>
+                         <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Sold By</p>
+                         <p className="font-bold text-emerald-950 flex items-center">
+                           {selectedProduct.providerId.name}
+                           {selectedProduct.providerId.isVerifiedProvider && (
+                             <span title="Verified Provider" className="flex items-center">
+                               <ShieldCheck className="w-4 h-4 ml-1.5 text-emerald-600" />
+                             </span>
+                           )}
+                         </p>
+                       </div>
                     </div>
                     <a href={`tel:${selectedProduct.providerId.phone}`} className="text-emerald-600 font-bold bg-emerald-100 px-4 py-2 rounded-lg flex items-center"><Phone className="w-4 h-4 mr-2" /> Call Now</a>
                   </div>

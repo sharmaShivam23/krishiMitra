@@ -7,88 +7,95 @@ export interface IntentResult {
 export const processVoiceCommand = (transcript: string, locale: string = 'hi'): IntentResult => {
   const text = transcript.toLowerCase();
 
-  // 1. Home Page / Main Page
-  if (text.includes('home') || text.includes('ghar') || text.includes('mukhya') || text.includes('wapas') || text.includes('shuru') || text.includes('main page')) {
-    return {
-      action: 'navigate',
+  const navigationVerbs = [
+    'open', 'khol', 'chalo', 'jao', 'jaa', 'le chalo', 'dikhao', 'show', 'go to', 'take me',
+    'khol do', 'chale', 'wapas', 'back', 'home', 'screen', 'page'
+  ];
+
+  const advisoryWords = [
+    'kaise', 'kya', 'kab', 'kyu', 'kyon', 'kitna', 'batao', 'samjhao', 'suggest', 'advice',
+    'help', 'problem', 'issue', 'should i', 'best', 'recommend'
+  ];
+
+  const hasNavigationVerb = navigationVerbs.some((word) => text.includes(word));
+  const hasAdvisorySignal = advisoryWords.some((word) => text.includes(word)) || text.includes('?');
+
+  const routeByTopic: Array<{ keywords: string[]; path: string; responsePa: string; responseDefault: string }> = [
+    {
+      keywords: ['home', 'ghar', 'mukhya', 'wapas', 'shuru', 'main page'],
       path: `/${locale}`,
-      responseSpeech: locale === 'pa' ? 'ਮੁੱਖ ਪੰਨੇ ਤੇ ਵਾਪਸ ਜਾ ਰਿਹਾ ਹਾਂ' : 'Mukhya page par wapas jaa raha hoon.'
-    };
-  }
-
-  // 2. Mandi Prices / Advisor
-  if (text.includes('mandi') || text.includes('bhav') || text.includes('rate') || text.includes('kimat') || text.includes('price')) {
-    return {
-      action: 'navigate',
+      responsePa: 'ਮੁੱਖ ਪੰਨੇ ਤੇ ਵਾਪਸ ਜਾ ਰਿਹਾ ਹਾਂ',
+      responseDefault: 'Mukhya page par wapas jaa raha hoon.'
+    },
+    {
+      keywords: ['mandi', 'bhav', 'rate', 'kimat', 'price'],
       path: `/${locale}/dashboard/mandi-prices/mandi-advisor`,
-      responseSpeech: locale === 'pa' ? 'ਮੰਡੀ ਦੇ ਭਾਅ ਦਿਖਾ ਰਿਹਾ ਹਾਂ' : 'Mandi ke bhav aur advisor khol raha hoon.'
-    };
-  }
-
-  // 3. Crop Intelligence
-  if (text.includes('crop') || text.includes('fasal') || text.includes('kheti') || text.includes('intelligence') || text.includes('jankari') || text.includes('salah')) {
-    return {
-      action: 'navigate',
+      responsePa: 'ਮੰਡੀ ਦੇ ਭਾਅ ਦਿਖਾ ਰਿਹਾ ਹਾਂ',
+      responseDefault: 'Mandi ke bhav aur advisor khol raha hoon.'
+    },
+    {
+      keywords: ['crop', 'fasal', 'kheti', 'intelligence', 'jankari', 'salah'],
       path: `/${locale}/dashboard/crop-intelligence`,
-      responseSpeech: locale === 'pa' ? 'ਫਸਲ ਦੀ ਜਾਣਕਾਰੀ ਖੋਲ੍ਹ ਰਿਹਾ ਹਾਂ' : 'Fasal ki jankari aur salah khol raha hoon.'
-    };
-  }
-
-  // 4. Community Forum
-  if (text.includes('community') || text.includes('forum') || text.includes('saval') || text.includes('kisan') || text.includes('charcha') || text.includes('network')) {
-    return {
-      action: 'navigate',
+      responsePa: 'ਫਸਲ ਦੀ ਜਾਣਕਾਰੀ ਖੋਲ੍ਹ ਰਿਹਾ ਹਾਂ',
+      responseDefault: 'Fasal ki jankari aur salah khol raha hoon.'
+    },
+    {
+      keywords: ['community', 'forum', 'saval', 'kisan', 'charcha', 'network'],
       path: `/${locale}/dashboard/community`,
-      responseSpeech: locale === 'pa' ? 'ਕਿਸਾਨ ਨੈੱਟਵਰਕ ਖੋਲ੍ਹ ਰਿਹਾ ਹਾਂ' : 'Kisan network aur charcha khol raha hoon.'
-    };
-  }
-
-  // 5. Collective Selling Pools
-  if (text.includes('pool') || text.includes('samooh') || text.includes('ekatha') || text.includes('milkar') || text.includes('group') || text.includes('collective')) {
-    return {
-      action: 'navigate',
+      responsePa: 'ਕਿਸਾਨ ਨੈੱਟਵਰਕ ਖੋਲ੍ਹ ਰਿਹਾ ਹਾਂ',
+      responseDefault: 'Kisan network aur charcha khol raha hoon.'
+    },
+    {
+      keywords: ['pool', 'samooh', 'ekatha', 'milkar', 'group', 'collective'],
       path: `/${locale}/dashboard/selling-pool`,
-      responseSpeech: locale === 'pa' ? 'ਸਮੂਹਿਕ ਵਿਕਰੀ ਪੂਲ ਖੋਲ੍ਹ ਰਿਹਾ ਹਾਂ' : 'Samoohik bikri pool khol raha hoon.'
-    };
-  }
-
-  // 6. Weather
-  if (text.includes('mausam') || text.includes('weather') || text.includes('barish') || text.includes('dhup')) {
-    return {
-      action: 'navigate',
+      responsePa: 'ਸਮੂਹਿਕ ਵਿਕਰੀ ਪੂਲ ਖੋਲ੍ਹ ਰਿਹਾ ਹਾਂ',
+      responseDefault: 'Samoohik bikri pool khol raha hoon.'
+    },
+    {
+      keywords: ['mausam', 'weather', 'barish', 'dhup'],
       path: `/${locale}/dashboard/weather`,
-      responseSpeech: locale === 'pa' ? 'ਅੱਜ ਦਾ ਮੌਸਮ ਇਹ ਹੈ' : 'Aaj ka mausam screen par hai.'
-    };
-  }
-
-  // 7. Disease Detection / AI Scanner
-  if (text.includes('bimari') || text.includes('disease') || text.includes('keeda') || text.includes('scan') || text.includes('photo')) {
-    return {
-      action: 'navigate',
-      path: `/${locale}/dashboard/disease`,
-      responseSpeech: locale === 'pa' ? 'ਕਿਰਪਾ ਕਰਕੇ ਪੱਤੇ ਦੀ ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ' : 'Kripya patte ki photo upload karein, AI bimari check karega.'
-    };
-  }
-
-  // 8. Equipment / Services
-  if (text.includes('tractor') || text.includes('rent') || text.includes('machine') || text.includes('kiraye') || text.includes('service')) {
-    return {
-      action: 'navigate',
+      responsePa: 'ਅੱਜ ਦਾ ਮੌਸਮ ਖੋਲ੍ਹ ਰਿਹਾ ਹਾਂ',
+      responseDefault: 'Aaj ka mausam screen par khol raha hoon.'
+    },
+    {
+      keywords: ['bimari', 'disease', 'keeda', 'scan', 'photo'],
+      path: `/${locale}/dashboard/disease-detection`,
+      responsePa: 'ਕਿਰਪਾ ਕਰਕੇ ਪੱਤੇ ਦੀ ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ',
+      responseDefault: 'Kripya patte ki photo upload karein, AI bimari check karega.'
+    },
+    {
+      keywords: ['tractor', 'rent', 'machine', 'kiraye', 'service'],
       path: `/${locale}/dashboard/Services`,
-      responseSpeech: locale === 'pa' ? 'ਕਿਰਾਏ ਦੀਆਂ ਮਸ਼ੀਨਾਂ ਇੱਥੇ ਹਨ' : 'Kiraye ki machine aur services yahan uplabdh hain.'
-    };
-  }
+      responsePa: 'ਕਿਰਾਏ ਦੀਆਂ ਮਸ਼ੀਨਾਂ ਇੱਥੇ ਹਨ',
+      responseDefault: 'Kiraye ki machine aur services yahan uplabdh hain.'
+    },
+    {
+      keywords: ['yojana', 'scheme', 'subsidy', 'sarkari'],
+      path: `/${locale}/dashboard/schemes`,
+      responsePa: 'ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ ਖੋਲ੍ਹ ਰਿਹਾ ਹਾਂ',
+      responseDefault: 'Sarkari yojanao ki jankari khol raha hoon.'
+    }
+  ];
 
-  // 9. Government Schemes
-  if (text.includes('yojana') || text.includes('scheme') || text.includes('subsidy') || text.includes('sarkari')) {
+  const matchedTopic = routeByTopic.find((topic) => topic.keywords.some((keyword) => text.includes(keyword)));
+
+  if (matchedTopic && hasNavigationVerb && !hasAdvisorySignal) {
     return {
       action: 'navigate',
-      path: `/${locale}/dashboard/schemes`,
-      responseSpeech: locale === 'pa' ? 'ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ ਖੋਲ੍ਹ ਰਿਹਾ ਹਾਂ' : 'Sarkari yojanao ki jankari khol raha hoon.'
+      path: matchedTopic.path,
+      responseSpeech: locale === 'pa' ? matchedTopic.responsePa : matchedTopic.responseDefault
     };
   }
 
-  // Fallback - Error Handling
+  if (matchedTopic) {
+    return {
+      action: 'speak_only',
+      responseSpeech: locale === 'pa'
+        ? 'ਸਮਝ ਗਿਆ। ਮੈਂ ਇਸ ਬਾਰੇ ਸਧੀ ਸਲਾਹ ਦੇ ਸਕਦਾ ਹਾਂ।'
+        : 'Samajh gaya. Main is baare mein seedhi salah de sakta hoon.'
+    };
+  }
+
   return {
     action: 'unknown',
     responseSpeech: locale === 'pa' ? 'ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਇਆ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਬੋਲੋ।' : 'Mujhe samajh nahi aaya. Kripya dobara bole, ya aasan shabdon ka prayog karein.'

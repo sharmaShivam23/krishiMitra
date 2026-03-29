@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     await connectDB();
     const body = await req.json();
-    const { name, phone, password, state, district, preferredLanguage, otp, role } = body;
+    const { name, phone, password, state, district, preferredLanguage, otp, role, shopName, licenseNumber, gstNumber, licenseImage } = body;
 
     // 1. Validate input
     if (!name || !phone || !password || !otp) {
@@ -40,7 +40,12 @@ export async function POST(req: Request) {
       state: state || '',
       district: district || '',
       preferredLanguage: preferredLanguage || 'en',
-      role: validRole // User-selected role
+      role: validRole, // User-selected role
+      shopName: validRole === 'provider' ? shopName : undefined,
+      licenseNumber: validRole === 'provider' ? licenseNumber : undefined,
+      gstNumber: validRole === 'provider' ? gstNumber : undefined,
+      licenseImage: validRole === 'provider' ? licenseImage : undefined,
+      isVerifiedProvider: false // Default to unverified
     });
 
     // 5. Clean up OTP
