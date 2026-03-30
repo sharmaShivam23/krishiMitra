@@ -9,7 +9,7 @@ export async function GET(req: Request) {
   const authHeader = req.headers.get('authorization');
   
   // If there is no password, or it's the wrong password, kick them out immediately!
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET_LIFE}`) {
     console.error("Blocked unauthorized attempt to access daily tasks.");
     return new NextResponse('Unauthorized: Invalid API Key', { status: 401 });
   }
