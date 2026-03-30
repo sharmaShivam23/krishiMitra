@@ -213,6 +213,32 @@ const rateLimitSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now, expires: 900 } // 900 seconds = 15 mins
 });
 
+
+// --- 📅 NEW: SMART CROP LIFECYCLE SCHEMA ---
+
+const TaskSchema = new Schema({
+  dayOffset: { type: Number, required: true }, 
+  scheduledDate: { type: Date, required: true },
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  priority: { type: String, enum: ['high', 'medium', 'low'], default: 'medium' },
+  isCompleted: { type: Boolean, default: false },
+  completedAt: { type: Date }
+});
+
+const ActiveCropSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  cropName: { type: String, required: true },
+  location: {
+    state: String,
+    district: String
+  },
+  startDate: { type: Date, required: true },
+  status: { type: String, enum: ['Active', 'Harvested', 'Failed'], default: 'Active' },
+  tasks: [TaskSchema] // Array of AI-generated tasks
+}, { timestamps: true });
+
+export const ActiveCrop = mongoose.models.ActiveCrop || mongoose.model('ActiveCrop', ActiveCropSchema);
 export const Otp = mongoose.models.Otp || mongoose.model('Otp', otpSchema);
 export const RateLimit = mongoose.models.RateLimit || mongoose.model('RateLimit', rateLimitSchema);
 export const User = mongoose.models.User || mongoose.model('User', UserSchema);
