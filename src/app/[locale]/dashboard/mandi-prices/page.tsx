@@ -251,13 +251,13 @@ export default function MandiPrices() {
    
         <motion.div variants={item} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           
-          <div className="relative">
+          {/* <div className="relative">
             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">Search Multi</label>
             <div className="absolute inset-y-0 bottom-0 left-0 pl-4 flex items-center pointer-events-none mt-6">
               <Search className="h-4 w-4 text-gray-400" />
             </div>
             <input type="text" placeholder="Crop, Market, District..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="block w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500/20 text-gray-900 font-medium text-sm transition-all outline-none" />
-          </div>
+          </div> */}
 
           <div className="relative">
             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">Commodity</label>

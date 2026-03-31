@@ -5,6 +5,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocale } from 'next-intl';
+import { getAiLanguage } from '@/lib/localeToLanguage';
 import {
   Brain, Loader2, TrendingUp, TrendingDown, 
   AlertTriangle, IndianRupee, MapPin, Wheat, 
@@ -56,6 +58,9 @@ const TypewriterText = ({ text }: { text: string }) => {
 
 
 export default function MandiAdvisor() {
+  const locale = useLocale();
+  const aiLanguage = getAiLanguage(locale);
+
   const [formData, setFormData] = useState({
     commodity: '',
     state: '',
@@ -107,7 +112,7 @@ export default function MandiAdvisor() {
       const res = await fetch('/api/mandi-advisor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ ...formData, language: aiLanguage })
       });
 
       

@@ -14,7 +14,9 @@ import {
   MapPin,
   Loader2,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Phone,
+  PhoneOff
 } from 'lucide-react';
 import Logo from './Logo';
 import { useTranslations, useLocale } from 'next-intl';
@@ -27,6 +29,42 @@ export default function Footer() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | '', message: string }>({ type: '', message: '' });
   const [mode, setMode] = useState<'subscribe' | 'unsubscribe'>('subscribe');
+
+  const [callState, setCallState] = useState<'idle' | 'loading' | 'success' | 'error' | 'unsubscribed'>('idle');
+  const [callMsg, setCallMsg] = useState('');
+
+  const handleRequestCall = async () => {
+    if (callState === 'loading') return;
+    setCallState('loading');
+    setCallMsg('');
+    try {
+      const res = await fetch('/api/request-call', { method: 'POST', credentials: 'include' });
+      const data = await res.json();
+      if (res.status === 403 && data.notSubscribed) {
+        setCallState('unsubscribed');
+        setCallMsg('Subscribe to the Kisan Helpline first to use this feature.');
+        return;
+      }
+      if (res.status === 401) {
+        setCallState('error');
+        setCallMsg('Please log in to use this feature.');
+        return;
+      }
+      if (!res.ok || !data.success) throw new Error(data.error || 'Call request failed');
+      setCallState('success');
+      setCallMsg(data.message || 'Call initiated!');
+    } catch (err: any) {
+      setCallState('error');
+      setCallMsg(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setTimeout(() => {
+        if (callState !== 'unsubscribed') {
+          setCallState('idle');
+          setCallMsg('');
+        }
+      }, 5000);
+    }
+  };
 
   
   const handleSubscribe = async () => {
@@ -195,15 +233,67 @@ export default function Footer() {
             </div>
             <p className="text-stone-400 font-medium leading-relaxed mb-8 pr-4">{t('brandDesc')}</p>
             
-            <div className="bg-[#06241b]/80 border border-emerald-800/30 rounded-2xl p-4 inline-flex items-center space-x-4 mb-8 shadow-inner hover:border-emerald-600/50 transition-colors cursor-pointer group">
-              <div className="w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500/20 group-hover:scale-110 transition-all">
-                <PhoneCall className="w-5 h-5" />
+            {/* ── Helpline Call Card ── */}
+            <button
+              onClick={handleRequestCall}
+              disabled={callState === 'loading'}
+              className={`w-full text-left bg-[#06241b]/80 border rounded-2xl p-4 inline-flex items-center space-x-4 mb-8 shadow-inner transition-all group relative overflow-hidden disabled:cursor-wait ${
+                callState === 'success'
+                  ? 'border-emerald-500/60 bg-emerald-900/20'
+                  : callState === 'unsubscribed'
+                  ? 'border-amber-500/40 bg-amber-900/10'
+                  : callState === 'error'
+                  ? 'border-red-500/30'
+                  : 'border-emerald-800/30 hover:border-emerald-600/50 cursor-pointer'
+              }`}
+              title={callState === 'unsubscribed' ? 'Subscribe to helpline first' : 'Click to request a call back'}
+            >
+              {/* Glow on hover */}
+              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" style={{ background: 'radial-gradient(ellipse at 30% 50%,rgba(16,185,129,.08),transparent 70%)' }} />
+
+              <div className={`relative w-12 h-12 rounded-full flex items-center justify-center border transition-all shrink-0 ${
+                callState === 'success'
+                  ? 'bg-emerald-500/30 border-emerald-400/50 text-emerald-400'
+                  : callState === 'unsubscribed'
+                  ? 'bg-amber-500/20 border-amber-500/30 text-amber-400'
+                  : callState === 'error'
+                  ? 'bg-red-500/10 border-red-500/20 text-red-400'
+                  : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500/20 group-hover:scale-110'
+              }`}>
+                {callState === 'loading' ? <Loader2 className="w-5 h-5 animate-spin" /> :
+                 callState === 'success' ? <CheckCircle2 className="w-5 h-5" /> :
+                 callState === 'error' ? <AlertCircle className="w-5 h-5" /> :
+                 callState === 'unsubscribed' ? <PhoneOff className="w-5 h-5" /> :
+                 <PhoneCall className="w-5 h-5" />}
               </div>
-              <div>
-                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-0.5">{t('helpline')}</p>
-                <p className="text-xl font-black text-white group-hover:text-amber-400 transition-colors">1800-180-1551</p>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-0.5">
+                  {t('helpline')}
+                </p>
+                <p className={`text-xl font-black transition-colors ${
+                  callState === 'success' ? 'text-emerald-400' :
+                  callState === 'unsubscribed' ? 'text-amber-400' :
+                  callState === 'error' ? 'text-red-400' :
+                  'text-white group-hover:text-amber-400'
+                }`}>
+                  {callState === 'loading' ? 'Connecting...' :
+                   callState === 'success' ? 'Call Initiated! ✓' :
+                   callState === 'error' ? 'Failed — Tap to Retry' :
+                   callState === 'unsubscribed' ? 'Subscribe First' :
+                   '1800-180-1551'}
+                </p>
+                {callMsg ? (
+                  <p className={`text-[11px] font-medium mt-0.5 leading-tight ${
+                    callState === 'success' ? 'text-emerald-400/80' :
+                    callState === 'unsubscribed' ? 'text-amber-400/80' :
+                    'text-red-400/80'
+                  }`}>{callMsg}</p>
+                ) : (
+                  <p className="text-[11px] text-stone-500 font-medium mt-0.5">Tap to request a call back • Subscribers only</p>
+                )}
               </div>
-            </div>
+            </button>
 
             <div className="flex space-x-3">
               {[Facebook, Twitter, Instagram, Youtube].map((Icon, i) => (

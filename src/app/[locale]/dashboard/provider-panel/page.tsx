@@ -8,6 +8,8 @@ import {
   AlertTriangle, ShieldCheck, Loader2, Image as ImageIcon, Trash2
 } from 'lucide-react';
 import { STATES_DISTRICTS } from '@/utils/indiaStates';
+import CloudinaryImageUpload from '@/components/CloudinaryImageUpload';
+import StateDistrictSelector from '@/components/StateDistrictSelector';
 
 export default function ProviderPanel() {
   const t = useTranslations('ProviderPanel');
@@ -155,29 +157,19 @@ export default function ProviderPanel() {
                   {/* FIX: Added text-gray-900 bg-white */}
                   <input required type="number" name="price" value={formData.price} onChange={handleChange} placeholder="0.00" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500 outline-none text-gray-900 bg-white placeholder-gray-400" />
                 </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5 flex items-center"><ImageIcon className="w-4 h-4 mr-1"/> Image URL</label>
-                  {/* FIX: Added text-gray-900 bg-white */}
-                  <input name="image" value={formData.image} onChange={handleChange} placeholder="https://res.cloudinary.com/..." className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500 outline-none text-gray-900 bg-white placeholder-gray-400" />
-                </div>
-                <div className="flex gap-4">
-                   <div className="flex-1">
-                      <label className="block text-sm font-bold text-gray-700 mb-1.5 flex items-center"><MapPin className="w-4 h-4 mr-1"/> State</label>
-                      {/* FIX: Added text-gray-900 bg-white */}
-                      <select required name="state" value={formData.state} onChange={(e) => setFormData({ ...formData, state: e.target.value, district: '' })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500 outline-none appearance-none text-gray-900 bg-white">
-                        <option value="">Select State</option>
-                        {Object.keys(STATES_DISTRICTS).map(s => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                   </div>
-                   <div className="flex-1">
-                      <label className="block text-sm font-bold text-gray-700 mb-1.5 flex items-center">District</label>
-                      {/* FIX: Added text-gray-900 bg-white */}
-                      <select required disabled={!formData.state} name="district" value={formData.district} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500 outline-none appearance-none disabled:bg-gray-100 disabled:opacity-75 text-gray-900 bg-white">
-                        <option value="">Select District</option>
-                        {formData.state && STATES_DISTRICTS[formData.state]?.map((d: string) => <option key={d} value={d}>{d}</option>)}
-                      </select>
-                   </div>
-                </div>
+                <CloudinaryImageUpload
+                  value={formData.image}
+                  onChange={(url) => setFormData(prev => ({ ...prev, image: url }))}
+                  label="Product Image"
+                />
+                <StateDistrictSelector
+                  state={formData.state}
+                  district={formData.district}
+                  onStateChange={v => setFormData(prev => ({ ...prev, state: v, district: '' }))}
+                  onDistrictChange={v => setFormData(prev => ({ ...prev, district: v }))}
+                  autoFillFromDB
+                  required
+                />
               </div>
               <div className="space-y-5">
                 <div>

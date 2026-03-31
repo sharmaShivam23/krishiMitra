@@ -10,6 +10,8 @@ import {
   AlertCircle, CheckCircle2, ArrowLeft, Settings
 } from 'lucide-react';
 import Link from 'next/link';
+import CloudinaryImageUpload from '@/components/CloudinaryImageUpload';
+import StateDistrictSelector from '@/components/StateDistrictSelector';
 
 const CATEGORIES = ['Tractor', 'Harvester', 'Sprayer', 'Cultivator', 'Seeder', 'Other'];
 const STATES = ['Uttar Pradesh', 'Punjab', 'Haryana', 'Maharashtra', 'Madhya Pradesh', 'Gujarat', 'Rajasthan'];
@@ -31,7 +33,8 @@ export default function PostListing() {
     equipment: { name: '', condition: 'Good' },
     serviceDetails: { jobType: '', estimatedCapacity: '' },
     location: { state: '', district: '', village: '' },
-    images: []
+    images: [] as string[],
+    imageUrl: '',
   });
 
   const handleTypeChange = (type: 'rent' | 'service') => {
@@ -65,7 +68,8 @@ export default function PostListing() {
 
       const payload = {
         ...formData,
-        pricing: { ...formData.pricing, rate: Number(formData.pricing.rate) }
+        pricing: { ...formData.pricing, rate: Number(formData.pricing.rate) },
+        images: formData.imageUrl ? [formData.imageUrl] : []
       };
 
       const res = await fetch('/api/listing', {
@@ -200,7 +204,21 @@ export default function PostListing() {
               </div>
             </section>
 
+            {/* ─── Equipment Photo ─── */}
             <section className="space-y-4">
+              <h3 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-2 flex items-center gap-2">
+                Equipment Photo
+                <span className="text-xs font-normal text-gray-400">(optional but recommended)</span>
+              </h3>
+              <CloudinaryImageUpload
+                value={formData.imageUrl}
+                onChange={(url) => setFormData(prev => ({ ...prev, imageUrl: url }))}
+                label="Upload a clear photo of your equipment"
+              />
+            </section>
+
+            <section className="space-y-4">
+
               <h3 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-2">{t('technicalDetails')}</h3>
               
               <div>
@@ -247,22 +265,15 @@ export default function PostListing() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('state')}</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
-                    <select required value={formData.location.state} onChange={(e) => handleNestedChange('location', 'state', e.target.value)} className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 outline-none transition-all font-bold text-gray-900 appearance-none cursor-pointer">
-                      <option value="" disabled>{t('selectState')}</option>
-                      {STATES.map(s => <option key={s} value={s}>{t(`states.${s}`)}</option>)}
-                    </select>
-                  </div>
-                </div>
+                <StateDistrictSelector
+                  state={formData.location.state}
+                  district={formData.location.district}
+                  onStateChange={v => setFormData(prev => ({ ...prev, location: { ...prev.location, state: v, district: '' } }))}
+                  onDistrictChange={v => setFormData(prev => ({ ...prev, location: { ...prev.location, district: v } }))}
+                  autoFillFromDB
+                  required
+                />
 
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('district')}</label>
-                  <input required value={formData.location.district} onChange={(e) => handleNestedChange('location', 'district', e.target.value)} placeholder={t('districtPlaceholder')} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 outline-none transition-all font-medium text-gray-900" />
-                </div>
-                
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('village')}</label>
                   <input value={formData.location.village} onChange={(e) => handleNestedChange('location', 'village', e.target.value)} placeholder={t('villagePlaceholder')} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 outline-none transition-all font-medium text-gray-900" />

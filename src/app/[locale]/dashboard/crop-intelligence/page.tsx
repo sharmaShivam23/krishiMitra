@@ -8,11 +8,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import {
-  Sprout, MapPin, CloudSun, Leaf, Loader2, ArrowRight, Target,
+  Sprout, MapPin, CloudSun, Loader2, ArrowRight, Target,
   AlertCircle, Droplets, Calendar, TrendingUp, Sparkles, Map,
-  CheckCircle2, Database, ChevronDown, Wand2, Languages
+  CheckCircle2, Database, ChevronDown, ExternalLink
 } from 'lucide-react';
 import { translateDBText } from '@/utils/dbTranslator';
+import { getAiLanguage } from '@/lib/localeToLanguage';
+import Link from 'next/link';
 
 /* ======================================================
    TYPES & MAPPINGS
@@ -44,32 +46,9 @@ interface RegionSuggestion {
   longitude: number;
 }
 
-// Real regional soil mapping for the Indian Subcontinent
-const regionalSoilMap: Record<string, string> = {
-  "Uttar Pradesh": "Alluvial Soil, well-drained",
-  "Punjab": "Deep Alluvial, Loamy",
-  "Haryana": "Alluvial, Sandy Loam",
-  "Maharashtra": "Black Cotton Soil (Regur), Clayey",
-  "Gujarat": "Black Soil and Sandy Loam",
-  "Madhya Pradesh": "Medium to Deep Black Soil",
-  "Rajasthan": "Arid / Sandy Soil, well-drained",
-  "West Bengal": "Alluvial / Gangetic Loam",
-  "Karnataka": "Red Loamy and Laterite Soil",
-  "Kerala": "Laterite and Coastal Alluvium",
-  "Tamil Nadu": "Red Sandy and Deltaic Alluvium",
-  "Bihar": "Rich Alluvial Soil",
-  "Andhra Pradesh": "Red Loam and Coastal Alluvium"
-};
 
-const LANGUAGES = [
-  { code: 'English', name: 'English' },
-  { code: 'Hindi', name: 'हिन्दी (Hindi)' },
-  { code: 'Punjabi', name: 'ਪੰਜਾਬੀ (Punjabi)' },
-  { code: 'Marathi', name: 'मराठी (Marathi)' },
-  { code: 'Bengali', name: 'বাংলা (Bengali)' },
-  { code: 'Telugu', name: 'తెలుగు (Telugu)' },
-  { code: 'Tamil', name: 'தமிழ் (Tamil)' },
-];
+
+
 
 const weatherCodeMap: Record<number, string> = {
   0: 'Clear',
@@ -100,8 +79,7 @@ export default function CropIntelligence() {
   const locale = useLocale();
 
 
-  const defaultLangMap: Record<string, string> = { en: 'English', hi: 'Hindi', pa: 'Punjabi' };
-  const initialLang = defaultLangMap[locale] || 'English';
+  const initialLang = getAiLanguage(locale);
 
   const [availableCrops, setAvailableCrops] = useState<Crop[]>([]);
   const [isLoadingCrops, setIsLoadingCrops] = useState(true);
@@ -113,10 +91,8 @@ export default function CropIntelligence() {
   const [formData, setFormData] = useState({
     crop: '',
     location: '',
-    stateRegion: '', 
+    stateRegion: '',
     weather: '',
-    soil: '',
-    language: initialLang //  Language state
   });
 
   const [isCropDropdownOpen, setIsCropDropdownOpen] = useState(false);
@@ -127,8 +103,9 @@ export default function CropIntelligence() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const suggestionRef = useRef<HTMLDivElement>(null);
 
-  const [isDetectingSoil, setIsDetectingSoil] = useState(false);
   const [isAutoFillingRegionData, setIsAutoFillingRegionData] = useState(false);
+  const [isFetchingWeather, setIsFetchingWeather] = useState(false);
+  const [weatherCoords, setWeatherCoords] = useState<{ lat: number; lon: number } | null>(null);
 
   useEffect(() => {
     async function fetchCrops() {
@@ -178,101 +155,87 @@ export default function CropIntelligence() {
   }, []);
 
   const autoFillRegionDetails = async (
-    cityName: string,
-    stateRegion: string,
     latitude?: number,
     longitude?: number
-) => {
-    const matchedState = Object.keys(regionalSoilMap).find((state) =>
-      (stateRegion || '').includes(state) || cityName.includes(state)
-    );
-
-    setFormData((prev) => ({
-      ...prev,
-      soil: matchedState ? regionalSoilMap[matchedState] : (prev.soil || 'Mixed Loam / Regional Variant')
-    }));
-
+  ) => {
     if (typeof latitude !== 'number' || typeof longitude !== 'number') return;
-
+    setWeatherCoords({ lat: latitude, lon: longitude });
+    setIsFetchingWeather(true);
     try {
       const weatherRes = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`
       );
       const weatherData = await weatherRes.json();
       const current = weatherData?.current;
-
       if (!current) return;
-
       const condition = weatherCodeMap[current.weather_code as number] || 'Weather update available';
-      const temp = typeof current.temperature_2m === 'number' ? `${Math.round(current.temperature_2m)}C` : '';
-      const humidity = typeof current.relative_humidity_2m === 'number' ? `humidity ${current.relative_humidity_2m}%` : '';
-      const wind = typeof current.wind_speed_10m === 'number' ? `wind ${Math.round(current.wind_speed_10m)} km/h` : '';
+      const temp = typeof current.temperature_2m === 'number' ? `${Math.round(current.temperature_2m)}°C` : '';
+      const humidity = typeof current.relative_humidity_2m === 'number' ? `Humidity ${current.relative_humidity_2m}%` : '';
+      const wind = typeof current.wind_speed_10m === 'number' ? `Wind ${Math.round(current.wind_speed_10m)} km/h` : '';
       const weatherSummary = [condition, temp, humidity, wind].filter(Boolean).join(', ');
-
-      setFormData((prev) => ({
-        ...prev,
-        weather: weatherSummary || prev.weather
-      }));
+      setFormData(prev => ({ ...prev, weather: weatherSummary }));
     } catch (err) {
       console.error('Weather auto-fill failed:', err);
+    } finally {
+      setIsFetchingWeather(false);
     }
+  };
+
+  const refreshWeather = async () => {
+    if (!weatherCoords) return;
+    await autoFillRegionDetails(weatherCoords.lat, weatherCoords.lon);
   };
 
   const handleRegionSelect = async (city: RegionSuggestion) => {
     setIsAutoFillingRegionData(true);
-    setFormData(prev => ({ 
-      ...prev, 
+    setFormData(prev => ({
+      ...prev,
       location: `${city.name}, ${city.admin1 ? city.admin1 + ', ' : ''}${city.country}`,
-      stateRegion: city.admin1 || ''
+      stateRegion: city.admin1 || '',
+      weather: '',
     }));
     setShowSuggestions(false);
-    await autoFillRegionDetails(
-      `${city.name}, ${city.admin1 ? city.admin1 + ', ' : ''}${city.country || ''}`,
-      city.admin1 || '',
-      city.latitude,
-      city.longitude
-    );
+    await autoFillRegionDetails(city.latitude, city.longitude);
     setIsAutoFillingRegionData(false);
   };
 
+  // Auto-fill region + weather from the user's DB profile on mount
   useEffect(() => {
-    const autoFillFromSavedRegion = async () => {
-      if (typeof window === 'undefined') return;
-      if (formData.location.trim()) return;
-
-      const savedState = localStorage.getItem('userState') || '';
-      const savedDistrict = localStorage.getItem('userDistrict') || '';
-      if (!savedState) return;
-
-      const locationLabel = savedDistrict ? `${savedDistrict}, ${savedState}, India` : `${savedState}, India`;
-      setFormData((prev) => ({
-        ...prev,
-        location: locationLabel,
-        stateRegion: savedState
-      }));
-
-      setIsAutoFillingRegionData(true);
+    const autoFillFromDB = async () => {
       try {
-        const geoRes = await fetch(
-          `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(locationLabel)}&count=1&language=en&format=json`
-        );
-        const geoData = await geoRes.json();
-        const first = geoData?.results?.[0] as RegionSuggestion | undefined;
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.success || !data.user) return;
+        const { state, district } = data.user;
+        if (!state) return;
 
-        await autoFillRegionDetails(
-          locationLabel,
-          savedState,
-          first?.latitude,
-          first?.longitude
-        );
+        const locationLabel = district ? `${district}, ${state}, India` : `${state}, India`;
+        setFormData(prev => ({
+          ...prev,
+          location: locationLabel,
+          stateRegion: state,
+        }));
+
+        setIsAutoFillingRegionData(true);
+        try {
+          const geoRes = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(locationLabel)}&count=1&language=en&format=json`
+          );
+          const geoData = await geoRes.json();
+          const first = geoData?.results?.[0] as RegionSuggestion | undefined;
+          await autoFillRegionDetails(first?.latitude, first?.longitude);
+        } catch (err) {
+          console.error('Geo lookup failed:', err);
+        } finally {
+          setIsAutoFillingRegionData(false);
+        }
       } catch (err) {
-        console.error('Saved region auto-fill failed:', err);
-      } finally {
-        setIsAutoFillingRegionData(false);
+        console.error('Profile fetch failed:', err);
       }
     };
-
-    void autoFillFromSavedRegion();
+    void autoFillFromDB();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCropSelect = (cropName: string) => {
@@ -280,24 +243,7 @@ export default function CropIntelligence() {
     setIsCropDropdownOpen(false);
   };
 
-  const autoDetectSoil = () => {
-    if (!formData.stateRegion && !formData.location) {
-      alert("Please select a Region from the suggestions first to detect the soil type.");
-      return;
-    }
-    setIsDetectingSoil(true);
-    setTimeout(() => {
-      const stateMatch = Object.keys(regionalSoilMap).find(state => 
-        formData.stateRegion.includes(state) || formData.location.includes(state)
-      );
-      if (stateMatch) {
-        setFormData(prev => ({ ...prev, soil: regionalSoilMap[stateMatch] }));
-      } else {
-        setFormData(prev => ({ ...prev, soil: "Mixed Loam / Regional Variant" }));
-      }
-      setIsDetectingSoil(false);
-    }, 800);
-  };
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -316,7 +262,7 @@ export default function CropIntelligence() {
       const res = await fetch('/api/crops', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'intelligence', ...formData })
+        body: JSON.stringify({ mode: 'intelligence', language: initialLang, ...formData })
       });
 
       const data = await res.json();
@@ -442,76 +388,81 @@ export default function CropIntelligence() {
                 </AnimatePresence>
               </div>
 
-              {/* Weather Input */}
+              {/* Weather — auto-fetched display */}
               <div>
-                <label className="text-sm font-semibold text-gray-700 mb-1.5 block">{t('weather')} <span className="text-red-500">*</span></label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <CloudSun className="h-4 w-4 text-gray-400" />
+                <label className="text-sm font-semibold text-gray-700 mb-1.5 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <CloudSun className="w-3.5 h-3.5 text-sky-500" />
+                    {t('weather')}
+                  </span>
+                  {weatherCoords && (
+                    <button
+                      type="button"
+                      onClick={refreshWeather}
+                      disabled={isFetchingWeather}
+                      className="text-xs text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 disabled:opacity-50"
+                    >
+                      <Loader2 className={`w-3 h-3 ${isFetchingWeather ? 'animate-spin' : ''}`} />
+                      Refresh
+                    </button>
+                  )}
+                </label>
+
+                {isFetchingWeather ? (
+                  <div className="w-full py-3 px-4 bg-sky-50 border border-sky-200 rounded-xl flex items-center gap-3 text-sky-700">
+                    <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                    <span className="text-sm font-semibold">Fetching live weather...</span>
                   </div>
-                  <input required type="text" name="weather" placeholder={t('weatherPlaceholder')} value={formData.weather} onChange={handleInputChange} className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm font-medium" />
-                </div>
-                {isAutoFillingRegionData && (
-                  <p className="mt-1.5 text-xs font-semibold text-emerald-700 inline-flex items-center gap-1.5">
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    Auto fetching weather from selected region...
-                  </p>
+                ) : formData.weather ? (
+                  <div className="w-full py-3 px-4 bg-sky-50 border border-sky-200 rounded-xl flex items-center gap-3">
+                    <CloudSun className="w-5 h-5 text-sky-500 shrink-0" />
+                    <span className="text-sm font-semibold text-sky-900">{formData.weather}</span>
+                  </div>
+                ) : (
+                  <div className="w-full py-3 px-4 bg-gray-50 border border-dashed border-gray-300 rounded-xl flex items-center gap-3 text-gray-400">
+                    <CloudSun className="w-4 h-4 shrink-0" />
+                    <span className="text-sm font-medium">Select a region above to auto-fetch weather</span>
+                  </div>
                 )}
               </div>
 
-              {/* Soil Input */}
-              <div>
-                <label className="text-sm font-semibold text-gray-700 mb-1.5 block">{t('soil')} <span className="text-red-500">*</span></label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Leaf className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <input 
-                    required 
-                    type="text" 
-                    name="soil" 
-                    placeholder={t('soilPlaceholder')} 
-                    value={formData.soil} 
-                    onChange={handleInputChange} 
-                    className="w-full pl-11 pr-27.5 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm font-medium" 
-                  />
-                  <button 
-                    type="button"
-                    onClick={autoDetectSoil}
-                    disabled={isDetectingSoil}
-                    className="absolute inset-y-1.5 right-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs px-3 rounded-lg border border-emerald-200 transition-colors flex items-center gap-1.5 disabled:opacity-50"
-                  >
-                    {isDetectingSoil ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
-                    {t('detectBtn')}
-                  </button>
-                </div>
-                {isAutoFillingRegionData && (
-                  <p className="mt-1.5 text-xs font-semibold text-emerald-700">Soil type is being auto detected from region.</p>
-                )}
-              </div>
+
 
             
-              <div>
-                <label className="text-sm font-semibold text-gray-700 mb-1.5 block">{t('language')}</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Languages className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <select
-                    name="language"
-                    value={formData.language}
-                    onChange={handleInputChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm font-medium cursor-pointer appearance-none"
-                  >
-                    {LANGUAGES.map(lang => (
-                      <option key={lang.code} value={lang.code}>{lang.name}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="w-4 h-4 text-gray-400 absolute right-4 top-3.5 pointer-events-none" />
-                </div>
-              </div>
 
-              <button disabled={isAnalyzing} className="w-full mt-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl flex justify-center items-center transition-all shadow-md active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed">
+
+              {/* ─── Lifecycle CTA ─── */}
+              {formData.crop && (
+                <Link
+                  href={`/${locale}/dashboard/crop-lifecycle`}
+                  className="group w-full mt-1 flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] text-white px-5 py-4 rounded-xl shadow-lg shadow-emerald-900/20 transition-all"
+                >
+                  <div className="bg-white/20 p-2 rounded-lg shrink-0">
+                    <Sprout className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className="text-sm font-black leading-tight">Track {formData.crop}'s Lifecycle</p>
+                    <p className="text-emerald-200 text-xs font-medium mt-0.5">Get a day-by-day AI farming plan →</p>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-emerald-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
+                </Link>
+              )}
+
+              {!formData.crop && (
+                <Link
+                  href={`/${locale}/dashboard/crop-lifecycle`}
+                  className="group w-full mt-1 flex items-center gap-3 border-2 border-dashed border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50 text-emerald-700 px-5 py-4 rounded-xl transition-all"
+                >
+                  <Sprout className="w-5 h-5 shrink-0" />
+                  <div className="flex-1 text-left">
+                    <p className="text-sm font-bold">Start Crop Lifecycle Tracker</p>
+                    <p className="text-emerald-500 text-xs mt-0.5">AI day-by-day farming schedule</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform shrink-0" />
+                </Link>
+              )}
+
+              <button disabled={isAnalyzing} className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl flex justify-center items-center transition-all shadow-md active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed">
                 {isAnalyzing ? <><Loader2 className="animate-spin w-4 h-4 mr-2" /> {t('analyzing')}</> : <>{t('runAnalysis')} <ArrowRight className="w-4 h-4 ml-2" /></>}
               </button>
             </form>
@@ -685,6 +636,44 @@ export default function CropIntelligence() {
                       {renderAdvice(result.aiAdvice)}
                     </div>
                   </div>
+
+                  {/* ─── Lifecycle CTA Banner (Result Panel) ─── */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 p-6 shadow-xl"
+                  >
+                    {/* decorative blobs */}
+                    <div className="absolute -top-8 -right-8 w-32 h-32 bg-emerald-400/10 rounded-full pointer-events-none" />
+                    <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-teal-400/10 rounded-full pointer-events-none" />
+
+                    <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                      <div className="bg-emerald-400/20 backdrop-blur-sm p-3 rounded-xl border border-emerald-400/20 shrink-0">
+                        <Sprout className="w-8 h-8 text-emerald-300" />
+                      </div>
+
+                      <div className="flex-1">
+                        <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1">Next Step</p>
+                        <h3 className="text-xl font-black text-white leading-tight">
+                          Start tracking <span className="text-emerald-300">{result.crop.name}</span>
+                        </h3>
+                        <p className="text-emerald-300/80 text-sm font-medium mt-1">
+                          Let AI build a day-by-day schedule for your field
+                          {formData.location ? ` in ${formData.stateRegion || formData.location}` : ''}.
+                        </p>
+                      </div>
+
+                      <Link
+                        href={`/${locale}/dashboard/crop-lifecycle`}
+                        className="group shrink-0 flex items-center gap-2.5 bg-emerald-400 hover:bg-emerald-300 active:scale-95 text-emerald-950 font-black px-5 py-3 rounded-xl transition-all shadow-lg shadow-emerald-900/40 whitespace-nowrap"
+                      >
+                        <Sprout className="w-4 h-4" />
+                        Open Lifecycle Tracker
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    </div>
+                  </motion.div>
 
                 </motion.div>
               )}

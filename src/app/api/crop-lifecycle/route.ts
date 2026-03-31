@@ -1,15 +1,14 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import { ActiveCrop, User } from '@/models'; 
+import { ActiveCrop } from '@/models';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { verifyToken } from '@/lib/auth'; 
-import { cookies } from 'next/headers'; 
+import { verifyToken } from '@/lib/auth';
+import { cookies } from 'next/headers';
+import { getAiLanguage } from '@/lib/localeToLanguage';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
-// ==========================================
-// GET: Fetch all active crops for the farmer
-// ==========================================
+
 export async function GET(req: Request) {
   try {
     const cookieStore = await cookies();
@@ -55,18 +54,9 @@ export async function POST(req: Request) {
 
     await mongoose.connect(process.env.MONGODB_URI || '');
 
-    // Fetch the user to get their preferred language
-    const user = await User.findById(decoded.userId);
-    if (!user) {
-      return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
-    }
-
-    // Map language codes to full names for the AI
-    const languageMap: { [key: string]: string } = {
-      'en': 'English', 'hi': 'Hindi', 'pa': 'Punjabi', 'mr': 'Marathi',
-      'gu': 'Gujarati', 'ta': 'Tamil', 'te': 'Telugu', 'kn': 'Kannada'
-    };
-    const aiLanguage = languageMap[user.preferredLanguage || 'hi'] || 'Hindi';
+    // Derive AI language from the user's active locale stored in cookie
+    const localeCode = cookieStore.get('preferredLocale')?.value || 'en';
+    const aiLanguage = getAiLanguage(localeCode);
 
     // Call Gemini with the localized prompt
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });

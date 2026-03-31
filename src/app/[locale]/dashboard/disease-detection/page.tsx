@@ -5,10 +5,11 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import { 
   Upload, ShieldCheck, AlertTriangle, 
-  Loader2, CheckCircle, Leaf, Activity, X, Info, Languages, ChevronDown, Camera, Store, ArrowRight
+  Loader2, CheckCircle, Leaf, Activity, X, Camera, Store, ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
 import { requestKrishiSarthi } from '@/lib/krishiSarthi';
+import { getAiLanguage } from '@/lib/localeToLanguage';
 
 interface ScanResult {
   disease: string;
@@ -18,27 +19,18 @@ interface ScanResult {
   severity?: 'HIGH' | 'MEDIUM' | 'LOW';
 }
 
-const LANGUAGES = [
-  { code: 'English', name: 'English' },
-  { code: 'Hindi', name: 'हिन्दी (Hindi)' },
-  { code: 'Punjabi', name: 'ਪੰਜਾਬੀ (Punjabi)' },
-  { code: 'Marathi', name: 'मराठी (Marathi)' },
-  { code: 'Bengali', name: 'বাংলা (Bengali)' },
-  { code: 'Telugu', name: 'తెలుగు (Telugu)' },
-  { code: 'Tamil', name: 'தமிழ் (Tamil)' },
-];
+
 
 export default function DiseaseDetection() {
   const t = useTranslations('DiseaseDetection');
   const locale = useLocale();
 
-  const defaultLangMap: Record<string, string> = { en: 'English', hi: 'Hindi', pa: 'Punjabi' };
-  const initialLang = defaultLangMap[locale] || 'English';
+  const initialLang = getAiLanguage(locale);
 
   const [mode, setMode] = useState<'upload' | 'live'>('upload');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState(initialLang); 
+
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState<ScanResult | null>(null);
   const [error, setError] = useState('');
@@ -183,7 +175,7 @@ export default function DiseaseDetection() {
       const res = await fetch('/api/disease-detection', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageUrl, language: selectedLanguage }), 
+        body: JSON.stringify({ imageUrl, language: initialLang }), 
       });
 
       const data = await res.json();
@@ -229,7 +221,7 @@ export default function DiseaseDetection() {
           const res = await fetch('/api/disease-detection', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ imageBase64, audioBase64, audioMimeType: audioBlob.type, language: selectedLanguage }), 
+            body: JSON.stringify({ imageBase64, audioBase64, audioMimeType: audioBlob.type, language: initialLang }), 
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data.error || 'AI Scan failed');
@@ -322,14 +314,7 @@ export default function DiseaseDetection() {
             )}
           </div>
 
-          <div className="mb-4">
-            <label className="text-sm font-bold text-gray-700 mb-1.5 block">{t('language')}</label>
-            <select value={selectedLanguage} onChange={(e) => setSelectedLanguage(e.target.value)} disabled={isScanning} className="w-full px-4 py-3 bg-gray-50 border text-black border-black rounded-xl outline-none font-bold">
-              {LANGUAGES.map(lang => (
-                <option key={lang.code} value={lang.code}>{lang.name}</option>
-              ))}
-            </select>
-          </div>
+
 
           {mode === 'upload' ? (
             <button onClick={handleUploadScan} disabled={!selectedImage || isScanning || !!result} className="w-full py-4 rounded-xl font-bold text-white bg-agri-900 hover:bg-agri-800 disabled:opacity-50">
