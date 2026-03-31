@@ -11,6 +11,7 @@ import {
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import { STATES_DISTRICTS } from '@/utils/indiaStates';
+import StateDistrictSelector from '@/components/StateDistrictSelector';
 
 export default function RegisterPage() {
   const t = useTranslations('Register');
@@ -276,34 +277,16 @@ export default function RegisterPage() {
                   </div>
                 </motion.div>
 
-                {/* 🔴 ALIGNMENT FIX: Used CSS Grid (grid-cols-2) instead of flex */}
-                <motion.div variants={itemVariant} className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-1.5">{t('region')}</label>
-                    <div className="relative group">
-                      <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                      <select name="state" required value={formData.state} onChange={(e) => {
-                        setFormData(prev => ({ ...prev, state: e.target.value, district: '' }));
-                        if (error) setError('');
-                      }} className="block w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer shadow-sm bg-white font-medium">
-                        <option value="" disabled>Select State</option>
-                        {Object.keys(STATES_DISTRICTS).map(s => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                      <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-1.5">District</label>
-                    <div className="relative group">
-                      <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                      <select name="district" required disabled={!formData.state} value={formData.district} onChange={handleChange} className="block w-full pl-11 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer disabled:opacity-50 disabled:bg-gray-50 shadow-sm bg-white font-medium">
-                        <option value="" disabled>Select District</option>
-                        {formData.state && (STATES_DISTRICTS as any)[formData.state]?.map((d: string) => <option key={d} value={d}>{d}</option>)}
-                      </select>
-                      <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
-                    </div>
-                  </div>
+                <motion.div variants={itemVariant}>
+                  <StateDistrictSelector
+                    state={formData.state}
+                    district={formData.district}
+                    onStateChange={v => { setFormData(prev => ({ ...prev, state: v, district: '' })); if (error) setError(''); }}
+                    onDistrictChange={v => { setFormData(prev => ({ ...prev, district: v })); if (error) setError(''); }}
+                    required
+                    stateLabel={t('region')}
+                    districtLabel="District"
+                  />
                 </motion.div>
 
                 {/* 🔴 ALIGNMENT FIX: Grid Layout for Role and Language */}

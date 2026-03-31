@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogOut, Loader2, Store, Menu, X } from 'lucide-react';
+import { LogOut, Loader2, Store, Menu, X, Phone, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { getNavLinks } from '@/app/Data/NavLinks'; 
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -19,6 +19,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [userRole, setUserRole] = useState<string | null>(null);
   const [showMobileMore, setShowMobileMore] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [callState, setCallState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [callMsg, setCallMsg] = useState('');
 
   useAutoLocation();
 
@@ -73,6 +75,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     await handleLogout();
   };
 
+  const handleRequestCall = async () => {
+    if (callState === 'loading') return;
+    setCallState('loading');
+    setCallMsg('');
+    try {
+      const res = await fetch('/api/request-call', { method: 'POST', credentials: 'include' });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Failed to request call');
+      setCallState('success');
+      setCallMsg(data.message || 'Call initiated!');
+    } catch (err: any) {
+      setCallState('error');
+      setCallMsg(err.message || 'Something went wrong');
+    } finally {
+      setTimeout(() => { setCallState('idle'); setCallMsg(''); }, 4000);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-b from-[#f5fbf7] to-[#edf6f1] flex font-sans selection:bg-agri-400 selection:text-agri-900">
       
@@ -111,7 +131,44 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-white/10 space-y-2">
+
+          {/* ── Request a Call CTA ── */}
+          <button
+            onClick={handleRequestCall}
+            disabled={callState === 'loading'}
+            className={`group flex items-center w-full space-x-3 px-4 py-3.5 rounded-xl font-bold transition-all duration-300 relative overflow-hidden ${
+              callState === 'success'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                : callState === 'error'
+                ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 hover:border-emerald-400/40 shadow-[0_0_16px_rgba(16,185,129,0.15)] hover:shadow-[0_0_24px_rgba(16,185,129,0.3)]'
+            } disabled:opacity-70`}
+          >
+            {/* Animated glow ring */}
+            {callState === 'idle' && (
+              <span className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: 'linear-gradient(135deg,rgba(16,185,129,.12),transparent)' }} />
+            )}
+            <div className={`relative ${
+              callState === 'loading' ? 'animate-spin' : callState === 'success' ? '' : 'group-hover:scale-110 transition-transform'
+            }`}>
+              {callState === 'loading' ? <Loader2 className="w-5 h-5" /> :
+               callState === 'success' ? <CheckCircle2 className="w-5 h-5 text-emerald-400" /> :
+               callState === 'error' ? <AlertCircle className="w-5 h-5" /> :
+               <Phone className="w-5 h-5" />}
+            </div>
+            <div className="flex-1 text-left">
+              <span className="block text-sm">
+                {callState === 'loading' ? 'Calling...' :
+                 callState === 'success' ? 'Call Initiated! ✓' :
+                 callState === 'error' ? 'Failed — Retry?' :
+                 'Request a Call'}
+              </span>
+              {callMsg && <span className="block text-[11px] font-medium opacity-80 mt-0.5 leading-tight">{callMsg}</span>}
+              {callState === 'idle' && <span className="block text-[11px] font-medium opacity-60 mt-0.5">We call you back instantly</span>}
+            </div>
+          </button>
+
           <button 
             onClick={requestLogout}
             disabled={isLoggingOut}
@@ -192,6 +249,28 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Link>
                   );
                 })}
+
+                <button
+                  type="button"
+                  onClick={() => { setShowMobileMore(false); handleRequestCall(); }}
+                  disabled={callState === 'loading'}
+                  className={`rounded-xl border px-2 py-3 flex flex-col items-center text-center gap-1 transition ${
+                    callState === 'success'
+                      ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                      : callState === 'error'
+                      ? 'border-red-200 bg-red-50 text-red-600'
+                      : 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                  } disabled:opacity-60`}
+                >
+                  <div>
+                    {callState === 'loading' ? <Loader2 className="w-4 h-4 animate-spin" /> :
+                     callState === 'success' ? <CheckCircle2 className="w-4 h-4" /> :
+                     <Phone className="w-4 h-4" />}
+                  </div>
+                  <span className="text-[11px] font-semibold leading-tight">
+                    {callState === 'loading' ? 'Calling...' : callState === 'success' ? 'Called! ✓' : 'Call Me'}
+                  </span>
+                </button>
 
                 <button
                   type="button"

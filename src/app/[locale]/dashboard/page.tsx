@@ -1,26 +1,27 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, Variants } from 'framer-motion';
-import { 
-  CloudSun, Droplets, Wind, TrendingUp, 
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, Variants, animate, useInView } from 'framer-motion';
+import {
+  CloudSun, Droplets, Wind, TrendingUp, TrendingDown,
   ShieldCheck, ArrowRight, MapPin, Activity,
-  Loader2, Sun, Cloud, CloudRain, CloudLightning, Scale, IndianRupee, CheckCircle2
+  Loader2, Sun, Cloud, CloudRain, CloudLightning, IndianRupee,
+  CheckCircle2, Sprout, Brain, Microscope, BarChart3, Leaf,
+  Thermometer, Eye, AlertTriangle, Zap
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 
-/* ======================================================
-    HELPERS & TYPES
-====================================================== */
-
+/* ════════════════════════════════════════════════════════
+   TYPES
+═══════════════════════════════════════════════════════ */
 interface WeatherData {
   temp: string;
   condition: string;
   humidity: string;
   wind: string;
+  code: number;
 }
-
 interface MandiAlert {
   commodity: string;
   market: string;
@@ -29,251 +30,546 @@ interface MandiAlert {
   maxPrice: number | string;
 }
 
+/* ════════════════════════════════════════════════════════
+   FARMING UTILS
+═══════════════════════════════════════════════════════ */
+const getCurrentSeason = () => {
+  const m = new Date().getMonth() + 1;
+  if (m >= 6 && m <= 10) return { name: 'Kharif', emoji: '🌧️', color: 'bg-blue-900/60 text-blue-300 border-blue-500/30' };
+  if (m >= 11 || m <= 3)  return { name: 'Rabi',   emoji: '❄️', color: 'bg-indigo-900/60 text-indigo-300 border-indigo-500/30' };
+  return { name: 'Zaid', emoji: '☀️', color: 'bg-amber-900/60 text-amber-300 border-amber-500/30' };
+};
+
+const getFarmAdvisory = (weather: WeatherData | null) => {
+  if (!weather) return null;
+  const hum = parseInt(weather.humidity);
+  const wind = parseInt(weather.wind);
+  const { code } = weather;
+  if (code >= 95) return { icon: AlertTriangle, msg: 'Storm alert — secure equipment', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' };
+  if (hum > 80)   return { icon: Droplets,     msg: 'High humidity — watch for fungal disease', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' };
+  if (code >= 51) return { icon: CloudRain,    msg: 'Rain expected — delay spraying', color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' };
+  if (wind > 30)  return { icon: Wind,         msg: 'High winds — avoid pesticide spray', color: 'text-cyan-400', bg: 'bg-cyan-500/10 border-cyan-500/20' };
+  if (hum < 40)   return { icon: Sun,          msg: 'Low humidity — irrigate fields', color: 'text-orange-400', bg: 'bg-orange-500/10 border-orange-500/20' };
+  return { icon: CheckCircle2, msg: 'Optimal farm conditions today', color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' };
+};
+
+/* ════════════════════════════════════════════════════════
+   QUICK ACCESS TILES
+═══════════════════════════════════════════════════════ */
+const QUICK_TILES = [
+  {
+    id: 'mandi',
+    label: 'Mandi Prices',
+    sub: 'Live market rates',
+    icon: BarChart3,
+    href: '/dashboard/mandi-prices',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop',
+    accent: 'from-amber-500/70 to-orange-600/70',
+    glow: 'shadow-amber-900/40',
+    chip: '🌾 Today',
+  },
+  {
+    id: 'disease',
+    label: 'Crop Doctor',
+    sub: 'AI disease detection',
+    icon: Microscope,
+    href: '/dashboard/disease-detection',
+    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=800&auto=format&fit=crop',
+    accent: 'from-emerald-600/70 to-green-700/70',
+    glow: 'shadow-emerald-900/40',
+    chip: '🔬 AI Scan',
+  },
+  {
+    id: 'lifecycle',
+    label: 'Crop Lifecycle',
+    sub: 'Growth planner',
+    icon: Sprout,
+    href: '/dashboard/crop-lifecycle',
+    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=800&auto=format&fit=crop',
+    accent: 'from-green-600/70 to-teal-700/70',
+    glow: 'shadow-green-900/40',
+    chip: '🌱 Plan',
+  },
+  {
+    id: 'advisor',
+    label: 'AI Advisor',
+    sub: 'Smart recommendations',
+    icon: Brain,
+    href: '/dashboard/mandi-prices/mandi-advisor',
+    image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800&auto=format&fit=crop',
+    accent: 'from-violet-600/70 to-purple-700/70',
+    glow: 'shadow-violet-900/40',
+    chip: '🤖 Smart',
+  },
+];
+
+/* ════════════════════════════════════════════════════════
+   ANIMATED SUN SVG
+═══════════════════════════════════════════════════════ */
+function AnimatedSunIcon() {
+  return (
+    <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }} className="w-10 h-10">
+      <Sun className="w-10 h-10 text-amber-300 drop-shadow-[0_0_12px_rgba(251,191,36,0.8)]" />
+    </motion.div>
+  );
+}
+function AnimatedRainIcon() {
+  return (
+    <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 1.2, repeat: Infinity }} className="w-10 h-10">
+      <CloudRain className="w-10 h-10 text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.6)]" />
+    </motion.div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   RADAR PULSE (for AI panel)
+═══════════════════════════════════════════════════════ */
+function RadarPulse() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {[1, 2, 3].map(i => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full border border-emerald-500/20"
+          initial={{ width: 40, height: 40, opacity: 0.6 }}
+          animate={{ width: 140, height: 140, opacity: 0 }}
+          transition={{ duration: 2.5, delay: i * 0.8, repeat: Infinity, ease: 'easeOut' }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════════ */
 export default function DashboardOverview() {
   const t = useTranslations('DashboardOverview');
   const locale = useLocale();
 
-  // 🌟 NEW: State to hold the actual user's name (Fallback is 'Farmer'/'किसान')
-  // const [userName, setUserName] = useState(t('defaultName') || 'Farmer'); 
   const [userName, setUserName] = useState('');
-  
   const [locationName, setLocationName] = useState('Meerut, Uttar Pradesh');
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [weatherIcon, setWeatherIcon] = useState<React.ReactNode>(<CloudSun className="w-6 h-6 text-blue-200" />);
   const [mandiAlerts, setMandiAlerts] = useState<MandiAlert[]>([]);
   const [isLoadingMandi, setIsLoadingMandi] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  const season = getCurrentSeason();
+  const advisory = getFarmAdvisory(weatherData);
+
+  /* ── Clock tick ── */
+  useEffect(() => {
+    const id = setInterval(() => setCurrentTime(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const greeting = () => {
+    const h = currentTime.getHours();
+    if (h < 12) return 'Good Morning';
+    if (h < 17) return 'Good Afternoon';
+    return 'Good Evening';
+  };
 
   const getWeatherDetails = (code: number) => {
-    if (code === 0) return { text: t('weather.conditions.clear'), icon: <Sun className="w-6 h-6 text-blue-200" /> };
-    if (code >= 1 && code <= 3) return { text: t('weather.conditions.cloudy'), icon: <CloudSun className="w-6 h-6 text-blue-200" /> };
-    if (code === 45 || code === 48) return { text: t('weather.conditions.foggy'), icon: <Cloud className="w-6 h-6 text-blue-200" /> };
-    if (code >= 51 && code <= 65) return { text: t('weather.conditions.rain'), icon: <CloudRain className="w-6 h-6 text-blue-200" /> };
-    if (code >= 80 && code <= 82) return { text: t('weather.conditions.heavyRain'), icon: <CloudRain className="w-6 h-6 text-blue-200" /> };
-    if (code >= 95) return { text: t('weather.conditions.thunder'), icon: <CloudLightning className="w-6 h-6 text-blue-200" /> };
-    return { text: t('weather.conditions.cloudy'), icon: <CloudSun className="w-6 h-6 text-blue-200" /> };
+    if (code === 0)                  return { text: t('weather.conditions.clear'),     icon: <AnimatedSunIcon /> };
+    if (code >= 1 && code <= 3)      return { text: t('weather.conditions.cloudy'),    icon: <CloudSun className="w-10 h-10 text-blue-200" /> };
+    if (code === 45 || code === 48)  return { text: t('weather.conditions.foggy'),     icon: <Cloud className="w-10 h-10 text-blue-200" /> };
+    if (code >= 51 && code <= 65)    return { text: t('weather.conditions.rain'),      icon: <AnimatedRainIcon /> };
+    if (code >= 80 && code <= 82)    return { text: t('weather.conditions.heavyRain'), icon: <AnimatedRainIcon /> };
+    if (code >= 95)                  return { text: t('weather.conditions.thunder'),   icon: <CloudLightning className="w-10 h-10 text-yellow-300" /> };
+    return { text: t('weather.conditions.cloudy'), icon: <CloudSun className="w-10 h-10 text-blue-200" /> };
   };
 
   const container: Variants = {
     hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    show: { opacity: 1, transition: { staggerChildren: 0.09 } }
   };
-
   const item: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 120 } }
+    hidden: { opacity: 0, y: 22 },
+    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 110, damping: 18 } }
   };
 
-  // 🌟 NEW: Fetch User Data on Mount
+  /* ── Fetch user ── */
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/auth/me');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && data.user?.name) {
-            // Get just the first name for a friendlier greeting
-            const firstName = data.user.name.split(' ')[0];
-            setUserName(firstName);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch user", error);
-      }
-    };
-    fetchUser();
+    fetch('/api/auth/me').then(r => r.json()).then(d => {
+      if (d.success && d.user?.name) setUserName(d.user.name.split(' ')[0]);
+    }).catch(() => {});
   }, []);
 
-  // Weather Fetching
+  /* ── Fetch weather ── */
   useEffect(() => {
     const fetchWeather = async (lat: number, lon: number) => {
       try {
         const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m`);
         const data = await res.json();
         const details = getWeatherDetails(data.current.weather_code);
-        
         setWeatherData({
           temp: `${Math.round(data.current.temperature_2m)}°C`,
           condition: details.text,
           humidity: `${data.current.relative_humidity_2m}%`,
-          wind: `${Math.round(data.current.wind_speed_10m)} km/h`
+          wind: `${Math.round(data.current.wind_speed_10m)} km/h`,
+          code: data.current.weather_code,
         });
-        setWeatherIcon(details.icon);
-
         const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
         const geoData = await geoRes.json();
         if (geoData.city || geoData.locality) {
           setLocationName(`${geoData.city || geoData.locality}, ${geoData.principalSubdivision}`);
         }
-      } catch (error) { console.error("Weather failed", error); }
+      } catch { /* silently fail */ }
     };
-
-    if ("geolocation" in navigator) {
+    if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
+        pos => fetchWeather(pos.coords.latitude, pos.coords.longitude),
         () => fetchWeather(28.9845, 77.7064)
       );
     }
-  }, [locale]); // Added locale to re-fetch translated city names if needed
+  }, [locale]);
 
-  // Mandi Fetching
+  /* ── Fetch mandi ── */
   useEffect(() => {
-    const fetchMandi = async () => {
-      try {
-        const res = await fetch('/api/mandi');
-        const data = await res.json();
-        if (data.prices) setMandiAlerts(data.prices.slice(0, 3));
-      } catch (error) { console.error("Mandi failed", error); }
-      finally { setIsLoadingMandi(false); }
-    };
-    fetchMandi();
+    fetch('/api/mandi').then(r => r.json()).then(d => {
+      if (d.prices) setMandiAlerts(d.prices.slice(0, 3));
+    }).catch(() => {}).finally(() => setIsLoadingMandi(false));
   }, []);
 
+  const weatherDetails = weatherData ? getWeatherDetails(weatherData.code) : null;
+
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-6 md:space-y-8 overflow-x-hidden max-w-7xl mx-auto">
-      
-      {/* Header Section */}
-      <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-3 md:gap-4">
-        <div>
-          <h1 className="text-3xl leading-tight md:text-4xl font-black text-emerald-900 tracking-tight">
-            {/* 🌟 NEW: Dynamic user name injected here */}
-            {t('welcome', { name: userName })}
-          </h1>
-          <p className="text-gray-600 mt-2 flex items-center font-semibold text-sm md:text-base leading-tight">
-            <MapPin className="w-4 h-4 mr-1 text-emerald-600" />
-            {locationName}
-          </p>
+    <motion.div variants={container} initial="hidden" animate="show" className="space-y-5 md:space-y-7 overflow-x-hidden max-w-7xl mx-auto">
+
+      {/* ══════════════════════════════════════════════════════
+          HERO GREETING BANNER
+      ═════════════════════════════════════════════════════ */}
+      <motion.div variants={item} className="relative rounded-3xl overflow-hidden min-h-[160px] md:min-h-[190px] shadow-xl">
+        {/* Background field image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2064&auto=format&fit=crop')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/95 via-emerald-950/80 to-emerald-900/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/60 to-transparent" />
+
+        {/* Floating leaf particles */}
+        {['🌿','🍃','🌾'].map((emoji, i) => (
+          <motion.span
+            key={i}
+            className="absolute text-2xl pointer-events-none select-none"
+            style={{ right: `${15 + i * 20}%`, top: `${20 + i * 15}%` }}
+            animate={{ y: [0, -10, 0], rotate: [0, 8, -8, 0], opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 4 + i, repeat: Infinity, delay: i * 1.2 }}
+          >
+            {emoji}
+          </motion.span>
+        ))}
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 md:p-8 h-full">
+          <div>
+            {/* Season badge */}
+            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest border mb-3 ${season.color}`}>
+              <span>{season.emoji}</span> {season.name} Season
+            </div>
+
+            {/* Greeting */}
+            <h1 className="text-2xl md:text-4xl font-black text-white leading-tight">
+              {greeting()},{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-amber-400">
+                {userName ? `${userName}!` : 'Kisan!'}
+              </span>
+            </h1>
+            <p className="text-emerald-200/70 mt-1.5 flex items-center gap-1.5 font-semibold text-sm">
+              <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              {locationName} · {currentTime.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </p>
+          </div>
+
+          <Link
+            href={`/${locale}/dashboard/disease-detection`}
+            className="hidden md:flex items-center gap-2 bg-emerald-400 text-emerald-950 px-6 py-3 rounded-2xl font-black hover:bg-amber-400 transition-all shadow-lg active:scale-95 shrink-0 group"
+          >
+            <ShieldCheck className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <span>{t('runScan')}</span>
+          </Link>
         </div>
-        <Link href={`/${locale}/dashboard/disease-detection`} className="hidden md:flex items-center space-x-2 bg-emerald-900 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-800 transition shadow-lg shadow-emerald-900/20 active:scale-95">
-          <ShieldCheck className="w-5 h-5 text-emerald-400" />
-          <span>{t('runScan')}</span>
-        </Link>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
-        {/* Weather Card */}
-        <motion.div variants={item} className="bg-linear-to-br from-blue-500 via-blue-600 to-blue-700 rounded-4xl p-6 md:p-7 text-white shadow-[0_18px_50px_-22px_rgba(37,99,235,0.85)] border border-blue-300/30">
-          <div className="relative z-10 flex flex-col h-full justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-bold text-blue-100">{t('weather.title')}</h3>
-                {weatherIcon}
+      {/* ══════════════════════════════════════════════════════
+          QUICK ACCESS TILES
+      ═════════════════════════════════════════════════════ */}
+      <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        {QUICK_TILES.map(tile => (
+          <Link
+            key={tile.id}
+            href={`/${locale}${tile.href}`}
+            className={`relative overflow-hidden rounded-2xl group shadow-lg ${tile.glow} hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 active:scale-95 min-h-[130px]`}
+          >
+            {/* Bg image */}
+            <div
+              className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
+              style={{ backgroundImage: `url(${tile.image})` }}
+            />
+            <div className={`absolute inset-0 bg-gradient-to-br ${tile.accent}`} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+            <div className="relative z-10 p-4 h-full flex flex-col justify-between">
+              {/* Chip */}
+              <span className="self-start text-[10px] font-black bg-white/15 backdrop-blur-sm border border-white/20 px-2 py-0.5 rounded-full text-white">
+                {tile.chip}
+              </span>
+              <div>
+                <tile.icon className="w-6 h-6 text-white mb-1.5 drop-shadow-md" />
+                <div className="text-white font-black text-base leading-tight drop-shadow-md">{tile.label}</div>
+                <div className="text-white/70 text-[11px] font-semibold mt-0.5">{tile.sub}</div>
               </div>
-              {weatherData ? (
-                <>
-                  <div className="text-[3.4rem] leading-none font-black tracking-tighter mb-2">{weatherData.temp}</div>
-                  <div className="text-blue-100 font-medium mb-6">{weatherData.condition}</div>
-                </>
-              ) : (
-                <div className="py-6 flex items-center text-blue-100">
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" /> {t('weather.loading')}
-                </div>
-              )}
             </div>
-            <div className="flex space-x-4 text-sm font-semibold bg-white/10 p-3.5 rounded-2xl backdrop-blur-md w-max border border-white/20 mt-auto shadow-inner shadow-white/10">
-              <div className="flex items-center"><Droplets className="w-4 h-4 mr-1.5 text-blue-200"/> {weatherData?.humidity || '--%'}</div>
-              <div className="flex items-center"><Wind className="w-4 h-4 mr-1.5 text-blue-200"/> {weatherData?.wind || '-- km/h'}</div>
+          </Link>
+        ))}
+      </motion.div>
+
+      {/* ══════════════════════════════════════════════════════
+          WEATHER + CROP STATUS
+      ═════════════════════════════════════════════════════ */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+
+        {/* ── Weather Card ── */}
+        <motion.div variants={item} className="relative overflow-hidden bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-3xl p-6 text-white shadow-[0_18px_50px_-22px_rgba(37,99,235,0.85)] border border-blue-300/20">
+
+          {/* Atmospheric field bg */}
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-15"
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1504370805625-d32c54b16100?q=80&w=800&auto=format&fit=crop')" }}
+          />
+          <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
+
+          <div className="relative z-10 flex flex-col h-full">
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="font-bold text-blue-100 text-sm uppercase tracking-wider">{t('weather.title')}</h3>
+              {weatherDetails?.icon ?? <CloudSun className="w-10 h-10 text-blue-200 opacity-60" />}
+            </div>
+
+            {weatherData ? (
+              <>
+                <div className="text-[3.4rem] leading-none font-black tracking-tighter mb-1">{weatherData.temp}</div>
+                <div className="text-blue-100 font-semibold mb-4 text-sm">{weatherData.condition}</div>
+              </>
+            ) : (
+              <div className="py-6 flex items-center text-blue-100">
+                <Loader2 className="w-5 h-5 animate-spin mr-2" /> {t('weather.loading')}
+              </div>
+            )}
+
+            {/* Advisory chip */}
+            {advisory && (
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold border mb-3 ${advisory.bg}`}>
+                <advisory.icon className={`w-3.5 h-3.5 ${advisory.color} shrink-0`} />
+                <span className={advisory.color}>{advisory.msg}</span>
+              </div>
+            )}
+
+            <div className="flex gap-4 text-sm font-semibold bg-white/10 p-3 rounded-xl backdrop-blur-sm border border-white/15 mt-auto">
+              <div className="flex items-center gap-1.5"><Droplets className="w-4 h-4 text-blue-200" />{weatherData?.humidity ?? '--%'}</div>
+              <div className="flex items-center gap-1.5"><Wind className="w-4 h-4 text-blue-200" />{weatherData?.wind ?? '-- km/h'}</div>
             </div>
           </div>
         </motion.div>
 
-        {/* Active Crop Status */}
-        <motion.div variants={item} className="bg-white rounded-4xl p-6 md:p-7 border border-agri-100 shadow-[0_18px_45px_-28px_rgba(2,44,34,0.4)] col-span-1 md:col-span-2 flex flex-col justify-between overflow-hidden">
-          <div className="relative z-10 flex justify-between items-start mb-4">
-            <div>
-              <h3 className="text-xl md:text-2xl leading-tight font-black text-emerald-900">{t('deployment.title')}</h3>
-              <p className="text-sm md:text-base text-gray-600 font-semibold">{t('deployment.subtitle')}</p>
-            </div>
-            <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs md:text-sm font-black rounded-xl border border-emerald-200/70">
-                {t('deployment.dayTracker', { current: 42, total: 120 })}
-            </span>
-          </div>
-          
-          <div className="relative z-10 flex items-center space-x-6 my-2">
-            <div className="w-20 h-20 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center justify-center">
-                <Activity className="w-10 h-10 text-emerald-600" />
-            </div>
-            <div>
-              <h2 className="text-[2rem] md:text-[2.15rem] leading-tight font-black text-emerald-900">{t('deployment.cropName')}</h2>
-              <p className="text-emerald-600 font-black mt-1.5 flex items-center text-base md:text-lg">
-                <CheckCircle2 className="w-4 h-4 mr-1" /> {t('deployment.healthLabel')}: {t('deployment.healthValue')}
-              </p>
-            </div>
-          </div>
+        {/* ── Active Crop Card ── */}
+        <motion.div variants={item} className="relative overflow-hidden bg-white rounded-3xl border border-emerald-100 shadow-[0_18px_45px_-28px_rgba(2,44,34,0.35)] col-span-1 md:col-span-2">
 
-          <div className="relative z-10 mt-auto">
-            <div className="w-full bg-gray-100 rounded-full h-2.5 mb-2 overflow-hidden">
-              <motion.div initial={{ width: 0 }} animate={{ width: '35%' }} className="bg-emerald-500 h-2.5 rounded-full" />
+          {/* Field bg */}
+          <div
+            className="absolute inset-0 bg-cover bg-bottom opacity-12"
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=800&auto=format&fit=crop')" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/70" />
+
+          <div className="relative z-10 p-6 md:p-7 flex flex-col h-full justify-between">
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h3 className="text-xl md:text-2xl font-black text-emerald-900 leading-tight">{t('deployment.title')}</h3>
+                <p className="text-sm text-gray-500 font-semibold mt-0.5">{t('deployment.subtitle')}</p>
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-black rounded-xl border border-emerald-200/70">
+                  {t('deployment.dayTracker', { current: 42, total: 120 })}
+                </span>
+                <span className={`px-2.5 py-1 text-[10px] font-black rounded-full border ${season.color}`}>
+                  {season.emoji} {season.name}
+                </span>
+              </div>
             </div>
-            <p className="text-sm text-gray-500 font-black text-right uppercase tracking-wider">
-                {t('deployment.harvestProgress', { percent: 35 })}
-            </p>
+
+            <div className="flex items-center gap-5 my-2">
+              {/* Crop icon with field ring */}
+              <div className="relative w-20 h-20 shrink-0">
+                <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                  <div
+                    className="w-full h-full bg-cover bg-center opacity-30"
+                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1466629437334-b4f6603563c5?q=80&w=200&auto=format&fit=crop')" }}
+                  />
+                </div>
+                <div className="absolute inset-0 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center justify-center">
+                  <Leaf className="w-10 h-10 text-emerald-500" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-[2rem] md:text-[2.1rem] leading-tight font-black text-emerald-900">
+                  {t('deployment.cropName')}
+                </h2>
+                <p className="text-emerald-600 font-black mt-1 flex items-center gap-1 text-base md:text-lg">
+                  <CheckCircle2 className="w-4 h-4" />
+                  {t('deployment.healthLabel')}: {t('deployment.healthValue')}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-auto">
+              <div className="flex justify-between items-center mb-1.5">
+                <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Growth Progress</span>
+                <span className="text-xs font-black text-emerald-600">{t('deployment.harvestProgress', { percent: 35 })}</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: '35%' }}
+                  transition={{ duration: 1.5, ease: 'easeOut', delay: 0.5 }}
+                  className="h-3 rounded-full bg-gradient-to-r from-emerald-500 to-green-400 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                />
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
-        {/* Mandi Tracker */}
-        <motion.div variants={item} className="bg-white rounded-4xl p-6 md:p-7 border border-agri-100 shadow-[0_18px_45px_-28px_rgba(2,44,34,0.4)]">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-bold text-emerald-900 flex items-center">
-              <Activity className="w-5 h-5 mr-2 text-emerald-500" /> {t('mandi.title')}
+      {/* ══════════════════════════════════════════════════════
+          MANDI + AI INTELLIGENCE
+      ═════════════════════════════════════════════════════ */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
+
+        {/* ── Mandi Tracker ── */}
+        <motion.div variants={item} className="bg-white rounded-3xl p-6 md:p-7 border border-emerald-100 shadow-[0_18px_45px_-28px_rgba(2,44,34,0.3)]">
+          <div className="flex justify-between items-center mb-5">
+            <h3 className="text-lg font-black text-emerald-900 flex items-center gap-2">
+              <div className="p-2 bg-amber-50 rounded-xl border border-amber-100">
+                <BarChart3 className="w-4.5 h-4.5 text-amber-600" />
+              </div>
+              {t('mandi.title')}
             </h3>
-            <Link href={`/${locale}/dashboard/mandi-prices`} className="text-sm font-bold text-emerald-600 hover:text-emerald-800 flex items-center bg-emerald-50 px-3 py-1.5 rounded-lg transition-colors">
+            <Link
+              href={`/${locale}/dashboard/mandi-prices`}
+              className="text-sm font-bold text-emerald-600 hover:text-emerald-800 flex items-center bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl transition-all"
+            >
               {t('mandi.viewAll')} <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
-          <div className="space-y-4">
+
+          <div className="space-y-3">
             {isLoadingMandi ? (
-              <div className="py-8 flex flex-col items-center text-gray-400">
+              <div className="py-10 flex flex-col items-center text-gray-400">
                 <Loader2 className="w-8 h-8 animate-spin text-emerald-400 mb-2" />
                 <span className="text-sm">{t('mandi.loading')}</span>
               </div>
             ) : mandiAlerts.map((alert, idx) => (
-              <div key={idx} className="flex items-center justify-between p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                <div>
-                  <h4 className="font-bold text-gray-900">{alert.commodity}</h4>
-                  <p className="text-xs text-gray-500 flex items-center"><MapPin className="w-3 h-3 mr-1" /> {alert.market}</p>
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className={`flex items-center justify-between p-4 rounded-2xl border transition-all hover:shadow-sm ${idx % 2 === 0 ? 'bg-stone-50 border-stone-100' : 'bg-emerald-50/40 border-emerald-100/60'}`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base ${idx % 2 === 0 ? 'bg-amber-100' : 'bg-emerald-100'}`}>
+                    {idx === 0 ? '🌾' : idx === 1 ? '🌽' : '🧅'}
+                  </div>
+                  <div>
+                    <h4 className="font-black text-gray-900 text-sm">{alert.commodity}</h4>
+                    <p className="text-[11px] text-gray-400 flex items-center gap-0.5">
+                      <MapPin className="w-2.5 h-2.5" /> {alert.market}
+                    </p>
+                  </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-black text-gray-900 text-lg flex items-center justify-end"><IndianRupee className="w-4 h-4 mr-0.5" /> {alert.modalPrice}</div>
-                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1">₹{alert.minPrice} - ₹{alert.maxPrice}</div>
+                  <div className="font-black text-gray-900 flex items-center gap-0.5 justify-end">
+                    <IndianRupee className="w-3.5 h-3.5" />
+                    <span className="text-lg">{alert.modalPrice}</span>
+                    {/* Trend indicator — random for now, would come from price history */}
+                    {idx === 0
+                      ? <TrendingUp className="w-4 h-4 text-emerald-500 ml-1" />
+                      : idx === 1
+                      ? <TrendingDown className="w-4 h-4 text-red-400 ml-1" />
+                      : <TrendingUp className="w-4 h-4 text-emerald-500 ml-1" />}
+                  </div>
+                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mt-0.5">
+                    ₹{alert.minPrice}–₹{alert.maxPrice}
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* Intelligence Panel */}
-        <motion.div variants={item} className="bg-linear-to-br from-emerald-950 to-[#03261f] rounded-4xl p-6 md:p-7 text-white shadow-[0_18px_50px_-24px_rgba(2,44,34,0.7)] relative overflow-hidden border border-emerald-800/60">
-          <div className="relative z-10">
-            <div className="flex items-center space-x-2 mb-2">
-              <ShieldCheck className="w-6 h-6 text-emerald-400" />
-              <h3 className="text-xl font-bold">{t('aiAssistant.title')}</h3>
-            </div>
-            <p className="text-emerald-100/70 text-sm mb-8">{t('aiAssistant.monitoring')}</p>
-            
-            <div className="space-y-3">
-              {weatherData && parseInt(weatherData.humidity) > 75 ? (
-                 <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex items-start space-x-3">
-                   <Droplets className="w-5 h-5 text-amber-400 mt-1" />
-                   <div>
-                     <h4 className="text-sm font-bold text-amber-100">{t('aiAssistant.fungalWarningTitle')}</h4>
-                     <p className="text-xs text-amber-100/70 mt-1">{t('aiAssistant.fungalWarningDesc', { humidity: weatherData.humidity })}</p>
-                   </div>
-                 </div>
-              ) : (
-                <div className="bg-white/10 border border-white/10 rounded-2xl p-4 flex items-start space-x-3">
-                  <CloudSun className="w-5 h-5 text-emerald-400 mt-1" />
-                  <div>
-                    <h4 className="text-sm font-bold text-white">{t('aiAssistant.optimalTitle')}</h4>
-                    <p className="text-xs text-emerald-100/70 mt-1">{t('aiAssistant.optimalDesc')}</p>
-                  </div>
-                </div>
-              )}
+        {/* ── AI Intelligence Panel ── */}
+        <motion.div variants={item} className="bg-gradient-to-br from-emerald-950 to-[#03261f] rounded-3xl p-6 md:p-7 text-white shadow-[0_18px_50px_-24px_rgba(2,44,34,0.8)] relative overflow-hidden border border-emerald-800/50">
+
+          {/* Field bg overlay */}
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-10"
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800&auto=format&fit=crop')" }}
+          />
+
+          {/* Radar pulse behind icon */}
+          <div className="absolute top-8 right-8">
+            <RadarPulse />
+            <div className="relative z-10 w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30">
+              <Zap className="w-5 h-5 text-emerald-400" />
             </div>
           </div>
+
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-1">
+              <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              <h3 className="text-lg font-black">{t('aiAssistant.title')}</h3>
+            </div>
+            <p className="text-emerald-100/60 text-sm mb-6">{t('aiAssistant.monitoring')}</p>
+
+            <div className="space-y-3">
+              {/* Dynamic advisory based on weather */}
+              {advisory ? (
+                <div className={`flex items-start gap-3 rounded-2xl p-4 border ${advisory.bg}`}>
+                  <advisory.icon className={`w-5 h-5 ${advisory.color} mt-0.5 shrink-0`} />
+                  <div>
+                    <h4 className={`text-sm font-black ${advisory.color}`}>
+                      {weatherData && parseInt(weatherData.humidity) > 75 ? t('aiAssistant.fungalWarningTitle') : t('aiAssistant.optimalTitle')}
+                    </h4>
+                    <p className="text-xs text-emerald-100/60 mt-1">
+                      {weatherData && parseInt(weatherData.humidity) > 75
+                        ? t('aiAssistant.fungalWarningDesc', { humidity: weatherData.humidity })
+                        : t('aiAssistant.optimalDesc')}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-white/8 border border-white/10 rounded-2xl p-4 flex items-center gap-3">
+                  <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" />
+                  <span className="text-sm text-emerald-100/70">Analysing farm conditions…</span>
+                </div>
+              )}
+
+              {/* AI tip card */}
+              <div className="bg-white/5 border border-white/8 rounded-2xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Brain className="w-4 h-4 text-violet-400" />
+                  <span className="text-xs font-black text-violet-300 uppercase tracking-wider">AI Insight</span>
+                </div>
+                <p className="text-xs text-emerald-100/70 leading-relaxed">
+                  Based on current weather and mandi trends, consider harvesting within the next 7 days for optimal pricing.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <Link href={`/${locale}/dashboard/mandi-prices/mandi-advisor`}>
-            <button className="relative z-10 mt-8 w-full bg-emerald-400 text-emerald-950 font-bold py-4 rounded-xl active:scale-95 transition-all">
+            <button className="relative z-10 mt-6 w-full bg-emerald-400 hover:bg-amber-400 text-emerald-950 font-black py-3.5 rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2 group">
+              <Brain className="w-4 h-4 group-hover:scale-110 transition-transform" />
               {t('aiAssistant.button')}
             </button>
           </Link>
