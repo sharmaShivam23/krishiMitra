@@ -74,20 +74,24 @@ export async function POST(req: Request) {
       You are an expert Indian agronomist. 
       Create a practical, day-by-day crop lifecycle plan for farming ${cropName} in ${district}, ${state}.
       The start/sowing date is ${startDate}.
+      
+      CRITICAL INSTRUCTION 1: You MUST write the "title" and "description" entirely in the ${aiLanguage} language. Keep the JSON keys in English.
+      CRITICAL INSTRUCTION 2: Evaluate if the start date ${startDate} is the optimal season/month to start growing ${cropName} in ${state}. If it is NOT the optimal season, provide a warning in the "outOfSeasonWarning" field specifying which month(s) would be best for optimal growth. If it IS the right season, set "outOfSeasonWarning" to null.
 
-      CRITICAL INSTRUCTION: You MUST write the "title" and "description" entirely in the ${aiLanguage} language. Keep the JSON keys in English.
-
-      Output EXACTLY a raw JSON array. DO NOT wrap the JSON in markdown blocks (like \`\`\`json). No introductory text.
+      Output EXACTLY a raw JSON object. DO NOT wrap the JSON in markdown blocks (like \`\`\`json). No introductory text.
       
       Format exactly like this:
-      [
-        {
-          "dayOffset": 0,
-          "title": "Task title in ${aiLanguage}",
-          "description": "Clear, practical farmer-friendly instruction in ${aiLanguage}",
-          "priority": "high" 
-        }
-      ]
+      {
+        "outOfSeasonWarning": "Ideally, it is best to grow this in [Best Month(s)]. If you grow now, yield might decrease." or null,
+        "tasks": [
+          {
+            "dayOffset": 0,
+            "title": "Task title in ${aiLanguage}",
+            "description": "Clear, practical farmer-friendly instruction in ${aiLanguage}",
+            "priority": "high" 
+          }
+        ]
+      }
 
       Include 10 to 15 critical stages: Land Preparation, Seed Treatment, Sowing, First Irrigation, Fertilization, Weed Control, Disease Check, and Harvesting. Use realistic day offsets. Priorities must be exactly "high", "medium", or "low".
     `;
@@ -102,7 +106,9 @@ export async function POST(req: Request) {
         aiText = aiText.replace(/```/g, '').trim();
     }
     
-    const generatedTasks = JSON.parse(aiText);
+    const parsedData = JSON.parse(aiText);
+    const generatedTasks = parsedData.tasks || [];
+    const warningText = parsedData.outOfSeasonWarning || null;
 
     // Calculate real dates
     const start = new Date(startDate);
@@ -123,9 +129,48 @@ export async function POST(req: Request) {
 
     await newActiveCrop.save();
 
-    return NextResponse.json({ success: true, activeCrop: newActiveCrop });
+    return NextResponse.json({ success: true, activeCrop: newActiveCrop, warning: warningText });
   } catch (error: any) {
     console.error("Gemini/DB Error:", error);
     return NextResponse.json({ success: false, error: "Failed to generate plan. Please try again." }, { status: 500 });
+  }
+}
+
+// ==========================================
+// DELETE: Remove an active crop plan
+// ==========================================
+export async function DELETE(req: Request) {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('auth_token')?.value;
+
+    if (!token) {
+      return NextResponse.json({ success: false, error: 'Unauthorized: No token provided' }, { status: 401 });
+    }
+
+    const decoded: any = verifyToken(token);
+    if (!decoded) {
+      return NextResponse.json({ success: false, error: 'Session invalid or expired. Please log in again.' }, { status: 401 });
+    }
+    
+    const url = new URL(req.url);
+    const cropId = url.searchParams.get('cropId');
+
+    if (!cropId) {
+      return NextResponse.json({ success: false, error: 'cropId is required' }, { status: 400 });
+    }
+
+    await mongoose.connect(process.env.MONGODB_URI || '');
+    
+    const deletedCrop = await ActiveCrop.findOneAndDelete({ _id: cropId, userId: decoded.userId });
+    
+    if (!deletedCrop) {
+      return NextResponse.json({ success: false, error: 'Crop not found or unauthorized' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, deletedCropId: cropId });
+  } catch (error: any) {
+    console.error("DELETE Crop Lifecycle Error:", error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
