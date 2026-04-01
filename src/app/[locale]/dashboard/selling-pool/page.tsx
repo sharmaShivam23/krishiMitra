@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { requestKrishiSarthi } from '@/lib/krishiSarthi';
+import { addToQueue } from '@/lib/offlineQueue';
 
 // --- INTERFACES ---
 interface PoolMember {
@@ -73,6 +74,7 @@ export default function SellingPoolsPage() {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [offlineNotice, setOfflineNotice] = useState('');
 
   // --- EFFECTS ---
   useEffect(() => {
@@ -157,12 +159,25 @@ export default function SellingPoolsPage() {
   const handleCreatePool = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     const payload = {
       ...createForm,
       creatorName: currentUser?.name || 'Unknown Farmer',
       creatorPhone: currentUser?.phone || '0000000000'
     };
+
+    const resetForm = () => setCreateForm(prev => ({...prev, commodity: '', mandi: '', targetQuantity: '', initialQuantity: '', priceExpectation: '', closingDate: ''}));
+    const showOffline = (msg: string) => { setOfflineNotice(msg); setTimeout(() => setOfflineNotice(''), 5000); };
+
+    // --- OFFLINE ---
+    if (!navigator.onLine) {
+      addToQueue('selling-pool', '/api/selling-pools', 'POST', payload);
+      setIsCreateModalOpen(false);
+      resetForm();
+      setIsSubmitting(false);
+      showOffline('Saved offline! Pool will be created when you reconnect.');
+      return;
+    }
 
     try {
       const res = await fetch('/api/selling-pools', {
@@ -174,9 +189,15 @@ export default function SellingPoolsPage() {
       if (data.success) {
         setPools([{...data.pool, transports: []}, ...pools]);
         setIsCreateModalOpen(false);
-        setCreateForm(prev => ({...prev, commodity: '', mandi: '', targetQuantity: '', initialQuantity: '', priceExpectation: '', closingDate: ''}));
+        resetForm();
       }
-    } catch (e) { console.error(e); }
+    } catch (err) {
+      console.error(err);
+      addToQueue('selling-pool', '/api/selling-pools', 'POST', payload);
+      setIsCreateModalOpen(false);
+      resetForm();
+      showOffline('Network error! Pool request saved offline and will sync when connected.');
+    }
     finally { setIsSubmitting(false); }
   };
 
@@ -184,7 +205,7 @@ export default function SellingPoolsPage() {
     e.preventDefault();
     if (!selectedPoolId) return;
     setIsSubmitting(true);
-    
+
     const payload = {
       quantity: joinForm.quantity,
       farmerName: currentUser?.name || 'Unknown Farmer',
@@ -193,8 +214,21 @@ export default function SellingPoolsPage() {
       state: currentUser?.state || 'Unknown'
     };
 
+    const poolEndpoint = `/api/selling-pools/${selectedPoolId}/join`;
+    const showOffline = (msg: string) => { setOfflineNotice(msg); setTimeout(() => setOfflineNotice(''), 5000); };
+
+    // --- OFFLINE ---
+    if (!navigator.onLine) {
+      addToQueue('selling-pool', poolEndpoint, 'POST', payload);
+      setIsJoinModalOpen(false);
+      setJoinForm({ quantity: '' });
+      setIsSubmitting(false);
+      showOffline('Saved offline! You will be joined to this pool when you reconnect.');
+      return;
+    }
+
     try {
-      const res = await fetch(`/api/selling-pools/${selectedPoolId}/join`, {
+      const res = await fetch(poolEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -205,9 +239,30 @@ export default function SellingPoolsPage() {
         setIsJoinModalOpen(false);
         setJoinForm({ quantity: '' });
       }
-    } catch (e) { console.error(e); }
+    } catch (err) {
+      console.error(err);
+      addToQueue('selling-pool', poolEndpoint, 'POST', payload);
+      setIsJoinModalOpen(false);
+      setJoinForm({ quantity: '' });
+      showOffline('Network error! Join request saved offline and will sync when connected.');
+    }
     finally { setIsSubmitting(false); }
   };
+
+  // Re-fetch pools after offline queue syncs
+  useEffect(() => {
+    const handler = async (e: Event) => {
+      const { feature } = (e as CustomEvent<{ feature: string }>).detail;
+      if (feature !== 'selling-pool') return;
+      try {
+        const res = await fetch('/api/selling-pools');
+        const data = await res.json();
+        if (data.success) setPools(data.pools.map((p: Pool) => ({...p, transports: p.transports || []})));
+      } catch (err) { console.error('Sync re-fetch failed:', err); }
+    };
+    window.addEventListener('krishimitra:synced', handler);
+    return () => window.removeEventListener('krishimitra:synced', handler);
+  }, []);
 
   // ✅ IMPROVED: Safely and instantly updates the UI when a member is fired
   const handleRemoveMember = async (poolId: string, memberPhone: string, quantityToDeduct: number) => {
@@ -316,6 +371,14 @@ export default function SellingPoolsPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-10 font-sans pb-16">
+
+      {/* Offline notice — appears when an action was saved to the offline queue */}
+      {offlineNotice && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-amber-500 text-white px-5 py-2.5 rounded-full shadow-xl text-sm font-semibold">
+          {offlineNotice}
+        </div>
+      )}
+
       {/* --- HERO SECTION --- */}
       <div className="relative overflow-hidden rounded-[2.5rem] bg-[#041a13] px-8 py-12 md:p-16 shadow-2xl border border-emerald-900/50">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[100px] pointer-events-none" />
