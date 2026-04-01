@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import mongoose from 'mongoose';
+import { connectDB } from '@/lib/mongodb';
 import { ActiveCrop, User } from '@/models';
 
 export async function GET(req: Request) {
@@ -15,7 +15,7 @@ export async function GET(req: Request) {
   }
 
   try {
-    await mongoose.connect(process.env.MONGODB_URI || '');
+    await connectDB();
     
     // Get beginning and end of today
     const todayStart = new Date();

@@ -186,6 +186,41 @@ export default function MandiPrices() {
   };
 
   /* ======================================================
+     EXPORT CSV FUNCTIONALITY
+  ====================================================== */
+  const handleExportCSV = () => {
+    if (filteredData.length === 0) return;
+    
+    const headers = ['Commodity', 'Variety', 'State', 'District', 'Market', 'Min Price', 'Max Price', 'Modal Price', 'Date'];
+    const rows = filteredData.map((data: any) => [
+      data.commodity,
+      data.variety || 'FAQ',
+      data.state,
+      data.district,
+      data.market,
+      data.minPrice,
+      data.maxPrice,
+      data.modalPrice,
+      data.date
+    ]);
+    
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(item => `"${item}"`).join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `mandi_prices_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  /* ======================================================
      ANIMATIONS & RENDER
   ====================================================== */
   const container: Variants = {
@@ -242,7 +277,10 @@ export default function MandiPrices() {
               <Bot className="w-4 h-4" />
               <span className="text-sm">Ask KrishiSarthi</span>
             </button>
-            <button className="hidden md:flex items-center space-x-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-bold hover:bg-gray-50 transition shadow-sm active:scale-95">
+            <button 
+              onClick={handleExportCSV}
+              className="hidden md:flex items-center space-x-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-bold hover:bg-gray-50 transition shadow-sm active:scale-95"
+            >
               <ArrowDownToLine className="w-4 h-4 text-gray-400" />
               <span className="text-sm">Export CSV</span>
             </button>
@@ -251,13 +289,13 @@ export default function MandiPrices() {
    
         <motion.div variants={item} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           
-          <div className="relative">
+          {/* <div className="relative">
             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">Search Multi</label>
             <div className="absolute inset-y-0 bottom-0 left-0 pl-4 flex items-center pointer-events-none mt-6">
               <Search className="h-4 w-4 text-gray-400" />
             </div>
             <input type="text" placeholder="Crop, Market, District..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="block w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500/20 text-gray-900 font-medium text-sm transition-all outline-none" />
-          </div>
+          </div> */}
 
           <div className="relative">
             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">Commodity</label>

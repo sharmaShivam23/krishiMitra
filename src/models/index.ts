@@ -12,7 +12,8 @@ const UserSchema = new Schema({
   licenseNumber: { type: String },
   gstNumber: { type: String },
   licenseImage: { type: String },
-  isVerifiedProvider: { type: Boolean, default: false }
+  isVerifiedProvider: { type: Boolean, default: false },
+  providerStatus: { type: String, enum: ['Pending', 'Accepted', 'Rejected'], default: 'Pending' }
 }, { timestamps: true });
 
 const CropSchema = new Schema({
@@ -235,6 +236,7 @@ const ActiveCropSchema = new Schema({
   },
   startDate: { type: Date, required: true },
   status: { type: String, enum: ['Active', 'Harvested', 'Failed'], default: 'Active' },
+  outOfSeasonWarning: { type: String }, // <-- NEW
   tasks: [TaskSchema] // Array of AI-generated tasks
 }, { timestamps: true });
 

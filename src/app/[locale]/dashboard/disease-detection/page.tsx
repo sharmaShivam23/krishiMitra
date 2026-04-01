@@ -5,10 +5,11 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import { 
   Upload, ShieldCheck, AlertTriangle, 
-  Loader2, CheckCircle, Leaf, Activity, X, Info, Languages, ChevronDown, Camera, Store, ArrowRight
+  Loader2, CheckCircle, Leaf, Activity, X, Camera, Store, ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
 import { requestKrishiSarthi } from '@/lib/krishiSarthi';
+import { getAiLanguage } from '@/lib/localeToLanguage';
 
 interface ScanResult {
   disease: string;
@@ -18,27 +19,16 @@ interface ScanResult {
   severity?: 'HIGH' | 'MEDIUM' | 'LOW';
 }
 
-const LANGUAGES = [
-  { code: 'English', name: 'English' },
-  { code: 'Hindi', name: 'हिन्दी (Hindi)' },
-  { code: 'Punjabi', name: 'ਪੰਜਾਬੀ (Punjabi)' },
-  { code: 'Marathi', name: 'मराठी (Marathi)' },
-  { code: 'Bengali', name: 'বাংলা (Bengali)' },
-  { code: 'Telugu', name: 'తెలుగు (Telugu)' },
-  { code: 'Tamil', name: 'தமிழ் (Tamil)' },
-];
-
 export default function DiseaseDetection() {
   const t = useTranslations('DiseaseDetection');
   const locale = useLocale();
 
-  const defaultLangMap: Record<string, string> = { en: 'English', hi: 'Hindi', pa: 'Punjabi' };
-  const initialLang = defaultLangMap[locale] || 'English';
+  const initialLang = getAiLanguage(locale);
 
   const [mode, setMode] = useState<'upload' | 'live'>('upload');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState(initialLang); 
+
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState<ScanResult | null>(null);
   const [error, setError] = useState('');
@@ -73,6 +63,15 @@ export default function DiseaseDetection() {
     return () => stopCamera();
   }, []);
 
+  // 🔥 FIX 1: Watch for mode changes to safely start/stop camera AFTER React renders the video tag
+  useEffect(() => {
+    if (mode === 'live') {
+      startCamera();
+    } else {
+      stopCamera();
+    }
+  }, [mode]);
+
   const triggerBioRadar = async (analysis: any) => {
     if (!currentUser) return;
     try {
@@ -85,7 +84,7 @@ export default function DiseaseDetection() {
             diseaseName: analysis.disease,
             severity: analysis.severity || 'MEDIUM',
             confidence: analysis.confidence,
-            solution: analysis.solutions[0],
+            solution: analysis.solutions[0] || 'No specific solution provided.',
             prevention: analysis.harm 
           }
         })
@@ -95,7 +94,6 @@ export default function DiseaseDetection() {
     }
   };
 
-  // 🔥 FIX 2: Pass district explicitly to avoid React state closure bugs
   const fetchRecommendedProducts = async (disease: string, district: string) => {
     try {
       console.log(`🔍 Searching products for: ${disease} in ${district}`);
@@ -121,9 +119,14 @@ export default function DiseaseDetection() {
         audio: true 
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
+      
+      // Failsafe: Give React a micro-tick to ensure the ref is attached
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      }, 50);
+
     } catch (err) {
       setError("Please allow camera and microphone access to use Live mode.");
     }
@@ -134,13 +137,16 @@ export default function DiseaseDetection() {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
   };
 
+  // 🔥 FIX 2: Only change state here; the useEffect will handle the camera lifecycle safely
   const handleModeSwitch = (newMode: 'upload' | 'live') => {
+    if (newMode === mode) return;
     setMode(newMode);
     clearImage();
-    if (newMode === 'live') startCamera();
-    else stopCamera();
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,7 +189,7 @@ export default function DiseaseDetection() {
       const res = await fetch('/api/disease-detection', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageUrl, language: selectedLanguage }), 
+        body: JSON.stringify({ imageUrl, language: initialLang }), 
       });
 
       const data = await res.json();
@@ -193,7 +199,6 @@ export default function DiseaseDetection() {
       
       const userDistrict = currentUser?.district || '';
       await triggerBioRadar(data.analysis);
-      // await fetchRecommendedProducts(data.analysis.disease, userDistrict);
       await fetchRecommendedProducts(data.analysis.disease, '');
 
     } catch (err: any) {
@@ -229,7 +234,7 @@ export default function DiseaseDetection() {
           const res = await fetch('/api/disease-detection', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ imageBase64, audioBase64, audioMimeType: audioBlob.type, language: selectedLanguage }), 
+            body: JSON.stringify({ imageBase64, audioBase64, audioMimeType: audioBlob.type, language: initialLang }), 
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data.error || 'AI Scan failed');
@@ -320,15 +325,6 @@ export default function DiseaseDetection() {
                 </div>
               </>
             )}
-          </div>
-
-          <div className="mb-4">
-            <label className="text-sm font-bold text-gray-700 mb-1.5 block">{t('language')}</label>
-            <select value={selectedLanguage} onChange={(e) => setSelectedLanguage(e.target.value)} disabled={isScanning} className="w-full px-4 py-3 bg-gray-50 border text-black border-black rounded-xl outline-none font-bold">
-              {LANGUAGES.map(lang => (
-                <option key={lang.code} value={lang.code}>{lang.name}</option>
-              ))}
-            </select>
           </div>
 
           {mode === 'upload' ? (

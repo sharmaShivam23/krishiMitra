@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Leaf, Calendar, CheckCircle2, Circle, Loader2, Plus, Sprout, AlertCircle, TrendingUp, Trash2, ArrowLeft, ChevronRight, X } from 'lucide-react';
+import { Leaf, Calendar, CheckCircle2, Circle, Loader2, Plus, Sprout, AlertCircle, TrendingUp, Trash2, ArrowLeft, ChevronRight, X, ChevronDown, Sparkles } from 'lucide-react';
+import { STATES_DISTRICTS } from '@/utils/indiaStates';
 
 export default function CropLifecyclePage() {
   const [activeCrops, setActiveCrops] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
-  
   const [showAddForm, setShowAddForm] = useState(false);
   const [newCropData, setNewCropData] = useState({ 
     cropName: '', 
@@ -18,43 +18,48 @@ export default function CropLifecyclePage() {
   });
   
   const [expandedCropId, setExpandedCropId] = useState<string | null>(null);
-  const [outOfSeasonWarning, setOutOfSeasonWarning] = useState<string | null>(null);
+  const [cropToReview, setCropToReview] = useState<any>(null); 
   const [cropToDelete, setCropToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  const STATE_LIST = Object.keys(STATES_DISTRICTS).sort();
+  const districtList = newCropData.state ? (STATES_DISTRICTS[newCropData.state] ?? []) : [];
 
   // 1. Fetch User's Active Crops (CRASH-PROOF & COOKIE-BASED)
   const fetchActiveCrops = async () => {
     setIsLoading(true);
     try {
       const res = await fetch('/api/crop-lifecycle');
-      
-      // Read the raw text response first to prevent JSON crash on empty body
-      const text = await res.text(); 
-      if (!text) {
-        console.error("Backend returned an empty response!");
-        setIsLoading(false);
-        return; 
-      }
-
+      const text = await res.text();
+      if (!text) { setIsLoading(false); return; }
       const data = JSON.parse(text);
-
-      if (data.success) {
-        setActiveCrops(data.activeCrops);
-      } else {
-        console.error("API Error:", data.error);
-      }
-    } catch (error) {
-      console.error("Failed to fetch crops:", error);
+      if (data.success) setActiveCrops(data.activeCrops);
+    } catch (e) {
+      console.error('Failed to fetch crops:', e);
     } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchActiveCrops();
+  useEffect(() => { 
+    fetchActiveCrops(); 
+    
+    // Fetch User Profile locally to know their state
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        if (data.success) {
+          setUserProfile(data.user);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchUser();
   }, []);
 
-  // 2. Generate New Plan via Gemini (COOKIE-BASED)
   const handleGeneratePlan = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsGenerating(true);
@@ -62,55 +67,46 @@ export default function CropLifecyclePage() {
       const res = await fetch('/api/crop-lifecycle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newCropData)
+        body: JSON.stringify(newCropData),
       });
-      
       const text = await res.text();
-      if (!text) throw new Error("Empty response from server");
-      
+      if (!text) throw new Error('Empty response');
       const data = JSON.parse(text);
-
       if (data.success) {
-        setActiveCrops([data.activeCrop, ...activeCrops]);
+        setActiveCrops(prev => [data.activeCrop, ...prev]);
         setShowAddForm(false);
         setNewCropData({ ...newCropData, cropName: '', startDate: '' });
         if (data.warning) {
-          setOutOfSeasonWarning(data.warning);
+          setCropToReview(data.activeCrop);
         }
       } else {
-        alert(data.error || "Failed to generate plan.");
+        alert(data.error || 'Failed to generate plan.');
       }
-    } catch (error) {
-      console.error(error);
-      alert("An error occurred while generating the plan.");
+    } catch (e) {
+      console.error(e);
+      alert('An error occurred while generating the plan.');
     } finally {
       setIsGenerating(false);
     }
   };
 
-  // 3. Toggle Task Completion (COOKIE-BASED)
   const handleToggleTask = async (cropId: string, taskId: string, currentStatus: boolean) => {
-    // Optimistic UI Update for instant feedback
-    const updatedCrops = activeCrops.map(crop => {
-      if (crop._id === cropId) {
-        return {
-          ...crop,
-          tasks: crop.tasks.map((t: any) => t._id === taskId ? { ...t, isCompleted: !currentStatus } : t)
-        };
-      }
-      return crop;
-    });
-    setActiveCrops(updatedCrops);
-
-    // Backend update
+    setActiveCrops(prev =>
+      prev.map(crop =>
+        crop._id === cropId
+          ? { ...crop, tasks: crop.tasks.map((t: any) => t._id === taskId ? { ...t, isCompleted: !currentStatus } : t) }
+          : crop
+      )
+    );
     try {
       await fetch('/api/crop-lifecycle/task', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ activeCropId: cropId, taskId, isCompleted: !currentStatus })
+        body: JSON.stringify({ activeCropId: cropId, taskId, isCompleted: !currentStatus }),
       });
     } catch (error) {
       console.error("Failed to update task", error);
+    }
   };
 
   // 4. Delete Crop Plan
@@ -137,15 +133,18 @@ export default function CropLifecyclePage() {
     }
   };
 
+  const inputClass = "w-full p-4 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-400 outline-none text-gray-900 font-semibold placeholder:text-gray-400 placeholder:font-normal transition-all";
+  const selectClass = "w-full p-4 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-400 outline-none text-gray-900 font-semibold transition-all appearance-none cursor-pointer";
+
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
       
       {/* OUT OF SEASON WARNING MODAL */}
       <AnimatePresence>
-        {outOfSeasonWarning && (
+        {cropToReview && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative border border-orange-100">
-              <button onClick={() => setOutOfSeasonWarning(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+              <button disabled={isDeleting} onClick={() => setCropToReview(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
                 <X className="w-6 h-6" />
               </button>
               <div className="mb-6 flex justify-center">
@@ -155,11 +154,33 @@ export default function CropLifecyclePage() {
               </div>
               <h3 className="text-2xl font-black text-center text-gray-900 mb-2">Not the Best Season</h3>
               <p className="text-gray-600 text-center mb-8 leading-relaxed">
-                {outOfSeasonWarning}
+                {cropToReview.outOfSeasonWarning}
               </p>
-              <button onClick={() => setOutOfSeasonWarning(null)} className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-orange-500/30">
-                I Understand, Continue
-              </button>
+              <div className="flex gap-4">
+                <button 
+                  disabled={isDeleting} 
+                  onClick={async () => {
+                    setIsDeleting(true);
+                    try {
+                      const res = await fetch(`/api/crop-lifecycle?cropId=${cropToReview._id}`, { method: 'DELETE' });
+                      const d = await res.json();
+                      if(d.success) setActiveCrops(prev => prev.filter(c => c._id !== cropToReview._id));
+                    } catch(e) {}
+                    setIsDeleting(false);
+                    setCropToReview(null);
+                  }} 
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3.5 rounded-xl transition"
+                >
+                  Cancel this crop
+                </button>
+                <button 
+                  disabled={isDeleting} 
+                  onClick={() => setCropToReview(null)} 
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-orange-500/30"
+                >
+                  Proceed anyway
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
@@ -194,55 +215,158 @@ export default function CropLifecyclePage() {
       </AnimatePresence>
 
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-emerald-900 text-white p-8 rounded-3xl shadow-xl gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 text-white p-8 rounded-3xl shadow-xl gap-4">
         <div>
-          <h1 className="text-3xl font-black mb-2 flex items-center">
-            <Sprout className="w-8 h-8 mr-3 text-emerald-300"/> Smart Crop Manager
+          <h1 className="text-3xl font-black mb-2 flex items-center gap-3">
+            <div className="bg-emerald-400/20 p-2 rounded-xl">
+              <Sprout className="w-7 h-7 text-emerald-300" />
+            </div>
+            Smart Crop Manager
           </h1>
-          <p className="text-emerald-100 font-medium">AI-powered day-by-day guides tailored to your field.</p>
+          <p className="text-emerald-200 font-medium">AI-powered day-by-day guides tailored to your field.</p>
         </div>
-        <button 
-          onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-emerald-400 hover:bg-emerald-300 text-emerald-950 px-6 py-3 rounded-xl font-bold transition flex items-center shadow-lg whitespace-nowrap"
+        <button
+          onClick={() => setShowAddForm(v => !v)}
+          className="bg-emerald-400 hover:bg-emerald-300 active:scale-95 text-emerald-950 px-6 py-3 rounded-xl font-bold transition-all flex items-center shadow-lg whitespace-nowrap gap-2"
         >
-          {showAddForm ? 'Cancel' : <><Plus className="w-5 h-5 mr-2" /> Add Crop</>}
+          {showAddForm ? <><X className="w-5 h-5" /> Cancel</> : <><Plus className="w-5 h-5" /> Add Crop</>}
         </button>
       </div>
 
-      {/* ADD NEW CROP FORM */}
-      {showAddForm && (
-        <motion.form 
-          initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
-          onSubmit={handleGeneratePlan} 
-          className="bg-white p-8 rounded-3xl shadow-lg border border-emerald-50"
-        >
-          <h2 className="text-xl font-black text-emerald-900 mb-6 flex items-center">
-            Configure Your Field
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">What are you planting?</label>
-              <input required value={newCropData.cropName} onChange={e => setNewCropData({...newCropData, cropName: e.target.value})} placeholder="e.g. Sugarcane, Wheat..." className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none" />
+      {/* ADD CROP FORM */}
+      <AnimatePresence>
+        {showAddForm && (
+          <motion.form
+            key="add-form"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.2 }}
+            onSubmit={handleGeneratePlan}
+            className="bg-white p-8 rounded-3xl shadow-xl border border-emerald-100"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-emerald-100 p-2 rounded-xl">
+                <Leaf className="w-5 h-5 text-emerald-700" />
+              </div>
+              <h2 className="text-xl font-black text-gray-900">Configure Your Field</h2>
             </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Expected Sowing Date</label>
-              <input required type="date" value={newCropData.startDate} onChange={e => setNewCropData({...newCropData, startDate: e.target.value})} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none" />
-            </div>
-          </div>
-          <button disabled={isGenerating} type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl flex justify-center items-center transition disabled:opacity-70">
-            {isGenerating ? <><Loader2 className="w-5 h-5 animate-spin mr-2" /> AI Generating Custom Plan...</> : 'Generate Smart Guide'}
-          </button>
-        </motion.form>
-      )}
 
-      {/* LOADING / EMPTY STATES */}
+            <div className="grid md:grid-cols-2 gap-5 mb-5">
+              {/* Crop Name */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">What are you planting? *</label>
+                <input
+                  required
+                  value={newCropData.cropName}
+                  onChange={e => setNewCropData(p => ({ ...p, cropName: e.target.value }))}
+                  placeholder="e.g. Wheat, Sugarcane, Rice..."
+                  className={inputClass}
+                />
+              </div>
+
+              {/* Sowing Date */}
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Expected Sowing Date *</label>
+                <input
+                  required
+                  type="date"
+                  value={newCropData.startDate}
+                  onChange={e => setNewCropData(p => ({ ...p, startDate: e.target.value }))}
+                  className={inputClass}
+                />
+              </div>
+
+              {/* State */}
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  State *
+                  {userProfile?.state && (
+                    <span className="ml-2 text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">
+                      from your profile
+                    </span>
+                  )}
+                </label>
+                <div className="relative">
+                  <select
+                    required
+                    value={newCropData.state}
+                    onChange={e => setNewCropData(p => ({ ...p, state: e.target.value, district: '' }))}
+                    className={selectClass}
+                  >
+                    <option value="">— Select State —</option>
+                    {STATE_LIST.map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* District */}
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  District
+                  {userProfile?.district && (
+                    <span className="ml-2 text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">
+                      from your profile
+                    </span>
+                  )}
+                </label>
+                <div className="relative">
+                  <select
+                    value={newCropData.district}
+                    onChange={e => setNewCropData(p => ({ ...p, district: e.target.value }))}
+                    disabled={!newCropData.state}
+                    className={`${selectClass} disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    <option value="">— Select District —</option>
+                    {districtList.map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Info banner */}
+            <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3 mb-5 flex items-start gap-3">
+              <Sparkles className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+              <p className="text-sm text-emerald-800 font-medium">
+                Krishi LifeCycle AI will generate a personalized day-by-day farming schedule based on your crop, location, and sowing date.
+              </p>
+            </div>
+
+            <button
+              disabled={isGenerating}
+              type="submit"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold py-4 rounded-xl flex justify-center items-center transition-all shadow-md disabled:opacity-70 gap-2"
+            >
+              {isGenerating ? (
+                <><Loader2 className="w-5 h-5 animate-spin" /> AI is building your custom plan...</>
+              ) : (
+                <><Sparkles className="w-5 h-5" /> Generate Smart Guide</>
+              )}
+            </button>
+          </motion.form>
+        )}
+      </AnimatePresence>
+
+      {/* LOADING */}
       {isLoading ? (
-        <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-emerald-600" /></div>
+        <div className="flex flex-col items-center justify-center py-24 gap-4">
+          <Loader2 className="w-12 h-12 animate-spin text-emerald-500" />
+          <p className="text-gray-500 font-semibold">Loading your crops...</p>
+        </div>
       ) : activeCrops.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
-          <Leaf className="w-16 h-16 text-emerald-100 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold text-gray-800">No Active Crops</h3>
-          <p className="text-gray-500 mt-2">Click 'Add Crop' to let KrishiMitra AI build your first farming schedule.</p>
+        /* EMPTY STATE */
+        <div className="text-center py-24 bg-white rounded-3xl border border-gray-100 shadow-sm">
+          <div className="bg-emerald-50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-5">
+            <Leaf className="w-10 h-10 text-emerald-300" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">No Active Crops</h3>
+          <p className="text-gray-500 max-w-sm mx-auto">Click <strong>Add Crop</strong> to let KrishiMitra AI build your first farming schedule.</p>
         </div>
       ) : (
         /* DASHBOARD & TIMELINE TOGGLE DISPLAY */
@@ -281,6 +405,17 @@ export default function CropLifecyclePage() {
                       </button>
                     </div>
                   </div>
+
+                  {/* NOTE/WARNING */}
+                  {crop.outOfSeasonWarning && (
+                    <div className="bg-orange-50 border-l-4 border-orange-500 p-4 mx-8 mt-6 rounded-r-lg flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="text-orange-800 font-bold mb-1">Not Suitable for this Season</h4>
+                        <p className="text-orange-700 text-sm">{crop.outOfSeasonWarning}</p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* GAMIFICATION & PROGRESS BAR */}
                   <div className="px-8 pt-6 pb-4">
@@ -383,61 +518,67 @@ export default function CropLifecyclePage() {
           </div>
         ) : (
           /* DASHBOARD CARDS VIEW */
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {activeCrops.map(crop => {
-              const totalTasks = crop.tasks?.length || 0;
-              const completedCount = crop.tasks?.filter((t: any) => t.isCompleted).length || 0;
-              const progressPercentage = totalTasks === 0 ? 0 : Math.round((completedCount / totalTasks) * 100);
+          <div className="space-y-12">
+            <div>
+              <h2 className="text-2xl font-black text-emerald-900 mb-6 flex items-center">
+                <Leaf className="w-6 h-6 mr-2 text-emerald-500" /> My Active Crops
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {activeCrops.map(crop => {
+                  const totalTasks = crop.tasks?.length || 0;
+                  const completedCount = crop.tasks?.filter((t: any) => t.isCompleted).length || 0;
+                  const progressPercentage = totalTasks === 0 ? 0 : Math.round((completedCount / totalTasks) * 100);
 
-              return (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  key={crop._id} 
-                  className="bg-white rounded-3xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-emerald-50 overflow-hidden cursor-pointer flex flex-col"
-                  onClick={() => setExpandedCropId(crop._id)}
-                >
-                  <div className="p-6 pb-4 bg-gradient-to-br from-emerald-50/50 to-white flex-1">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-xl font-black text-emerald-950">{crop.cropName}</h3>
-                        <p className="text-sm font-semibold text-emerald-600 flex items-center mt-1">
-                          <Calendar className="w-3.5 h-3.5 mr-1" /> {new Date(crop.startDate).toLocaleDateString()}
-                        </p>
+                  return (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      key={crop._id} 
+                      className="bg-white rounded-3xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-emerald-50 overflow-hidden cursor-pointer flex flex-col"
+                      onClick={() => setExpandedCropId(crop._id)}
+                    >
+                      <div className="p-6 pb-4 bg-gradient-to-br from-emerald-50/50 to-white flex-1">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="text-xl font-black text-emerald-950">{crop.cropName}</h3>
+                            <p className="text-sm font-semibold text-emerald-600 flex items-center mt-1">
+                              <Calendar className="w-3.5 h-3.5 mr-1" /> {new Date(crop.startDate).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setCropToDelete(crop._id); }}
+                            className="text-gray-400 hover:text-red-500 transition p-2 hover:bg-red-50 rounded-full"
+                            title="Delete Crop Plan"
+                          >
+                            <Trash2 className="w-5 h-5"/>
+                          </button>
+                        </div>
+
+                        <div className="mb-2 flex justify-between items-end">
+                          <span className="text-sm font-bold text-gray-500 uppercase">Progress</span>
+                          <span className="text-lg font-black text-emerald-600">{progressPercentage}%</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                          <div className="bg-emerald-500 h-full rounded-full transition-all duration-1000" style={{ width: `${progressPercentage}%` }}></div>
+                        </div>
                       </div>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); setCropToDelete(crop._id); }}
-                        className="text-gray-400 hover:text-red-500 transition p-2 hover:bg-red-50 rounded-full"
-                        title="Delete Crop Plan"
-                      >
-                        <Trash2 className="w-5 h-5"/>
-                      </button>
-                    </div>
-
-                    <div className="mb-2 flex justify-between items-end">
-                      <span className="text-sm font-bold text-gray-500 uppercase">Progress</span>
-                      <span className="text-lg font-black text-emerald-600">{progressPercentage}%</span>
-                    </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                      <div className="bg-emerald-500 h-full rounded-full transition-all duration-1000" style={{ width: `${progressPercentage}%` }}></div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-50 px-6 py-4 flex justify-between items-center border-t border-gray-100 group">
-                    <div className="text-sm font-semibold text-gray-500 flex items-center">
-                      <CheckCircle2 className="w-4 h-4 mr-1 text-emerald-500" />
-                      {completedCount} / {totalTasks} Tasks
-                    </div>
-                    <div className="text-emerald-600 font-bold text-sm flex items-center group-hover:underline">
-                      View Full Plan <ChevronRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition" />
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+                      
+                      <div className="bg-gray-50 px-6 py-4 flex justify-between items-center border-t border-gray-100 group">
+                        <div className="text-sm font-semibold text-gray-500 flex items-center">
+                          <CheckCircle2 className="w-4 h-4 mr-1 text-emerald-500" />
+                          {completedCount} / {totalTasks} Tasks
+                        </div>
+                        <div className="text-emerald-600 font-bold text-sm flex items-center group-hover:underline">
+                          View Full Plan <ChevronRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition" />
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         )
       )}
     </div>
   );
-}
 }

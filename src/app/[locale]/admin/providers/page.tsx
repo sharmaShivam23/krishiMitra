@@ -8,6 +8,7 @@ export default function AdminProvidersManager() {
   const [providers, setProviders] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'pending' | 'reviewed'>('pending');
 
   useEffect(() => {
     fetchProviders();
@@ -15,7 +16,7 @@ export default function AdminProvidersManager() {
 
   const fetchProviders = async () => {
     try {
-      const res = await fetch('/api/admin/providers');
+      const res = await fetch('/api/admin/providers', { cache: 'no-store' });
       const json = await res.json();
       if (json.success) setProviders(json.providers);
     } catch (err) {
@@ -25,27 +26,31 @@ export default function AdminProvidersManager() {
     }
   };
 
-  const handleToggleVerification = async (id: string, currentStatus: boolean) => {
+  const handleUpdateStatus = async (id: string, status: 'Accepted' | 'Rejected', isVerified: boolean) => {
     try {
       const res = await fetch('/api/admin/providers', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, isVerifiedProvider: !currentStatus })
+        body: JSON.stringify({ id, isVerifiedProvider: isVerified, providerStatus: status })
       });
       const json = await res.json();
       if (json.success) {
-        setProviders(providers.map(p => p._id === id ? { ...p, isVerifiedProvider: !currentStatus } : p));
+        setProviders(providers.map(p => p._id === id ? { ...p, isVerifiedProvider: isVerified, providerStatus: status } : p));
       }
     } catch (err) {
       alert("Failed to update verification status");
     }
   };
 
-  const filteredProviders = providers.filter(p => 
+  const searchFilter = (p: any) => 
     (p.name?.toLowerCase() || '').includes(search.toLowerCase()) ||
     (p.shopName?.toLowerCase() || '').includes(search.toLowerCase()) ||
-    (p.phone?.toLowerCase() || '').includes(search.toLowerCase())
-  );
+    (p.phone?.toLowerCase() || '').includes(search.toLowerCase());
+
+  const pendingProviders = providers.filter(p => searchFilter(p) && (!p.providerStatus || p.providerStatus === 'Pending'));
+  const reviewedProviders = providers.filter(p => searchFilter(p) && p.providerStatus && p.providerStatus !== 'Pending');
+
+  const displayProviders = activeTab === 'pending' ? pendingProviders : reviewedProviders;
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-6xl mx-auto">
@@ -66,6 +71,21 @@ export default function AdminProvidersManager() {
         </div>
       </div>
 
+      <div className="flex gap-4 mb-6">
+        <button 
+          onClick={() => setActiveTab('pending')}
+          className={`px-4 py-2 font-bold rounded-xl transition-colors ${activeTab === 'pending' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}
+        >
+          Pending Requests ({pendingProviders.length})
+        </button>
+        <button 
+          onClick={() => setActiveTab('reviewed')}
+          className={`px-4 py-2 font-bold rounded-xl transition-colors ${activeTab === 'reviewed' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}
+        >
+          Reviewed Providers ({reviewedProviders.length})
+        </button>
+      </div>
+
       <div className="bg-white rounded-[2rem] shadow-sm border border-stone-200 overflow-hidden">
         {loading ? (
           <div className="flex justify-center items-center p-20"><Loader2 className="w-8 h-8 animate-spin text-emerald-500" /></div>
@@ -82,7 +102,7 @@ export default function AdminProvidersManager() {
                 </tr>
               </thead>
               <tbody className="text-stone-700 font-medium">
-                {filteredProviders.map((provider: any) => (
+                {displayProviders.map((provider: any) => (
                   <tr key={provider._id} className="border-b border-stone-50 hover:bg-stone-50 transition-colors">
                     <td className="py-4 pr-4">
                       <p className="font-bold text-emerald-950">{provider.name}</p>
@@ -106,33 +126,54 @@ export default function AdminProvidersManager() {
                     </td>
                     <td className="py-4 text-center">
                       <span className={`px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider inline-flex items-center ${
-                        provider.isVerifiedProvider ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                        provider.providerStatus === 'Accepted' ? 'bg-emerald-100 text-emerald-700' : 
+                        provider.providerStatus === 'Rejected' ? 'bg-red-100 text-red-700' :
+                        'bg-amber-100 text-amber-700'
                       }`}>
-                        {provider.isVerifiedProvider ? (
-                          <><ShieldCheck className="w-3.5 h-3.5 mr-1" /> Verified</>
+                        {provider.providerStatus === 'Accepted' ? (
+                          <><ShieldCheck className="w-3.5 h-3.5 mr-1" /> Accepted</>
+                        ) : provider.providerStatus === 'Rejected' ? (
+                          <><ShieldAlert className="w-3.5 h-3.5 mr-1" /> Rejected</>
                         ) : (
-                          <><ShieldAlert className="w-3.5 h-3.5 mr-1" /> Under Review</>
+                          <><ShieldAlert className="w-3.5 h-3.5 mr-1" /> Pending</>
                         )}
                       </span>
                     </td>
                     <td className="py-4 text-right">
-                      <button 
-                        onClick={() => handleToggleVerification(provider._id, provider.isVerifiedProvider)} 
-                        className={`px-4 py-2 font-bold text-sm rounded-xl transition-colors ${
-                          provider.isVerifiedProvider 
-                            ? 'bg-stone-100 text-stone-600 hover:bg-stone-200' 
-                            : 'bg-emerald-600 text-white hover:bg-emerald-700'
-                        }`}
-                      >
-                        {provider.isVerifiedProvider ? 'Revoke Verification' : 'Verify Provider'}
-                      </button>
+                      {activeTab === 'pending' ? (
+                        <div className="flex justify-end gap-2">
+                          <button 
+                            onClick={() => handleUpdateStatus(provider._id, 'Rejected', false)} 
+                            className="px-4 py-2 font-bold text-sm rounded-xl transition-colors bg-red-100 text-red-600 hover:bg-red-200"
+                          >
+                            Reject
+                          </button>
+                          <button 
+                            onClick={() => handleUpdateStatus(provider._id, 'Accepted', true)} 
+                            className="px-4 py-2 font-bold text-sm rounded-xl transition-colors bg-emerald-600 text-white hover:bg-emerald-700"
+                          >
+                            Accept
+                          </button>
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => handleUpdateStatus(provider._id, provider.providerStatus === 'Accepted' ? 'Rejected' : 'Accepted', provider.providerStatus !== 'Accepted')} 
+                          className={`px-4 py-2 font-bold text-sm rounded-xl transition-colors ${
+                            provider.providerStatus === 'Accepted' 
+                              ? 'bg-stone-100 text-stone-600 hover:bg-stone-200' 
+                              : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                          }`}
+                        >
+                          {provider.providerStatus === 'Accepted' ? 'Revoke (Reject)' : 'Verify (Accept)'}
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            {filteredProviders.length === 0 && (
-              <div className="text-center p-10 text-stone-400 font-medium">No providers found.</div>
+            {displayProviders.length === 0 && (
+              <div className="text-center p-10 text-stone-400 font-medium">No providers found in this category.</div>
             )}
           </div>
         )}

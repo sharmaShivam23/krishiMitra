@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Tractor, Wrench, MapPin, Search, Filter, 
@@ -11,6 +12,11 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import ListingContactFooter from '@/components/ListingContactFooter';
 import { STATES_DISTRICTS } from '@/utils/indiaStates';
+import TractorAnimation from '@/Lottie/Tractor.json';
+
+// Dynamic import — disables SSR to avoid Lottie hydration mismatch
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+
 
 interface Provider {
   _id: string;
@@ -111,11 +117,17 @@ export default function EquipmentExchange() {
 
   return (
     <div className="min-h-screen bg-gray-50/50 pb-20 font-sans selection:bg-emerald-400 selection:text-emerald-950">
-      <div className="bg-emerald-950 relative overflow-hidden pt-12 pb-24 px-6 lg:px-8 border-b-[6px] border-emerald-500">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-600/20 rounded-full mix-blend-screen filter blur-[80px]"></div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+
+      {/* ═══════════════ HERO HEADER ═══════════════ */}
+      <div className="bg-emerald-950 relative overflow-hidden pt-12 pb-0 px-6 lg:px-8 border-b-[6px] border-emerald-500">
+        {/* Background texture */}
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+        {/* Glow blobs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-600/20 rounded-full mix-blend-screen filter blur-[80px]" />
+        <div className="absolute -bottom-10 left-1/4 w-64 h-64 bg-teal-600/10 rounded-full mix-blend-screen filter blur-[60px]" />
+
+        {/* Content row */}
+        <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6">
           <div>
             <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold uppercase tracking-widest mb-4">
               <Tractor className="w-4 h-4" /> <span>{t('badge')}</span>
@@ -130,13 +142,68 @@ export default function EquipmentExchange() {
 
           <Link 
             href="/dashboard/Services/post" 
-            className="flex items-center justify-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-6 py-3.5 rounded-xl font-bold transition-all shadow-[0_0_30px_-5px_rgba(16,185,129,0.4)] active:scale-95 group"
+            className="flex items-center justify-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-6 py-3.5 rounded-xl font-bold transition-all shadow-[0_0_30px_-5px_rgba(16,185,129,0.4)] active:scale-95 group mb-6"
           >
             <PlusCircle className="w-5 h-5 group-hover:rotate-90 transition-transform" />
             <span>{t('postListingBtn')}</span>
           </Link>
         </div>
+
+        {/* ── TRACTOR ROAD STRIP ── */}
+        <div className="relative z-10 w-full h-28 overflow-hidden select-none pointer-events-none">
+          {/* Road surface */}
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-emerald-900/60 to-emerald-950 border-t border-emerald-700/40" />
+
+          {/* Dashed center line — scrolling */}
+          <div className="absolute bottom-8 left-0 right-0 h-[2px] overflow-hidden">
+            <motion.div
+              className="flex gap-8 whitespace-nowrap"
+              animate={{ x: [0, -200] }}
+              transition={{ repeat: Infinity, duration: 2.5, ease: 'linear' }}
+            >
+              {Array.from({ length: 30 }).map((_, i) => (
+                <div key={i} className="w-12 h-[2px] bg-yellow-400/40 shrink-0" />
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Tractor driving left → right */}
+          <motion.div
+            className="absolute bottom-4"
+            style={{ width: 160 }}
+            animate={{ x: ['-160px', '110vw'] }}
+            transition={{ repeat: Infinity, duration: 7, ease: 'linear' }}
+          >
+            <Lottie
+              animationData={TractorAnimation}
+              loop
+              autoplay
+              style={{ width: 160, height: 80 }}
+            />
+          </motion.div>
+
+          {/* Dust cloud puffs */}
+          {[0.3, 0.55, 0.8].map((delay, i) => (
+            <motion.div
+              key={i}
+              className="absolute bottom-8 rounded-full bg-amber-100/10"
+              style={{ width: 20 + i * 10, height: 20 + i * 10 }}
+              animate={{
+                x: ['-180px', '115vw'],
+                opacity: [0, 0.5, 0],
+                scale: [0.5, 1.4, 0.8],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 7,
+                ease: 'linear',
+                delay: delay,
+              }}
+            />
+          ))}
+        </div>
       </div>
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
         <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 p-4 sm:p-5 flex flex-col mb-8 border border-gray-100 gap-4">
