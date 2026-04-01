@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import {SUPPORTED_LOCALES} from '@/i18n/locales';
 import "../globals.css";
 import FloatingVoiceAssistant from "@/components/FloatingVoiceAssistant";
+import OfflineSyncProvider from "@/components/OfflineSyncProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,6 +47,8 @@ export default async function RootLayout({
           {children}
           {/* Voice Assistant is now globally available across all pages */}
           <FloatingVoiceAssistant />
+          {/* Offline queue: auto-syncs pending actions when internet is restored */}
+          <OfflineSyncProvider />
         </NextIntlClientProvider>
       </body>
     </html>

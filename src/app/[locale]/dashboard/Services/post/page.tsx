@@ -12,6 +12,7 @@ import {
 import Link from 'next/link';
 import CloudinaryImageUpload from '@/components/CloudinaryImageUpload';
 import StateDistrictSelector from '@/components/StateDistrictSelector';
+import { addToQueue } from '@/lib/offlineQueue';
 
 const CATEGORIES = ['Tractor', 'Harvester', 'Sprayer', 'Cultivator', 'Seeder', 'Other'];
 const STATES = ['Uttar Pradesh', 'Punjab', 'Haryana', 'Maharashtra', 'Madhya Pradesh', 'Gujarat', 'Rajasthan'];
@@ -23,6 +24,7 @@ export default function PostListing() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [offlineQueued, setOfflineQueued] = useState(false);
 
   const [formData, setFormData] = useState({
     listingType: 'rent',
@@ -72,6 +74,13 @@ export default function PostListing() {
         images: formData.imageUrl ? [formData.imageUrl] : []
       };
 
+      if (!navigator.onLine) {
+        addToQueue('listing', '/api/listing', 'POST', payload);
+        setOfflineQueued(true);
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch('/api/listing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -97,7 +106,17 @@ export default function PostListing() {
       }, 2000);
 
     } catch (err: any) {
-      setError(err.message);
+      if (!navigator.onLine) {
+        const payload = {
+          ...formData,
+          pricing: { ...formData.pricing, rate: Number(formData.pricing.rate) },
+          images: formData.imageUrl ? [formData.imageUrl] : []
+        };
+        addToQueue('listing', '/api/listing', 'POST', payload);
+        setOfflineQueued(true);
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -159,6 +178,11 @@ export default function PostListing() {
               {success && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-xl flex items-start text-sm font-bold">
                   <CheckCircle2 className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" /> {t('successMsg')}
+                </motion.div>
+              )}
+              {offlineQueued && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="bg-amber-50 border border-amber-200 text-amber-700 p-4 rounded-xl flex items-start text-sm font-bold">
+                  <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" /> You&apos;re offline — listing saved locally and will be published when you reconnect.
                 </motion.div>
               )}
             </AnimatePresence>

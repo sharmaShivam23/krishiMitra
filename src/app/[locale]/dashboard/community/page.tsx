@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { STATES_DISTRICTS } from '@/utils/indiaStates';
 import { requestKrishiSarthi } from '@/lib/krishiSarthi';
+import { addToQueue } from '@/lib/offlineQueue';
 
 interface Reply {
   _id: string;
@@ -120,15 +121,44 @@ export default function CommunityForum() {
     e.preventDefault();
     if (!newTitle.trim() || !newContent.trim() || !newState || !newDistrict.trim()) return;
     setIsSubmitting(true);
-    
-    const tagsArray = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
 
+    const tagsArray = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+    const body = { title: newTitle, content: newContent, state: newState, district: newDistrict, tags: tagsArray };
+
+    // Helper: add an optimistic (temporary) post to the UI so the user sees feedback immediately
+    const addTempPost = () => {
+      const tempPost: Post = {
+        _id: `offline_${Date.now()}`,
+        author: 'You',
+        title: newTitle,
+        content: newContent,
+        state: newState,
+        district: newDistrict,
+        tags: tagsArray,
+        upvotes: 0,
+        comments: 0,
+        createdAt: new Date().toISOString(),
+        isResolved: false,
+      };
+      setPosts((prev: Post[]) => [tempPost, ...prev]);
+    };
+
+    // --- OFFLINE: device has no internet ---
+    if (!navigator.onLine) {
+      addToQueue('community', '/api/community', 'POST', body);
+      addTempPost();
+      setIsModalOpen(false);
+      setNewTitle(''); setNewContent(''); setNewState(''); setNewDistrict(''); setNewTags('');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // --- ONLINE: try to submit normally ---
     try {
       const res = await fetch('/api/community', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // Sending District to Backend
-        body: JSON.stringify({ title: newTitle, content: newContent, state: newState, district: newDistrict, tags: tagsArray })
+        body: JSON.stringify(body)
       });
       const data = await res.json();
       if (data.success) {
@@ -137,11 +167,31 @@ export default function CommunityForum() {
         setNewTitle(''); setNewContent(''); setNewState(''); setNewDistrict(''); setNewTags('');
       }
     } catch (error) {
+      // Network failed even though navigator.onLine was true — queue for later
       console.error(error);
+      addToQueue('community', '/api/community', 'POST', body);
+      addTempPost();
+      setIsModalOpen(false);
+      setNewTitle(''); setNewContent(''); setNewState(''); setNewDistrict(''); setNewTags('');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // When the offline queue syncs a community post, re-fetch so temp posts are replaced by real ones
+  useEffect(() => {
+    const handler = async (e: Event) => {
+      const { feature } = (e as CustomEvent<{ feature: string }>).detail;
+      if (feature !== 'community') return;
+      try {
+        const res = await fetch('/api/community');
+        const data = await res.json();
+        if (data.success) setPosts(data.posts);
+      } catch (err) { console.error(err); }
+    };
+    window.addEventListener('krishimitra:synced', handler);
+    return () => window.removeEventListener('krishimitra:synced', handler);
+  }, []);
 
   const toggleReplies = async (postId: string) => {
     if (expandedPostId === postId) {
