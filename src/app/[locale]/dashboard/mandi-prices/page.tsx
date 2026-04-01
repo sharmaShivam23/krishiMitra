@@ -186,6 +186,41 @@ export default function MandiPrices() {
   };
 
   /* ======================================================
+     EXPORT CSV FUNCTIONALITY
+  ====================================================== */
+  const handleExportCSV = () => {
+    if (filteredData.length === 0) return;
+    
+    const headers = ['Commodity', 'Variety', 'State', 'District', 'Market', 'Min Price', 'Max Price', 'Modal Price', 'Date'];
+    const rows = filteredData.map((data: any) => [
+      data.commodity,
+      data.variety || 'FAQ',
+      data.state,
+      data.district,
+      data.market,
+      data.minPrice,
+      data.maxPrice,
+      data.modalPrice,
+      data.date
+    ]);
+    
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(item => `"${item}"`).join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `mandi_prices_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  /* ======================================================
      ANIMATIONS & RENDER
   ====================================================== */
   const container: Variants = {
@@ -242,7 +277,10 @@ export default function MandiPrices() {
               <Bot className="w-4 h-4" />
               <span className="text-sm">Ask KrishiSarthi</span>
             </button>
-            <button className="hidden md:flex items-center space-x-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-bold hover:bg-gray-50 transition shadow-sm active:scale-95">
+            <button 
+              onClick={handleExportCSV}
+              className="hidden md:flex items-center space-x-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-bold hover:bg-gray-50 transition shadow-sm active:scale-95"
+            >
               <ArrowDownToLine className="w-4 h-4 text-gray-400" />
               <span className="text-sm">Export CSV</span>
             </button>

@@ -6,7 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import { 
   Sprout, Loader2, Phone, Lock, ArrowRight, 
-  ShieldCheck, Leaf,
+  ShieldCheck, Leaf, ArrowLeft,
   Tractor
 } from 'lucide-react';
 
@@ -135,9 +135,9 @@ function LoginForm() {
       <motion.div variants={itemVariant}>
         <div className="flex justify-between items-center mb-1.5">
           <label htmlFor="password" className="block text-sm font-bold text-gray-700">{t('password')}</label>
-          <a href="#" className="text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline">
+          <Link href={`/${locale}/forgot-password`} className="text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline">
             {t('forgot')}
-          </a>
+          </Link>
         </div>
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -224,6 +224,13 @@ export default function LoginPage() {
           <Suspense fallback={<div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-emerald-600" /></div>}>
             <LoginForm />
           </Suspense>
+
+          {/* Back to Home Button */}
+          <div className="mt-8 flex justify-center">
+            <Link href={`/${locale}`} className="text-sm font-bold text-gray-500 hover:text-emerald-600 transition-colors flex items-center group">
+              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> Back to Landing Page
+            </Link>
+          </div>
 
         </div>
       </div>

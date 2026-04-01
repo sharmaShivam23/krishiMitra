@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogOut, Loader2, Store, Menu, X, Phone, CheckCircle2, AlertCircle } from 'lucide-react';
+import { LogOut, Loader2, Store, Menu, X, Phone, CheckCircle2, AlertCircle, BellRing, ArrowLeft } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { getNavLinks } from '@/app/Data/NavLinks'; 
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -21,6 +21,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [callState, setCallState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [callMsg, setCallMsg] = useState('');
+  const [userPhone, setUserPhone] = useState<string>('');
+  const [subState, setSubState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [subMsg, setSubMsg] = useState('');
 
   useAutoLocation();
 
@@ -30,6 +33,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       .then(data => {
         if (data.success && data.user) {
           setUserRole(data.user.role);
+          if (data.user.phone) {
+            setUserPhone(data.user.phone);
+          }
         }
       })
       .catch(err => console.error("Failed to fetch user role", err));
@@ -90,6 +96,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       setCallMsg(err.message || 'Something went wrong');
     } finally {
       setTimeout(() => { setCallState('idle'); setCallMsg(''); }, 4000);
+    }
+  };
+
+  const handleSubscribe = async () => {
+    if (!userPhone) {
+      setSubState('error');
+      setSubMsg('Phone number not found.');
+      setTimeout(() => { setSubState('idle'); setSubMsg(''); }, 4000);
+      return;
+    }
+    setSubState('loading');
+    setSubMsg('');
+    try {
+      const res = await fetch('/api/cron/send-alerts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: userPhone, action: 'subscribe' }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Subscription failed');
+      setSubState('success');
+      setSubMsg(data.message || 'Subscribed successfully!');
+    } catch (err: any) {
+      setSubState('error');
+      setSubMsg(err.message || 'Error occurred');
+    } finally {
+      setTimeout(() => { setSubState('idle'); setSubMsg(''); }, 4000);
     }
   };
 
@@ -169,13 +202,55 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </button>
 
+          <button
+            onClick={handleSubscribe}
+            disabled={subState === 'loading'}
+            className={`group flex items-center w-full space-x-3 px-4 py-3.5 rounded-xl font-bold transition-all duration-300 relative overflow-hidden flex-shrink-0 ${
+              subState === 'success'
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                : subState === 'error'
+                ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 hover:border-amber-400/40 shadow-[0_0_16px_rgba(245,158,11,0.15)] hover:shadow-[0_0_24px_rgba(245,158,11,0.3)]'
+            } disabled:opacity-70`}
+          >
+            {subState === 'idle' && (
+              <span className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: 'linear-gradient(135deg,rgba(245,158,11,.12),transparent)' }} />
+            )}
+            <div className={`relative flex-shrink-0 ${
+              subState === 'loading' ? 'animate-spin' : subState === 'success' ? '' : 'group-hover:scale-110 transition-transform'
+            }`}>
+              {subState === 'loading' ? <Loader2 className="w-5 h-5" /> :
+               subState === 'success' ? <CheckCircle2 className="w-5 h-5 text-amber-400" /> :
+               subState === 'error' ? <AlertCircle className="w-5 h-5" /> :
+               <BellRing className="w-5 h-5" />}
+            </div>
+            <div className="flex-1 text-left line-clamp-2">
+              <span className="block text-sm leading-tight">
+                {subState === 'loading' ? 'Subscribing...' :
+                 subState === 'success' ? 'Subscribed! ✓' :
+                 subState === 'error' ? 'Failed' :
+                 'Subscribe to Alerts'}
+              </span>
+              {subMsg && <span className="block text-[11px] font-medium opacity-80 mt-0.5 leading-tight">{subMsg}</span>}
+              {subState === 'idle' && !subMsg && <span className="block text-[11px] font-medium opacity-60 mt-0.5">Get Mandi prices daily</span>}
+            </div>
+          </button>
+
+          <Link 
+            href={`/${locale}`}
+            className="flex items-center w-full space-x-3 px-4 py-3.5 rounded-xl font-medium text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 transition-all duration-300"
+          >
+            <ArrowLeft className="w-5 h-5 flex-shrink-0" />
+            <span className="text-sm">Landing Page</span>
+          </Link>
+
           <button 
             onClick={requestLogout}
             disabled={isLoggingOut}
             className="flex items-center w-full space-x-3 px-4 py-3.5 rounded-xl font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all duration-300"
           >
-            {isLoggingOut ? <Loader2 className="w-5 h-5 animate-spin" /> : <LogOut className="w-5 h-5" />}
-            <span>{isLoggingOut ? t('actions.loggingOut') : t('actions.signOut')}</span>
+            {isLoggingOut ? <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" /> : <LogOut className="w-5 h-5 flex-shrink-0" />}
+            <span className="text-sm">{isLoggingOut ? t('actions.loggingOut') : t('actions.signOut')}</span>
           </button>
         </div>
       </aside>
@@ -274,11 +349,46 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                 <button
                   type="button"
+                  onClick={() => { setShowMobileMore(false); handleSubscribe(); }}
+                  disabled={subState === 'loading'}
+                  className={`rounded-xl border px-2 py-3 flex flex-col items-center justify-center text-center gap-1 transition ${
+                    subState === 'success'
+                      ? 'border-amber-300 bg-amber-50 text-amber-700'
+                      : subState === 'error'
+                      ? 'border-red-200 bg-red-50 text-red-600'
+                      : 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100'
+                  } disabled:opacity-60`}
+                >
+                  <div>
+                    {subState === 'loading' ? <Loader2 className="w-4 h-4 animate-spin" /> :
+                     subState === 'success' ? <CheckCircle2 className="w-4 h-4" /> :
+                     <BellRing className="w-4 h-4" />}
+                  </div>
+                  <span className="text-[11px] font-semibold leading-tight">
+                    {subState === 'loading' ? 'wait...' : subState === 'success' ? 'Subbed! ✓' : 'Subscribe'}
+                  </span>
+                </button>
+
+                <Link
+                  href={`/${locale}`}
+                  onClick={() => setShowMobileMore(false)}
+                  className="rounded-xl border border-blue-200 bg-blue-50 px-2 py-3 flex flex-col items-center justify-center text-center gap-1 text-blue-600 hover:bg-blue-100 transition"
+                >
+                  <div>
+                    <ArrowLeft className="w-4.5 h-4.5" />
+                  </div>
+                  <span className="text-[11px] font-semibold leading-tight">
+                    Landing
+                  </span>
+                </Link>
+
+                <button
+                  type="button"
                   onClick={() => {
                     setShowMobileMore(false);
                     requestLogout();
                   }}
-                  className="rounded-xl border border-red-200 bg-red-50 px-2 py-3 flex flex-col items-center text-center gap-1 text-red-600 hover:bg-red-100 transition"
+                  className="rounded-xl border border-red-200 bg-red-50 px-2 py-3 flex flex-col items-center justify-center text-center gap-1 text-red-600 hover:bg-red-100 transition"
                 >
                   <div>
                     <LogOut className="w-4.5 h-4.5" />

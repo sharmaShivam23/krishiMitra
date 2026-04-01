@@ -128,7 +128,7 @@ export function proxy(request: NextRequest) {
 
   const isAdminPath = pathWithoutLocale.startsWith('/admin');
   const isAdminLogin = pathWithoutLocale === '/admin/login';
-  const isUserAuthPath = pathWithoutLocale === '/login' || pathWithoutLocale === '/register';
+  const isUserAuthPath = pathWithoutLocale === '/login' || pathWithoutLocale === '/register' || pathWithoutLocale === '/forgot-password';
   const isPublicLanding = pathWithoutLocale === '/';
 
   if (isAdminPath) {

@@ -19,8 +19,6 @@ interface ScanResult {
   severity?: 'HIGH' | 'MEDIUM' | 'LOW';
 }
 
-
-
 export default function DiseaseDetection() {
   const t = useTranslations('DiseaseDetection');
   const locale = useLocale();
@@ -65,6 +63,15 @@ export default function DiseaseDetection() {
     return () => stopCamera();
   }, []);
 
+  // 🔥 FIX 1: Watch for mode changes to safely start/stop camera AFTER React renders the video tag
+  useEffect(() => {
+    if (mode === 'live') {
+      startCamera();
+    } else {
+      stopCamera();
+    }
+  }, [mode]);
+
   const triggerBioRadar = async (analysis: any) => {
     if (!currentUser) return;
     try {
@@ -77,7 +84,7 @@ export default function DiseaseDetection() {
             diseaseName: analysis.disease,
             severity: analysis.severity || 'MEDIUM',
             confidence: analysis.confidence,
-            solution: analysis.solutions[0],
+            solution: analysis.solutions[0] || 'No specific solution provided.',
             prevention: analysis.harm 
           }
         })
@@ -87,7 +94,6 @@ export default function DiseaseDetection() {
     }
   };
 
-  // 🔥 FIX 2: Pass district explicitly to avoid React state closure bugs
   const fetchRecommendedProducts = async (disease: string, district: string) => {
     try {
       console.log(`🔍 Searching products for: ${disease} in ${district}`);
@@ -113,9 +119,14 @@ export default function DiseaseDetection() {
         audio: true 
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
+      
+      // Failsafe: Give React a micro-tick to ensure the ref is attached
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      }, 50);
+
     } catch (err) {
       setError("Please allow camera and microphone access to use Live mode.");
     }
@@ -126,13 +137,16 @@ export default function DiseaseDetection() {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
   };
 
+  // 🔥 FIX 2: Only change state here; the useEffect will handle the camera lifecycle safely
   const handleModeSwitch = (newMode: 'upload' | 'live') => {
+    if (newMode === mode) return;
     setMode(newMode);
     clearImage();
-    if (newMode === 'live') startCamera();
-    else stopCamera();
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,7 +199,6 @@ export default function DiseaseDetection() {
       
       const userDistrict = currentUser?.district || '';
       await triggerBioRadar(data.analysis);
-      // await fetchRecommendedProducts(data.analysis.disease, userDistrict);
       await fetchRecommendedProducts(data.analysis.disease, '');
 
     } catch (err: any) {
@@ -313,8 +326,6 @@ export default function DiseaseDetection() {
               </>
             )}
           </div>
-
-
 
           {mode === 'upload' ? (
             <button onClick={handleUploadScan} disabled={!selectedImage || isScanning || !!result} className="w-full py-4 rounded-xl font-bold text-white bg-agri-900 hover:bg-agri-800 disabled:opacity-50">

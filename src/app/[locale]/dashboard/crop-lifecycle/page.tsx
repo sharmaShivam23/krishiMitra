@@ -2,89 +2,31 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Leaf, Calendar, CheckCircle2, Circle, Loader2, Plus, Sprout,
-  AlertCircle, TrendingUp, Trophy, Star, Sparkles, MapPin, ChevronDown, X
-} from 'lucide-react';
-
-/* ─── Full Indian States & Districts data ─── */
-const INDIA_STATES: Record<string, string[]> = {
-  "Andhra Pradesh": ["Visakhapatnam","Vijayawada","Guntur","Nellore","Kurnool","Tirupati","Rajahmundry","Kakinada","Eluru","Ongole","Anantapur","Chittoor","Srikakulam","Vizianagaram","West Godavari","East Godavari","Krishna","Prakasam","Sri Potti Sri Ramulu Nellore","YSR Kadapa"],
-  "Arunachal Pradesh": ["Itanagar","Tawang","Bomdila","Pasighat","Naharlagun","Ziro","Along","Tezu","Aalo","Changlang"],
-  "Assam": ["Guwahati","Dibrugarh","Jorhat","Silchar","Tezpur","Nagaon","Tinsukia","Bongaigaon","Dhubri","Sivasagar","Karimganj","Hailakandi","Cachar"],
-  "Bihar": ["Patna","Gaya","Bhagalpur","Muzaffarpur","Darbhanga","Arrah","Begusarai","Katihar","Saharsa","Purnia","Munger","Nalanda","Saran","Vaishali","Sitamarhi"],
-  "Chhattisgarh": ["Raipur","Bilaspur","Durg","Korba","Rajnandgaon","Jagdalpur","Raigarh","Ambikapur","Dhamtari","Kanker"],
-  "Goa": ["North Goa","South Goa"],
-  "Gujarat": ["Ahmedabad","Surat","Vadodara","Rajkot","Bhavnagar","Jamnagar","Gandhinagar","Junagadh","Anand","Mehsana","Patan","Banaskantha","Sabarkantha","Kheda","Amreli","Botad","Chhota Udaipur","Dahod","Dang","Devbhoomi Dwarka"],
-  "Haryana": ["Gurugram","Faridabad","Rohtak","Hisar","Panipat","Ambala","Yamunanagar","Sonipat","Karnal","Bhiwani","Fatehabad","Jhajjar","Jind","Kaithal","Kurukshetra","Mahendragarh","Mewat","Palwal","Panchkula","Rewari","Sirsa"],
-  "Himachal Pradesh": ["Shimla","Mandi","Solan","Dharamsala","Kullu","Hamirpur","Una","Bilaspur","Chamba","Kinnaur","Lahaul and Spiti","Sirmaur"],
-  "Jharkhand": ["Ranchi","Jamshedpur","Dhanbad","Bokaro","Hazaribagh","Dumka","Deoghar","Giridih","Ramgarh","Gumla","Lohardaga","Pakur","Palamu"],
-  "Karnataka": ["Bengaluru","Mysuru","Hubballi","Mangaluru","Belagavi","Kalaburagi","Ballari","Vijayapura","Shivamogga","Tumakuru","Raichur","Udupi","Hassan","Dharwad","Chikkamagaluru","Chitradurga","Davangere","Kodagu","Kolar","Mandya"],
-  "Kerala": ["Thiruvananthapuram","Kochi","Kozhikode","Thrissur","Kollam","Malappuram","Alappuzha","Kannur","Palakkad","Kasaragod","Kottayam","Idukki","Pathanamthitta","Wayanad"],
-  "Madhya Pradesh": ["Bhopal","Indore","Jabalpur","Gwalior","Ujjain","Sagar","Ratlam","Satna","Murwara","Singrauli","Rewa","Burhanpur","Khandwa","Bhind","Chhindwara","Guna","Shivpuri","Vidisha","Chhatarpur","Damoh"],
-  "Maharashtra": ["Mumbai","Pune","Nagpur","Nashik","Thane","Aurangabad","Solapur","Amravati","Kolhapur","Nanded","Sangli","Jalgaon","Akola","Latur","Dhule","Ahmednagar","Chandrapur","Parbhani","Ratnagiri","Satara","Osmanabad","Beed","Hingoli","Jalna","Nandurbar","Wardha","Washim","Yavatmal"],
-  "Manipur": ["Imphal","Thoubal","Bishnupur","Churachandpur","Senapati","Ukhrul","Chandel","Tamenglong","Jiribam"],
-  "Meghalaya": ["Shillong","Tura","Jowai","Nongpoh","Baghmara","East Khasi Hills","West Khasi Hills","Ri Bhoi","East Garo Hills","West Garo Hills","East Jaintia Hills","West Jaintia Hills"],
-  "Mizoram": ["Aizawl","Lunglei","Champhai","Kolasib","Lawngtlai","Mamit","Saiha","Serchhip"],
-  "Nagaland": ["Kohima","Dimapur","Mokokchung","Tuensang","Wokha","Mon","Zunheboto","Phek","Longleng","Kiphire","Peren"],
-  "Odisha": ["Bhubaneswar","Cuttack","Rourkela","Sambalpur","Puri","Berhampur","Balasore","Bhadrak","Baripada","Jeypore","Barbil","Jharsuguda","Angul","Bolangir","Dhenkanal","Kendujhar","Koraput","Rayagada","Sundargarh","Kandhamal"],
-  "Punjab": ["Amritsar","Ludhiana","Jalandhar","Patiala","Bathinda","Mohali","Gurdaspur","Firozpur","Hoshiarpur","Ropar","Faridkot","Fazilka","Fatehgarh Sahib","Kapurthala","Mansa","Moga","Muktsar","Nawanshahr","Pathankot","Sangrur","Tarn Taran"],
-  "Rajasthan": ["Jaipur","Jodhpur","Kota","Bikaner","Ajmer","Udaipur","Bhilwara","Alwar","Sikar","Sri Ganganagar","Pali","Barmer","Nagaur","Chittorgarh","Jhalawar","Dholpur","Dungarpur","Hanumangarh","Karauli","Sawai Madhopur","Tonk","Baran","Bundi","Churu","Dausa","Jaisalmer","Jalore","Jhunjhunu","Pratapgarh","Rajsamand","Sirohi"],
-  "Sikkim": ["Gangtok","Mangan","Namchi","Gyalshing","East Sikkim","West Sikkim","North Sikkim","South Sikkim"],
-  "Tamil Nadu": ["Chennai","Coimbatore","Madurai","Tiruchirappalli","Salem","Tirunelveli","Tiruppur","Ranipet","Vellore","Erode","Thoothukudi","Dindigul","Thanjavur","Kancheepuram","Cuddalore","Nagercoil","Ariyalur","Chengalpattu","Dharmapuri","Kallakurichi","Karur","Krishnagiri","Mayiladuthurai","Nagapattinam","Namakkal","Perambalur","Pudukkottai","Ramanathapuram","Sivaganga","Tenkasi","The Nilgiris","Tirupattur","Tiruvannamalai","Virudhunagar"],
-  "Telangana": ["Hyderabad","Warangal","Nizamabad","Karimnagar","Khammam","Ramagundam","Mahabubnagar","Nalgonda","Adilabad","Suryapet","Siddipet","Vikarabad","Wanaparthy","Yadadri Bhuvanagiri","Jagtial","Jangaon","Jogulamba Gadwal","Kamareddy","Kumuram Bheem","Mahabubabad","Mancherial","Medchal-Malkajgiri","Mulugu","Nagarkurnool","Narayanpet","Nirmal","Pedapalli","Rajanna Sircilla","Sangareddy","Bhadradri Kothagudem","Hanamkonda","Medak"],
-  "Tripura": ["Agartala","Udaipur","Dharmanagar","Kailashahar","Ambassa","West Tripura","East Tripura","North Tripura","South Tripura","Dhalai","Gomati","Khowai","Sepahijala","Unakoti"],
-  "Uttar Pradesh": ["Lucknow","Kanpur","Agra","Varanasi","Allahabad","Meerut","Noida","Ghaziabad","Bareilly","Aligarh","Moradabad","Saharanpur","Gorakhpur","Firozabad","Jhansi","Muzaffarnagar","Mathura","Budaun","Rampur","Shahjahanpur","Farrukhabad","Mau","Hapur","Etawah","Mirzapur","Bulandshahr","Sambhal","Ambedkar Nagar","Fatehpur","Raebareli","Orai","Bahraich","Modinagar","Unnao","Jaunpur","Lakhimpur","Hathras","Banda","Pilibhit","Barabanki","Khurja","Gonda","Mainpuri","Lalitpur","Etah","Deoria","Bahraich","Hardoi"],
-  "Uttarakhand": ["Dehradun","Haridwar","Roorkee","Haldwani","Rudrapur","Kashipur","Rishikesh","Pithoragarh","Almora","Nainital","Chamoli","Champawat","Pauri Garhwal","Tehri Garhwal","Ukhimath","Uttarkashi"],
-  "West Bengal": ["Kolkata","Asansol","Siliguri","Durgapur","Bardhaman","Malda","Baharampur","Muzaffarpur","Habra","Bharatpur","Jalpaiguri","Kharagpur","Midnapore","Darjeeling","Cooch Behar","Alipurduar","Bankura","Birbhum","Dakshin Dinajpur","Hooghly","Howrah","Jhargram","Kalimpong","Murshidabad","Nadia","North 24 Parganas","Paschim Bardhaman","Paschim Medinipur","Purba Bardhaman","Purba Medinipur","Purulia","South 24 Parganas","Uttar Dinajpur"],
-  "Delhi": ["New Delhi","Central Delhi","East Delhi","North Delhi","North East Delhi","North West Delhi","Shahdara","South Delhi","South East Delhi","South West Delhi","West Delhi"],
-  "Jammu and Kashmir": ["Srinagar","Jammu","Anantnag","Baramulla","Kathua","Sopore","Poonch","Rajouri","Bandipora","Budgam","Doda","Ganderbal","Kishtwar","Kulgam","Kupwara","Pulwama","Ramban","Reasi","Samba","Shopian","Udhampur"],
-  "Ladakh": ["Leh","Kargil"],
-  "Chandigarh": ["Chandigarh"],
-  "Puducherry": ["Puducherry","Karaikal","Mahe","Yanam"],
-};
-
-const STATE_LIST = Object.keys(INDIA_STATES).sort();
+import { Leaf, Calendar, CheckCircle2, Circle, Loader2, Plus, Sprout, AlertCircle, TrendingUp, Trash2, ArrowLeft, ChevronRight, X, ChevronDown, Sparkles } from 'lucide-react';
+import { STATES_DISTRICTS } from '@/utils/indiaStates';
 
 export default function CropLifecyclePage() {
   const [activeCrops, setActiveCrops] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [userProfile, setUserProfile] = useState<{ state?: string; district?: string } | null>(null);
-
-  const [newCropData, setNewCropData] = useState({
-    cropName: '',
-    startDate: '',
-    state: '',
-    district: '',
+  const [newCropData, setNewCropData] = useState({ 
+    cropName: '', 
+    startDate: '', 
+    state: 'Uttar Pradesh', 
+    district: 'Meerut' 
   });
+  
+  const [expandedCropId, setExpandedCropId] = useState<string | null>(null);
+  const [cropToReview, setCropToReview] = useState<any>(null); 
+  const [cropToDelete, setCropToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>(null);
 
-  // Districts filtered to selected state
-  const districtList = newCropData.state ? (INDIA_STATES[newCropData.state] || []) : [];
+  const STATE_LIST = Object.keys(STATES_DISTRICTS).sort();
+  const districtList = newCropData.state ? (STATES_DISTRICTS[newCropData.state] ?? []) : [];
 
-  // Fetch user profile for default state/district (auth_token sent automatically as HttpOnly cookie)
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch('/api/auth/me', { credentials: 'include' });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && data.user) {
-            const u = data.user;
-            setUserProfile({ state: u.state, district: u.district });
-            setNewCropData(prev => ({
-              ...prev,
-              state: u.state || '',
-              district: u.district || '',
-            }));
-          }
-        }
-      } catch (e) { console.error('Failed to load profile:', e); }
-    };
-    fetchProfile();
-  }, []);
-
+  // 1. Fetch User's Active Crops (CRASH-PROOF & COOKIE-BASED)
   const fetchActiveCrops = async () => {
     setIsLoading(true);
     try {
@@ -100,7 +42,23 @@ export default function CropLifecyclePage() {
     }
   };
 
-  useEffect(() => { fetchActiveCrops(); }, []);
+  useEffect(() => { 
+    fetchActiveCrops(); 
+    
+    // Fetch User Profile locally to know their state
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        if (data.success) {
+          setUserProfile(data.user);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleGeneratePlan = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,7 +75,10 @@ export default function CropLifecyclePage() {
       if (data.success) {
         setActiveCrops(prev => [data.activeCrop, ...prev]);
         setShowAddForm(false);
-        setNewCropData(prev => ({ ...prev, cropName: '', startDate: '' }));
+        setNewCropData({ ...newCropData, cropName: '', startDate: '' });
+        if (data.warning) {
+          setCropToReview(data.activeCrop);
+        }
       } else {
         alert(data.error || 'Failed to generate plan.');
       }
@@ -143,14 +104,115 @@ export default function CropLifecyclePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ activeCropId: cropId, taskId, isCompleted: !currentStatus }),
       });
-    } catch (e) { console.error('Failed to update task', e); }
+    } catch (error) {
+      console.error("Failed to update task", error);
+    }
+  };
+
+  // 4. Delete Crop Plan
+  const handleDeleteCrop = async () => {
+    if (!cropToDelete) return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/crop-lifecycle?cropId=${cropToDelete}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success) {
+        setActiveCrops(activeCrops.filter(c => c._id !== cropToDelete));
+        if (expandedCropId === cropToDelete) setExpandedCropId(null);
+      } else {
+        alert("Failed to delete crop: " + data.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error deleting crop.");
+    } finally {
+      setIsDeleting(false);
+      setCropToDelete(null);
+    }
   };
 
   const inputClass = "w-full p-4 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-400 outline-none text-gray-900 font-semibold placeholder:text-gray-400 placeholder:font-normal transition-all";
   const selectClass = "w-full p-4 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-400 outline-none text-gray-900 font-semibold transition-all appearance-none cursor-pointer";
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-16">
+    <div className="max-w-4xl mx-auto space-y-8 pb-12">
+      
+      {/* OUT OF SEASON WARNING MODAL */}
+      <AnimatePresence>
+        {cropToReview && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative border border-orange-100">
+              <button disabled={isDeleting} onClick={() => setCropToReview(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <X className="w-6 h-6" />
+              </button>
+              <div className="mb-6 flex justify-center">
+                <div className="bg-orange-100 p-4 rounded-full text-orange-600">
+                  <AlertCircle className="w-10 h-10" />
+                </div>
+              </div>
+              <h3 className="text-2xl font-black text-center text-gray-900 mb-2">Not the Best Season</h3>
+              <p className="text-gray-600 text-center mb-8 leading-relaxed">
+                {cropToReview.outOfSeasonWarning}
+              </p>
+              <div className="flex gap-4">
+                <button 
+                  disabled={isDeleting} 
+                  onClick={async () => {
+                    setIsDeleting(true);
+                    try {
+                      const res = await fetch(`/api/crop-lifecycle?cropId=${cropToReview._id}`, { method: 'DELETE' });
+                      const d = await res.json();
+                      if(d.success) setActiveCrops(prev => prev.filter(c => c._id !== cropToReview._id));
+                    } catch(e) {}
+                    setIsDeleting(false);
+                    setCropToReview(null);
+                  }} 
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3.5 rounded-xl transition"
+                >
+                  Cancel this crop
+                </button>
+                <button 
+                  disabled={isDeleting} 
+                  onClick={() => setCropToReview(null)} 
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-orange-500/30"
+                >
+                  Proceed anyway
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+      {/* DELETE CONFIRMATION MODAL */}
+        {cropToDelete && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative border border-red-100">
+              <button disabled={isDeleting} onClick={() => setCropToDelete(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <X className="w-6 h-6" />
+              </button>
+              <div className="mb-6 flex justify-center">
+                <div className="bg-red-100 p-4 rounded-full text-red-600">
+                  <Trash2 className="w-10 h-10" />
+                </div>
+              </div>
+              <h3 className="text-2xl font-black text-center text-gray-900 mb-2">Delete Crop Plan</h3>
+              <p className="text-gray-600 text-center mb-8">
+                Are you sure you want to delete this crop plan? This action cannot be undone and all tracked progress will be lost.
+              </p>
+              <div className="flex gap-4">
+                <button disabled={isDeleting} onClick={() => setCropToDelete(null)} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3.5 rounded-xl transition">
+                  Cancel
+                </button>
+                <button disabled={isDeleting} onClick={handleDeleteCrop} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-red-500/30 flex items-center justify-center">
+                  {isDeleting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Yes, Delete'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 text-white p-8 rounded-3xl shadow-xl gap-4">
@@ -272,7 +334,7 @@ export default function CropLifecyclePage() {
             <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3 mb-5 flex items-start gap-3">
               <Sparkles className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
               <p className="text-sm text-emerald-800 font-medium">
-                Gemini AI will generate a personalized day-by-day farming schedule based on your crop, location, and sowing date.
+                Krishi LifeCycle AI will generate a personalized day-by-day farming schedule based on your crop, location, and sowing date.
               </p>
             </div>
 
@@ -307,194 +369,215 @@ export default function CropLifecyclePage() {
           <p className="text-gray-500 max-w-sm mx-auto">Click <strong>Add Crop</strong> to let KrishiMitra AI build your first farming schedule.</p>
         </div>
       ) : (
-        <div className="space-y-10">
-          {activeCrops.map(crop => {
-            const totalTasks = crop.tasks?.length || 0;
-            const completedCount = crop.tasks?.filter((t: any) => t.isCompleted).length || 0;
-            const progressPercentage = totalTasks === 0 ? 0 : Math.round((completedCount / totalTasks) * 100);
-            const isAllDone = totalTasks > 0 && completedCount === totalTasks;
+        /* DASHBOARD & TIMELINE TOGGLE DISPLAY */
+        expandedCropId ? (
+          /* DETAIL VIEW */
+          <div className="space-y-6">
+            <button 
+              onClick={() => setExpandedCropId(null)}
+              className="flex items-center text-emerald-700 hover:text-emerald-800 font-bold transition bg-emerald-50 px-4 py-2 rounded-lg w-fit"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" /> Back to Lifecycle Dashboard
+            </button>
+            {activeCrops.filter(c => c._id === expandedCropId).map(crop => {
+              // Gamification Calculations
+              const totalTasks = crop.tasks?.length || 0;
+              const completedCount = crop.tasks?.filter((t: any) => t.isCompleted).length || 0;
+              const progressPercentage = totalTasks === 0 ? 0 : Math.round((completedCount / totalTasks) * 100);
 
-            return (
-              <div key={crop._id} className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
-
-                {/* Crop Header */}
-                <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 border-b border-emerald-100 flex flex-wrap justify-between items-start gap-3">
-                  <div>
-                    <h2 className="text-2xl font-black text-emerald-900 flex items-center gap-2">
-                      <Sprout className="w-6 h-6 text-emerald-600" />
-                      {crop.cropName}
-                    </h2>
-                    <div className="flex items-center gap-4 mt-2 flex-wrap">
-                      <p className="text-emerald-700 font-semibold flex items-center gap-1 text-sm">
-                        <Calendar className="w-4 h-4" />
-                        Started: {new Date(crop.startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </p>
-                      {(crop.location?.district || crop.location?.state) && (
-                        <p className="text-emerald-600 font-semibold flex items-center gap-1 text-sm">
-                          <MapPin className="w-4 h-4" />
-                          {[crop.location?.district, crop.location?.state].filter(Boolean).join(', ')}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide ${
-                    isAllDone
-                      ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-                      : 'bg-emerald-200 text-emerald-800'
-                  }`}>
-                    {isAllDone ? '🏆 Completed' : crop.status}
-                  </span>
-                </div>
-
-                {/* PROGRESS BAR */}
-                <div className="px-8 pt-6 pb-4">
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-3 gap-2">
+              return (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} key={crop._id} className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+                  
+                  {/* Crop Header */}
+                  <div className="bg-emerald-50 p-6 border-b border-emerald-100 flex justify-between items-center flex-wrap gap-4">
                     <div>
-                      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Overall Progress</h4>
-                      <p className="text-4xl font-black text-emerald-600 leading-none mt-1">
-                        {progressPercentage}%
+                      <h2 className="text-2xl font-black text-emerald-900">{crop.cropName}</h2>
+                      <p className="text-emerald-700 font-medium flex items-center mt-1">
+                        <Calendar className="w-4 h-4 mr-1"/> Started: {new Date(crop.startDate).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="text-left md:text-right flex flex-col gap-1 items-start md:items-end">
-                      <span className="inline-flex items-center bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-lg border border-blue-100 gap-1.5">
-                        <TrendingUp className="w-3.5 h-3.5" />
-                        {completedCount}/{totalTasks} tasks completed
+                    <div className="flex items-center gap-3">
+                      <span className="bg-emerald-200 text-emerald-800 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wide">
+                        {crop.status}
                       </span>
+                      <button onClick={(e) => { e.stopPropagation(); setCropToDelete(crop._id); }} className="p-2 text-red-500 hover:bg-red-50 rounded-full transition" title="Delete Plan">
+                        <Trash2 className="w-5 h-5" />
+                      </button>
                     </div>
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-                    <motion.div
-                      className={`h-full rounded-full ${isAllDone ? 'bg-gradient-to-r from-yellow-400 to-amber-500' : 'bg-gradient-to-r from-emerald-400 to-teal-500'}`}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progressPercentage}%` }}
-                      transition={{ duration: 1, ease: 'easeOut' }}
-                    />
+
+                  {/* NOTE/WARNING */}
+                  {crop.outOfSeasonWarning && (
+                    <div className="bg-orange-50 border-l-4 border-orange-500 p-4 mx-8 mt-6 rounded-r-lg flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="text-orange-800 font-bold mb-1">Not Suitable for this Season</h4>
+                        <p className="text-orange-700 text-sm">{crop.outOfSeasonWarning}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* GAMIFICATION & PROGRESS BAR */}
+                  <div className="px-8 pt-6 pb-4">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-3 gap-2">
+                      <div>
+                        <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Overall Progress</h4>
+                        <p className="text-3xl font-black text-emerald-600 leading-none mt-1">{progressPercentage}%</p>
+                      </div>
+                      <div className="text-left md:text-right">
+                        <span className="inline-flex items-center bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-lg border border-blue-100">
+                          <TrendingUp className="w-3.5 h-3.5 mr-1.5" /> 
+                          {Math.min(progressPercentage + 12, 100)}% of farmers in your district are at this stage
+                        </span>
+                      </div>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-3.5 overflow-hidden">
+                      <div 
+                        className="bg-emerald-500 h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden" 
+                        style={{ width: `${progressPercentage}%` }}
+                      >
+                        <div className="absolute inset-0 bg-white/20 w-full animate-[shimmer_2s_infinite]"></div>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                {/* ✅ COMPLETION BANNER */}
-                <AnimatePresence>
-                  {isAllDone && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="mx-6 mb-4 rounded-2xl overflow-hidden"
-                    >
-                      <div className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 p-8 text-center relative overflow-hidden">
-                        {/* decorative circles */}
-                        <div className="absolute -top-8 -left-8 w-32 h-32 bg-white/10 rounded-full" />
-                        <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
+                  {/* Tasks Timeline */}
+                  <div className="p-8 pt-4">
+                    <div className="relative border-l-2 border-emerald-100 ml-4 space-y-8">
+                      {crop.tasks?.map((task: any) => {
+                        const isOverdue = !task.isCompleted && new Date(task.scheduledDate) < new Date(new Date().setHours(0,0,0,0));
+                        const isToday = !task.isCompleted && new Date(task.scheduledDate).toDateString() === new Date().toDateString();
+                        const isFuture = !task.isCompleted && new Date(task.scheduledDate) > new Date(new Date().setHours(23,59,59,999));
 
-                        <div className="relative z-10">
-                          <div className="flex justify-center mb-4">
-                            <div className="bg-white/30 backdrop-blur-sm p-4 rounded-full shadow-lg">
-                              <Trophy className="w-10 h-10 text-white" />
+                        return (
+                          <div key={task._id} className="relative pl-8">
+                            {/* Interactive Checkbox / Timeline Dot */}
+                            <button 
+                              disabled={isFuture}
+                              title={isFuture ? "Cannot complete a future task yet." : "Toggle task"}
+                              onClick={() => handleToggleTask(crop._id, task._id, task.isCompleted)}
+                              className={`absolute -left-[17px] top-1 outline-none rounded-full bg-white ${isFuture ? 'cursor-not-allowed opacity-50' : ''}`}
+                            >
+                              {task.isCompleted ? (
+                                <CheckCircle2 className="w-8 h-8 text-emerald-500 fill-emerald-50 hover:text-emerald-600 transition scale-110" />
+                              ) : (
+                                <Circle className={`w-8 h-8 ${isFuture ? 'text-gray-200' : 'text-gray-300 hover:text-emerald-400 transition'}`} />
+                              )}
+                            </button>
+
+                            <div className={`p-5 rounded-2xl border transition-all duration-300 ${
+                              task.isCompleted 
+                                ? 'bg-gray-50 border-gray-100 opacity-60' 
+                                : isToday 
+                                  ? 'bg-emerald-50 border-emerald-200 ring-2 ring-emerald-100 shadow-sm' 
+                                  : isOverdue 
+                                    ? 'bg-red-50 border-red-200 shadow-sm' 
+                                    : isFuture
+                                      ? 'bg-white border-dashed border-gray-200 opacity-70 cursor-not-allowed'
+                                      : 'bg-white border-gray-200 hover:border-emerald-300 shadow-sm'
+                            }`}>
+                              
+                              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-2">
+                                <h3 className={`font-bold text-lg ${task.isCompleted ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
+                                  {task.title}
+                                </h3>
+                                <span className={`text-xs font-bold px-2.5 py-1 rounded-md w-fit ${
+                                  isOverdue ? 'bg-red-100 text-red-700' 
+                                  : isToday ? 'bg-emerald-200 text-emerald-800' 
+                                  : isFuture ? 'bg-gray-100 text-gray-400'
+                                  : 'bg-gray-100 text-gray-600'
+                                }`}>
+                                  {isToday ? 'Due Today' : `Due: ${new Date(task.scheduledDate).toLocaleDateString()}`}
+                                </span>
+                              </div>
+                              
+                              <p className={`text-sm ${task.isCompleted ? 'text-gray-400' : 'text-gray-600'}`}>
+                                {task.description}
+                              </p>
+
+                              {isOverdue && !task.isCompleted && (
+                                <p className="text-red-600 text-xs font-bold mt-3 flex items-center bg-red-100/50 w-fit px-2 py-1 rounded">
+                                  <AlertCircle className="w-3.5 h-3.5 mr-1" /> Overdue task. Please complete as soon as possible.
+                                </p>
+                              )}
+                              
+                              {isFuture && !task.isCompleted && (
+                                <p className="text-gray-400 text-xs font-medium mt-3 flex items-center">
+                                  Task scheduled for the future.
+                                </p>
+                              )}
                             </div>
                           </div>
-                          <h3 className="text-2xl font-black text-white mb-2">
-                            🎉 Plan Complete!
-                          </h3>
-                          <p className="text-yellow-950/80 font-semibold text-sm mb-5 max-w-sm mx-auto">
-                            Congratulations! You've successfully completed all <strong>{totalTasks} tasks</strong> for <strong>{crop.cropName}</strong>. Your field is on track for a great harvest!
-                          </p>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        ) : (
+          /* DASHBOARD CARDS VIEW */
+          <div className="space-y-12">
+            <div>
+              <h2 className="text-2xl font-black text-emerald-900 mb-6 flex items-center">
+                <Leaf className="w-6 h-6 mr-2 text-emerald-500" /> My Active Crops
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {activeCrops.map(crop => {
+                  const totalTasks = crop.tasks?.length || 0;
+                  const completedCount = crop.tasks?.filter((t: any) => t.isCompleted).length || 0;
+                  const progressPercentage = totalTasks === 0 ? 0 : Math.round((completedCount / totalTasks) * 100);
 
-                          {/* Stats Row */}
-                          <div className="grid grid-cols-3 gap-3">
-                            {[
-                              { icon: <CheckCircle2 className="w-5 h-5" />, label: 'Tasks Done', value: `${completedCount}/${totalTasks}` },
-                              { icon: <Calendar className="w-5 h-5" />, label: 'Duration', value: (() => {
-                                const start = new Date(crop.startDate);
-                                const days = Math.round((Date.now() - start.getTime()) / 86400000);
-                                return `${days} days`;
-                              })() },
-                              { icon: <Star className="w-5 h-5" />, label: 'Score', value: '100%' },
-                            ].map((stat, i) => (
-                              <div key={i} className="bg-white/25 backdrop-blur-sm rounded-xl p-3 flex flex-col items-center gap-1">
-                                <span className="text-white">{stat.icon}</span>
-                                <span className="text-xl font-black text-white">{stat.value}</span>
-                                <span className="text-xs text-yellow-950/70 font-bold">{stat.label}</span>
-                              </div>
-                            ))}
+                  return (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      key={crop._id} 
+                      className="bg-white rounded-3xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-emerald-50 overflow-hidden cursor-pointer flex flex-col"
+                      onClick={() => setExpandedCropId(crop._id)}
+                    >
+                      <div className="p-6 pb-4 bg-gradient-to-br from-emerald-50/50 to-white flex-1">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="text-xl font-black text-emerald-950">{crop.cropName}</h3>
+                            <p className="text-sm font-semibold text-emerald-600 flex items-center mt-1">
+                              <Calendar className="w-3.5 h-3.5 mr-1" /> {new Date(crop.startDate).toLocaleDateString()}
+                            </p>
                           </div>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setCropToDelete(crop._id); }}
+                            className="text-gray-400 hover:text-red-500 transition p-2 hover:bg-red-50 rounded-full"
+                            title="Delete Crop Plan"
+                          >
+                            <Trash2 className="w-5 h-5"/>
+                          </button>
+                        </div>
+
+                        <div className="mb-2 flex justify-between items-end">
+                          <span className="text-sm font-bold text-gray-500 uppercase">Progress</span>
+                          <span className="text-lg font-black text-emerald-600">{progressPercentage}%</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                          <div className="bg-emerald-500 h-full rounded-full transition-all duration-1000" style={{ width: `${progressPercentage}%` }}></div>
                         </div>
                       </div>
-
-                      {/* Completed tasks summary strip */}
-                      <div className="bg-emerald-900 px-6 py-4 flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-emerald-200 text-sm font-semibold">
-                          <Sparkles className="w-4 h-4 text-emerald-400" />
-                          All farming stages completed successfully
+                      
+                      <div className="bg-gray-50 px-6 py-4 flex justify-between items-center border-t border-gray-100 group">
+                        <div className="text-sm font-semibold text-gray-500 flex items-center">
+                          <CheckCircle2 className="w-4 h-4 mr-1 text-emerald-500" />
+                          {completedCount} / {totalTasks} Tasks
                         </div>
-                        <span className="text-emerald-400 font-black text-sm">KrishiMitra AI ✓</span>
+                        <div className="text-emerald-600 font-bold text-sm flex items-center group-hover:underline">
+                          View Full Plan <ChevronRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition" />
+                        </div>
                       </div>
                     </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Tasks Timeline */}
-                <div className="p-8 pt-2">
-                  <div className="relative border-l-2 border-emerald-100 ml-4 space-y-6">
-                    {crop.tasks?.map((task: any) => {
-                      const isOverdue = !task.isCompleted && new Date(task.scheduledDate) < new Date(new Date().setHours(0, 0, 0, 0));
-                      const isToday = !task.isCompleted && new Date(task.scheduledDate).toDateString() === new Date().toDateString();
-
-                      return (
-                        <div key={task._id} className="relative pl-10">
-                          {/* Timeline dot / checkbox */}
-                          <button
-                            onClick={() => handleToggleTask(crop._id, task._id, task.isCompleted)}
-                            className="absolute -left-[18px] top-2 bg-white outline-none rounded-full hover:scale-110 transition-transform"
-                          >
-                            {task.isCompleted ? (
-                              <CheckCircle2 className="w-8 h-8 text-emerald-500 fill-emerald-50" />
-                            ) : (
-                              <Circle className="w-8 h-8 text-gray-300 hover:text-emerald-400 transition-colors" />
-                            )}
-                          </button>
-
-                          <div className={`p-5 rounded-2xl border transition-all duration-300 ${
-                            task.isCompleted
-                              ? 'bg-gray-50 border-gray-100 opacity-60'
-                              : isToday
-                                ? 'bg-emerald-50 border-emerald-200 ring-2 ring-emerald-100 shadow-sm'
-                                : isOverdue
-                                  ? 'bg-red-50 border-red-200 shadow-sm'
-                                  : 'bg-white border-gray-200 hover:border-emerald-200 hover:shadow-md shadow-sm'
-                          }`}>
-                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-2">
-                              <h3 className={`font-bold text-lg leading-snug ${task.isCompleted ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
-                                {task.title}
-                              </h3>
-                              <span className={`text-xs font-bold px-3 py-1 rounded-full w-fit shrink-0 ${
-                                task.isCompleted ? 'bg-emerald-100 text-emerald-700'
-                                : isToday ? 'bg-emerald-500 text-white'
-                                : isOverdue ? 'bg-red-100 text-red-700'
-                                : 'bg-gray-100 text-gray-600'
-                              }`}>
-                                {task.isCompleted ? '✓ Done' : isToday ? '📅 Due Today' : `Due: ${new Date(task.scheduledDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`}
-                              </span>
-                            </div>
-
-                            <p className={`text-sm leading-relaxed ${task.isCompleted ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {task.description}
-                            </p>
-
-                            {isOverdue && !task.isCompleted && (
-                              <p className="text-red-600 text-xs font-bold mt-3 flex items-center gap-1.5 bg-red-100/60 w-fit px-3 py-1.5 rounded-lg">
-                                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                                Overdue — please complete as soon as possible
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          </div>
+        )
       )}
     </div>
   );

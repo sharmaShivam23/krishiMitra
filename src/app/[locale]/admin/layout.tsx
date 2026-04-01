@@ -12,10 +12,11 @@ import {
 const MENU_ITEMS = [
   { name: 'Overview', icon: <LayoutDashboard className="w-5 h-5" />, path: '/admin/dashboard' },
   { name: 'Manage Users', icon: <Users className="w-5 h-5" />, path: '/admin/users' },
+  { name: 'AI Disease Analytics', icon: <ShieldCheck className="w-5 h-5" />, path: '/admin/analytics' },
+  { name: 'Providers', icon: <ShieldCheck className="w-5 h-5" />, path: '/admin/providers' },
   { name: 'Community Forum', icon: <MessageSquare className="w-5 h-5" />, path: '/admin/forum' },
   { name: 'Rental Listings', icon: <Tractor className="w-5 h-5" />, path: '/admin/rental' },
   { name: 'Collective Selling', icon: <Briefcase className="w-5 h-5" />, path: '/admin/pools' },
-  { name: 'AI Disease Analytics', icon: <ShieldCheck className="w-5 h-5" />, path: '/admin/analytics' },
   { name: 'Gov. Schemes', icon: <Landmark className="w-5 h-5" />, path: '/admin/Schemes' },
 ];
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import mongoose from 'mongoose';
+import { connectDB } from '@/lib/mongodb';
 import { ActiveCrop } from '@/models';
 import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers'; // 👈 IMPORT COOKIES
@@ -21,7 +21,7 @@ export async function PUT(req: Request) {
     }
     
     const { activeCropId, taskId, isCompleted } = await req.json();
-    await mongoose.connect(process.env.MONGODB_URI || '');
+    await connectDB();
     
     const crop = await ActiveCrop.findOneAndUpdate(
       { _id: activeCropId, userId: decoded.userId, "tasks._id": taskId },

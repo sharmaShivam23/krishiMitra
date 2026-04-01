@@ -361,6 +361,13 @@ export default function RegisterPage() {
               </motion.form>
             )}
           </AnimatePresence>
+          
+          {/* Back to Home Button */}
+          <div className="mt-8 flex justify-center">
+            <Link href={`/${locale}`} className="text-sm font-bold text-gray-500 hover:text-emerald-600 transition-colors flex items-center group">
+              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> Back to Landing Page
+            </Link>
+          </div>
         </div>
       </div>
 
