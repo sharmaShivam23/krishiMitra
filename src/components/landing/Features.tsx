@@ -46,7 +46,7 @@ export default function Features() {
 
       <div className="max-w-7xl mx-auto px-6 py-24 relative z-20">
 
-        {/* ── Section heading ── */}
+        {/* ── Seasons heading ── */}
         <div className="text-center mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -55,7 +55,7 @@ export default function Features() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 border border-emerald-200 mb-5"
           >
             <Sprout className="w-4 h-4 text-emerald-600" />
-            <span className="text-emerald-700 text-xs font-black uppercase tracking-widest">AI-Powered Farm Tools</span>
+            <span className="text-emerald-700 text-xs font-black uppercase tracking-widest">Crop Seasons</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -64,7 +64,7 @@ export default function Features() {
             transition={{ delay: 0.1 }}
             className="text-3xl md:text-5xl font-black text-stone-900 mb-4"
           >
-            {t('heading')}
+            Seasons
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -73,7 +73,7 @@ export default function Features() {
             transition={{ delay: 0.2 }}
             className="text-stone-600 font-medium max-w-2xl mx-auto text-lg"
           >
-            {t('subheading')}
+            Know which crops to grow and when — based on India's Kharif, Rabi, Zaid, and Perennial seasons.
           </motion.p>
         </div>
 
@@ -109,6 +109,28 @@ export default function Features() {
             );
           })}
         </motion.div>
+
+        {/* ── Tools heading ── */}
+        <div className="text-center mb-8 mt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 border border-emerald-200 mb-5"
+          >
+            <Sprout className="w-4 h-4 text-emerald-600" />
+            <span className="text-emerald-700 text-xs font-black uppercase tracking-widest">AI-Powered Farm Tools</span>
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl md:text-5xl font-black text-stone-900"
+          >
+            {t('heading')}
+          </motion.h2>
+        </div>
 
         {/* ── Feature bento grid ── */}
         <motion.div

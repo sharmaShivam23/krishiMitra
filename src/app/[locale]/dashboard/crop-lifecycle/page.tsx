@@ -1,20 +1,22 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Leaf, Calendar, CheckCircle2, Circle, Loader2, Plus, Sprout, AlertCircle, TrendingUp, Trash2, ArrowLeft, ChevronRight, X, ChevronDown, Sparkles } from 'lucide-react';
 import { STATES_DISTRICTS } from '@/utils/indiaStates';
 
-export default function CropLifecyclePage() {
+function CropLifecycleContent() {
+  const searchParams = useSearchParams();
   const [activeCrops, setActiveCrops] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newCropData, setNewCropData] = useState({ 
-    cropName: '', 
-    startDate: '', 
-    state: 'Uttar Pradesh', 
-    district: 'Meerut' 
+  const [newCropData, setNewCropData] = useState({
+    cropName: '',
+    startDate: '',
+    state: 'Uttar Pradesh',
+    district: 'Meerut'
   });
   
   const [expandedCropId, setExpandedCropId] = useState<string | null>(null);
@@ -42,9 +44,18 @@ export default function CropLifecyclePage() {
     }
   };
 
-  useEffect(() => { 
-    fetchActiveCrops(); 
-    
+  // Pre-fill crop from ?crop= URL param (coming from crop-intelligence page)
+  useEffect(() => {
+    const cropFromParam = searchParams.get('crop');
+    if (cropFromParam) {
+      setNewCropData(prev => ({ ...prev, cropName: cropFromParam }));
+      setShowAddForm(true);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    fetchActiveCrops();
+
     // Fetch User Profile locally to know their state
     const fetchUser = async () => {
       try {
@@ -52,6 +63,15 @@ export default function CropLifecyclePage() {
         const data = await res.json();
         if (data.success) {
           setUserProfile(data.user);
+          // Pre-fill state/district from user profile
+          const { state, district } = data.user;
+          if (state) {
+            setNewCropData(prev => ({
+              ...prev,
+              state: state,
+              district: district || prev.district,
+            }));
+          }
         }
       } catch (e) {
         console.error(e);
@@ -580,5 +600,18 @@ export default function CropLifecyclePage() {
         )
       )}
     </div>
+  );
+}
+
+export default function CropLifecyclePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center py-24 gap-4">
+        <Loader2 className="w-12 h-12 animate-spin text-emerald-500" />
+        <p className="text-gray-500 font-semibold">Loading...</p>
+      </div>
+    }>
+      <CropLifecycleContent />
+    </Suspense>
   );
 }

@@ -131,23 +131,6 @@ export default function Hero() {
             </a>
           </motion.div>
 
-          {/* ── Animated stats row ── */}
-          <motion.div
-            variants={itemVariants}
-            className="grid grid-cols-3 gap-4 max-w-xl mx-auto"
-          >
-            {stats.map((s, i) => (
-              <div
-                key={i}
-                className="bg-white/8 border border-white/10 backdrop-blur-md rounded-2xl p-4 text-center hover:bg-white/12 transition-all"
-              >
-                <div className="text-2xl md:text-3xl font-black text-amber-400">
-                  <CountUp to={s.value} suffix={s.suffix} prefix={s.prefix} />
-                </div>
-                <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-1">{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
         </motion.div>
       </div>
 
