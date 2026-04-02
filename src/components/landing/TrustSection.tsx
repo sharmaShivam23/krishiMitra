@@ -1,52 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import { motion, useInView, animate, Variants } from 'framer-motion';
-import { features } from '@/app/Data/Tools';
+import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { ShieldCheck, MapPin, IndianRupee, Sprout, Users, TrendingUp, Award } from 'lucide-react';
+import { ShieldCheck, MapPin, Sprout, TrendingUp } from 'lucide-react';
 
-/* ── Animated counter (same pattern as Hero) ───────────── */
-function CountUp({ to, suffix = '', prefix = '' }: { to: number; suffix?: string; prefix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  useEffect(() => {
-    if (!inView || !ref.current) return;
-    const ctrl = animate(0, to, {
-      duration: 2.2,
-      ease: 'easeOut',
-      onUpdate(v) {
-        if (ref.current) ref.current.textContent = prefix + Math.floor(v).toLocaleString('en-IN') + suffix;
-      }
-    });
-    return () => ctrl.stop();
-  }, [inView, to, suffix, prefix]);
-  return <span ref={ref}>{prefix}0{suffix}</span>;
-}
-
-/* ── Season strip ───────────────────────────────────────── */
-const SEASONS = [
-  { name: 'Kharif',    months: 'Jun – Oct', emoji: '🌧️', color: 'from-blue-500/20 to-cyan-500/20',   border: 'border-blue-400/30',   text: 'text-blue-300' },
-  { name: 'Rabi',      months: 'Nov – Mar', emoji: '❄️', color: 'from-indigo-500/20 to-violet-500/20', border: 'border-indigo-400/30', text: 'text-indigo-300' },
-  { name: 'Zaid',      months: 'Mar – Jun', emoji: '☀️', color: 'from-amber-500/20 to-orange-500/20', border: 'border-amber-400/30',  text: 'text-amber-300' },
-  { name: 'Perennial', months: 'Year-round',emoji: '🌿', color: 'from-emerald-500/20 to-green-500/20', border: 'border-emerald-400/30', text: 'text-emerald-300' },
-];
-
-const currentSeason = () => {
-  const m = new Date().getMonth() + 1;
-  if (m >= 6 && m <= 10) return 'Kharif';
-  if (m >= 11 || m <= 3) return 'Rabi';
-  if (m >= 3 && m <= 6) return 'Zaid';
-  return 'Perennial';
-};
-
-/* ── Trust stats ────────────────────────────────────────── */
-const TRUST_STATS = [
-  { icon: Users, value: 12000, suffix: '+', label: 'Farmers Empowered', color: 'text-emerald-400' },
-  { icon: MapPin, value: 7000, suffix: '+', label: 'Mandis Tracked', color: 'text-amber-400' },
-  { icon: IndianRupee, value: 28, suffix: ' States', label: 'Pan-India Coverage', color: 'text-blue-400' },
-  { icon: Award, value: 99, suffix: '%', label: 'Satisfaction Rate', color: 'text-violet-400' },
-];
 
 /* ── Testimonials ───────────────────────────────────────── */
 const TESTIMONIALS = [
@@ -57,58 +14,9 @@ const TESTIMONIALS = [
 
 export default function TrustSection() {
   const t = useTranslations('TrustSection');
-  const season = currentSeason();
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
-  };
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 80, damping: 18 } }
-  };
 
   return (
     <section className="bg-stone-50 relative overflow-hidden">
-
-      {/* ── Season context strip ── */}
-      <div className="bg-[#06241b] border-b border-emerald-900/40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center gap-3">
-          <span className="text-emerald-400 text-xs font-black uppercase tracking-widest shrink-0">Current Season:</span>
-          <div className="flex items-center gap-2 flex-wrap">
-            {SEASONS.map(s => (
-              <span
-                key={s.name}
-                className={`px-3 py-1 rounded-full text-xs font-bold border bg-gradient-to-r ${s.color} ${s.border} ${s.text} transition-all ${s.name === season ? 'ring-2 ring-offset-1 ring-offset-[#06241b] ring-emerald-400 scale-105' : 'opacity-60'}`}
-              >
-                {s.emoji} {s.name} <span className="opacity-60 font-medium">{s.months}</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Animated stats band ── */}
-      <div className="bg-white border-b border-stone-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            variants={containerVariants}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6"
-          >
-            {TRUST_STATS.map((s, i) => (
-              <motion.div key={i} variants={itemVariants} className="text-center">
-                <div className={`text-3xl md:text-4xl font-black ${s.color} mb-1`}>
-                  <CountUp to={s.value} suffix={s.suffix} />
-                </div>
-                <div className="text-stone-500 text-sm font-semibold">{s.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </div>
 
       {/* ── CTA banner with field image ── */}
       <div className="max-w-7xl mx-auto px-6 py-24">

@@ -4,10 +4,10 @@ import { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence  , Variants} from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
-import { 
-  Sprout, Loader2, Phone, Lock, ArrowRight, 
+import {
+  Sprout, Loader2, Phone, Lock, ArrowRight,
   ShieldCheck, Leaf, ArrowLeft,
-  Tractor
+  Tractor, Eye, EyeOff
 } from 'lucide-react';
 
 function LoginForm() {
@@ -17,6 +17,7 @@ function LoginForm() {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     phone: '',
     password: '',
@@ -143,10 +144,18 @@ function LoginForm() {
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
           </div>
-          <input id="password" name="password" type="password" required value={formData.password} onChange={handleChange}
-            className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-medium transition-all bg-white hover:border-gray-300 text-gray-900"
+          <input id="password" name="password" type={showPassword ? 'text' : 'password'} required value={formData.password} onChange={handleChange}
+            className="block w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-medium transition-all bg-white hover:border-gray-300 text-gray-900"
             placeholder={t('placeholder')}
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(v => !v)}
+            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-emerald-600 transition-colors"
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+          </button>
         </div>
       </motion.div>
 

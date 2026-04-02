@@ -219,11 +219,21 @@ export default function CropIntelligence() {
 
         setIsAutoFillingRegionData(true);
         try {
-          const geoRes = await fetch(
-            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(locationLabel)}&count=1&language=en&format=json`
-          );
-          const geoData = await geoRes.json();
-          const first = geoData?.results?.[0] as RegionSuggestion | undefined;
+          // Try district first, fall back to state for better Indian location results
+          const tryGeocode = async (term: string) => {
+            const res = await fetch(
+              `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(term)}&count=5&language=en&format=json&countryCode=IN`
+            );
+            const data = await res.json();
+            return (data?.results || []) as RegionSuggestion[];
+          };
+
+          let results = district ? await tryGeocode(district) : [];
+          // If district search returned nothing, fall back to state
+          if (results.length === 0 && state) {
+            results = await tryGeocode(state);
+          }
+          const first = results[0];
           await autoFillRegionDetails(first?.latitude, first?.longitude);
         } catch (err) {
           console.error('Geo lookup failed:', err);
@@ -248,6 +258,14 @@ export default function CropIntelligence() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     if (e.target.name === 'location') setShowSuggestions(true);
+  };
+
+  // When user presses Enter in location field, pick the top suggestion and fetch weather
+  const handleLocationKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && regionSuggestions.length > 0) {
+      e.preventDefault();
+      await handleRegionSelect(regionSuggestions[0]);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -366,7 +384,7 @@ export default function CropIntelligence() {
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <MapPin className="h-4 w-4 text-gray-400" />
                   </div>
-                  <input required type="text" name="location" placeholder={t('regionPlaceholder')} value={formData.location} onChange={handleInputChange} autoComplete="off" className="w-full pl-11 pr-10 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm font-medium" />
+                  <input required type="text" name="location" placeholder={t('regionPlaceholder')} value={formData.location} onChange={handleInputChange} onKeyDown={handleLocationKeyDown} autoComplete="off" className="w-full pl-11 pr-10 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm font-medium" />
                   {isSearchingRegion && (
                     <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                       <Loader2 className="w-4 h-4 text-emerald-500 animate-spin" />
@@ -434,14 +452,14 @@ export default function CropIntelligence() {
               {/* ─── Lifecycle CTA ─── */}
               {formData.crop && (
                 <Link
-                  href={`/${locale}/dashboard/crop-lifecycle`}
+                  href={`/${locale}/dashboard/crop-lifecycle?crop=${encodeURIComponent(formData.crop)}`}
                   className="group w-full mt-1 flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] text-white px-5 py-4 rounded-xl shadow-lg shadow-emerald-900/20 transition-all"
                 >
                   <div className="bg-white/20 p-2 rounded-lg shrink-0">
                     <Sprout className="w-5 h-5" />
                   </div>
                   <div className="flex-1 text-left">
-                    <p className="text-sm font-black leading-tight">Track {formData.crop}'s Lifecycle</p>
+                    <p className="text-sm font-black leading-tight">Track {formData.crop}&apos;s Lifecycle</p>
                     <p className="text-emerald-200 text-xs font-medium mt-0.5">Get a day-by-day AI farming plan →</p>
                   </div>
                   <ExternalLink className="w-4 h-4 text-emerald-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />

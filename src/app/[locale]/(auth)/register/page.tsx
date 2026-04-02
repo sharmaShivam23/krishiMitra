@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { 
-  Loader2, User, Phone, MapPin, 
-  Lock, ArrowRight, ShieldCheck, 
+import {
+  Loader2, User, Phone, MapPin,
+  Lock, ArrowRight, ShieldCheck,
   ChevronDown, Leaf, KeyRound, ArrowLeft, CheckCircle2,
-  Store, FileText, Image as ImageIcon, X, BadgeCheck
+  Store, FileText, Image as ImageIcon, X, BadgeCheck, Eye, EyeOff
 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
@@ -20,6 +20,7 @@ export default function RegisterPage() {
   const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   
   // Modal State
   const [isProviderModalOpen, setIsProviderModalOpen] = useState(false);
@@ -324,7 +325,15 @@ export default function RegisterPage() {
                   <label className="block text-sm font-bold text-gray-900 mb-1.5">{t('password')}</label>
                   <div className="relative group">
                     <Lock className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                    <input name="password" type="password" required value={formData.password} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 text-black rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all shadow-sm font-medium" placeholder={t('passwordPlaceholder')} />
+                    <input name="password" type={showPassword ? 'text' : 'password'} required value={formData.password} onChange={handleChange} className="block w-full pl-11 pr-12 py-3.5 border border-gray-200 text-black rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all shadow-sm font-medium" placeholder={t('passwordPlaceholder')} />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(v => !v)}
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-emerald-600 transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
                   </div>
                 </motion.div>
 
