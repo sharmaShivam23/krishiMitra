@@ -239,12 +239,12 @@ export default function MandiPrices() {
       <motion.div variants={container} initial="hidden" animate="show" className="max-w-[1400px] mx-auto">
         
         <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-7 md:mb-8 border-b border-gray-200/60 pb-5 md:pb-6">
-          <div className="flex items-center gap-4">
-            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-xl shadow-lg shadow-emerald-500/20">
+          <div className="flex items-center gap-4 rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-emerald-50 p-4 md:p-0 md:border-0 md:bg-transparent">
+            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-2xl shadow-lg shadow-emerald-500/20">
               <Activity className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-[2rem] leading-[1.05] md:text-3xl font-black text-gray-900 tracking-tight">Live Market Telemetry</h1>
+              <h1 className="text-[1.75rem] leading-[1.05] md:text-3xl font-black text-gray-900 tracking-tight">Live Market Telemetry</h1>
               <p className="text-gray-500 text-sm mt-1 flex items-center">
                 {isLocating ? (
                    <span className="flex items-center text-emerald-600"><Loader2 className="w-3 h-3 mr-1 animate-spin" /> Acquiring satellite lock...</span>
@@ -254,10 +254,10 @@ export default function MandiPrices() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:flex items-center gap-2">
             <button
               onClick={() => router.push(`/${locale}/dashboard/mandi-prices/mandi-advisor`)}
-              className="flex items-center space-x-2 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-4 py-2.5 rounded-xl font-bold hover:from-gray-800 hover:to-gray-700 transition shadow-sm active:scale-95"
+              className="flex items-center justify-center space-x-2 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-4 py-2.5 rounded-2xl font-bold hover:from-gray-800 hover:to-gray-700 transition shadow-sm active:scale-95"
             >
               <Bot className="w-4 h-4" />
               <span className="text-sm">AI Market Predictor</span>
@@ -272,7 +272,7 @@ export default function MandiPrices() {
                   }
                 })
               }
-              className="flex items-center space-x-2 bg-agri-100 border border-agri-300 text-agri-900 px-4 py-2.5 rounded-xl font-black hover:bg-agri-200 transition shadow-sm active:scale-95"
+              className="flex items-center justify-center space-x-2 bg-agri-100 border border-agri-300 text-agri-900 px-4 py-2.5 rounded-2xl font-black hover:bg-agri-200 transition shadow-sm active:scale-95"
             >
               <Bot className="w-4 h-4" />
               <span className="text-sm">Ask KrishiSarthi</span>
@@ -287,7 +287,7 @@ export default function MandiPrices() {
           </div>
         </motion.div>
    
-        <motion.div variants={item} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <motion.div variants={item} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8 rounded-2xl border border-emerald-100 bg-white/90 p-3 md:p-0 md:border-0 md:bg-transparent">
           
           {/* <div className="relative">
             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">Search Multi</label>
@@ -334,7 +334,7 @@ export default function MandiPrices() {
 
         </motion.div>
 
-        <motion.div variants={item} className="bg-white rounded-2xl shadow-sm border border-gray-200/60 overflow-hidden min-h-[500px] flex flex-col relative z-10">
+        <motion.div variants={item} className="bg-white rounded-2xl shadow-sm border border-gray-200/60 overflow-hidden min-h-[420px] md:min-h-[500px] flex flex-col relative z-10">
           
           <div className="hidden md:grid grid-cols-12 gap-4 bg-gray-50/80 border-b border-gray-200/60 p-6 text-xs font-bold text-gray-500 uppercase tracking-wider items-center">
             <div className="col-span-4">Commodity & Variety</div>
@@ -366,66 +366,83 @@ export default function MandiPrices() {
                   <p className="text-gray-500 font-medium text-sm">No recent arrivals match your current search and filter criteria.</p>
                 </motion.div>
               ) : (
-                <motion.div key="data" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="divide-y divide-gray-100">
+                <motion.div key="data" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 md:space-y-0 md:divide-y md:divide-gray-100">
                   {filteredData.map((data, idx) => (
                     <motion.div 
                       key={`${data.market}-${data.commodity}-${idx}`} 
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.02 }} 
-                      className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6 hover:bg-emerald-50/30 transition-colors items-center group"
+                      className="block md:grid md:grid-cols-12 md:gap-4 p-0 md:p-6 mb-3 md:mb-0 rounded-[20px] md:rounded-none border border-emerald-100/60 md:border-0 md:hover:bg-emerald-50/30 transition-colors items-center group bg-white shadow-sm md:shadow-none"
                     >
-                      <div className="col-span-1 md:col-span-4 flex flex-col">
-                        <span className="text-lg font-black text-gray-900 flex items-center group-hover:text-emerald-700 transition-colors">
-                          {data.commodity}
-                        </span>
-                        <span className="text-xs font-bold text-gray-500 mt-1 uppercase tracking-wider bg-gray-100 w-max px-2 py-0.5 rounded-md border border-gray-200/60">
-                          Variety: {data.variety || 'FAQ / Other'}
-                        </span>
+                      {/* 📱 DEDICATED MOBILE TILE */}
+                      <div className="flex flex-col md:hidden p-4 gap-3">
+                         <div className="flex justify-between items-start">
+                            <div>
+                               <h3 className="text-[17px] font-black text-gray-900 leading-tight tracking-tight">{data.commodity}</h3>
+                               <p className="text-[10px] font-black text-emerald-800/60 bg-emerald-50 px-2 py-0.5 rounded uppercase tracking-wider mt-1.5 w-max border border-emerald-100">{data.variety || 'FAQ'}</p>
+                            </div>
+                            <div className="flex items-center gap-3">
+                               <div className="text-right">
+                                 <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">Modal Price</span>
+                                 <h4 className="text-xl font-black text-emerald-600 leading-none flex items-center justify-end tracking-tight"><IndianRupee className="w-4 h-4 mr-0.5" />{data.modalPrice}</h4>
+                               </div>
+                               <button onClick={() => handleListenPrice(data)} className="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-sm active:scale-95 border border-blue-100"><Volume2 className="w-4 h-4" /></button>
+                            </div>
+                         </div>
+                         
+                         <div className="flex justify-between items-end border-t border-gray-50 pt-3 mt-0.5">
+                            <div className="flex-1 min-w-0 pr-2">
+                               <p className="text-[13px] font-black text-gray-700 flex items-center truncate"><MapPin className="w-3.5 h-3.5 mr-1.5 text-emerald-500 shrink-0" />{data.market}</p>
+                               <p className="text-xs font-semibold text-gray-400 pl-[18px] mt-0.5 truncate">{data.district}, {data.state}</p>
+                            </div>
+                            <div className="text-right shrink-0">
+                               <p className="text-[11px] font-bold text-gray-600 flex items-center justify-end"><Scale className="w-3 h-3 mr-1" /> ₹{data.minPrice} - ₹{data.maxPrice}</p>
+                               <p className="text-[10px] font-bold text-gray-400 flex items-center justify-end mt-1.5"><Calendar className="w-3 h-3 mr-1" /> {data.date}</p>
+                            </div>
+                         </div>
                       </div>
 
-                      <div className="col-span-1 md:col-span-4 flex flex-col mt-2 md:mt-0">
-                        <div className="flex items-center text-sm font-bold text-gray-700">
-                          <MapPin className="w-4 h-4 mr-1.5 text-emerald-500" /> 
-                          {data.market}, <span className="ml-1 text-gray-500">{data.district}</span>
+                      {/* 💻 DESKTOP ROW (Hidden on Mobile) */}
+                      <div className="hidden md:contents">
+                        <div className="col-span-1 md:col-span-4 flex flex-col">
+                          <span className="text-lg font-black text-gray-900 group-hover:text-emerald-700 transition-colors">
+                            {data.commodity}
+                          </span>
+                          <span className="text-xs font-bold text-gray-500 mt-1 uppercase tracking-wider bg-gray-100 w-max px-2 py-0.5 rounded-md border border-gray-200/60">
+                            Variety: {data.variety || 'FAQ / Other'}
+                          </span>
                         </div>
-                        <div className="flex items-center text-xs font-medium text-gray-400 mt-1 pl-[22px]">
-                          {data.state}
-                        </div>
-                      </div>
 
-                      <div className="col-span-1 md:col-span-4 flex flex-col md:items-end mt-4 md:mt-0 bg-gray-50 md:bg-transparent p-4 md:p-0 rounded-xl md:rounded-none">
-                        
-                        <div className="flex items-center justify-between w-full md:w-auto gap-4">
-                          <span className="md:hidden text-xs font-bold text-gray-400 uppercase tracking-wider">Modal Price:</span>
-                          
+                        <div className="col-span-1 md:col-span-4 flex flex-col">
+                          <div className="flex items-center text-sm font-bold text-gray-700">
+                            <MapPin className="w-4 h-4 mr-1.5 text-emerald-500" /> 
+                            {data.market}, <span className="ml-1 text-gray-500">{data.district}</span>
+                          </div>
+                          <div className="flex items-center text-xs font-medium text-gray-400 mt-1 pl-[22px]">
+                            {data.state}
+                          </div>
+                        </div>
+
+                        <div className="col-span-1 md:col-span-4 flex flex-col items-end">
                           <div className="flex items-center gap-3">
-                            {/* The Price */}
                             <span className="text-2xl font-black text-emerald-600 flex items-center">
                               <IndianRupee className="w-5 h-5 mr-0.5" />
                               {data.modalPrice}
                             </span>
-                            
-                            {/* 🔊 THE NEW AUDIO BUTTON */}
-                            <button 
-                              onClick={() => handleListenPrice(data)}
-                              title="सुनने के लिए दबाएं (Listen)"
-                              className="w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white active:scale-95"
-                            >
+                            <button onClick={() => handleListenPrice(data)} title="सुनने के लिए दबाएं (Listen)" className="w-10 h-10 rounded-full flex items-center justify-center transition-all bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-100">
                               <Volume2 className="w-4 h-4" />
                             </button>
                           </div>
-                        </div>
-                        
-                        <div className="flex items-center justify-between md:justify-end w-full mt-2 md:mt-1 gap-2">
-                          <span className="text-xs font-semibold text-gray-500 flex items-center bg-white md:bg-gray-50 px-2 py-1 rounded-md border border-gray-200">
-                            <Scale className="w-3 h-3 mr-1 text-gray-400" />
-                            ₹{data.minPrice} - ₹{data.maxPrice}
-                          </span>
-                          <span className="text-xs font-semibold text-gray-500 flex items-center bg-white md:bg-gray-50 px-2 py-1 rounded-md border border-gray-200">
-                            <Calendar className="w-3 h-3 mr-1 text-gray-400" />
-                            {data.date}
-                          </span>
+                          <div className="flex items-center justify-end w-full mt-1.5 gap-2">
+                            <span className="text-xs font-semibold text-gray-500 flex items-center px-2 py-1 bg-gray-50 rounded-md border border-gray-200">
+                              <Scale className="w-3 h-3 mr-1 text-gray-400" /> ₹{data.minPrice} - ₹{data.maxPrice}
+                            </span>
+                            <span className="text-xs font-semibold text-gray-500 flex items-center px-2 py-1 bg-gray-50 rounded-md border border-gray-200">
+                              <Calendar className="w-3 h-3 mr-1 text-gray-400" /> {data.date}
+                            </span>
+                          </div>
                         </div>
                       </div>
+
                     </motion.div>
                   ))}
                 </motion.div>

@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { IntentResult, processVoiceCommand } from '@/lib/intentEngine';
 import { useLocale } from 'next-intl';
+import { SUPPORTED_LOCALES } from '@/i18n/locales';
 
 type SpeechRecognitionCtor = new () => {
   continuous: boolean;
@@ -53,10 +54,27 @@ const LANG_FALLBACKS: Record<string, string[]> = {
   ur: ['ur-IN', 'ur', 'urd']
 };
 
+const isSupportedLocale = (value: string | null | undefined): value is string => {
+  if (!value) return false;
+  return SUPPORTED_LOCALES.includes(value as (typeof SUPPORTED_LOCALES)[number]);
+};
+
 const getPreferredLocaleClient = (fallbackLocale: string) => {
   if (typeof window === 'undefined') return fallbackLocale;
-  const preferred = window.localStorage.getItem('preferredLocale') || '';
-  return preferred || fallbackLocale;
+
+  const stored = window.localStorage.getItem('preferredLocale');
+  const fallbackIsValid = isSupportedLocale(fallbackLocale);
+  const storedIsValid = isSupportedLocale(stored);
+
+  // Prefer the current route locale to avoid mismatch with UI language.
+  const resolved = fallbackIsValid ? fallbackLocale : (storedIsValid ? stored! : 'en');
+
+  if (stored !== resolved) {
+    window.localStorage.setItem('preferredLocale', resolved);
+    document.cookie = `preferredLocale=${resolved}; path=/; max-age=31536000`;
+  }
+
+  return resolved;
 };
 
 // Get the best supported language code for Web Speech API

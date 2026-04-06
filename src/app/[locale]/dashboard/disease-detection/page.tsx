@@ -269,32 +269,48 @@ export default function DiseaseDetection() {
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="max-w-5xl mx-auto">
-      <motion.div variants={item} className="mb-6 md:mb-8 text-center md:text-left">
-        <h1 className="text-[2.05rem] leading-[1.05] md:text-4xl font-black text-agri-900 tracking-tight flex items-center justify-center md:justify-start">
-          <ShieldCheck className="w-8 h-8 mr-3 text-agri-600" />
-          {t('title')}
-        </h1>
-        <p className="text-gray-600 mt-2 font-semibold">{t('subtitle')}</p>
+      <motion.div variants={item} className="mb-6 md:mb-8">
+        <div className="rounded-[28px] border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-emerald-50 px-5 py-6 md:p-0 md:border-0 md:bg-transparent text-center md:text-left shadow-xl shadow-emerald-900/5 md:shadow-none">
+          
+          <div className="flex md:inline-flex items-center justify-center gap-1.5 rounded-full bg-emerald-100/70 border border-emerald-200 px-3 py-1 text-[11px] font-black text-emerald-800 uppercase tracking-widest w-max mx-auto md:mx-0">
+            <ShieldCheck className="w-3.5 h-3.5" /> Smart Scan
+          </div>
+
+          <h1 className="mt-4 text-[1.8rem] md:text-4xl font-black text-agri-900 tracking-tight leading-tight">
+            {t('title')}
+          </h1>
+          
+          <p className="text-gray-600 mt-2.5 font-medium text-[13px] sm:text-sm md:text-base leading-relaxed max-w-sm sm:max-w-md md:max-w-lg mx-auto md:mx-0">
+            {t('subtitle')}
+          </p>
+          
+          <div className="mt-5 flex flex-wrap items-center justify-center md:justify-start gap-2">
+            <span className="px-3 py-1.5 rounded-xl bg-white text-emerald-800 text-[11px] font-black border border-emerald-100 shadow-sm shrink-0">📷 Photo</span>
+            <span className="px-3 py-1.5 rounded-xl bg-white text-emerald-800 text-[11px] font-black border border-emerald-100 shadow-sm shrink-0">📹 Live Scan</span>
+            <span className="px-3 py-1.5 rounded-xl bg-white text-emerald-800 text-[11px] font-black border border-emerald-100 shadow-sm shrink-0">✨ Instant Remedies</span>
+          </div>
+        </div>
       </motion.div>
 
-      <motion.div variants={item} className="flex space-x-2 mb-6 bg-gray-100 p-1 rounded-xl inline-flex">
-        <button onClick={() => handleModeSwitch('upload')} className={`px-6 py-2 rounded-lg font-bold text-sm flex items-center transition-all ${mode === 'upload' ? 'bg-white shadow-sm text-agri-900' : 'text-gray-500 hover:text-agri-700'}`}>
+      <motion.div variants={item} className="w-full mb-6 bg-emerald-50/70 border border-emerald-100 p-1.5 rounded-2xl inline-flex">
+        <button onClick={() => handleModeSwitch('upload')} className={`flex-1 px-4 py-2.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${mode === 'upload' ? 'bg-white shadow-sm text-agri-900' : 'text-emerald-700/70 hover:text-agri-800'}`}>
           <Upload className="w-4 h-4 mr-2" /> Upload Photo
         </button>
-        <button onClick={() => handleModeSwitch('live')} className={`px-6 py-2 rounded-lg font-bold text-sm flex items-center transition-all ${mode === 'live' ? 'bg-white shadow-sm text-agri-900' : 'text-gray-500 hover:text-agri-700'}`}>
-          <Camera className="w-4 h-4 mr-2" /> Live Scanner
+        <button onClick={() => handleModeSwitch('live')} className={`flex-1 px-4 py-2.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${mode === 'live' ? 'bg-white shadow-sm text-agri-900' : 'text-emerald-700/70 hover:text-agri-800'}`}>
+          <Camera className="w-4 h-4" /> Live Scanner
         </button>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <motion.div variants={item} className="bg-white p-6 rounded-3xl shadow-xl shadow-gray-200/40 border border-gray-100 flex flex-col min-h-[500px]">
-          <div className="flex-1 relative w-full min-h-[300px] mb-4 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 overflow-hidden flex flex-col items-center justify-center">
+        <motion.div variants={item} className="bg-white p-5 md:p-6 rounded-3xl shadow-xl shadow-gray-200/40 border border-gray-100 flex flex-col min-h-[420px] md:min-h-[500px]">
+          <div className="flex-1 relative w-full min-h-[260px] md:min-h-[300px] mb-4 rounded-2xl border-2 border-dashed border-emerald-200 bg-emerald-50/40 overflow-hidden flex flex-col items-center justify-center">
             {mode === 'upload' && !selectedImage && (
               <div className="text-center p-6 cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm group-hover:scale-110 transition-transform">
                   <Leaf className="w-8 h-8 text-agri-400" />
                 </div>
                 <p className="text-agri-900 font-bold">{t('uploadPrompt')}</p>
+                <p className="text-xs text-agri-700/70 mt-1">JPG or PNG • Clear leaf photo</p>
               </div>
             )}
             {mode === 'upload' && selectedImage && (
@@ -313,6 +329,11 @@ export default function DiseaseDetection() {
                     <div className="w-2 h-2 bg-white rounded-full mr-2" /> Recording Audio
                   </div>
                 )}
+                {!isRecording && (
+                  <div className="absolute bottom-4 left-4 right-4 text-xs font-semibold text-white/80 bg-black/40 rounded-full px-3 py-2 text-center backdrop-blur-sm">
+                    Hold to talk while scanning the leaf
+                  </div>
+                )}
               </div>
             )}
 
@@ -328,12 +349,12 @@ export default function DiseaseDetection() {
           </div>
 
           {mode === 'upload' ? (
-            <button onClick={handleUploadScan} disabled={!selectedImage || isScanning || !!result} className="w-full py-4 rounded-xl font-bold text-white bg-agri-900 hover:bg-agri-800 disabled:opacity-50">
+            <button onClick={handleUploadScan} disabled={!selectedImage || isScanning || !!result} className="w-full py-3.5 md:py-4 rounded-2xl font-black text-white bg-agri-900 hover:bg-agri-800 disabled:opacity-50">
               {isScanning ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : "Analyze Image"}
             </button>
           ) : (
             <div className="space-y-2">
-              <button onMouseDown={startRecording} onMouseUp={stopRecording} onTouchStart={startRecording} onTouchEnd={stopRecording} disabled={isScanning || !!result} className={`w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center select-none ${isRecording ? 'bg-red-500 scale-95 shadow-inner' : 'bg-agri-900 hover:bg-agri-800'} disabled:opacity-50`}>
+              <button onMouseDown={startRecording} onMouseUp={stopRecording} onTouchStart={startRecording} onTouchEnd={stopRecording} disabled={isScanning || !!result} className={`w-full py-3.5 md:py-4 rounded-2xl font-black text-white transition-all flex items-center justify-center select-none ${isRecording ? 'bg-red-500 scale-95 shadow-inner' : 'bg-agri-900 hover:bg-agri-800'} disabled:opacity-50`}>
                 {isScanning ? <Loader2 className="w-6 h-6 animate-spin" /> : isRecording ? <>Release to Send to KrishiSarthi</> : <>Hold to Talk to KrishiSarthi</>}
               </button>
               <button
@@ -347,7 +368,7 @@ export default function DiseaseDetection() {
                     }
                   })
                 }
-                className="w-full py-3 rounded-xl border border-agri-300 text-agri-900 bg-agri-100 hover:bg-agri-200 font-black shadow-sm"
+                className="w-full py-3 rounded-2xl border border-emerald-200 text-emerald-900 bg-emerald-50 hover:bg-emerald-100 font-black shadow-sm"
               >
                 Ask KrishiSarthi (Voice)
               </button>
@@ -358,7 +379,7 @@ export default function DiseaseDetection() {
         <div className="h-full flex flex-col">
           <AnimatePresence mode="wait">
             {!result ? (
-              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 bg-agri-50 border-2 border-dashed border-gray-200 rounded-3xl flex flex-col items-center justify-center p-8 text-center min-h-[500px]">
+              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 bg-emerald-50/60 border-2 border-dashed border-emerald-100 rounded-3xl flex flex-col items-center justify-center p-8 text-center min-h-[420px] md:min-h-[500px]">
                 <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
                   <Activity className="w-10 h-10 text-gray-300" />
                 </div>

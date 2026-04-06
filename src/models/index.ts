@@ -8,6 +8,107 @@ const UserSchema = new Schema({
   state: { type: String },
   district: { type: String },
   preferredLanguage: { type: String, default: 'hi' },
+  lastLocale: { type: String },
+  lastActiveModule: { type: String },
+  lastActiveRoute: { type: String },
+  lastContextSummary: { type: String },
+  lastIntent: { type: String },
+  lastQuestion: { type: String },
+  lastSeenAt: { type: Date },
+  soilProfile: {
+    source: { type: String, enum: ['report', 'kit', 'lab'] },
+    landName: { type: String },
+    areaAcres: { type: Number },
+    landRecord: {
+      surveyNumber: { type: String },
+      khasraNumber: { type: String },
+      khataNumber: { type: String },
+      khewatNumber: { type: String },
+      pattaNumber: { type: String },
+      tehsil: { type: String }
+    },
+    ph: { type: Number },
+    moisture: { type: Number },
+    n: { type: Number },
+    p: { type: Number },
+    k: { type: Number },
+    ec: { type: Number },
+    organicCarbon: { type: Number },
+    soilType: { type: String },
+    updatedAt: { type: Date },
+    status: { type: String },
+    stage: { type: Number },
+    progress: { type: Number },
+    lastTestedAt: { type: Date },
+    retestRequestedAt: { type: Date },
+    location: {
+      state: { type: String },
+      district: { type: String },
+      village: { type: String }
+    }
+  },
+  soilKitOrder: {
+    status: {
+      type: String,
+      enum: ['ordered', 'packed', 'shipped', 'out-for-delivery', 'delivered'],
+      default: 'ordered'
+    },
+    trackingId: { type: String },
+    trackingUrl: { type: String },
+    trackingSteps: [{ type: String }],
+    orderedAt: { type: Date },
+    eta: { type: String },
+    item: {
+      title: { type: String },
+      description: { type: String }
+    },
+    payment: {
+      mode: { type: String },
+      status: { type: String },
+      label: { type: String }
+    },
+    price: {
+      amount: { type: Number },
+      currency: { type: String },
+      label: { type: String }
+    },
+    address: {
+      name: { type: String },
+      phone: { type: String },
+      line1: { type: String },
+      line2: { type: String },
+      village: { type: String },
+      district: { type: String },
+      state: { type: String },
+      pincode: { type: String }
+    }
+  },
+  soilKitReport: {
+    imageUrl: { type: String },
+    values: {
+      ph: { type: Number },
+      moisture: { type: Number },
+      n: { type: Number },
+      p: { type: Number },
+      k: { type: Number },
+      ec: { type: Number },
+      organicCarbon: { type: Number }
+    },
+    updatedAt: { type: Date }
+  },
+  soilGovtReport: {
+    imageUrl: { type: String },
+    values: {
+      ph: { type: Number },
+      moisture: { type: Number },
+      n: { type: Number },
+      p: { type: Number },
+      k: { type: Number },
+      ec: { type: Number },
+      organicCarbon: { type: Number }
+    },
+    updatedAt: { type: Date }
+  },
   shopName: { type: String },
   licenseNumber: { type: String },
   gstNumber: { type: String },
@@ -214,6 +315,26 @@ const rateLimitSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now, expires: 900 } // 900 seconds = 15 mins
 });
 
+const SoilKitCatalogSchema = new Schema({
+  isActive: { type: Boolean, default: true },
+  item: {
+    title: { type: String, required: true },
+    description: { type: String }
+  },
+  payment: {
+    mode: { type: String, required: true },
+    status: { type: String },
+    label: { type: String }
+  },
+  price: {
+    amount: { type: Number, required: true },
+    currency: { type: String, required: true },
+    label: { type: String }
+  },
+  trackingUrl: { type: String },
+  trackingSteps: [{ type: String }]
+}, { timestamps: true });
+
 
 // --- 📅 NEW: SMART CROP LIFECYCLE SCHEMA ---
 
@@ -243,6 +364,7 @@ const ActiveCropSchema = new Schema({
 export const ActiveCrop = mongoose.models.ActiveCrop || mongoose.model('ActiveCrop', ActiveCropSchema);
 export const Otp = mongoose.models.Otp || mongoose.model('Otp', otpSchema);
 export const RateLimit = mongoose.models.RateLimit || mongoose.model('RateLimit', rateLimitSchema);
+export const SoilKitCatalog = mongoose.models.SoilKitCatalog || mongoose.model('SoilKitCatalog', SoilKitCatalogSchema);
 export const User = mongoose.models.User || mongoose.model('User', UserSchema);
 export const Crop = mongoose.models.Crop || mongoose.model('Crop', CropSchema);
 export const MandiPrice = mongoose.models.MandiPrice || mongoose.model('MandiPrice', MandiPriceSchema);
@@ -283,3 +405,7 @@ const ProductReviewSchema = new Schema({
 
 export const PesticideProduct = mongoose.models.PesticideProduct || mongoose.model('PesticideProduct', PesticideProductSchema);
 export const ProductReview = mongoose.models.ProductReview || mongoose.model('ProductReview', ProductReviewSchema);
+
+// Re-export Farmland
+export { Farmland } from './FarmlandModel';
+export type { IFarmland, FarmlandStatus } from './FarmlandModel';

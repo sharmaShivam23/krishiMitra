@@ -71,6 +71,29 @@
     "brandDesc": "புத்திசாலித்தனமான ஆலோசனைகள், நேரடி சந்தை விலைகள் மற்றும் எளிய விவசாயக் கருவிகள் மூலம் இந்திய விவசாயிகள் சிறப்பாக வளர உதவுதல்.",
     "helpline": "24/7 கிசான் ஹெல்ப்லைன்",
     "platformHeading": "மேடை",
+        "orderSummaryTitle": "Order summary",
+        "orderItemTitle": "Soil test strip kit",
+        "orderItemDesc": "Everything you need to read pH + moisture.",
+        "orderPaymentLabel": "Payment",
+        "orderPaymentValue": "Cash on delivery",
+        "orderPrice": "Pay when the kit arrives.",
+        "shippingTitle": "Shipping address",
+        "shippingHelp": "Add your address to unlock shipping.",
+        "orderStatusLabel": "Order confirmed",
+        "viewTracking": "Track order",
+        "trackingTitle": "Order tracking",
+        "trackingHelp": "We update your delivery status automatically.",
+        "orderIdLabel": "Tracking ID",
+        "orderDateLabel": "Order date",
+        "etaLabel": "ETA",
+        "etaDefault": "3-5 days",
+        "tracking": {
+          "ordered": "Ordered",
+          "packed": "Packed",
+          "shipped": "Shipped",
+          "outForDelivery": "Out for delivery",
+          "delivered": "Delivered"
+        },
     "platformLinks": {
       "intel": "ஸ்மார்ட் பயிர் வழிகாட்டி",
       "mandi": "நேரடி மண்டி விலைகள்",
@@ -103,7 +126,7 @@
       "mandi": "மண்டி விலைகள்",
       "disease": "நோய் ஸ்கேனர்",
       "services": "வாடகைகள்",
-      "weather": "வானிலை",
+      "soil": "மண் தகவல்",
       "community": "சமூகம்",
       "schemes": "திட்டங்கள்",
       "products": "தயாரிப்புகள்",
@@ -488,6 +511,259 @@
       "Insurance": "பயிர் காப்பீடு",
       "Credit & Loans": "பண்ணை கடன்கள்",
       "Other": "மற்றவை"
+    }
+  },
+  "Soil": {
+    "journey": {
+      "startLabel": "தொடங்கு",
+      "badge": "மண் அறிவு",
+      "heroTitle": "உங்கள் நிலத்தின் சுயவிவரத்தை உருவாக்குங்கள். உடனடி மண் தகவலைப் பெறுங்கள்.",
+      "heroSubtitle": "படி 1: நில சுயவிவரம். படி 2: மண் மதிப்புகள் (கைமுறை அல்லது கிட்). படி 3: ஹெல்த் கார்டைச் சேர்க்கவும். படி 4: அறிக்கையைப் பெறுங்கள்.",
+      "profileUpdated": "சுயவிவரம் புதுப்பிக்கப்பட்டது {date}",
+      "noProfile": "இன்னும் மண் சுயவிவரம் இல்லை",
+      "startTitle": "நில விவரங்களுடன் தொடங்குங்கள்",
+      "startDesc": "நாங்கள் படிப்படியாக வழிகாட்டுவோம். எப்போது வேண்டுமானாலும் திருத்தலாம்.",
+      "startButton": "தொடங்கு",
+      "stepLabel": "படி {current} / {total}",
+      "cards": {
+        "landFirst": {
+          "title": "நிலம்-முதல் சுயவிவரம்",
+          "desc": "சோதிக்க வேண்டிய நிலத்தையே தேர்வு செய்யுங்கள்."
+        },
+        "easyEntry": {
+          "title": "எளிய மதிப்பு பதிவு",
+          "desc": "எண்களை எழுதுங்கள் அல்லது புகைப்படம் மூலம் படியுங்கள்."
+        },
+        "merged": {
+          "title": "இணைந்த துல்லியம்",
+          "desc": "ஹெல்த் கார்ட் ஆய்வக நம்பிக்கையை உயர்த்துகிறது."
+        }
+      }
+    },
+    "status": {
+      "autosaving": "சேமிக்கிறது",
+      "saved": "சேமிக்கப்பட்டது",
+      "saveFailed": "சேமிக்க முடியவில்லை",
+      "draft": "வரைவு"
+    },
+    "statusCard": {
+      "title": "Land profile status",
+      "subtitle": "Track where you are and what to do next.",
+      "stages": {
+        "step1": "Land details",
+        "step2": "Soil test",
+        "step3": "Health card",
+        "step4": "Final report"
+      },
+      "statuses": {
+        "landPending": "Land details pending",
+        "kitPending": "Soil test pending",
+        "kitOrdered": "Kit on the way",
+        "valuesCaptured": "Soil values captured",
+        "cardPending": "Health card optional",
+        "ready": "Ready for report",
+        "completed": "Report ready",
+        "retest": "Retest recommended"
+      },
+      "nextAction": "Next action",
+      "primaryCta": "Take me there",
+      "editLand": "Edit land profile",
+      "retestBadge": "Retest needed",
+      "retestCta": "Start retest",
+      "retestStarted": "Retest started. Please add new pH + moisture values.",
+      "retestFailed": "Could not start retest. Try again.",
+      "actions": {
+        "land-pending": "Complete land details to continue.",
+        "kit-pending": "Start your soil test or order a kit.",
+        "kit-ordered": "Your kit is on the way. Track delivery or prepare the test.",
+        "values-captured": "You can upload a health card or move to report.",
+        "card-pending": "Upload the soil health card if available.",
+        "ready": "Generate your final soil report.",
+        "completed": "View or update your report anytime.",
+        "retest": "Your soil test is old. Take a fresh pH + moisture reading."
+      },
+      "activity": {
+        "title": "Recent activity",
+        "empty": "No activity yet.",
+        "kitOrdered": "Kit ordered",
+        "kitUpdated": "Soil values updated",
+        "cardUpdated": "Health card updated",
+        "profileSaved": "Land profile saved"
+      }
+    },
+    "buttons": {
+      "saveDraft": "வரைவை சேமிக்கவும்",
+      "saveContinue": "சேமித்து தொடரவும்",
+      "saveValues": "மதிப்புகளை சேமிக்கவும்",
+      "skip": "இப்போது தவிர்க்கவும்"
+    },
+    "step1": {
+      "stepLabel": "படி 1 / 4",
+      "title": "நில விவரங்கள்",
+      "subtitle": "சோதிக்க வேண்டிய நிலத்தின் விவரங்களை நிரப்பவும்.",
+      "titleShort": "நில விவரங்கள்",
+      "hint": "நிலப் பெயரும் இடமும் சேர்க்கவும்.",
+      "sections": {
+        "basics": "அடிப்படை தகவல்",
+        "location": "இடம்",
+        "records": "நில ஆவணங்கள் (விரும்பினால்)"
+      },
+      "required": "தேவை: நிலப் பெயர், மாநிலம், மாவட்டம்."
+    },
+    "errors": {
+      "required": "Please fill land name, state, and district."
+    },
+    "step2": {
+      "stepLabel": "படி 2 / 4",
+      "title": "pH மற்றும் ஈரப்பதம் சேர்க்கவும்",
+      "subtitle": "எண்கள் இருந்தால் எழுதுங்கள், இல்லையெனில் கிட் ஆர்டர் செய்யுங்கள்.",
+      "titleShort": "மண் மதிப்புகள்",
+      "hint": "pH மற்றும் ஈரப்பதம் எழுதுங்கள் அல்லது கிட் பயன்படுத்துங்கள்.",
+      "tabs": {
+        "manual": "எண்கள் உள்ளன",
+        "kit": "கிட் தேவை"
+      },
+      "fields": {
+        "ph": "pH",
+        "phPlaceholder": "எ.கா., 6.8",
+        "moisture": "ஈரப்பதம் (%)",
+        "moisturePlaceholder": "எ.கா., 18"
+      },
+      "manual": {
+        "label": "கைமுறை பதிவு",
+        "title": "pH மற்றும் ஈரப்பதம் எழுதுங்கள்",
+        "subtitle": "ஒரு நிமிடத்துக்குள் முடியும்.",
+        "badge": "விரைவு",
+        "help": "எங்களுக்கு pH மற்றும் ஈரப்பதம் மட்டும் போதும்.",
+        "errors": {
+          "required": "Enter pH and moisture values before saving."
+        }
+      },
+      "kit": {
+        "label": "கிட் பாதை",
+        "title": "ஸ்ட்ரிப் கிட் ஆர்டர் செய்யுங்கள்",
+        "subtitle": "3-5 நாட்களில் டெலிவரி.",
+        "options": {
+          "orderTitle": "கிட் ஆர்டர் செய்யுங்கள்",
+          "orderDesc": "3-5 நாட்களில் டெலிவரி.",
+          "uploadTitle": "கிட் உள்ளது",
+          "uploadDesc": "இப்போது புகைப்படம் பதிவேற்றவும்."
+        },
+        "errors": {
+          "formInvalid": "Please fill all required fields.",
+          "name": "Enter farmer name.",
+          "phone": "Enter phone number.",
+          "phoneInvalid": "Enter a 10-digit phone number.",
+          "line1": "Enter address line.",
+          "village": "Enter village.",
+          "district": "Enter district.",
+          "state": "Enter state.",
+          "pincode": "Enter pincode.",
+          "pincodeInvalid": "Enter a 6-digit pincode."
+        },
+        "steps": {
+          "step1": "கிட் ஆர்டர் செய்யுங்கள்",
+          "step2": "மண் ஸ்ட்ரிப் டெஸ்ட் செய்யுங்கள்",
+          "step3": "pH + ஈரப்பதத்திற்கு புகைப்படம் பதிவேற்றவும்"
+        },
+        "orderButton": "கிட் ஆர்டர் செய்யுங்கள்",
+        "hideForm": "படிவத்தை மறைக்கவும்",
+        "help": "எண்கள் இல்லாதபோது சிறந்தது.",
+        "uploadLabel": "கிட் ஸ்ட்ரிப் புகைப்படம் பதிவேற்றவும் (விருப்பம்)",
+        "readPhoto": "புகைப்படத்தில் இருந்து படிக்கவும்",
+        "readHelp": "நாங்கள் pH மற்றும் ஈரப்பதம் மட்டுமே படிக்கிறோம்.",
+        "deliveryTitle": "டெலிவரி விவரங்கள்",
+        "deliveryDesc": "கிட் அனுப்ப முகவரி தேவை.",
+        "confirmOrder": "கிட் ஆர்டர் உறுதிசெய்",
+        "altHelp": "மதிப்புகளை கைமுறையாகவும் எழுதலாம்."
+      }
+    },
+    "step3": {
+      "stepLabel": "படி 3 / 4",
+      "title": "சோயில் ஹெல்த் கார்ட்",
+      "subtitle": "கார்ட் இருந்தால் பதிவேற்றவும்.",
+      "titleShort": "ஹெல்த் கார்ட்",
+      "hint": "கார்டை பதிவேற்றவும் அல்லது தவிர்க்கவும்.",
+      "uploadLabel": "சோயில் ஹெல்த் கார்ட் பதிவேற்றவும் (விருப்பம்)",
+      "readPhoto": "புகைப்படத்தில் இருந்து படிக்கவும்",
+      "saveButton": "கார்டை சேமிக்கவும்"
+    },
+    "step4": {
+      "stepLabel": "படி 4 / 4",
+      "title": "இறுதி அறிக்கை",
+      "subtitle": "நில விவரங்களையும் மண் மதிப்புகளையும் இணைப்போம்.",
+      "titleShort": "இறுதி அறிக்கை",
+      "hint": "அறிக்கையை பார்வையிட்டு உருவாக்கவும்.",
+      "rankingTitle": "மண் தரவரிசை",
+      "scoreLabel": "ஸ்கோர்: {score}/100",
+      "insightsTitle": "முக்கிய குறிப்புகள்",
+      "generateButton": "அறிக்கை உருவாக்கவும்",
+      "generateHelp": "இதனை பயிர் ஆலோசனைக்கு பயன்படுத்துவோம்.",
+      "rank": {
+        "excellent": "சிறப்பு",
+        "good": "நல்லது",
+        "moderate": "மிதமான",
+        "needsImprovement": "மேம்பாடு தேவை"
+      },
+      "insights": {
+        "phLow": "மண் அமிலமாக உள்ளது. சுண்ணாம்பு மற்றும் கரிம கம்போஸ்ட் சேர்க்கவும்.",
+        "phHigh": "மண் க்ஷாரமாக உள்ளது. ஜிப்சம் மற்றும் கரிம உரம் சேர்க்கவும்.",
+        "nLow": "நைட்ரஜன் குறைவு. யூரியா/கம்போஸ்ட்டை பிரித்து இடுங்கள்.",
+        "pLow": "பாஸ்பரஸ் குறைவு. விதைப்பில் SSP/DAP பயன்படுத்தவும்.",
+        "kLow": "பொட்டாசியம் குறைவு. MOP அல்லது பொட்டாச் கலவையைப் பயன்படுத்தவும்.",
+        "ocLow": "கரிம கார்பன் குறைவு. காடேல் உரம், பசுமை உரம் சேர்க்கவும்.",
+        "ecHigh": "EC அதிகம். உப்புத்தன்மை மற்றும் பாசன தரத்தைச் சோதிக்கவும்.",
+        "missing": "குறிப்பிட்ட ஆலோசனைக்கு மீதி மதிப்புகளைச் சேர்க்கவும்."
+      },
+      "sources": {
+        "govtCard": "அரசு கார்ட்",
+        "kitResult": "கிட் முடிவு",
+        "manual": "கைமுறை"
+      },
+      "emptyValue": "--"
+    },
+    "soilTypes": {
+      "alluvial": "அல்லுவியல்",
+      "black": "கருப்பு மண்",
+      "red": "சிவப்பு மண்",
+      "laterite": "லேட்டரைட்",
+      "sandy": "மணல்",
+      "clay": "களிமண்",
+      "loamy": "லோமி"
+    },
+    "fields": {
+      "landName": { "label": "நிலப் பெயர்", "placeholder": "எ.கா., வடக்கு கோதுமை வயல்" },
+      "area": { "label": "பரப்பளவு (ஏக்கர்)", "placeholder": "எ.கா., 2.5" },
+      "soilType": { "label": "மண் வகை", "placeholder": "மண் வகையைத் தேர்ந்தெடுக்கவும்" },
+      "state": { "label": "மாநிலம்", "placeholder": "எ.கா., மகாராஷ்டிரா" },
+      "district": { "label": "மாவட்டம்", "placeholder": "எ.கா., புனே" },
+      "village": { "label": "கிராமம்", "placeholder": "எ.கா., ஹின்ஜவாடி" },
+      "tehsil": { "label": "தெஹசில் / தாலுக்" },
+      "surveyNumber": { "label": "சர்வே எண்" },
+      "khasraNumber": { "label": "கஸ்ரா எண்" },
+      "khataNumber": { "label": "காத்தா எண்" },
+      "khewatNumber": { "label": "கேவாட் எண்" },
+      "pattaNumber": { "label": "பட்டா எண்" },
+      "farmerName": { "label": "விவசாயி பெயர்" },
+      "phone": { "label": "மொபைல் எண்" },
+      "addressLine": { "label": "முகவரி" },
+      "pincode": { "label": "பின்கோடு" }
+    },
+    "messages": {
+      "loadError": "தரவை ஏற்ற முடியவில்லை.",
+      "kitOrderConfirmed": "கிட் ஆர்டர் உறுதிசெய்யப்பட்டது.",
+      "kitOrderFailed": "ஆர்டர் செய்ய முடியவில்லை.",
+      "ocrDone": "புகைப்படம் படிக்கப்பட்டது. மதிப்புகளைச் சரிபார்க்கவும்.",
+      "ocrFailed": "OCR தோல்வியடைந்தது.",
+      "kitSaved": "கிட் மதிப்புகள் சேமிக்கப்பட்டன.",
+      "govtSaved": "கார்ட் சேமிக்கப்பட்டது.",
+      "saveReportFailed": "அறிக்கையை சேமிக்க முடியவில்லை.",
+      "landSaved": "நில சுயவிவரம் சேமிக்கப்பட்டது.",
+      "landSaveFailed": "நில சுயவிவரம் சேமிக்க முடியவில்லை.",
+      "finalSaved": "இறுதி அறிக்கை சேமிக்கப்பட்டது.",
+      "finalSaveFailed": "அறிக்கையை சேமிக்க முடியவில்லை.",
+      "dismissError": "பிழையை மூடு",
+      "dismissMessage": "செய்தியை மூடு"
     }
   }
 }

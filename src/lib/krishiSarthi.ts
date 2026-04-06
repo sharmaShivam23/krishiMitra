@@ -9,6 +9,7 @@ export interface KrishiSarthiPageContext {
 export interface KrishiSarthiStartDetail {
   prompt?: string;
   context?: KrishiSarthiPageContext;
+  autoSend?: boolean;
 }
 
 export const requestKrishiSarthi = (detail: KrishiSarthiStartDetail = {}) => {

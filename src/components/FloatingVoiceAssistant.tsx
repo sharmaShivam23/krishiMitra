@@ -286,7 +286,8 @@ export default function FloatingVoiceAssistant() {
       appendMessage({
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: replyText
+        content: replyText,
+        actionPath: typeof data?.actionPath === 'string' ? data.actionPath : undefined
       });
 
       speak(replyText);
@@ -539,6 +540,7 @@ export default function FloatingVoiceAssistant() {
       const customEvent = event as CustomEvent<KrishiSarthiStartDetail>;
       const prompt = customEvent.detail?.prompt;
       const context = customEvent.detail?.context;
+      const autoSend = customEvent.detail?.autoSend;
 
       pageContextOverrideRef.current = context || null;
 
@@ -547,6 +549,12 @@ export default function FloatingVoiceAssistant() {
       if (prompt) {
         setIsTypingVisible(true);
         setInput(prompt);
+
+        if (autoSend) {
+          setInput('');
+          void submitText(prompt);
+          return;
+        }
       }
 
       if (isVoiceInputSupported && !isVoiceRecording) {
@@ -556,10 +564,20 @@ export default function FloatingVoiceAssistant() {
 
     window.addEventListener(KRISHI_SARTHI_START_EVENT, handler);
     return () => window.removeEventListener(KRISHI_SARTHI_START_EVENT, handler);
-  }, [isVoiceInputSupported, isVoiceRecording]);
+  }, [isVoiceInputSupported, isVoiceRecording, submitText]);
 
   const quickPrompts = quickPromptsByLocale[activeLocale] || quickPromptsByLocale.en;
   const hasConversation = messages.length > 1;
+
+  const isAuthPage =
+    normalizedPathname.includes('/login') ||
+    normalizedPathname.includes('/register') ||
+    normalizedPathname.includes('/forgot-password') ||
+    normalizedPathname.includes('/auth/');
+
+  const isLandingPage = normalizedPathname === '/' || /^\/[a-z]{2}\/?$/.test(normalizedPathname);
+
+  if (isAuthPage || isLandingPage) return null;
 
   return (
     <>
@@ -590,20 +608,21 @@ export default function FloatingVoiceAssistant() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.2 }}
-            className="fixed z-50 right-2 left-2 bottom-[calc(env(safe-area-inset-bottom)+8rem)] md:bottom-24 md:left-auto md:right-5 md:w-104 w-auto h-[76vh] md:h-[74vh] bg-white border border-agri-100 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.98 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="fixed z-50 right-2 left-2 bottom-[calc(env(safe-area-inset-bottom)+8rem)] md:bottom-24 md:left-auto md:right-5 md:w-[420px] w-auto h-[78vh] md:h-[74vh] bg-white/80 border border-emerald-200/70 rounded-[28px] shadow-[0_24px_60px_-30px_rgba(16,24,40,0.6)] overflow-hidden flex flex-col backdrop-blur-xl"
           >
-            <div className="px-4 py-3 border-b border-agri-100 bg-white flex items-center justify-between">
+            <div className="relative px-5 py-4 border-b border-emerald-100/70 bg-gradient-to-r from-emerald-50 via-white to-emerald-50 flex items-center justify-between">
+              <div className="absolute inset-0 opacity-60" style={{ backgroundImage: 'radial-gradient(circle at 20% 20%, rgba(16,185,129,0.15), transparent 55%)' }} />
               <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-full bg-agri-100 text-agri-800 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-[0_8px_20px_-12px_rgba(16,185,129,0.7)]">
                   <Bot className="w-4 h-4" />
                 </div>
-                <div>
-                  <p className="text-sm font-black text-agri-900">KrishiSarthi</p>
-                  <p className="text-[11px] text-agri-800/65 font-semibold">Farmer AI Assistant</p>
+                <div className="relative">
+                  <p className="text-sm font-black text-emerald-950">KrishiSarthi</p>
+                  <p className="text-[11px] text-emerald-800/70 font-semibold">Farmer AI Assistant</p>
                 </div>
               </div>
               <button
@@ -611,14 +630,14 @@ export default function FloatingVoiceAssistant() {
                   stopVoiceSession();
                   setIsOpen(false);
                 }}
-                className="p-2 rounded-full hover:bg-agri-100 text-agri-800"
+                className="relative p-2 rounded-full hover:bg-emerald-100 text-emerald-800"
                 aria-label="Close chat"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-agri-50/30">
+            <div ref={listRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-gradient-to-b from-white via-emerald-50/40 to-white">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -627,10 +646,10 @@ export default function FloatingVoiceAssistant() {
                   <div
                     className={`max-w-[85%] rounded-2xl px-3 py-2.5 text-sm leading-relaxed ${
                       message.role === 'user'
-                        ? 'bg-agri-600 text-white rounded-br-md shadow-sm'
+                        ? 'bg-emerald-600 text-white rounded-br-md shadow-[0_10px_20px_-16px_rgba(5,150,105,0.8)]'
                         : message.role === 'system'
-                          ? 'bg-amber-100 text-amber-900 rounded-bl-md'
-                          : 'bg-white text-agri-900 border border-agri-100 rounded-bl-md shadow-sm'
+                          ? 'bg-amber-50 text-amber-900 rounded-bl-md border border-amber-100'
+                          : 'bg-white text-emerald-950 border border-emerald-100/80 rounded-bl-md shadow-[0_8px_18px_-16px_rgba(16,185,129,0.5)]'
                     }`}
                   >
                     {message.content}
@@ -638,7 +657,7 @@ export default function FloatingVoiceAssistant() {
                       <button
                         type="button"
                         onClick={() => handleActionNavigate(message.actionPath)}
-                        className="mt-2 inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold bg-agri-50 text-agri-800 border border-agri-200 hover:bg-agri-100"
+                        className="mt-2 inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100"
                       >
                         Open Page <ArrowUpRight className="w-3 h-3" />
                       </button>
@@ -649,7 +668,7 @@ export default function FloatingVoiceAssistant() {
 
               {!hasConversation && !isSending && (
                 <>
-                  <div className="bg-white border border-agri-100 rounded-2xl p-3 text-xs text-agri-800/80">
+                  <div className="bg-white border border-emerald-100 rounded-2xl p-3 text-xs text-emerald-900/70 shadow-[0_8px_16px_-14px_rgba(16,185,129,0.5)]">
                     Tap the green button below and speak in your language.
                   </div>
                   <div className="grid grid-cols-2 gap-2">
@@ -659,7 +678,7 @@ export default function FloatingVoiceAssistant() {
                         type="button"
                         onClick={() => submitText(prompt)}
                         disabled={isSending}
-                        className="text-left px-3 py-2.5 rounded-xl text-xs font-semibold border border-agri-100 bg-white text-agri-800 hover:bg-agri-50 disabled:opacity-50"
+                        className="text-left px-3 py-2.5 rounded-xl text-xs font-semibold border border-emerald-100 bg-white text-emerald-900 hover:bg-emerald-50 disabled:opacity-50"
                       >
                         {prompt}
                       </button>
@@ -670,21 +689,21 @@ export default function FloatingVoiceAssistant() {
 
               {isSending && (
                 <div className="flex justify-start">
-                  <div className="bg-white border border-agri-100 text-agri-800 rounded-2xl rounded-bl-md px-3 py-2 text-sm flex items-center gap-2">
+                  <div className="bg-white border border-emerald-100 text-emerald-900 rounded-2xl rounded-bl-md px-3 py-2 text-sm flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" /> Thinking...
                   </div>
                 </div>
               )}
             </div>
 
-            <div className="border-t border-agri-100 p-3 bg-white space-y-2.5">
+            <div className="border-t border-emerald-100/70 p-4 bg-white space-y-2.5">
               <button
                 type="button"
                 onClick={isVoiceRecording ? stopVoiceSession : startVoiceSession}
-                className={`w-full h-12 rounded-xl font-bold transition flex items-center justify-center gap-2 border ${
+                className={`w-full h-12 rounded-2xl font-bold transition flex items-center justify-center gap-2 border ${
                   isVoiceRecording
                     ? 'bg-red-50 text-red-700 border-red-200'
-                    : 'bg-agri-600 text-white border-agri-600 hover:bg-agri-800'
+                    : 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700'
                 }`}
                 title={isVoiceRecording ? 'Stop voice chat' : 'Start voice chat'}
               >
@@ -706,7 +725,7 @@ export default function FloatingVoiceAssistant() {
                 <button
                   type="button"
                   onClick={() => setIsTypingVisible((prev) => !prev)}
-                  className="h-9 px-3 rounded-lg text-xs font-bold border border-agri-200 text-agri-800 bg-agri-50 hover:bg-agri-100"
+                  className="h-9 px-3 rounded-lg text-xs font-bold border border-emerald-200 text-emerald-900 bg-emerald-50 hover:bg-emerald-100"
                 >
                   {isTypingVisible ? 'Hide typing' : 'Type instead'}
                 </button>
@@ -722,7 +741,7 @@ export default function FloatingVoiceAssistant() {
                       }
                     ]);
                   }}
-                  className="h-9 px-3 rounded-lg text-xs font-semibold text-agri-900/60 hover:text-agri-800"
+                  className="h-9 px-3 rounded-lg text-xs font-semibold text-emerald-900/60 hover:text-emerald-800"
                 >
                   Clear
                 </button>
@@ -740,7 +759,7 @@ export default function FloatingVoiceAssistant() {
                       }
                     }}
                     placeholder="Type if needed..."
-                    className="flex-1 resize-none rounded-xl border border-agri-200 px-3 py-2.5 text-sm text-agri-900 outline-none focus:ring-2 focus:ring-agri-400 min-h-11 max-h-28"
+                    className="flex-1 resize-none rounded-xl border border-emerald-200 px-3 py-2.5 text-sm text-emerald-950 outline-none focus:ring-2 focus:ring-emerald-400 min-h-11 max-h-28"
                     rows={1}
                   />
 
@@ -748,7 +767,7 @@ export default function FloatingVoiceAssistant() {
                     type="button"
                     onClick={handleSend}
                     disabled={!input.trim() || isSending}
-                    className="h-11 w-11 rounded-xl bg-agri-600 text-white flex items-center justify-center disabled:opacity-50"
+                    className="h-11 w-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center disabled:opacity-50"
                     title="Send"
                   >
                     <Send className="w-4 h-4" />

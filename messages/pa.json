@@ -18,9 +18,9 @@
         "title": "ਸਮਾਰਟ ਫਸਲ ਗਾਈਡ",
         "desc": "ਆਪਣੀ ਸਥਾਨਕ ਮਿੱਟੀ ਅਤੇ ਮੌਸਮ ਦੇ ਆਧਾਰ 'ਤੇ ਬਿਜਾਈ ਅਤੇ ਵਾਢੀ ਦਾ ਸਹੀ ਸਮਾਂ ਜਾਣੋ।"
       },
-      "sellPredictor": {
-        "title": "ਵੇਚਣ ਦਾ ਸਹੀ ਸਮਾਂ",
-        "desc": "ਸਭ ਤੋਂ ਵੱਧ ਮੁਨਾਫੇ ਲਈ ਆਪਣੀ ਫਸਲ ਵੇਚਣ ਦਾ ਸਹੀ ਸਮਾਂ ਜਾਣੋ।"
+      "voiceAssistant": {
+        "title": "ਕ੍ਰਿਸ਼ੀ ਸਾਰਥੀ ਵੌਇਸ ਅਸਿਸਟੈਂਟ",
+        "desc": "ਆਪਣੀ ਸਥਾਨਕ ਭਾਸ਼ਾ ਵਿੱਚ ਬੋਲ ਕੇ ਤੁਰੰਤ ਖੇਤੀ ਦੀ ਸਲਾਹ ਅਤੇ ਮੌਸਮ ਦੀ ਜਾਣਕਾਰੀ ਪ੍ਰਾਪਤ ਕਰੋ।"
       },
       "diseaseVision": {
         "title": "ਫਸਲ ਬਿਮਾਰੀ ਸਕੈਨਰ",
@@ -71,6 +71,29 @@
     "brandDesc": "ਸਮਾਰਟ ਸਲਾਹ, ਲਾਈਵ ਬਾਜ਼ਾਰ ਦੇ ਭਾਅ ਅਤੇ ਆਸਾਨ ਖੇਤੀ ਸੰਦਾਂ ਨਾਲ ਭਾਰਤੀ ਕਿਸਾਨਾਂ ਦੀ ਮਦਦ ਕਰਨਾ।",
     "helpline": "24/7 ਕਿਸਾਨ ਹੈਲਪਲਾਈਨ",
     "platformHeading": "ਪਲੇਟਫਾਰਮ",
+        "orderSummaryTitle": "Order summary",
+        "orderItemTitle": "Soil test strip kit",
+        "orderItemDesc": "Everything you need to read pH + moisture.",
+        "orderPaymentLabel": "Payment",
+        "orderPaymentValue": "Cash on delivery",
+        "orderPrice": "Pay when the kit arrives.",
+        "shippingTitle": "Shipping address",
+        "shippingHelp": "Add your address to unlock shipping.",
+        "orderStatusLabel": "Order confirmed",
+        "viewTracking": "Track order",
+        "trackingTitle": "Order tracking",
+        "trackingHelp": "We update your delivery status automatically.",
+        "orderIdLabel": "Tracking ID",
+        "orderDateLabel": "Order date",
+        "etaLabel": "ETA",
+        "etaDefault": "3-5 days",
+        "tracking": {
+          "ordered": "Ordered",
+          "packed": "Packed",
+          "shipped": "Shipped",
+          "outForDelivery": "Out for delivery",
+          "delivered": "Delivered"
+        },
     "platformLinks": {
       "intel": "ਸਮਾਰਟ ਫਸਲ ਗਾਈਡ",
       "mandi": "ਲਾਈਵ ਮੰਡੀ ਦੇ ਭਾਅ",
@@ -103,7 +126,7 @@
       "mandi": "ਮੰਡੀ ਦੇ ਭਾਅ",
       "disease": "ਬਿਮਾਰੀ ਸਕੈਨਰ",
       "services": "ਕਿਰਾਏ 'ਤੇ ਲਓ",
-      "weather": "ਮੌਸਮ",
+      "soil": "ਮਿੱਟੀ ਜਾਣਕਾਰੀ",
       "community": "ਭਾਈਚਾਰਾ",
       "schemes": "ਯੋਜਨਾਵਾਂ",
       "products": "ਉਤਪਾਦ",
@@ -488,6 +511,259 @@
       "Insurance": "ਫਸਲ ਬੀਮਾ",
       "Credit & Loans": "ਖੇਤੀ ਲੋਨ",
       "Other": "ਹੋਰ"
+    }
+  },
+  "Soil": {
+    "journey": {
+      "startLabel": "ਸ਼ੁਰੂ ਕਰੋ",
+      "badge": "ਮਿੱਟੀ ਸਮਝ",
+      "heroTitle": "ਖੇਤ ਦੀ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ। ਤੁਰੰਤ ਮਿੱਟੀ ਜਾਣਕਾਰੀ ਲਓ।",
+      "heroSubtitle": "ਕਦਮ 1: ਖੇਤ ਪ੍ਰੋਫਾਈਲ। ਕਦਮ 2: ਮਿੱਟੀ ਦੇ ਮੁੱਲ (ਮੈਨੁਅਲ ਜਾਂ ਕਿਟ)। ਕਦਮ 3: ਹੈਲਥ ਕਾਰਡ ਜੋੜੋ। ਕਦਮ 4: ਰਿਪੋਰਟ ਲਓ।",
+      "profileUpdated": "ਪ੍ਰੋਫਾਈਲ ਅੱਪਡੇਟ {date}",
+      "noProfile": "ਹਾਲੇ ਕੋਈ ਮਿੱਟੀ ਪ੍ਰੋਫਾਈਲ ਨਹੀਂ",
+      "startTitle": "ਖੇਤ ਦੀ ਜਾਣਕਾਰੀ ਨਾਲ ਸ਼ੁਰੂ ਕਰੋ",
+      "startDesc": "ਅਸੀਂ ਤੁਹਾਨੂੰ ਕਦਮ-ਦਰ-ਕਦਮ ਮਦਦ ਕਰਾਂਗੇ। ਬਾਅਦ ਵਿੱਚ ਸੋਧ ਸਕਦੇ ਹੋ।",
+      "startButton": "ਸ਼ੁਰੂ ਕਰੋ",
+      "stepLabel": "ਕਦਮ {current} / {total}",
+      "cards": {
+        "landFirst": {
+          "title": "ਖੇਤ-ਪਹਿਲਾਂ ਪ੍ਰੋਫਾਈਲ",
+          "desc": "ਜਿਸ ਖੇਤ ਦੀ ਜਾਂਚ ਕਰਨੀ ਹੈ, ਉਹੀ ਚੁਣੋ।"
+        },
+        "easyEntry": {
+          "title": "ਸੌਖੀ ਮੁੱਲ ਭਰਾਈ",
+          "desc": "ਨੰਬਰ ਲਿਖੋ ਜਾਂ ਫੋਟੋ ਤੋਂ ਪੜ੍ਹੋ।"
+        },
+        "merged": {
+          "title": "ਜੁੜੀ ਹੋਈ ਸਹੀਅਤਾ",
+          "desc": "ਹੈਲਥ ਕਾਰਡ ਲੈਬ ਭਰੋਸਾ ਵਧਾਉਂਦਾ ਹੈ।"
+        }
+      }
+    },
+    "status": {
+      "autosaving": "ਸੇਵ ਹੋ ਰਿਹਾ ਹੈ",
+      "saved": "ਸੇਵ ਹੋ ਗਿਆ",
+      "saveFailed": "ਸੇਵ ਨਹੀਂ ਹੋਇਆ",
+      "draft": "ਡਰਾਫਟ"
+    },
+    "statusCard": {
+      "title": "Land profile status",
+      "subtitle": "Track where you are and what to do next.",
+      "stages": {
+        "step1": "Land details",
+        "step2": "Soil test",
+        "step3": "Health card",
+        "step4": "Final report"
+      },
+      "statuses": {
+        "landPending": "Land details pending",
+        "kitPending": "Soil test pending",
+        "kitOrdered": "Kit on the way",
+        "valuesCaptured": "Soil values captured",
+        "cardPending": "Health card optional",
+        "ready": "Ready for report",
+        "completed": "Report ready",
+        "retest": "Retest recommended"
+      },
+      "nextAction": "Next action",
+      "primaryCta": "Take me there",
+      "editLand": "Edit land profile",
+      "retestBadge": "Retest needed",
+      "retestCta": "Start retest",
+      "retestStarted": "Retest started. Please add new pH + moisture values.",
+      "retestFailed": "Could not start retest. Try again.",
+      "actions": {
+        "land-pending": "Complete land details to continue.",
+        "kit-pending": "Start your soil test or order a kit.",
+        "kit-ordered": "Your kit is on the way. Track delivery or prepare the test.",
+        "values-captured": "You can upload a health card or move to report.",
+        "card-pending": "Upload the soil health card if available.",
+        "ready": "Generate your final soil report.",
+        "completed": "View or update your report anytime.",
+        "retest": "Your soil test is old. Take a fresh pH + moisture reading."
+      },
+      "activity": {
+        "title": "Recent activity",
+        "empty": "No activity yet.",
+        "kitOrdered": "Kit ordered",
+        "kitUpdated": "Soil values updated",
+        "cardUpdated": "Health card updated",
+        "profileSaved": "Land profile saved"
+      }
+    },
+    "buttons": {
+      "saveDraft": "ਡਰਾਫਟ ਸੇਵ ਕਰੋ",
+      "saveContinue": "ਸੇਵ ਕਰਕੇ ਅੱਗੇ ਵਧੋ",
+      "saveValues": "ਮੁੱਲ ਸੇਵ ਕਰੋ",
+      "skip": "ਹੁਣੇ ਛੱਡੋ"
+    },
+    "step1": {
+      "stepLabel": "ਕਦਮ 1 / 4",
+      "title": "ਖੇਤ ਦੀ ਜਾਣਕਾਰੀ",
+      "subtitle": "ਜਿਸ ਖੇਤ ਦੀ ਜਾਂਚ ਕਰਨੀ ਹੈ, ਉਹ ਜਾਣਕਾਰੀ ਭਰੋ।",
+      "titleShort": "ਖੇਤ ਦੀ ਜਾਣਕਾਰੀ",
+      "hint": "ਖੇਤ ਦਾ ਨਾਮ ਅਤੇ ਥਾਂ ਭਰੋ।",
+      "sections": {
+        "basics": "ਬੁਨਿਆਦੀ ਜਾਣਕਾਰੀ",
+        "location": "ਥਾਂ",
+        "records": "ਜਮੀਨ ਦੇ ਕਾਗਜ਼ (ਚੋਇਕਲ)"
+      },
+      "required": "ਜ਼ਰੂਰੀ: ਖੇਤ ਦਾ ਨਾਮ, ਰਾਜ, ਜ਼ਿਲ੍ਹਾ।"
+    },
+    "errors": {
+      "required": "Please fill land name, state, and district."
+    },
+    "step2": {
+      "stepLabel": "ਕਦਮ 2 / 4",
+      "title": "pH ਅਤੇ ਨਮੀ ਜੋੜੋ",
+      "subtitle": "ਨੰਬਰ ਹੋਣ ਤਾਂ ਲਿਖੋ, ਨਹੀਂ ਤਾਂ ਕਿਟ ਲਓ।",
+      "titleShort": "ਮਿੱਟੀ ਦੇ ਮੁੱਲ",
+      "hint": "pH ਅਤੇ ਨਮੀ ਲਿਖੋ ਜਾਂ ਕਿਟ ਵਰਤੋ।",
+      "tabs": {
+        "manual": "ਨੰਬਰ ਹਨ",
+        "kit": "ਕਿਟ ਚਾਹੀਦਾ ਹੈ"
+      },
+      "fields": {
+        "ph": "pH",
+        "phPlaceholder": "ਜਿਵੇਂ, 6.8",
+        "moisture": "ਨਮੀ (%)",
+        "moisturePlaceholder": "ਜਿਵੇਂ, 18"
+      },
+      "manual": {
+        "label": "ਮੈਨੁਅਲ ਐਂਟਰੀ",
+        "title": "pH ਅਤੇ ਨਮੀ ਲਿਖੋ",
+        "subtitle": "ਇੱਕ ਮਿੰਟ ਤੋਂ ਘੱਟ ਸਮੇਂ ਵਿੱਚ ਹੋ ਜਾਵੇਗਾ।",
+        "badge": "ਤੇਜ਼",
+        "help": "ਸਾਨੂੰ ਸਿਰਫ pH ਅਤੇ ਨਮੀ ਚਾਹੀਦੀ ਹੈ।",
+        "errors": {
+          "required": "Enter pH and moisture values before saving."
+        }
+      },
+      "kit": {
+        "label": "ਕਿਟ ਰਾਹ",
+        "title": "ਸਟਰਿਪ ਕਿਟ ਮੰਗਵਾਓ",
+        "subtitle": "3-5 ਦਿਨ ਵਿੱਚ ਡਿਲੀਵਰੀ।",
+        "options": {
+          "orderTitle": "ਕਿਟ ਆਰਡਰ ਕਰੋ",
+          "orderDesc": "3-5 ਦਿਨ ਵਿੱਚ ਡਿਲੀਵਰੀ।",
+          "uploadTitle": "ਮੇਰੇ ਕੋਲ ਕਿਟ ਹੈ",
+          "uploadDesc": "ਹੁਣ ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ।"
+        },
+        "errors": {
+          "formInvalid": "Please fill all required fields.",
+          "name": "Enter farmer name.",
+          "phone": "Enter phone number.",
+          "phoneInvalid": "Enter a 10-digit phone number.",
+          "line1": "Enter address line.",
+          "village": "Enter village.",
+          "district": "Enter district.",
+          "state": "Enter state.",
+          "pincode": "Enter pincode.",
+          "pincodeInvalid": "Enter a 6-digit pincode."
+        },
+        "steps": {
+          "step1": "ਕਿਟ ਆਰਡਰ ਕਰੋ",
+          "step2": "ਮਿੱਟੀ ਸਟਰਿਪ ਟੈਸਟ ਕਰੋ",
+          "step3": "pH + ਨਮੀ ਲਈ ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ"
+        },
+        "orderButton": "ਕਿਟ ਆਰਡਰ ਕਰੋ",
+        "hideForm": "ਫਾਰਮ ਲੁਕਾਓ",
+        "help": "ਜਦੋਂ ਨੰਬਰ ਨਹੀਂ ਹੋਣ ਤਾਂ ਵਧੀਆ।",
+        "uploadLabel": "ਕਿਟ ਸਟਰਿਪ ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ (ਚੋਇਕਲ)",
+        "readPhoto": "ਫੋਟੋ ਤੋਂ ਪੜ੍ਹੋ",
+        "readHelp": "ਅਸੀਂ ਸਿਰਫ pH ਅਤੇ ਨਮੀ ਪੜ੍ਹਦੇ ਹਾਂ।",
+        "deliveryTitle": "ਡਿਲੀਵਰੀ ਜਾਣਕਾਰੀ",
+        "deliveryDesc": "ਕਿਟ ਲਈ ਪਤਾ ਚਾਹੀਦਾ ਹੈ।",
+        "confirmOrder": "ਕਿਟ ਆਰਡਰ ਪੱਕਾ ਕਰੋ",
+        "altHelp": "ਚਾਹੋ ਤਾਂ ਮੁੱਲ ਖੁਦ ਵੀ ਲਿਖ ਸਕਦੇ ਹੋ।"
+      }
+    },
+    "step3": {
+      "stepLabel": "ਕਦਮ 3 / 4",
+      "title": "ਸੋਇਲ ਹੈਲਥ ਕਾਰਡ",
+      "subtitle": "ਕਾਰਡ ਹੋਵੇ ਤਾਂ ਅਪਲੋਡ ਕਰੋ।",
+      "titleShort": "ਹੈਲਥ ਕਾਰਡ",
+      "hint": "ਕਾਰਡ ਅਪਲੋਡ ਕਰੋ ਜਾਂ ਛੱਡੋ।",
+      "uploadLabel": "ਸੋਇਲ ਹੈਲਥ ਕਾਰਡ ਅਪਲੋਡ ਕਰੋ (ਚੋਇਕਲ)",
+      "readPhoto": "ਫੋਟੋ ਤੋਂ ਪੜ੍ਹੋ",
+      "saveButton": "ਕਾਰਡ ਸੇਵ ਕਰੋ"
+    },
+    "step4": {
+      "stepLabel": "ਕਦਮ 4 / 4",
+      "title": "ਅੰਤਿਮ ਰਿਪੋਰਟ",
+      "subtitle": "ਖੇਤ ਦੀ ਜਾਣਕਾਰੀ ਅਤੇ ਮਿੱਟੀ ਦੇ ਮੁੱਲ ਜੋੜਾਂਗੇ।",
+      "titleShort": "ਅੰਤਿਮ ਰਿਪੋਰਟ",
+      "hint": "ਰਿਪੋਰਟ ਵੇਖੋ ਅਤੇ ਬਣਾਓ।",
+      "rankingTitle": "ਮਿੱਟੀ ਰੈਂਕਿੰਗ",
+      "scoreLabel": "ਸਕੋਰ: {score}/100",
+      "insightsTitle": "ਮੁੱਖ ਸੁਝਾਅ",
+      "generateButton": "ਰਿਪੋਰਟ ਬਣਾਓ",
+      "generateHelp": "ਇਹ ਫਸਲ ਸਲਾਹ ਲਈ ਵਰਤੀ ਜਾਵੇਗੀ।",
+      "rank": {
+        "excellent": "ਸ਼ਾਨਦਾਰ",
+        "good": "ਵਧੀਆ",
+        "moderate": "ਮੱਧਮ",
+        "needsImprovement": "ਸੁਧਾਰ ਦੀ ਲੋੜ"
+      },
+      "insights": {
+        "phLow": "ਮਿੱਟੀ ਤੇਜ਼ਾਬੀ ਹੈ। ਚੂਨਾ ਅਤੇ ਜੈਵਿਕ ਕੰਪੋਸਟ ਪਾਓ।",
+        "phHigh": "ਮਿੱਟੀ ਖਾਰੀ ਹੈ। ਜਿਪਸਮ ਅਤੇ ਜੈਵਿਕ ਖਾਦ ਪਾਓ।",
+        "nLow": "ਨਾਈਟ੍ਰੋਜਨ ਘੱਟ ਹੈ। ਯੂਰੀਆ/ਕੰਪੋਸਟ ਹਿੱਸਿਆਂ ਵਿੱਚ ਦਿਓ।",
+        "pLow": "ਫਾਸਫੋਰਸ ਘੱਟ ਹੈ। ਬਿਜਾਈ ਸਮੇਂ SSP/DAP ਦਿਓ।",
+        "kLow": "ਪੋਟਾਸ਼ ਘੱਟ ਹੈ। MOP ਜਾਂ ਪੋਟਾਸ਼ ਮਿਸ਼ਰਣ ਦਿਓ।",
+        "ocLow": "ਜੈਵਿਕ ਕਾਰਬਨ ਘੱਟ ਹੈ। ਗੋਬਰ ਖਾਦ/ਹਰੀ ਖਾਦ ਪਾਓ।",
+        "ecHigh": "EC ਜ਼ਿਆਦਾ ਹੈ। ਲਵਣਤਾ ਅਤੇ ਸਿੰਚਾਈ ਗੁਣਵੱਤਾ ਚੈੱਕ ਕਰੋ।",
+        "missing": "ਹੋਰ ਖਾਸ ਸਲਾਹ ਲਈ ਬਾਕੀ ਮੁੱਲ ਭਰੋ।"
+      },
+      "sources": {
+        "govtCard": "ਸਰਕਾਰੀ ਕਾਰਡ",
+        "kitResult": "ਕਿਟ ਨਤੀਜਾ",
+        "manual": "ਮੈਨੁਅਲ"
+      },
+      "emptyValue": "--"
+    },
+    "soilTypes": {
+      "alluvial": "ਗਾਦੀ",
+      "black": "ਕਾਲੀ ਮਿੱਟੀ",
+      "red": "ਲਾਲ ਮਿੱਟੀ",
+      "laterite": "ਲੇਟਰਾਈਟ",
+      "sandy": "ਰੇਤਲੀ",
+      "clay": "ਚਿਕਣੀ",
+      "loamy": "ਦੋਮਟ"
+    },
+    "fields": {
+      "landName": { "label": "ਖੇਤ ਦਾ ਨਾਮ", "placeholder": "ਜਿਵੇਂ, ਉੱਤਰ ਵਾਲਾ ਖੇਤ" },
+      "area": { "label": "ਖੇਤਰਫਲ (ਏਕੜ)", "placeholder": "ਜਿਵੇਂ, 2.5" },
+      "soilType": { "label": "ਮਿੱਟੀ ਦੀ ਕਿਸਮ", "placeholder": "ਮਿੱਟੀ ਚੁਣੋ" },
+      "state": { "label": "ਰਾਜ", "placeholder": "ਜਿਵੇਂ, ਮਹਾਰਾਸ਼ਟਰ" },
+      "district": { "label": "ਜ਼ਿਲ੍ਹਾ", "placeholder": "ਜਿਵੇਂ, ਪੁਨੇ" },
+      "village": { "label": "ਪਿੰਡ", "placeholder": "ਜਿਵੇਂ, ਹਿਨਜਵਾਡੀ" },
+      "tehsil": { "label": "ਤਹਸੀਲ / ਤਾਲੁਕਾ" },
+      "surveyNumber": { "label": "ਸਰਵੇ ਨੰਬਰ" },
+      "khasraNumber": { "label": "ਖਸਰਾ ਨੰਬਰ" },
+      "khataNumber": { "label": "ਖਾਤਾ ਨੰਬਰ" },
+      "khewatNumber": { "label": "ਖੇਵਟ ਨੰਬਰ" },
+      "pattaNumber": { "label": "ਪੱਟਾ ਨੰਬਰ" },
+      "farmerName": { "label": "ਕਿਸਾਨ ਦਾ ਨਾਮ" },
+      "phone": { "label": "ਮੋਬਾਈਲ ਨੰਬਰ" },
+      "addressLine": { "label": "ਪਤਾ" },
+      "pincode": { "label": "ਪਿਨਕੋਡ" }
+    },
+    "messages": {
+      "loadError": "ਡਾਟਾ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕਿਆ।",
+      "kitOrderConfirmed": "ਕਿਟ ਆਰਡਰ ਹੋ ਗਿਆ।",
+      "kitOrderFailed": "ਆਰਡਰ ਨਹੀਂ ਹੋ ਸਕਿਆ।",
+      "ocrDone": "ਫੋਟੋ ਪੜ੍ਹੀ ਗਈ। ਕਿਰਪਾ ਕਰਕੇ ਮੁੱਲ ਚੈੱਕ ਕਰੋ।",
+      "ocrFailed": "ਫੋਟੋ ਪੜ੍ਹਣ ਵਿੱਚ ਸਮੱਸਿਆ ਆਈ।",
+      "kitSaved": "ਕਿਟ ਦੇ ਮੁੱਲ ਸੇਵ ਹੋ ਗਏ।",
+      "govtSaved": "ਕਾਰਡ ਸੇਵ ਹੋ ਗਿਆ।",
+      "saveReportFailed": "ਰਿਪੋਰਟ ਸੇਵ ਨਹੀਂ ਹੋ ਸਕੀ।",
+      "landSaved": "ਖੇਤ ਦੀ ਜਾਣਕਾਰੀ ਸੇਵ ਹੋ ਗਈ।",
+      "landSaveFailed": "ਖੇਤ ਦੀ ਜਾਣਕਾਰੀ ਸੇਵ ਨਹੀਂ ਹੋਈ।",
+      "finalSaved": "ਅੰਤਿਮ ਰਿਪੋਰਟ ਸੇਵ ਹੋ ਗਈ।",
+      "finalSaveFailed": "ਰਿਪੋਰਟ ਸੇਵ ਨਹੀਂ ਹੋ ਸਕੀ।",
+      "dismissError": "ਗਲਤੀ ਬੰਦ ਕਰੋ",
+      "dismissMessage": "ਸੁਨੇਹਾ ਬੰਦ ਕਰੋ"
     }
   }
 }

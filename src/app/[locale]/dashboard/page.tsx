@@ -3,11 +3,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, Variants, animate, useInView } from 'framer-motion';
 import {
-  CloudSun, Droplets, Wind, TrendingUp, TrendingDown,
+  TrendingUp, TrendingDown,
   ShieldCheck, ArrowRight, MapPin, Activity,
-  Loader2, Sun, Cloud, CloudRain, CloudLightning, IndianRupee,
+  Loader2, IndianRupee,
   CheckCircle2, Sprout, Brain, Microscope, BarChart3, Leaf,
-  Thermometer, Eye, AlertTriangle, Zap
+  Thermometer, AlertTriangle, Zap
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
@@ -15,13 +15,6 @@ import { useTranslations, useLocale } from 'next-intl';
 /* ════════════════════════════════════════════════════════
    TYPES
 ═══════════════════════════════════════════════════════ */
-interface WeatherData {
-  temp: string;
-  condition: string;
-  humidity: string;
-  wind: string;
-  code: number;
-}
 interface MandiAlert {
   commodity: string;
   market: string;
@@ -40,18 +33,6 @@ const getCurrentSeason = () => {
   return { name: 'Zaid', emoji: '☀️', color: 'bg-amber-900/60 text-amber-300 border-amber-500/30' };
 };
 
-const getFarmAdvisory = (weather: WeatherData | null) => {
-  if (!weather) return null;
-  const hum = parseInt(weather.humidity);
-  const wind = parseInt(weather.wind);
-  const { code } = weather;
-  if (code >= 95) return { icon: AlertTriangle, msg: 'Storm alert — secure equipment', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' };
-  if (hum > 80)   return { icon: Droplets,     msg: 'High humidity — watch for fungal disease', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' };
-  if (code >= 51) return { icon: CloudRain,    msg: 'Rain expected — delay spraying', color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' };
-  if (wind > 30)  return { icon: Wind,         msg: 'High winds — avoid pesticide spray', color: 'text-cyan-400', bg: 'bg-cyan-500/10 border-cyan-500/20' };
-  if (hum < 40)   return { icon: Sun,          msg: 'Low humidity — irrigate fields', color: 'text-orange-400', bg: 'bg-orange-500/10 border-orange-500/20' };
-  return { icon: CheckCircle2, msg: 'Optimal farm conditions today', color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' };
-};
 
 /* ════════════════════════════════════════════════════════
    QUICK ACCESS TILES
@@ -103,23 +84,6 @@ const QUICK_TILES = [
   },
 ];
 
-/* ════════════════════════════════════════════════════════
-   ANIMATED SUN SVG
-═══════════════════════════════════════════════════════ */
-function AnimatedSunIcon() {
-  return (
-    <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }} className="w-10 h-10">
-      <Sun className="w-10 h-10 text-amber-300 drop-shadow-[0_0_12px_rgba(251,191,36,0.8)]" />
-    </motion.div>
-  );
-}
-function AnimatedRainIcon() {
-  return (
-    <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 1.2, repeat: Infinity }} className="w-10 h-10">
-      <CloudRain className="w-10 h-10 text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.6)]" />
-    </motion.div>
-  );
-}
 
 /* ════════════════════════════════════════════════════════
    RADAR PULSE (for AI panel)
@@ -149,13 +113,11 @@ export default function DashboardOverview() {
 
   const [userName, setUserName] = useState('');
   const [locationName, setLocationName] = useState('Meerut, Uttar Pradesh');
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [mandiAlerts, setMandiAlerts] = useState<MandiAlert[]>([]);
   const [isLoadingMandi, setIsLoadingMandi] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const season = getCurrentSeason();
-  const advisory = getFarmAdvisory(weatherData);
 
   /* ── Clock tick ── */
   useEffect(() => {
@@ -170,15 +132,6 @@ export default function DashboardOverview() {
     return 'Good Evening';
   };
 
-  const getWeatherDetails = (code: number) => {
-    if (code === 0)                  return { text: t('weather.conditions.clear'),     icon: <AnimatedSunIcon /> };
-    if (code >= 1 && code <= 3)      return { text: t('weather.conditions.cloudy'),    icon: <CloudSun className="w-10 h-10 text-blue-200" /> };
-    if (code === 45 || code === 48)  return { text: t('weather.conditions.foggy'),     icon: <Cloud className="w-10 h-10 text-blue-200" /> };
-    if (code >= 51 && code <= 65)    return { text: t('weather.conditions.rain'),      icon: <AnimatedRainIcon /> };
-    if (code >= 80 && code <= 82)    return { text: t('weather.conditions.heavyRain'), icon: <AnimatedRainIcon /> };
-    if (code >= 95)                  return { text: t('weather.conditions.thunder'),   icon: <CloudLightning className="w-10 h-10 text-yellow-300" /> };
-    return { text: t('weather.conditions.cloudy'), icon: <CloudSun className="w-10 h-10 text-blue-200" /> };
-  };
 
   const container: Variants = {
     hidden: { opacity: 0 },
@@ -196,20 +149,10 @@ export default function DashboardOverview() {
     }).catch(() => {});
   }, []);
 
-  /* ── Fetch weather ── */
+  /* ── Resolve location (no weather fetch) ── */
   useEffect(() => {
-    const fetchWeather = async (lat: number, lon: number) => {
+    const fetchLocation = async (lat: number, lon: number) => {
       try {
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m`);
-        const data = await res.json();
-        const details = getWeatherDetails(data.current.weather_code);
-        setWeatherData({
-          temp: `${Math.round(data.current.temperature_2m)}°C`,
-          condition: details.text,
-          humidity: `${data.current.relative_humidity_2m}%`,
-          wind: `${Math.round(data.current.wind_speed_10m)} km/h`,
-          code: data.current.weather_code,
-        });
         const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
         const geoData = await geoRes.json();
         if (geoData.city || geoData.locality) {
@@ -219,8 +162,8 @@ export default function DashboardOverview() {
     };
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        pos => fetchWeather(pos.coords.latitude, pos.coords.longitude),
-        () => fetchWeather(28.9845, 77.7064)
+        pos => fetchLocation(pos.coords.latitude, pos.coords.longitude),
+        () => fetchLocation(28.9845, 77.7064)
       );
     }
   }, [locale]);
@@ -231,8 +174,6 @@ export default function DashboardOverview() {
       if (d.prices) setMandiAlerts(d.prices.slice(0, 3));
     }).catch(() => {}).finally(() => setIsLoadingMandi(false));
   }, []);
-
-  const weatherDetails = weatherData ? getWeatherDetails(weatherData.code) : null;
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-5 md:space-y-7 overflow-x-hidden max-w-7xl mx-auto">
@@ -326,49 +267,46 @@ export default function DashboardOverview() {
       </motion.div>
 
       {/* ══════════════════════════════════════════════════════
-          WEATHER + CROP STATUS
+          SOIL INTELLIGENCE + CROP STATUS
       ═════════════════════════════════════════════════════ */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
 
-        {/* ── Weather Card ── */}
-        <motion.div variants={item} className="relative overflow-hidden bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-3xl p-6 text-white shadow-[0_18px_50px_-22px_rgba(37,99,235,0.85)] border border-blue-300/20">
+        {/* ── Soil Intelligence Card ── */}
+        <motion.div variants={item} className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-800 rounded-3xl p-6 text-white shadow-[0_18px_50px_-22px_rgba(2,44,34,0.85)] border border-emerald-700/40">
 
-          {/* Atmospheric field bg */}
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-15"
-            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1504370805625-d32c54b16100?q=80&w=800&auto=format&fit=crop')" }}
+            className="absolute inset-0 bg-cover bg-center opacity-10"
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=800&auto=format&fit=crop')" }}
           />
-          <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
+          <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-300/10 rounded-full blur-2xl" />
 
           <div className="relative z-10 flex flex-col h-full">
             <div className="flex items-start justify-between mb-3">
-              <h3 className="font-bold text-blue-100 text-sm uppercase tracking-wider">{t('weather.title')}</h3>
-              {weatherDetails?.icon ?? <CloudSun className="w-10 h-10 text-blue-200 opacity-60" />}
+              <h3 className="font-bold text-emerald-100 text-sm uppercase tracking-wider">Mitti Pehchaan</h3>
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center">
+                <Thermometer className="w-5 h-5 text-emerald-200" />
+              </div>
             </div>
 
-            {weatherData ? (
-              <>
-                <div className="text-[3.4rem] leading-none font-black tracking-tighter mb-1">{weatherData.temp}</div>
-                <div className="text-blue-100 font-semibold mb-4 text-sm">{weatherData.condition}</div>
-              </>
-            ) : (
-              <div className="py-6 flex items-center text-blue-100">
-                <Loader2 className="w-5 h-5 animate-spin mr-2" /> {t('weather.loading')}
-              </div>
-            )}
-
-            {/* Advisory chip */}
-            {advisory && (
-              <div className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold border mb-3 ${advisory.bg}`}>
-                <advisory.icon className={`w-3.5 h-3.5 ${advisory.color} shrink-0`} />
-                <span className={advisory.color}>{advisory.msg}</span>
-              </div>
-            )}
-
-            <div className="flex gap-4 text-sm font-semibold bg-white/10 p-3 rounded-xl backdrop-blur-sm border border-white/15 mt-auto">
-              <div className="flex items-center gap-1.5"><Droplets className="w-4 h-4 text-blue-200" />{weatherData?.humidity ?? '--%'}</div>
-              <div className="flex items-center gap-1.5"><Wind className="w-4 h-4 text-blue-200" />{weatherData?.wind ?? '-- km/h'}</div>
+            <div className="text-2xl font-black leading-tight mb-2">
+              Know your soil, grow smarter.
             </div>
+            <p className="text-emerald-100/70 text-sm font-semibold mb-4">
+              Government report or home kit. Field‑specific, Hindi‑friendly.
+            </p>
+
+            <div className="flex flex-wrap gap-2 text-[11px] font-bold mb-4">
+              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">pH</span>
+              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">NPK</span>
+              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">Soil Type</span>
+            </div>
+
+            <Link
+              href={`/${locale}/dashboard/soil-intelligence`}
+              className="mt-auto inline-flex items-center justify-center gap-2 bg-emerald-300 text-emerald-950 px-4 py-2.5 rounded-2xl font-black hover:bg-amber-300 transition-all shadow-lg active:scale-95"
+            >
+              🌱 Check My Soil <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </motion.div>
 
@@ -529,30 +467,18 @@ export default function DashboardOverview() {
               <ShieldCheck className="w-5 h-5 text-emerald-400" />
               <h3 className="text-lg font-black">{t('aiAssistant.title')}</h3>
             </div>
-            <p className="text-emerald-100/60 text-sm mb-6">{t('aiAssistant.monitoring')}</p>
+            <p className="text-emerald-100/60 text-sm mb-6">Personalized advice based on your soil, crop, and location.</p>
 
             <div className="space-y-3">
-              {/* Dynamic advisory based on weather */}
-              {advisory ? (
-                <div className={`flex items-start gap-3 rounded-2xl p-4 border ${advisory.bg}`}>
-                  <advisory.icon className={`w-5 h-5 ${advisory.color} mt-0.5 shrink-0`} />
-                  <div>
-                    <h4 className={`text-sm font-black ${advisory.color}`}>
-                      {weatherData && parseInt(weatherData.humidity) > 75 ? t('aiAssistant.fungalWarningTitle') : t('aiAssistant.optimalTitle')}
-                    </h4>
-                    <p className="text-xs text-emerald-100/60 mt-1">
-                      {weatherData && parseInt(weatherData.humidity) > 75
-                        ? t('aiAssistant.fungalWarningDesc', { humidity: weatherData.humidity })
-                        : t('aiAssistant.optimalDesc')}
-                    </p>
-                  </div>
+              <div className="bg-white/8 border border-white/10 rounded-2xl p-4 flex items-start gap-3">
+                <AlertTriangle className="w-4 h-4 text-amber-300 mt-0.5" />
+                <div>
+                  <h4 className="text-sm font-black text-amber-200">Add soil profile for best accuracy</h4>
+                  <p className="text-xs text-emerald-100/60 mt-1">
+                    Once we have pH and NPK, we can recommend crops, fertilizer, and irrigation.
+                  </p>
                 </div>
-              ) : (
-                <div className="bg-white/8 border border-white/10 rounded-2xl p-4 flex items-center gap-3">
-                  <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" />
-                  <span className="text-sm text-emerald-100/70">Analysing farm conditions…</span>
-                </div>
-              )}
+              </div>
 
               {/* AI tip card */}
               <div className="bg-white/5 border border-white/8 rounded-2xl p-4">
@@ -561,16 +487,16 @@ export default function DashboardOverview() {
                   <span className="text-xs font-black text-violet-300 uppercase tracking-wider">AI Insight</span>
                 </div>
                 <p className="text-xs text-emerald-100/70 leading-relaxed">
-                  Based on current weather and mandi trends, consider harvesting within the next 7 days for optimal pricing.
+                  Healthy soil today means higher yield tomorrow. Start with your soil health card or a quick kit test.
                 </p>
               </div>
             </div>
           </div>
 
-          <Link href={`/${locale}/dashboard/mandi-prices/mandi-advisor`}>
+          <Link href={`/${locale}/dashboard/soil-intelligence`}>
             <button className="relative z-10 mt-6 w-full bg-emerald-400 hover:bg-amber-400 text-emerald-950 font-black py-3.5 rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2 group">
               <Brain className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              {t('aiAssistant.button')}
+              Start Soil Check
             </button>
           </Link>
         </motion.div>

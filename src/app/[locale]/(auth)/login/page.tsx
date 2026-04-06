@@ -185,10 +185,10 @@ export default function LoginPage() {
     <div className="min-h-screen bg-white flex font-sans selection:bg-emerald-200 selection:text-emerald-900 overflow-hidden">
       
       {/* LEFT SIDE: Form Section */}
-      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:flex-none lg:w-[45%] xl:w-[40%] 2xl:w-[35%] relative z-10 bg-white">
+      <div className="flex-1 flex flex-col justify-center px-5 py-10 sm:px-12 lg:flex-none lg:w-[45%] xl:w-[40%] 2xl:w-[35%] relative z-10 bg-white min-h-[100dvh] lg:min-h-screen pt-safe">
         
         {/* Subtle background decoration */}
-        <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-emerald-50/50 to-transparent pointer-events-none" />
+        <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-emerald-50/50 to-transparent pointer-events-none" />
 
         <div className="mx-auto w-full max-w-md relative z-10">
           
@@ -197,15 +197,13 @@ export default function LoginPage() {
             initial={{ opacity: 0, y: -20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }}
-            className="mb-8 lg:mb-12"
+            className="mb-6 lg:mb-10"
           >
             <Link href={`/${locale}`} className="inline-flex items-center space-x-2.5 group">
-              <div className="p-2.5 rounded-xl shadow-lg shadow-emerald-600/20 group-hover:bg-emerald-700 transition-colors">
-                {/* <Sprout className="w-6 h-6 text-white" />
-                 */}
-                  <img src="/favicon.ico" className='h-16 w-16 bg-cover' alt="" />
+              <div className="p-1.5 md:p-2 rounded-xl shadow-md shadow-emerald-900/5 group-hover:bg-emerald-50 border border-emerald-100 transition-colors">
+                  <img src="/favicon.ico" className='h-9 w-9 md:h-11 md:w-11 object-contain rounded-lg' alt="KrishiMitra Logo" />
               </div>
-              <span className="text-2xl font-black tracking-tight text-gray-900">
+              <span className="text-2xl md:text-[1.7rem] font-black tracking-tight text-gray-900">
                 Krishi<span className="text-emerald-600">Mitra</span>
               </span>
             </Link>
@@ -218,10 +216,10 @@ export default function LoginPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mb-8"
           >
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
+            <h2 className="text-[1.7rem] sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight mb-2 leading-tight">
               {t('title')}
             </h2>
-            <p className="text-base text-gray-500 font-medium">
+            <p className="text-sm sm:text-base text-gray-500 font-medium leading-relaxed max-w-sm">
               {t('switchText')}{' '}
               <Link href={`/${locale}/register`} className="text-emerald-600 font-bold hover:text-emerald-700 transition-colors underline-offset-2 hover:underline">
                 {t('switchLink')}
@@ -237,7 +235,7 @@ export default function LoginPage() {
           {/* Back to Home Button */}
           <div className="mt-8 flex justify-center">
             <Link href={`/${locale}`} className="text-sm font-bold text-gray-500 hover:text-emerald-600 transition-colors flex items-center group">
-              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> Back to Landing Page
+              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> Back
             </Link>
           </div>
 

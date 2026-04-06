@@ -8,7 +8,10 @@
     "title2": "কা ডিজিটাল মিত্র",
     "subtitle": "স্মার্ট ফার্মিং টুল, লাইভ মান্ডির দাম, এবং ভারতীয় কৃষকদের আরও বৃদ্ধি পেতে এবং আরও উপার্জন করতে সাহায্য করার জন্য তৈরি আবহাওয়ার আপডেট।",
     "btnAdvisor": "স্মার্ট অ্যাডভাইজার শুরু করুন",
-    "btnProfile": "খামার প্রোফাইল সেট আপ করুন"
+        "help": "আমরা শুধু pH ও আর্দ্রতা চাই।",
+        "errors": {
+          "required": "সংরক্ষণ করার আগে pH এবং আর্দ্রতা মান লিখুন।"
+        }
   },
   "Features": {
     "heading": "একটি ভাল ফসলের জন্য সরঞ্জাম.",
@@ -27,6 +30,9 @@
         "desc": "একটি অসুস্থ উদ্ভিদ একটি ছবি তুলুন. তাত্ক্ষণিকভাবে রোগটি এবং কীভাবে এটি চিকিত্সা করা যায় তা খুঁজে বের করুন।"
       },
       "microClimate": {
+      "errors": {
+        "required": "Please fill land name, state, and district."
+      },
         "title": "7 দিনের স্থানীয় আবহাওয়া",
         "desc": "আপনার সঠিক খামার অবস্থানের জন্য সঠিক 7-দিনের আবহাওয়ার পূর্বাভাস পান।"
       },
@@ -35,6 +41,18 @@
         "desc": "সারা ভারত জুড়ে আপনার ফসলের জন্য প্রতিদিন, লাইভ APMC মান্ডির দাম দেখুন।"
       },
       "community": {
+          "errors": {
+            "formInvalid": "Please fill all required fields.",
+            "name": "Enter farmer name.",
+            "phone": "Enter phone number.",
+            "phoneInvalid": "Enter a 10-digit phone number.",
+            "line1": "Enter address line.",
+            "village": "Enter village.",
+            "district": "Enter district.",
+            "state": "Enter state.",
+            "pincode": "Enter pincode.",
+            "pincodeInvalid": "Enter a 6-digit pincode."
+          },
         "title": "কৃষক সম্প্রদায়",
         "desc": "অন্যান্য কৃষকদের সাথে সংযোগ করুন। প্রশ্ন জিজ্ঞাসা করুন, পরামর্শ ভাগ করুন এবং একে অপরকে সাহায্য করুন।"
       },
@@ -71,6 +89,29 @@
     "brandDesc": "স্মার্ট পরামর্শ, লাইভ বাজার মূল্য এবং সহজ চাষের সরঞ্জামগুলির মাধ্যমে ভারতীয় কৃষকদের আরও ভালভাবে বেড়ে উঠতে সাহায্য করা।",
     "helpline": "24/7 কিষাণ হেল্পলাইন",
     "platformHeading": "প্ল্যাটফর্ম",
+        "orderSummaryTitle": "Order summary",
+        "orderItemTitle": "Soil test strip kit",
+        "orderItemDesc": "Everything you need to read pH + moisture.",
+        "orderPaymentLabel": "Payment",
+        "orderPaymentValue": "Cash on delivery",
+        "orderPrice": "Pay when the kit arrives.",
+        "shippingTitle": "Shipping address",
+        "shippingHelp": "Add your address to unlock shipping.",
+        "orderStatusLabel": "Order confirmed",
+        "viewTracking": "Track order",
+        "trackingTitle": "Order tracking",
+        "trackingHelp": "We update your delivery status automatically.",
+        "orderIdLabel": "Tracking ID",
+        "orderDateLabel": "Order date",
+        "etaLabel": "ETA",
+        "etaDefault": "3-5 days",
+        "tracking": {
+          "ordered": "Ordered",
+          "packed": "Packed",
+          "shipped": "Shipped",
+          "outForDelivery": "Out for delivery",
+          "delivered": "Delivered"
+        },
     "platformLinks": {
       "intel": "স্মার্ট ক্রপ গাইড",
       "mandi": "লাইভ মান্ডি রেট",
@@ -104,6 +145,7 @@
       "disease": "রোগ স্ক্যানার",
       "services": "ভাড়া",
       "weather": "আবহাওয়া",
+      "soil": "মাটি তথ্য",
       "community": "সম্প্রদায়",
       "schemes": "স্কিম",
       "products": "পণ্য",
@@ -488,6 +530,259 @@
       "Insurance": "ফসল বীমা",
       "Credit & Loans": "কৃষি ঋণ",
       "Other": "অন্যান্য"
+    }
+  },
+  "Soil": {
+    "journey": {
+      "startLabel": "শুরু করুন",
+      "badge": "মাটি বুদ্ধিমত্তা",
+      "heroTitle": "জমির প্রোফাইল তৈরি করুন। সঙ্গে সঙ্গে মাটির তথ্য পান।",
+      "heroSubtitle": "ধাপ 1: জমির প্রোফাইল। ধাপ 2: মাটির মান (ম্যানুয়াল বা কিট)। ধাপ 3: হেলথ কার্ড যোগ করুন। ধাপ 4: রিপোর্ট নিন।",
+      "profileUpdated": "প্রোফাইল আপডেট {date}",
+      "noProfile": "এখনও মাটির প্রোফাইল নেই",
+      "startTitle": "জমির তথ্য দিয়ে শুরু করুন",
+      "startDesc": "ধাপে ধাপে সাহায্য করব। পরে সম্পাদনা করা যাবে।",
+      "startButton": "শুরু করুন",
+      "stepLabel": "ধাপ {current} / {total}",
+      "cards": {
+        "landFirst": {
+          "title": "জমি-প্রথম প্রোফাইল",
+          "desc": "যে জমি যাচাই করতে চান সেটাই বেছে নিন।"
+        },
+        "easyEntry": {
+          "title": "সহজ মান ইনপুট",
+          "desc": "সংখ্যা লিখুন বা ছবির মাধ্যমে পড়ুন।"
+        },
+        "merged": {
+          "title": "মিলিত নির্ভুলতা",
+          "desc": "হেলথ কার্ড ল্যাবের বিশ্বাসযোগ্যতা যোগ করে।"
+        }
+      }
+    },
+    "status": {
+      "autosaving": "সেভ হচ্ছে",
+      "saved": "সেভ হয়েছে",
+      "saveFailed": "সেভ হয়নি",
+      "draft": "ড্রাফ্ট"
+    },
+    "statusCard": {
+      "title": "Land profile status",
+      "subtitle": "Track where you are and what to do next.",
+      "stages": {
+        "step1": "Land details",
+        "step2": "Soil test",
+        "step3": "Health card",
+        "step4": "Final report"
+      },
+      "statuses": {
+        "landPending": "Land details pending",
+        "kitPending": "Soil test pending",
+        "kitOrdered": "Kit on the way",
+        "valuesCaptured": "Soil values captured",
+        "cardPending": "Health card optional",
+        "ready": "Ready for report",
+        "completed": "Report ready",
+        "retest": "Retest recommended"
+      },
+      "nextAction": "Next action",
+      "primaryCta": "Take me there",
+      "editLand": "Edit land profile",
+      "retestBadge": "Retest needed",
+      "retestCta": "Start retest",
+      "retestStarted": "Retest started. Please add new pH + moisture values.",
+      "retestFailed": "Could not start retest. Try again.",
+      "actions": {
+        "land-pending": "Complete land details to continue.",
+        "kit-pending": "Start your soil test or order a kit.",
+        "kit-ordered": "Your kit is on the way. Track delivery or prepare the test.",
+        "values-captured": "You can upload a health card or move to report.",
+        "card-pending": "Upload the soil health card if available.",
+        "ready": "Generate your final soil report.",
+        "completed": "View or update your report anytime.",
+        "retest": "Your soil test is old. Take a fresh pH + moisture reading."
+      },
+      "activity": {
+        "title": "Recent activity",
+        "empty": "No activity yet.",
+        "kitOrdered": "Kit ordered",
+        "kitUpdated": "Soil values updated",
+        "cardUpdated": "Health card updated",
+        "profileSaved": "Land profile saved"
+      }
+    },
+    "buttons": {
+      "saveDraft": "ড্রাফ্ট সেভ করুন",
+      "saveContinue": "সেভ করে এগিয়ে যান",
+      "saveValues": "মান সেভ করুন",
+      "skip": "এখন বাদ দিন"
+    },
+    "step1": {
+      "stepLabel": "ধাপ 1 / 4",
+      "title": "জমির তথ্য",
+      "subtitle": "যে জমি যাচাই করতে চান তার তথ্য দিন।",
+      "titleShort": "জমির তথ্য",
+      "hint": "জমির নাম ও অবস্থান দিন।",
+      "sections": {
+        "basics": "প্রাথমিক তথ্য",
+        "location": "অবস্থান",
+        "records": "জমির কাগজ (ঐচ্ছিক)"
+      },
+      "required": "প্রয়োজন: জমির নাম, রাজ্য, জেলা।"
+    },
+    "errors": {
+      "required": "Please fill land name, state, and district."
+    },
+    "step2": {
+      "stepLabel": "ধাপ 2 / 4",
+      "title": "pH এবং আর্দ্রতা যোগ করুন",
+      "subtitle": "সংখ্যা থাকলে লিখুন, না হলে কিট নিন।",
+      "titleShort": "মাটির মান",
+      "hint": "pH ও আর্দ্রতা লিখুন বা কিট নিন।",
+      "tabs": {
+        "manual": "সংখ্যা আছে",
+        "kit": "কিট দরকার"
+      },
+      "fields": {
+        "ph": "pH",
+        "phPlaceholder": "যেমন, 6.8",
+        "moisture": "আর্দ্রতা (%)",
+        "moisturePlaceholder": "যেমন, 18"
+      },
+      "manual": {
+        "label": "ম্যানুয়াল এন্ট্রি",
+        "title": "pH ও আর্দ্রতা লিখুন",
+        "subtitle": "এক মিনিটেরও কম সময় লাগে।",
+        "badge": "দ্রুত",
+        "help": "আমরা শুধু pH ও আর্দ্রতা চাই।",
+        "errors": {
+          "required": "সংরক্ষণ করার আগে pH এবং আর্দ্রতা মান লিখুন।"
+        }
+      },
+      "kit": {
+        "label": "কিট পথ",
+        "title": "স্ট্রিপ কিট অর্ডার করুন",
+        "subtitle": "৩-৫ দিনে ডেলিভারি।",
+        "options": {
+          "orderTitle": "কিট অর্ডার করুন",
+          "orderDesc": "৩-৫ দিনে ডেলিভারি।",
+          "uploadTitle": "কিট আছে",
+          "uploadDesc": "এখন ছবি আপলোড করুন।"
+        },
+        "errors": {
+          "formInvalid": "Please fill all required fields.",
+          "name": "Enter farmer name.",
+          "phone": "Enter phone number.",
+          "phoneInvalid": "Enter a 10-digit phone number.",
+          "line1": "Enter address line.",
+          "village": "Enter village.",
+          "district": "Enter district.",
+          "state": "Enter state.",
+          "pincode": "Enter pincode.",
+          "pincodeInvalid": "Enter a 6-digit pincode."
+        },
+        "steps": {
+          "step1": "কিট অর্ডার করুন",
+          "step2": "মাটি স্ট্রিপ টেস্ট করুন",
+          "step3": "pH + আর্দ্রতার জন্য ছবি আপলোড করুন"
+        },
+        "orderButton": "কিট অর্ডার করুন",
+        "hideForm": "ফর্ম লুকান",
+        "help": "যখন সংখ্যা নেই তখন ভালো।",
+        "uploadLabel": "কিট স্ট্রিপ ছবি আপলোড করুন (ঐচ্ছিক)",
+        "readPhoto": "ছবি থেকে পড়ুন",
+        "readHelp": "শুধু pH ও আর্দ্রতা পড়ি।",
+        "deliveryTitle": "ডেলিভারি তথ্য",
+        "deliveryDesc": "কিটের জন্য ঠিকানা দরকার।",
+        "confirmOrder": "কিট অর্ডার নিশ্চিত করুন",
+        "altHelp": "চাইলেই মান নিজে লিখতে পারেন।"
+      }
+    },
+    "step3": {
+      "stepLabel": "ধাপ 3 / 4",
+      "title": "সয়েল হেলথ কার্ড",
+      "subtitle": "কার্ড থাকলে আপলোড করুন।",
+      "titleShort": "হেলথ কার্ড",
+      "hint": "কার্ড আপলোড করুন বা বাদ দিন।",
+      "uploadLabel": "সয়েল হেলথ কার্ড আপলোড করুন (ঐচ্ছিক)",
+      "readPhoto": "ছবি থেকে পড়ুন",
+      "saveButton": "কার্ড সেভ করুন"
+    },
+    "step4": {
+      "stepLabel": "ধাপ 4 / 4",
+      "title": "চূড়ান্ত রিপোর্ট",
+      "subtitle": "জমির তথ্য ও মাটির মান একত্র করব।",
+      "titleShort": "চূড়ান্ত রিপোর্ট",
+      "hint": "রিপোর্ট দেখুন ও তৈরি করুন।",
+      "rankingTitle": "মাটির র‍্যাঙ্কিং",
+      "scoreLabel": "স্কোর: {score}/100",
+      "insightsTitle": "শীর্ষ পরামর্শ",
+      "generateButton": "রিপোর্ট তৈরি করুন",
+      "generateHelp": "এটি ফসল পরামর্শে ব্যবহার হবে।",
+      "rank": {
+        "excellent": "চমৎকার",
+        "good": "ভাল",
+        "moderate": "মাঝারি",
+        "needsImprovement": "উন্নতি প্রয়োজন"
+      },
+      "insights": {
+        "phLow": "মাটি অম্লীয়। চুন ও জৈব কম্পোস্ট দিন।",
+        "phHigh": "মাটি ক্ষারীয়। জিপসাম ও জৈব সার দিন।",
+        "nLow": "নাইট্রোজেন কম। ইউরিয়া/কম্পোস্ট ভাগ করে দিন।",
+        "pLow": "ফসফরাস কম। বপনের সময় SSP/DAP দিন।",
+        "kLow": "পটাশ কম। MOP বা পটাশ মিশ্রণ দিন।",
+        "ocLow": "জৈব কার্বন কম। গোবর সার, সবুজ সার দিন।",
+        "ecHigh": "EC বেশি। লবণাক্ততা ও সেচের গুণমান পরীক্ষা করুন।",
+        "missing": "আরও নির্দিষ্ট পরামর্শের জন্য বাকি মান যোগ করুন।"
+      },
+      "sources": {
+        "govtCard": "সরকারি কার্ড",
+        "kitResult": "কিট ফলাফল",
+        "manual": "ম্যানুয়াল"
+      },
+      "emptyValue": "--"
+    },
+    "soilTypes": {
+      "alluvial": "পলল",
+      "black": "কালো",
+      "red": "লাল",
+      "laterite": "ল্যাটেরাইট",
+      "sandy": "বালুকাময়",
+      "clay": "কাদামাটি",
+      "loamy": "দোঁআশ"
+    },
+    "fields": {
+      "landName": { "label": "জমির নাম", "placeholder": "যেমন, উত্তর পাশের জমি" },
+      "area": { "label": "আয়তন (একর)", "placeholder": "যেমন, 2.5" },
+      "soilType": { "label": "মাটির ধরন", "placeholder": "মাটি নির্বাচন করুন" },
+      "state": { "label": "রাজ্য", "placeholder": "যেমন, মহারাষ্ট্র" },
+      "district": { "label": "জেলা", "placeholder": "যেমন, পুনে" },
+      "village": { "label": "গ্রাম", "placeholder": "যেমন, হিনজেওয়াড়ি" },
+      "tehsil": { "label": "তহসিল / তালুক" },
+      "surveyNumber": { "label": "সার্ভে নম্বর" },
+      "khasraNumber": { "label": "খাসরা নম্বর" },
+      "khataNumber": { "label": "খাতা নম্বর" },
+      "khewatNumber": { "label": "খেওয়াট নম্বর" },
+      "pattaNumber": { "label": "পাট্টা নম্বর" },
+      "farmerName": { "label": "কৃষকের নাম" },
+      "phone": { "label": "মোবাইল নম্বর" },
+      "addressLine": { "label": "ঠিকানা" },
+      "pincode": { "label": "পিনকোড" }
+    },
+    "messages": {
+      "loadError": "ডাটা লোড করা যায়নি।",
+      "kitOrderConfirmed": "কিট অর্ডার হয়েছে।",
+      "kitOrderFailed": "অর্ডার করা যায়নি।",
+      "ocrDone": "ফটো পড়া হয়েছে। মান যাচাই করুন।",
+      "ocrFailed": "ফটো পড়তে সমস্যা হয়েছে।",
+      "kitSaved": "কিটের মান সেভ হয়েছে।",
+      "govtSaved": "কার্ড সেভ হয়েছে।",
+      "saveReportFailed": "রিপোর্ট সেভ করা যায়নি।",
+      "landSaved": "জমির তথ্য সেভ হয়েছে।",
+      "landSaveFailed": "জমির তথ্য সেভ হয়নি।",
+      "finalSaved": "চূড়ান্ত রিপোর্ট সেভ হয়েছে।",
+      "finalSaveFailed": "রিপোর্ট সেভ করা যায়নি।",
+      "dismissError": "ত্রুটি বন্ধ করুন",
+      "dismissMessage": "বার্তা বন্ধ করুন"
     }
   }
 }

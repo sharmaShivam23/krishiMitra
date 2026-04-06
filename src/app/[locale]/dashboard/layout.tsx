@@ -54,7 +54,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       : [])
   ];
 
-  const mobilePrimaryIds = new Set(['overview', 'mandi', 'weather', 'disease']);
+  const mobilePrimaryIds = new Set(['overview', 'mandi', 'disease', 'soil']);
   const mobilePrimaryLinks = navLinks.filter((link) => mobilePrimaryIds.has(link.id));
   const mobileSecondaryLinks = navLinks.filter((link) => !mobilePrimaryIds.has(link.id));
   const isSchemesPage = pathname?.toLowerCase().includes('/dashboard/schemes');
@@ -236,14 +236,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </button>
 
-          <Link 
-            href={`/${locale}`}
-            className="flex items-center w-full space-x-3 px-4 py-3.5 rounded-xl font-medium text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 transition-all duration-300"
-          >
-            <ArrowLeft className="w-5 h-5 flex-shrink-0" />
-            <span className="text-sm">Landing Page</span>
-          </Link>
-
           <button 
             onClick={requestLogout}
             disabled={isLoggingOut}
@@ -256,8 +248,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* 📱 MOBILE BOTTOM NAV */}
-      <nav className="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 z-50 pb-safe shadow-[0_-10px_30px_rgba(7,40,26,0.08)]">
-        <div className="mx-2 mb-2 mt-1 grid grid-cols-5 gap-1 rounded-2xl border border-agri-100/70 bg-white/95 px-1.5 py-1.5">
+      <nav className={`md:hidden fixed bottom-0 w-full backdrop-blur-xl border-t z-50 pb-safe shadow-[0_-10px_30px_rgba(7,40,26,0.08)] ${
+        isSchemesPage
+          ? 'bg-emerald-950/85 border-emerald-900/70'
+          : 'bg-white/90 border-gray-200'
+      }`}>
+        <div className={`mx-2 mb-2 mt-1 grid grid-cols-5 gap-1 rounded-2xl border px-1.5 py-1.5 ${
+          isSchemesPage
+            ? 'border-emerald-900/60 bg-emerald-950/70'
+            : 'border-agri-100/70 bg-white/95'
+        }`}>
           {mobilePrimaryLinks.map((link) => {
             const localizedHref = `/${locale}${link.href}`;
             const isActive = pathname === localizedHref;
@@ -269,11 +269,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className="flex flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 min-h-16 transition-colors"
               >
                 <div className={`p-2 rounded-xl transition-all duration-300 ${
-                  isActive ? 'bg-agri-100 text-agri-600' : 'text-gray-400 hover:text-agri-600'
+                  isSchemesPage
+                    ? (isActive ? 'bg-emerald-400/20 text-emerald-200' : 'text-emerald-200/60')
+                    : (isActive ? 'bg-agri-100 text-agri-600' : 'text-gray-400 hover:text-agri-600')
                 }`}>
                   {link.icon}
                 </div>
-                <span className={`text-[11px] leading-none font-bold whitespace-nowrap tracking-tight ${isActive ? 'text-agri-600' : 'text-gray-400'}`}>
+                <span className={`text-[11px] leading-none font-bold whitespace-nowrap tracking-tight ${
+                  isSchemesPage
+                    ? (isActive ? 'text-emerald-100' : 'text-emerald-200/60')
+                    : (isActive ? 'text-agri-600' : 'text-gray-400')
+                }`}>
                   {link.name.split(' ')[0]}
                 </span>
               </Link>
@@ -283,12 +289,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <button
             type="button"
             onClick={() => setShowMobileMore((prev) => !prev)}
-            className={`flex flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 min-h-16 transition-colors ${showMobileMore ? 'text-agri-600' : 'text-gray-400'}`}
+            className={`flex flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 min-h-16 transition-colors ${
+              isSchemesPage
+                ? (showMobileMore ? 'text-emerald-100' : 'text-emerald-200/60')
+                : (showMobileMore ? 'text-agri-600' : 'text-gray-400')
+            }`}
           >
-            <div className={`p-2 rounded-xl transition-all duration-300 ${showMobileMore ? 'bg-agri-100' : ''}`}>
+            <div className={`p-2 rounded-xl transition-all duration-300 ${
+              isSchemesPage
+                ? (showMobileMore ? 'bg-emerald-400/20' : '')
+                : (showMobileMore ? 'bg-agri-100' : '')
+            }`}>
               {showMobileMore ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </div>
-            <span className={`text-[11px] leading-none font-bold whitespace-nowrap tracking-tight ${showMobileMore ? 'text-agri-600' : 'text-gray-400'}`}>
+            <span className={`text-[11px] leading-none font-bold whitespace-nowrap tracking-tight ${
+              isSchemesPage
+                ? (showMobileMore ? 'text-emerald-100' : 'text-emerald-200/60')
+                : (showMobileMore ? 'text-agri-600' : 'text-gray-400')
+            }`}>
               More
             </span>
           </button>
@@ -301,7 +319,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 12 }}
               transition={{ duration: 0.18 }}
-              className="mx-2 mb-2 rounded-2xl border border-gray-200 bg-white p-3 shadow-xl"
+              className={`mx-2 mb-2 rounded-2xl border p-3 shadow-xl ${
+                isSchemesPage
+                  ? 'border-emerald-900/60 bg-emerald-950/90 text-emerald-50'
+                  : 'border-gray-200 bg-white'
+              }`}
             >
               <div className="grid grid-cols-3 gap-2">
                 {mobileSecondaryLinks.map((link) => {
@@ -314,9 +336,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       href={localizedHref}
                       onClick={() => setShowMobileMore(false)}
                       className={`rounded-xl border px-2 py-3 flex flex-col items-center text-center gap-1 ${
-                        isActive
-                          ? 'border-agri-200 bg-agri-50 text-agri-700'
-                          : 'border-gray-200 text-gray-600 hover:border-agri-200 hover:text-agri-700'
+                        isSchemesPage
+                          ? (isActive
+                            ? 'border-emerald-700/60 bg-emerald-900/50 text-emerald-100'
+                            : 'border-emerald-900/60 text-emerald-100/80 hover:border-emerald-700/60')
+                          : (isActive
+                            ? 'border-agri-200 bg-agri-50 text-agri-700'
+                            : 'border-gray-200 text-gray-600 hover:border-agri-200 hover:text-agri-700')
                       }`}
                     >
                       <div>{link.icon}</div>
@@ -404,9 +430,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </nav>
 
       {/* 📦 MAIN CONTENT AREA */}
-      <main className={`flex-1 md:ml-72 w-full ${isSchemesPage ? 'pb-24 md:pb-0' : 'pb-36 md:pb-0'} overflow-hidden relative`}>
+      <main className={`flex-1 md:ml-72 w-full ${isSchemesPage ? 'pb-24 md:pb-0 bg-[#021c17] min-h-[100dvh]' : 'pb-36 md:pb-0'} overflow-x-hidden relative`}>
         {!isSchemesPage && (
-          <header className="md:hidden flex items-center justify-between px-3.5 py-3 bg-white/95 backdrop-blur-md border-b border-agri-100 sticky top-0 z-30 shadow-[0_6px_24px_rgba(2,44,34,0.08)]">
+          <header className="md:hidden fixed top-0 left-0 right-0 flex items-center justify-between px-3.5 py-3 bg-white/95 backdrop-blur-md border-b border-agri-100 z-50 shadow-[0_6px_24px_rgba(2,44,34,0.08)]">
             <div className="flex items-center space-x-2 min-w-0">
               <div className="h-10 w-10 rounded-full border border-agri-200 bg-white p-0.5 shadow-sm shrink-0">
                 <img src="/favicon.ico" className='h-full w-full rounded-full object-contain' alt="Logo" />
@@ -417,6 +443,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <LanguageSwitcher compact />
             </div>
           </header>
+        )}
+
+        {!isSchemesPage && (
+          <div className="md:hidden h-16" aria-hidden="true" />
         )}
 
         <AnimatePresence mode="wait">

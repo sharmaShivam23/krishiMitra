@@ -313,14 +313,14 @@ export default function CommunityForum() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-7xl mx-auto relative">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
-        <div>
-          <h1 className="text-[2.05rem] leading-[1.05] md:text-4xl font-black text-agri-900 tracking-tight flex items-center">
-            <Users className="w-8 h-8 mr-3 text-agri-600" />
+        <div className="rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-emerald-50 p-4 md:p-0 md:border-0 md:bg-transparent">
+          <h1 className="text-[1.85rem] leading-[1.05] md:text-4xl font-black text-agri-900 tracking-tight flex items-center">
+            <Users className="w-7 h-7 md:w-8 md:h-8 mr-2.5 md:mr-3 text-agri-600" />
             {t('title')}
           </h1>
-          <p className="text-gray-600 mt-2 font-semibold">{t('subtitle')}</p>
+          <p className="text-gray-600 mt-2 font-semibold text-sm md:text-base">{t('subtitle')}</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full md:w-auto">
           <button
             onClick={() =>
               requestKrishiSarthi({
@@ -331,26 +331,31 @@ export default function CommunityForum() {
                 }
               })
             }
-            className="flex items-center justify-center space-x-2 bg-agri-100 border border-agri-300 text-agri-900 px-6 py-3 rounded-xl font-black hover:bg-agri-200 transition shadow-sm w-full md:w-auto"
+            className="flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-900 px-5 py-3 rounded-2xl font-black hover:bg-emerald-100 transition shadow-sm"
           >
-            <Users className="w-5 h-5" /><span>Ask KrishiSarthi</span>
+            <Users className="w-5 h-5" />
+            <span>Ask KrishiSarthi</span>
           </button>
-          <button onClick={() => setIsModalOpen(true)} className="flex items-center justify-center space-x-2 bg-agri-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-agri-700 transition shadow-lg shadow-agri-600/30 w-full md:w-auto">
-            <PenSquare className="w-5 h-5" /><span>{t('newDiscussion')}</span>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center justify-center gap-2 bg-agri-600 text-white px-5 py-3 rounded-2xl font-black hover:bg-agri-700 transition shadow-lg shadow-agri-600/30"
+          >
+            <PenSquare className="w-5 h-5" />
+            <span>{t('newDiscussion')}</span>
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6">
-        <div className="rounded-2xl border border-agri-200 bg-agri-50 px-3 py-3">
+      <div className="flex md:grid md:grid-cols-3 gap-2 md:gap-3 mb-6 overflow-x-auto md:overflow-visible pb-1 -mx-1 px-1">
+        <div className="min-w-[140px] md:min-w-0 rounded-2xl border border-agri-200 bg-agri-50 px-3 py-3">
           <p className="text-[11px] font-black uppercase tracking-wide text-agri-700">Discussions</p>
           <p className="mt-1 text-xl md:text-2xl font-black text-agri-900">{communityStats.totalPosts}</p>
         </div>
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-3">
+        <div className="min-w-[140px] md:min-w-0 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-3">
           <p className="text-[11px] font-black uppercase tracking-wide text-emerald-700">Resolved</p>
           <p className="mt-1 text-xl md:text-2xl font-black text-emerald-800">{communityStats.resolved}</p>
         </div>
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-3">
+        <div className="min-w-[140px] md:min-w-0 rounded-2xl border border-amber-200 bg-amber-50 px-3 py-3">
           <p className="text-[11px] font-black uppercase tracking-wide text-amber-700">Contributors</p>
           <p className="mt-1 text-xl md:text-2xl font-black text-amber-800">{communityStats.activeAuthors}</p>
         </div>
@@ -360,7 +365,7 @@ export default function CommunityForum() {
         <div className="lg:col-span-2 text-black space-y-6">
           
           {/* SEARCH, STATE AND DISTRICT FILTER BAR */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 rounded-2xl border border-agri-100 bg-white/95 p-3 shadow-sm md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none">
             <div className="flex items-center justify-between">
               <p className="text-sm font-black text-agri-900 inline-flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-agri-600" />
@@ -383,7 +388,7 @@ export default function CommunityForum() {
               )}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <div className="relative flex-2">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -393,7 +398,7 @@ export default function CommunityForum() {
                 placeholder={t('searchPlaceholder')} 
                 value={searchQuery} 
                 onChange={(e) => setSearchQuery(e.target.value)} 
-                className="block w-full pl-11 pr-4 py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-medium transition-all outline-none" 
+                className="block w-full pl-11 pr-4 py-3.5 md:py-4 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-medium transition-all outline-none" 
               />
             </div>
             
@@ -404,7 +409,7 @@ export default function CommunityForum() {
               <select
                 value={selectedStateFilter}
                 onChange={(e) => { setSelectedStateFilter(e.target.value); setSelectedDistrictFilter('All'); }}
-                className="block w-full pl-11 pr-10 py-4 bg-white text-agri-900 border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-bold transition-all outline-none appearance-none cursor-pointer text-ellipsis"
+                className="block w-full pl-11 pr-10 py-3.5 md:py-4 bg-white text-agri-900 border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-bold transition-all outline-none appearance-none cursor-pointer text-ellipsis"
               >
                 <option value="All">All States</option>
                 {Object.keys(STATES_DISTRICTS).map(s => <option key={s} value={s}>{s}</option>)}
@@ -419,7 +424,7 @@ export default function CommunityForum() {
                 value={selectedDistrictFilter}
                 onChange={(e) => setSelectedDistrictFilter(e.target.value)}
                 disabled={selectedStateFilter === 'All'}
-                className="block w-full pl-11 pr-10 py-4 bg-white text-agri-900 border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-bold transition-all outline-none appearance-none cursor-pointer disabled:opacity-50 text-ellipsis"
+                className="block w-full pl-11 pr-10 py-3.5 md:py-4 bg-white text-agri-900 border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-bold transition-all outline-none appearance-none cursor-pointer disabled:opacity-50 text-ellipsis"
               >
                 <option value="All">All Districts</option>
                 {selectedStateFilter !== 'All' && (STATES_DISTRICTS as any)[selectedStateFilter]?.map((d: string) => <option key={d} value={d}>{d}</option>)}
@@ -430,7 +435,7 @@ export default function CommunityForum() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as 'recent' | 'upvotes' | 'resolved')}
-                className="block w-full px-4 py-4 bg-white text-agri-900 border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-bold transition-all outline-none appearance-none cursor-pointer"
+                className="block w-full px-4 py-3.5 md:py-4 bg-white text-agri-900 border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-agri-400 font-bold transition-all outline-none appearance-none cursor-pointer"
               >
                 <option value="recent">Recent</option>
                 <option value="upvotes">Top Voted</option>
@@ -460,9 +465,9 @@ export default function CommunityForum() {
                   </motion.div>
                 ) : (
                   filteredPosts.map((post) => (
-                    <motion.div key={post._id} layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-3xl p-5 md:p-6 shadow-xl shadow-gray-200/40 border border-gray-100 flex flex-col transition-all hover:border-agri-300">
-                      <div className="flex gap-4">
-                        <div className="flex flex-col items-center space-y-2">
+                    <motion.div key={post._id} layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-3xl p-4 md:p-6 shadow-xl shadow-gray-200/40 border border-gray-100 flex flex-col transition-all hover:border-agri-300">
+                      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <div className="flex flex-row sm:flex-col items-center space-x-3 sm:space-x-0 sm:space-y-2">
                           <button onClick={() => handleUpvote(post._id)} className={`p-2 rounded-xl transition-colors border ${post.userHasUpvoted ? 'bg-agri-100 text-agri-600 border-agri-200 shadow-sm' : 'bg-gray-50 text-gray-400 hover:bg-agri-50 hover:text-agri-500 border-gray-100'}`}>
                             <ChevronUp className="w-6 h-6" />
                           </button>
@@ -515,7 +520,7 @@ export default function CommunityForum() {
                       <AnimatePresence>
                         {expandedPostId === post._id && (
                           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden mt-4 pt-4 border-t text-black border-gray-100">
-                            <div className="pl-12 pr-4 space-y-4 mb-4">
+                            <div className="pl-4 pr-2 sm:pl-12 sm:pr-4 space-y-4 mb-4">
                               {loadingReplies[post._id] ? (
                                 <Loader2 className="w-5 h-5 animate-spin text-gray-400 mx-auto my-4" />
                               ) : replies[post._id]?.length > 0 ? (
@@ -536,7 +541,7 @@ export default function CommunityForum() {
                               )}
                             </div>
 
-                            <div className="pl-12 pr-4 flex gap-2">
+                            <div className="pl-4 pr-2 sm:pl-12 sm:pr-4 flex gap-2">
                               <input 
                                 type="text" 
                                 value={replyDrafts[post._id] || ''}

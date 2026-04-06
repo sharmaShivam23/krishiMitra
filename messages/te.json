@@ -71,6 +71,29 @@
     "brandDesc": "స్మార్ట్ సలహాలు, లైవ్ మార్కెట్ ధరలు మరియు సులభమైన వ్యవసాయ సాధనాలతో భారతీయ రైతులు మరింత మెరుగ్గా ఎదగడానికి సహాయం చేస్తుంది.",
     "helpline": "24/7 కిసాన్ హెల్ప్‌లైన్",
     "platformHeading": "ప్లాట్‌ఫారమ్",
+        "orderSummaryTitle": "Order summary",
+        "orderItemTitle": "Soil test strip kit",
+        "orderItemDesc": "Everything you need to read pH + moisture.",
+        "orderPaymentLabel": "Payment",
+        "orderPaymentValue": "Cash on delivery",
+        "orderPrice": "Pay when the kit arrives.",
+        "shippingTitle": "Shipping address",
+        "shippingHelp": "Add your address to unlock shipping.",
+        "orderStatusLabel": "Order confirmed",
+        "viewTracking": "Track order",
+        "trackingTitle": "Order tracking",
+        "trackingHelp": "We update your delivery status automatically.",
+        "orderIdLabel": "Tracking ID",
+        "orderDateLabel": "Order date",
+        "etaLabel": "ETA",
+        "etaDefault": "3-5 days",
+        "tracking": {
+          "ordered": "Ordered",
+          "packed": "Packed",
+          "shipped": "Shipped",
+          "outForDelivery": "Out for delivery",
+          "delivered": "Delivered"
+        },
     "platformLinks": {
       "intel": "స్మార్ట్ పంట గైడ్",
       "mandi": "లైవ్ మండి ధరలు",
@@ -103,7 +126,7 @@
       "mandi": "మండి ధరలు",
       "disease": "వ్యాధి స్కానర్",
       "services": "అద్దెలు",
-      "weather": "వాతావరణం",
+      "soil": "మట్టి సమాచారం",
       "community": "సంఘం",
       "schemes": "పథకాలు",
       "products": "ఉత్పత్తులు",
@@ -488,6 +511,259 @@
       "Insurance": "పంట బీమా",
       "Credit & Loans": "వ్యవసాయ రుణాలు",
       "Other": "ఇతర"
+    }
+  },
+  "Soil": {
+    "journey": {
+      "startLabel": "ప్రారంభించండి",
+      "badge": "మట్టి జ్ఞానం",
+      "heroTitle": "మీ పొల ప్రొఫైల్‌ను సృష్టించండి. వెంటనే మట్టి సమాచారం పొందండి.",
+      "heroSubtitle": "దశ 1: పొల ప్రొఫైల్. దశ 2: మట్టి విలువలు (మాన్యువల్ లేదా కిట్). దశ 3: హెల్త్ కార్డ్ జోడించండి. దశ 4: నివేదిక పొందండి.",
+      "profileUpdated": "ప్రొఫైల్ అప్డేట్ {date}",
+      "noProfile": "ఇంకా మట్టి ప్రొఫైల్ లేదు",
+      "startTitle": "పొల వివరాలతో ప్రారంభించండి",
+      "startDesc": "మేము దశలవారీగా మార్గనిర్దేశం చేస్తాము. తర్వాత ఎప్పుడైనా ఎడిట్ చేయొచ్చు.",
+      "startButton": "ప్రారంభించండి",
+      "stepLabel": "దశ {current} / {total}",
+      "cards": {
+        "landFirst": {
+          "title": "పొలం-ముందు ప్రొఫైల్",
+          "desc": "చెక్ చేయాల్సిన పొలాన్ని ఎంచుకోండి."
+        },
+        "easyEntry": {
+          "title": "సులభ విలువల ఎంట్రీ",
+          "desc": "సంఖ్యలు టైప్ చేయండి లేదా ఫోటో నుంచి చదవండి."
+        },
+        "merged": {
+          "title": "కలిపిన ఖచ్చితత్వం",
+          "desc": "హెల్త్ కార్డ్ ల్యాబ్ నమ్మకాన్ని పెంచుతుంది."
+        }
+      }
+    },
+    "status": {
+      "autosaving": "సేవ్ అవుతోంది",
+      "saved": "సేవ్ అయ్యింది",
+      "saveFailed": "సేవ్ కాలేదు",
+      "draft": "డ్రాఫ్ట్"
+    },
+    "statusCard": {
+      "title": "Land profile status",
+      "subtitle": "Track where you are and what to do next.",
+      "stages": {
+        "step1": "Land details",
+        "step2": "Soil test",
+        "step3": "Health card",
+        "step4": "Final report"
+      },
+      "statuses": {
+        "landPending": "Land details pending",
+        "kitPending": "Soil test pending",
+        "kitOrdered": "Kit on the way",
+        "valuesCaptured": "Soil values captured",
+        "cardPending": "Health card optional",
+        "ready": "Ready for report",
+        "completed": "Report ready",
+        "retest": "Retest recommended"
+      },
+      "nextAction": "Next action",
+      "primaryCta": "Take me there",
+      "editLand": "Edit land profile",
+      "retestBadge": "Retest needed",
+      "retestCta": "Start retest",
+      "retestStarted": "Retest started. Please add new pH + moisture values.",
+      "retestFailed": "Could not start retest. Try again.",
+      "actions": {
+        "land-pending": "Complete land details to continue.",
+        "kit-pending": "Start your soil test or order a kit.",
+        "kit-ordered": "Your kit is on the way. Track delivery or prepare the test.",
+        "values-captured": "You can upload a health card or move to report.",
+        "card-pending": "Upload the soil health card if available.",
+        "ready": "Generate your final soil report.",
+        "completed": "View or update your report anytime.",
+        "retest": "Your soil test is old. Take a fresh pH + moisture reading."
+      },
+      "activity": {
+        "title": "Recent activity",
+        "empty": "No activity yet.",
+        "kitOrdered": "Kit ordered",
+        "kitUpdated": "Soil values updated",
+        "cardUpdated": "Health card updated",
+        "profileSaved": "Land profile saved"
+      }
+    },
+    "buttons": {
+      "saveDraft": "డ్రాఫ్ట్ సేవ్ చేయండి",
+      "saveContinue": "సేవ్ చేసి ముందుకు వెళ్లండి",
+      "saveValues": "విలువలు సేవ్ చేయండి",
+      "skip": "ఇప్పుడు వదిలేయండి"
+    },
+    "step1": {
+      "stepLabel": "దశ 1 / 4",
+      "title": "పొల వివరాలు",
+      "subtitle": "చెక్ చేయాలనుకున్న పొలం వివరాలు పూరించండి.",
+      "titleShort": "పొల వివరాలు",
+      "hint": "పొలం పేరు మరియు స్థానాన్ని నమోదు చేయండి.",
+      "sections": {
+        "basics": "ప్రాథమిక సమాచారం",
+        "location": "స్థానం",
+        "records": "భూమి రికార్డులు (ఐచ్ఛికం)"
+      },
+      "required": "అవసరం: పొలం పేరు, రాష్ట్రం, జిల్లా."
+    },
+    "errors": {
+      "required": "Please fill land name, state, and district."
+    },
+    "step2": {
+      "stepLabel": "దశ 2 / 4",
+      "title": "pH మరియు తేమ జోడించండి",
+      "subtitle": "సంఖ్యలు ఉంటే నమోదు చేయండి, లేకుంటే కిట్ ఆర్డర్ చేయండి.",
+      "titleShort": "మట్టి విలువలు",
+      "hint": "pH మరియు తేమ నమోదు చేయండి లేదా కిట్ వాడండి.",
+      "tabs": {
+        "manual": "సంఖ్యలు ఉన్నాయి",
+        "kit": "కిట్ కావాలి"
+      },
+      "fields": {
+        "ph": "pH",
+        "phPlaceholder": "ఉదా., 6.8",
+        "moisture": "తేమ (%)",
+        "moisturePlaceholder": "ఉదా., 18"
+      },
+      "manual": {
+        "label": "మాన్యువల్ ఎంట్రీ",
+        "title": "pH మరియు తేమ నమోదు చేయండి",
+        "subtitle": "ఒక నిమిషంలోపు పూర్తి అవుతుంది.",
+        "badge": "త్వరిత",
+        "help": "మాకు pH మరియు తేమ మాత్రమే అవసరం.",
+        "errors": {
+          "required": "Enter pH and moisture values before saving."
+        }
+      },
+      "kit": {
+        "label": "కిట్ మార్గం",
+        "title": "స్ట్రిప్ కిట్ ఆర్డర్ చేయండి",
+        "subtitle": "3-5 రోజుల్లో డెలివరీ.",
+        "options": {
+          "orderTitle": "కిట్ ఆర్డర్ చేయండి",
+          "orderDesc": "3-5 రోజుల్లో డెలివరీ.",
+          "uploadTitle": "కిట్ ఉంది",
+          "uploadDesc": "ఇప్పుడు ఫోటో అప్‌లోడ్ చేయండి."
+        },
+        "errors": {
+          "formInvalid": "Please fill all required fields.",
+          "name": "Enter farmer name.",
+          "phone": "Enter phone number.",
+          "phoneInvalid": "Enter a 10-digit phone number.",
+          "line1": "Enter address line.",
+          "village": "Enter village.",
+          "district": "Enter district.",
+          "state": "Enter state.",
+          "pincode": "Enter pincode.",
+          "pincodeInvalid": "Enter a 6-digit pincode."
+        },
+        "steps": {
+          "step1": "కిట్ ఆర్డర్ చేయండి",
+          "step2": "మట్టి స్ట్రిప్ టెస్ట్ చేయండి",
+          "step3": "pH + తేమ కోసం ఫోటో అప్‌లోడ్ చేయండి"
+        },
+        "orderButton": "కిట్ ఆర్డర్ చేయండి",
+        "hideForm": "ఫారం దాచండి",
+        "help": "సంఖ్యలు లేనప్పుడు ఉత్తమం.",
+        "uploadLabel": "కిట్ స్ట్రిప్ ఫోటో అప్‌లోడ్ చేయండి (ఐచ్ఛికం)",
+        "readPhoto": "ఫోటో నుండి చదవండి",
+        "readHelp": "మేము pH మరియు తేమ మాత్రమే చదువుతాము.",
+        "deliveryTitle": "డెలివరీ వివరాలు",
+        "deliveryDesc": "కిట్ కోసం మీ చిరునామా అవసరం.",
+        "confirmOrder": "కిట్ ఆర్డర్ నిర్ధారించండి",
+        "altHelp": "విలువలను మాన్యువల్‌గా కూడా ఇవ్వొచ్చు."
+      }
+    },
+    "step3": {
+      "stepLabel": "దశ 3 / 4",
+      "title": "సాయిల్ హెల్త్ కార్డ్",
+      "subtitle": "కార్డ్ ఉంటే అప్‌లోడ్ చేయండి.",
+      "titleShort": "హెల్త్ కార్డ్",
+      "hint": "కార్డ్ అప్‌లోడ్ చేయండి లేదా వదిలేయండి.",
+      "uploadLabel": "సాయిల్ హెల్త్ కార్డ్ అప్‌లోడ్ చేయండి (ఐచ్ఛికం)",
+      "readPhoto": "ఫోటో నుండి చదవండి",
+      "saveButton": "కార్డ్ సేవ్ చేయండి"
+    },
+    "step4": {
+      "stepLabel": "దశ 4 / 4",
+      "title": "తుది నివేదిక",
+      "subtitle": "పొల వివరాలు మరియు మట్టి విలువలను కలిపి ఇస్తాం.",
+      "titleShort": "తుది నివేదిక",
+      "hint": "నివేదికను చూడండి మరియు రూపొందించండి.",
+      "rankingTitle": "మట్టి ర్యాంకింగ్",
+      "scoreLabel": "స్కోర్: {score}/100",
+      "insightsTitle": "ముఖ్య సూచనలు",
+      "generateButton": "నివేదిక రూపొందించండి",
+      "generateHelp": "ఇది పంట సలహాకు ఉపయోగపడుతుంది.",
+      "rank": {
+        "excellent": "అత్యుత్తమం",
+        "good": "మంచిది",
+        "moderate": "మధ్యమం",
+        "needsImprovement": "మెరుగుదల అవసరం"
+      },
+      "insights": {
+        "phLow": "మట్టి ఆమ్లీయంగా ఉంది. సున్నం మరియు సేంద్రియ కంపోస్ట్ వేయండి.",
+        "phHigh": "మట్టి క్షారంగా ఉంది. జిప్సమ్ మరియు సేంద్రియ ఎరువు వేయండి.",
+        "nLow": "నైట్రోజన్ తక్కువ. యూరియా/కంపోస్ట్ విడతలుగా వేయండి.",
+        "pLow": "ఫాస్ఫరస్ తక్కువ. విత్తే సమయంలో SSP/DAP వేయండి.",
+        "kLow": "పొటాషియం తక్కువ. MOP లేదా పొటాష్ మిశ్రమం వాడండి.",
+        "ocLow": "సేంద్రియ కార్బన్ తక్కువ. ఎఫ్వైఎం, పచ్చి ఎరువు వేయండి.",
+        "ecHigh": "EC ఎక్కువ. లవణత మరియు నీటి నాణ్యతను తనిఖీ చేయండి.",
+        "missing": "మరింత స్పష్టమైన సలహా కోసం మిగతా విలువలు జోడించండి."
+      },
+      "sources": {
+        "govtCard": "ప్రభుత్వ కార్డు",
+        "kitResult": "కిట్ ఫలితం",
+        "manual": "మాన్యువల్"
+      },
+      "emptyValue": "--"
+    },
+    "soilTypes": {
+      "alluvial": "అల్లువియల్",
+      "black": "నల్ల మట్టి",
+      "red": "ఎర్ర మట్టి",
+      "laterite": "లేటరైట్",
+      "sandy": "ఇసుక",
+      "clay": "కలిమట్టి",
+      "loamy": "లోమీ"
+    },
+    "fields": {
+      "landName": { "label": "పొలం పేరు", "placeholder": "ఉదా., ఉత్తర గోధుమ పొలం" },
+      "area": { "label": "ప్రాంతం (ఎకరాలు)", "placeholder": "ఉదా., 2.5" },
+      "soilType": { "label": "మట్టి రకం", "placeholder": "మట్టి రకాన్ని ఎంచుకోండి" },
+      "state": { "label": "రాష్ట్రం", "placeholder": "ఉదా., మహారాష్ట్ర" },
+      "district": { "label": "జిల్లా", "placeholder": "ఉదా., పుణే" },
+      "village": { "label": "గ్రామం", "placeholder": "ఉదా., హింజవాడి" },
+      "tehsil": { "label": "తహసీల్ / తాలూకా" },
+      "surveyNumber": { "label": "సర్వే నంబర్" },
+      "khasraNumber": { "label": "ఖస్రా నంబర్" },
+      "khataNumber": { "label": "ఖాతా నంబర్" },
+      "khewatNumber": { "label": "ఖేవట్ నంబర్" },
+      "pattaNumber": { "label": "పట్టా నంబర్" },
+      "farmerName": { "label": "రైతు పేరు" },
+      "phone": { "label": "మొబైల్ నంబర్" },
+      "addressLine": { "label": "చిరునామా" },
+      "pincode": { "label": "పిన్కోడ్" }
+    },
+    "messages": {
+      "loadError": "డేటా లోడ్ కాలేదు.",
+      "kitOrderConfirmed": "కిట్ ఆర్డర్ ధృవీకరించబడింది.",
+      "kitOrderFailed": "ఆర్డర్ చేయలేకపోయాం.",
+      "ocrDone": "ఫోటో చదివాం. విలువలు చెక్ చేయండి.",
+      "ocrFailed": "OCR విఫలమైంది.",
+      "kitSaved": "కిట్ విలువలు సేవ్ అయ్యాయి.",
+      "govtSaved": "కార్డ్ సేవ్ అయ్యింది.",
+      "saveReportFailed": "నివేదిక సేవ్ కాలేదు.",
+      "landSaved": "పొల ప్రొఫైల్ సేవ్ అయ్యింది.",
+      "landSaveFailed": "పొల ప్రొఫైల్ సేవ్ కాలేదు.",
+      "finalSaved": "తుది నివేదిక సేవ్ అయ్యింది.",
+      "finalSaveFailed": "నివేదిక సేవ్ కాలేదు.",
+      "dismissError": "తప్పు మూసివేయండి",
+      "dismissMessage": "సందేశం మూసివేయండి"
     }
   }
 }

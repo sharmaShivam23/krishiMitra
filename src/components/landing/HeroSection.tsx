@@ -94,10 +94,10 @@ export default function Hero() {
         <motion.div initial="hidden" animate="visible" variants={containerVariants} className="max-w-5xl w-full">
 
           {/* Live badge */}
-          <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-emerald-500/15 border border-emerald-400/30 backdrop-blur-md mt-6 mb-8">
-            <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-ping" />
-            <Star className="w-3 h-3 text-amber-400" />
-            <span className="text-xs font-bold text-amber-100 tracking-widest uppercase">Nationwide Agriculture Grid Online</span>
+          <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-emerald-500/15 border border-emerald-400/30 backdrop-blur-md mt-6 mb-8 max-w-[90vw] overflow-hidden whitespace-nowrap">
+            <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-ping shrink-0" />
+            <Star className="w-3 h-3 text-amber-400 shrink-0" />
+            <span className="text-[10px] sm:text-xs font-bold text-amber-100 tracking-widest uppercase truncate">Empowering Farmers Nationwide</span>
           </motion.div>
 
           {/* Headline */}

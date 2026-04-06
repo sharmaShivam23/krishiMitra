@@ -28,14 +28,14 @@ export default function SplashScreen() {
   // 🛠️ FIX: Track if the component has mounted on the client
   const [isMounted, setIsMounted] = useState(false);
 
-  // Agricultural loading sequence messages
+  // Professional agricultural app loading sequence
   const loadingSteps = [
-    { threshold: 0, text: 'Initializing KrishiMitra Engine...' },
-    { threshold: 25, text: 'Connecting to APMC Mandi Grids...' },
-    { threshold: 50, text: 'Syncing Meteorological Data...' },
-    { threshold: 75, text: 'Calibrating AI Yield Predictors...' },
-    { threshold: 90, text: 'Securing Farmer Network...' },
-    { threshold: 100, text: 'System Online. Welcome.' }
+    { threshold: 0, text: 'Starting KrishiMitra...' },
+    { threshold: 25, text: 'Connecting to regional markets...' },
+    { threshold: 50, text: 'Syncing local weather data...' },
+    { threshold: 75, text: 'Preparing crop insights...' },
+    { threshold: 90, text: 'Securing connection...' },
+    { threshold: 100, text: 'Welcome to KrishiMitra.' }
   ];
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function SplashScreen() {
     setIsMounted(true);
 
     // Simulate loading progress
-    const duration = 4000; // 4 seconds total loading time
+    const duration = 3800; // 3.8 seconds total loading time
     const intervalTime = 50;
     const step = 100 / (duration / intervalTime);
 
@@ -53,11 +53,6 @@ export default function SplashScreen() {
         if (next >= 100) {
           clearInterval(timer);
           setIsFinished(true);
-          // Redirect after a brief pause when reaching 100%
-          setTimeout(() => {
-            const locale = getPreferredLocale();
-            window.location.href = `/${locale}/login`;
-          }, 800);
           return 100;
         }
         return next;
@@ -75,106 +70,55 @@ export default function SplashScreen() {
     }
   }, [progress, loadingText]);
 
-  // Floating particles configuration
-  const particles = Array.from({ length: 15 });
-
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-emerald-950 font-sans selection:bg-emerald-500/30">
+    <div className="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-emerald-950 font-sans selection:bg-emerald-500/30">
       
       {/* BACKGROUND ELEMENTS */}
       <div className="absolute inset-0 z-0">
         {/* Cinematic dark background image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 mix-blend-overlay"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.15] mix-blend-overlay"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2064&auto=format&fit=crop')" }}
         />
         
         {/* Light Leaks / Gradients */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-emerald-600/20 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-teal-600/20 rounded-full blur-[100px] pointer-events-none"></div>
-        
-        {/* 🛠️ FIX: Only render random particles IF isMounted is true */}
-        {isMounted && particles.map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ 
-              y: '100vh', 
-              x: `${Math.random() * 100}vw`,
-              opacity: Math.random() * 0.5 + 0.2,
-              scale: Math.random() * 0.5 + 0.5
-            }}
-            animate={{ 
-              y: '-10vh',
-              x: `${Math.random() * 100}vw`,
-              rotate: 360
-            }}
-            transition={{ 
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              ease: "linear",
-              delay: Math.random() * 5
-            }}
-            className="absolute z-0 w-2 h-2 bg-emerald-300 rounded-full blur-[1px]"
-          />
-        ))}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-teal-600/10 rounded-full blur-[100px] pointer-events-none"></div>
       </div>
 
       {/* MAIN CONTENT */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-md px-6">
         
-        {/* Animated Logo Container with 3D Perspective */}
+        {/* Premium Logo Container */}
         <motion.div
-          initial={{ scale: 0.8, opacity: 0, y: 20 }}
+          initial={{ scale: 0.9, opacity: 0, y: 10 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mb-6"
-          style={{ perspective: '1000px' }} // Added 3D perspective to parent
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative mb-8 flex justify-center"
         >
-          {/* Glowing ring behind logo */}
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-4 rounded-full border border-emerald-500/30 border-t-emerald-400 opacity-50"
-          />
-          <motion.div 
-            animate={{ rotate: -360 }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-8 rounded-full border border-dashed border-teal-500/20 opacity-30"
-          />
+          {/* Subtle Outer Glow */}
+          <div className="absolute inset-0 rounded-[2rem] bg-emerald-500/20 blur-xl animate-pulse"></div>
 
-          {/* 3D Glassmorphism Logo Element */}
-          <motion.div 
-            animate={{ 
-              rotateX: [0, 10, 0, -10, 0],
-              rotateY: [0, -15, 0, 15, 0],
-              y: [0, -5, 0]
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="relative w-28 h-28 border-b border-r border-black/20 rounded-[2rem] shadow-[0_20px_40px_rgba(4,47,46,0.8),inset_0_4px_10px_rgba(255,255,255,0.4),inset_0_-4px_10px_rgba(16,185,129,0.2)] flex items-center justify-center group"
-            style={{ transformStyle: 'preserve-3d' }} 
-          >
-            <div className="absolute inset-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] -z-10"></div>
-            
-            {/* The icon popping out in the Z-axis */}
-            <motion.div 
-              style={{ transform: 'translateZ(40px)' }} 
-              className="flex items-center justify-center"
-            >
-              <Logo/>
-            </motion.div>
-          </motion.div>
+          {/* Clean Glassmorphism Logo Element */}
+          <div className="relative w-28 h-28 bg-white/5 border border-white/10 backdrop-blur-md rounded-[2rem] shadow-xl flex items-center justify-center overflow-hidden">
+             {/* Dynamic inner highlight */}
+             <div className="absolute inset-0 bg-gradient-to-tr from-emerald-600/10 to-transparent"></div>
+             <motion.div 
+               animate={{ y: [0, -3, 0] }}
+               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+               className="relative z-10"
+             >
+               <img src="/favicon.ico" alt="KrishiMitra Start Logo" className="w-16 h-16 object-contain drop-shadow-md" />
+             </motion.div>
+          </div>
         </motion.div>
 
         {/* Brand Name Text */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-          className="text-center mb-12"
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          className="text-center mb-10"
         >
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white mb-2">
             Krishi<span className="text-emerald-400">Mitra</span>
