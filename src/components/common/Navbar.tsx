@@ -28,9 +28,9 @@ export default function Navbar() {
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-stone-50/90 backdrop-blur-xl border-b border-stone-200 shadow-sm py-4' : 'bg-transparent py-6'}`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <div className="flex items-center space-x-3 group cursor-pointer">
-          <img src="/favicon.ico" className='bg-cover w-16 h-16' alt="KrishiMitra Logo" />
-          <span className={`text-2xl font-black tracking-tight transition-colors ${scrolled ? 'text-stone-900' : 'text-white'}`}>
+        <div className="flex flex-shrink-0 items-center space-x-2 sm:space-x-3 group cursor-pointer mr-2">
+          <img src="/favicon.ico" className='object-contain w-8 h-8 sm:w-12 sm:h-12 flex-shrink-0' alt="KrishiMitra Logo" />
+          <span className={`text-xl sm:text-2xl font-black tracking-tight transition-colors whitespace-nowrap ${scrolled ? 'text-stone-900' : 'text-white'}`}>
             Krishi<span className="text-emerald-500">Mitra</span>
           </span>
         </div>
@@ -47,7 +47,12 @@ export default function Navbar() {
             {t('joinNetwork')} <ArrowRight className="w-4 h-4 ml-2" />
           </a>
           
-          <LanguageSwitcher />
+          <div className="block sm:hidden">
+            <LanguageSwitcher compact />
+          </div>
+          <div className="hidden sm:block">
+            <LanguageSwitcher />
+          </div>
         </div>
       </div>
     </motion.nav>

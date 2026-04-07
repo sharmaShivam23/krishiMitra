@@ -56,7 +56,8 @@
     "list1": "स्थानिक एसएमएस अलर्टसह थेट एपीएमसी मंडीच्या किमती",
     "list2": "स्थानिक ट्रॅक्टर, उपकरणे आणि शेतमजूर भाड्याने द्या",
     "list3": "स्मार्ट शेती सल्लागार आणि सत्यापित सरकारी योजना",
-    "stat1Label": "मंडी किंमत",
+        "required": "Please fill land name, state, and district."
+      },
     "stat1Value": "रिअल-टाइम",
     "stat2Label": "प्लॅटफॉर्म कव्हरेज",
     "stat2Value": "पॅन-भारत"
@@ -66,11 +67,34 @@
     "smsHeading2": "एसएमएस.",
     "smsDesc": "स्थानिक बाजार अद्यतने मिळविण्यासाठी सदस्यता घ्या. आपल्या कापणीसाठी योग्य किंमत कधीही चुकवू नका.",
     "smsPlaceholder": "10-अंकी मोबाइल नंबर प्रविष्ट करा",
-    "smsButton": "मला अलर्ट करा",
-    "smsDisclaimer": "मानक एसएमएस दर लागू होऊ शकतात. कधीही रद्द करा.",
-    "brandDesc": "स्मार्ट सल्ले, थेट बाजारभाव आणि साध्या शेती साधनांसह भारतीय शेतकऱ्यांना चांगले वाढण्यास मदत करणे.",
-    "helpline": "24/7 किसान हेल्पलाइन",
-    "platformHeading": "प्लॅटफॉर्म",
+            "formInvalid": "Please fill all required fields.",
+            "name": "Enter farmer name.",
+            "phone": "Enter phone number.",
+            "phoneInvalid": "Enter a 10-digit phone number.",
+            "line1": "Enter address line.",
+            "village": "Enter village.",
+            "district": "Enter district.",
+            "state": "Enter state.",
+            "pincode": "Enter pincode.",
+            "pincodeInvalid": "Enter a 6-digit pincode."
+        "orderPrice": "Pay when the kit arrives.",
+        "shippingTitle": "Shipping address",
+        "shippingHelp": "Add your address to unlock shipping.",
+        "orderStatusLabel": "Order confirmed",
+        "viewTracking": "Track order",
+        "trackingTitle": "Order tracking",
+        "trackingHelp": "We update your delivery status automatically.",
+        "orderIdLabel": "Tracking ID",
+        "orderDateLabel": "Order date",
+        "etaLabel": "ETA",
+        "etaDefault": "3-5 days",
+        "tracking": {
+          "ordered": "Ordered",
+          "packed": "Packed",
+          "shipped": "Shipped",
+          "outForDelivery": "Out for delivery",
+          "delivered": "Delivered"
+        },
     "platformLinks": {
       "intel": "स्मार्ट पीक मार्गदर्शक",
       "mandi": "थेट मंडीचे दर",
@@ -104,6 +128,7 @@
       "disease": "रोग स्कॅनर",
       "services": "भाड्याने",
       "weather": "हवामान",
+      "soil": "माती माहिती",
       "community": "समुदाय",
       "schemes": "योजना",
       "products": "उत्पादने",
@@ -488,6 +513,259 @@
       "Insurance": "पीक विमा",
       "Credit & Loans": "शेती कर्ज",
       "Other": "इतर"
+    }
+  },
+  "Soil": {
+    "journey": {
+      "startLabel": "सुरू करा",
+      "badge": "माती बुद्धिमत्ता",
+      "heroTitle": "शेताची प्रोफाइल तयार करा. त्वरित मातीची माहिती मिळवा.",
+      "heroSubtitle": "पायरी 1: शेत प्रोफाइल. पायरी 2: मातीचे मूल्य (मॅन्युअल किंवा किट). पायरी 3: हेल्थ कार्ड जोडा. पायरी 4: अहवाल मिळवा.",
+      "profileUpdated": "प्रोफाइल अपडेट {date}",
+      "noProfile": "अजून मातीची प्रोफाइल नाही",
+      "startTitle": "शेताची माहिती भरून सुरू करा",
+      "startDesc": "आम्ही टप्प्याटप्प्याने मदत करू. नंतर संपादन करता येईल.",
+      "startButton": "सुरू करा",
+      "stepLabel": "पायरी {current} / {total}",
+      "cards": {
+        "landFirst": {
+          "title": "शेत-प्रथम प्रोफाइल",
+          "desc": "ज्या शेताची तपासणी करायची आहे ते निवडा।"
+        },
+        "easyEntry": {
+          "title": "सोपे मूल्य भरणे",
+          "desc": "नंबर टाका किंवा फोटोमधून वाचा।"
+        },
+        "merged": {
+          "title": "एकत्रित अचूकता",
+          "desc": "हेल्थ कार्डमुळे लॅबचा विश्वास वाढतो।"
+        }
+      }
+    },
+    "status": {
+      "autosaving": "सेव होत आहे",
+      "saved": "सेव झाले",
+      "saveFailed": "सेव झाले नाही",
+      "draft": "ड्राफ्ट"
+    },
+    "statusCard": {
+      "title": "Land profile status",
+      "subtitle": "Track where you are and what to do next.",
+      "stages": {
+        "step1": "Land details",
+        "step2": "Soil test",
+        "step3": "Health card",
+        "step4": "Final report"
+      },
+      "statuses": {
+        "landPending": "Land details pending",
+        "kitPending": "Soil test pending",
+        "kitOrdered": "Kit on the way",
+        "valuesCaptured": "Soil values captured",
+        "cardPending": "Health card optional",
+        "ready": "Ready for report",
+        "completed": "Report ready",
+        "retest": "Retest recommended"
+      },
+      "nextAction": "Next action",
+      "primaryCta": "Take me there",
+      "editLand": "Edit land profile",
+      "retestBadge": "Retest needed",
+      "retestCta": "Start retest",
+      "retestStarted": "Retest started. Please add new pH + moisture values.",
+      "retestFailed": "Could not start retest. Try again.",
+      "actions": {
+        "land-pending": "Complete land details to continue.",
+        "kit-pending": "Start your soil test or order a kit.",
+        "kit-ordered": "Your kit is on the way. Track delivery or prepare the test.",
+        "values-captured": "You can upload a health card or move to report.",
+        "card-pending": "Upload the soil health card if available.",
+        "ready": "Generate your final soil report.",
+        "completed": "View or update your report anytime.",
+        "retest": "Your soil test is old. Take a fresh pH + moisture reading."
+      },
+      "activity": {
+        "title": "Recent activity",
+        "empty": "No activity yet.",
+        "kitOrdered": "Kit ordered",
+        "kitUpdated": "Soil values updated",
+        "cardUpdated": "Health card updated",
+        "profileSaved": "Land profile saved"
+      }
+    },
+    "buttons": {
+      "saveDraft": "ड्राफ्ट सेव करा",
+      "saveContinue": "सेव करा आणि पुढे जा",
+      "saveValues": "मूल्ये सेव करा",
+      "skip": "आत्ता वगळा"
+    },
+    "step1": {
+      "stepLabel": "पायरी 1 / 4",
+      "title": "शेताची माहिती",
+      "subtitle": "ज्या शेताची तपासणी करायची आहे ती माहिती भरा.",
+      "titleShort": "शेताची माहिती",
+      "hint": "शेताचे नाव आणि ठिकाण भरा.",
+      "sections": {
+        "basics": "मूलभूत माहिती",
+        "location": "ठिकाण",
+        "records": "जमीन कागदपत्रे (ऐच्छिक)"
+      },
+      "required": "आवश्यक: शेताचे नाव, राज्य, जिल्हा."
+    },
+    "errors": {
+      "required": "Please fill land name, state, and district."
+    },
+    "step2": {
+      "stepLabel": "पायरी 2 / 4",
+      "title": "pH आणि ओलावा जोडा",
+      "subtitle": "संख्या असतील तर लिहा, नसतील तर किट घ्या.",
+      "titleShort": "मातीचे मूल्य",
+      "hint": "pH आणि ओलावा लिहा किंवा किट वापरा.",
+      "tabs": {
+        "manual": "संख्या आहेत",
+        "kit": "किट हवे आहे"
+      },
+      "fields": {
+        "ph": "pH",
+        "phPlaceholder": "उदा., 6.8",
+        "moisture": "ओलावा (%)",
+        "moisturePlaceholder": "उदा., 18"
+      },
+      "manual": {
+        "label": "मॅन्युअल एंट्री",
+        "title": "pH आणि ओलावा लिहा",
+        "subtitle": "एक मिनिटापेक्षा कमी वेळ लागतो.",
+        "badge": "जलद",
+        "help": "आम्हाला फक्त pH आणि ओलावा हवा आहे.",
+        "errors": {
+          "required": "Enter pH and moisture values before saving."
+        }
+      },
+      "kit": {
+        "label": "किट मार्ग",
+        "title": "स्ट्रिप किट ऑर्डर करा",
+        "subtitle": "३-५ दिवसांत डिलिव्हरी.",
+        "options": {
+          "orderTitle": "किट ऑर्डर करा",
+          "orderDesc": "३-५ दिवसांत डिलिव्हरी.",
+          "uploadTitle": "किट आहे",
+          "uploadDesc": "आता फोटो अपलोड करा."
+        },
+        "errors": {
+          "formInvalid": "Please fill all required fields.",
+          "name": "Enter farmer name.",
+          "phone": "Enter phone number.",
+          "phoneInvalid": "Enter a 10-digit phone number.",
+          "line1": "Enter address line.",
+          "village": "Enter village.",
+          "district": "Enter district.",
+          "state": "Enter state.",
+          "pincode": "Enter pincode.",
+          "pincodeInvalid": "Enter a 6-digit pincode."
+        },
+        "steps": {
+          "step1": "किट ऑर्डर करा",
+          "step2": "माती स्ट्रिप तपासा",
+          "step3": "pH + ओलाव्यासाठी फोटो अपलोड करा"
+        },
+        "orderButton": "किट ऑर्डर करा",
+        "hideForm": "फॉर्म लपवा",
+        "help": "संख्या नसतील तेव्हा उपयोगी.",
+        "uploadLabel": "किट स्ट्रिप फोटो अपलोड करा (ऐच्छिक)",
+        "readPhoto": "फोटोमधून वाचा",
+        "readHelp": "फक्त pH आणि ओलावा वाचतो.",
+        "deliveryTitle": "डिलिव्हरी माहिती",
+        "deliveryDesc": "किटसाठी पत्ता आवश्यक आहे.",
+        "confirmOrder": "किट ऑर्डर निश्चित करा",
+        "altHelp": "हवे असल्यास मूल्ये स्वतः लिहू शकता."
+      }
+    },
+    "step3": {
+      "stepLabel": "पायरी 3 / 4",
+      "title": "माती हेल्थ कार्ड",
+      "subtitle": "कार्ड असल्यास अपलोड करा.",
+      "titleShort": "हेल्थ कार्ड",
+      "hint": "कार्ड अपलोड करा किंवा वगळा.",
+      "uploadLabel": "माती हेल्थ कार्ड अपलोड करा (ऐच्छिक)",
+      "readPhoto": "फोटोमधून वाचा",
+      "saveButton": "कार्ड सेव करा"
+    },
+    "step4": {
+      "stepLabel": "पायरी 4 / 4",
+      "title": "अंतिम अहवाल",
+      "subtitle": "शेताची माहिती आणि मातीचे मूल्य जोडू.",
+      "titleShort": "अंतिम अहवाल",
+      "hint": "अहवाल पाहा आणि तयार करा.",
+      "rankingTitle": "माती रँकिंग",
+      "scoreLabel": "स्कोर: {score}/100",
+      "insightsTitle": "मुख्य सूचना",
+      "generateButton": "अहवाल तयार करा",
+      "generateHelp": "हे पीक सल्ल्यासाठी वापरू.",
+      "rank": {
+        "excellent": "उत्कृष्ट",
+        "good": "चांगले",
+        "moderate": "मध्यम",
+        "needsImprovement": "सुधारणा आवश्यक"
+      },
+      "insights": {
+        "phLow": "माती आम्लीय आहे. चुनखडी व सेंद्रिय कंपोस्ट घाला।",
+        "phHigh": "माती क्षारीय आहे. जिप्सम व सेंद्रिय खत घाला।",
+        "nLow": "नायट्रोजन कमी आहे. युरिया/कंपोस्ट विभागून द्या।",
+        "pLow": "फॉस्फरस कमी आहे. पेरणीवेळी SSP/DAP द्या।",
+        "kLow": "पोटॅश कमी आहे. MOP किंवा पोटॅश मिश्रण द्या।",
+        "ocLow": "सेंद्रिय कार्बन कमी आहे. शेणखत, हिरवे खत द्या।",
+        "ecHigh": "EC जास्त आहे. क्षारता व सिंचन गुणवत्ता तपासा।",
+        "missing": "अधिक अचूक सल्ल्यासाठी उरलेली मूल्ये भरा।"
+      },
+      "sources": {
+        "govtCard": "सरकारी कार्ड",
+        "kitResult": "किट निकाल",
+        "manual": "मॅन्युअल"
+      },
+      "emptyValue": "--"
+    },
+    "soilTypes": {
+      "alluvial": "जलोढ",
+      "black": "काळी माती",
+      "red": "लाल माती",
+      "laterite": "लेटेराइट",
+      "sandy": "वालुकामय",
+      "clay": "चिकण",
+      "loamy": "दोमट"
+    },
+    "fields": {
+      "landName": { "label": "शेताचे नाव", "placeholder": "उदा., उत्तर बाजूचे शेत" },
+      "area": { "label": "क्षेत्रफळ (एकर)", "placeholder": "उदा., 2.5" },
+      "soilType": { "label": "मातीचा प्रकार", "placeholder": "माती निवडा" },
+      "state": { "label": "राज्य", "placeholder": "उदा., महाराष्ट्र" },
+      "district": { "label": "जिल्हा", "placeholder": "उदा., पुणे" },
+      "village": { "label": "गाव", "placeholder": "उदा., हिंजवडी" },
+      "tehsil": { "label": "तहसील / तालुका" },
+      "surveyNumber": { "label": "सर्वे नंबर" },
+      "khasraNumber": { "label": "खसरा नंबर" },
+      "khataNumber": { "label": "खाता नंबर" },
+      "khewatNumber": { "label": "खेवट नंबर" },
+      "pattaNumber": { "label": "पट्टा नंबर" },
+      "farmerName": { "label": "शेतकरी नाव" },
+      "phone": { "label": "मोबाइल नंबर" },
+      "addressLine": { "label": "पत्ता" },
+      "pincode": { "label": "पिनकोड" }
+    },
+    "messages": {
+      "loadError": "माहिती लोड होऊ शकली नाही.",
+      "kitOrderConfirmed": "किट ऑर्डर झाले.",
+      "kitOrderFailed": "ऑर्डर करता आली नाही.",
+      "ocrDone": "फोटो वाचला. कृपया मूल्ये तपासा.",
+      "ocrFailed": "फोटो वाचण्यात अडचण आली.",
+      "kitSaved": "किट मूल्ये सेव झाली.",
+      "govtSaved": "कार्ड सेव झाले.",
+      "saveReportFailed": "अहवाल सेव होऊ शकला नाही.",
+      "landSaved": "शेताची माहिती सेव झाली.",
+      "landSaveFailed": "शेताची माहिती सेव झाली नाही.",
+      "finalSaved": "अंतिम अहवाल सेव झाला.",
+      "finalSaveFailed": "अहवाल सेव होऊ शकला नाही.",
+      "dismissError": "त्रुटी बंद करा",
+      "dismissMessage": "संदेश बंद करा"
     }
   }
 }

@@ -31,6 +31,8 @@ const securityHeaders = [
       "img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com https://www.transparenttextures.com",
       // API connections
       "connect-src 'self' https://api.cloudinary.com https://geocoding-api.open-meteo.com https://api.open-meteo.com https://enam.gov.in https://api.bigdatacloud.net",
+      // Media (Sarvam TTS returns data URLs)
+      "media-src 'self' data: blob:",
       // Frames: block all
       "frame-src 'none'",
       // Object embeds: block all

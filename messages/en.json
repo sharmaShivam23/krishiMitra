@@ -20,7 +20,11 @@
       },
       "sellPredictor": {
         "title": "Best Time to Sell",
-        "desc": "Find out the right time to sell your crops for the highest profit."
+        "desc": "Find the right time to sell your crops for maximum profit."
+      },
+      "voiceAssistant": {
+        "title": "KrishiSarthi Voice AI",
+        "desc": "Speak in your local language to get instant farming advice and weather updates."
       },
       "diseaseVision": {
         "title": "Crop Disease Scanner",
@@ -44,7 +48,11 @@
       },
       "yieldAnalytics": {
         "title": "Harvest Tracker",
-        "desc": "Keep a record of your past harvests to plan better for the next season."
+        "desc": "Track your past harvests to plan better for the next season."
+      },
+      "soilIntelligence": {
+        "title": "Soil Intelligence Labs",
+        "desc": "Locate certified soil testing soil labs nearby and get personalized crop recommendations."
       }
     }
   },
@@ -104,6 +112,7 @@
       "disease": "Disease Scanner",
       "services": "Rentals",
       "weather": "Weather",
+      "soil": "Soil Intelligence",
       "community": "Community",
       "schemes": "Schemes",
       "products": "Products",
@@ -488,6 +497,298 @@
       "Insurance": "Crop Insurance",
       "Credit & Loans": "Farm Loans",
       "Other": "Other"
+    }
+  },
+  "Soil": {
+    "journey": {
+      "startLabel": "Start",
+      "badge": "Soil Intelligence",
+      "heroTitle": "Create your land profile. Get instant soil insights.",
+      "heroSubtitle": "Step 1: land profile. Step 2: soil values (manual or kit). Step 3: add health card. Step 4: get report.",
+      "profileUpdated": "Profile updated {date}",
+      "noProfile": "No soil profile yet",
+      "startTitle": "Begin with land details",
+      "startDesc": "We will guide you step by step. You can edit anytime.",
+      "startButton": "Start",
+      "stepLabel": "Step {current} of {total}",
+      "cards": {
+        "landFirst": {
+          "title": "Land-first profile",
+          "desc": "Diagnose the exact field you choose."
+        },
+        "easyEntry": {
+          "title": "Easy values entry",
+          "desc": "Type numbers or read from photo."
+        },
+        "merged": {
+          "title": "Merged accuracy",
+          "desc": "Health card adds lab confidence."
+        }
+      }
+    },
+    "status": {
+      "autosaving": "Saving",
+      "saved": "Saved",
+      "saveFailed": "Save failed",
+      "draft": "Draft"
+    },
+    "statusCard": {
+      "title": "Land profile status",
+      "subtitle": "Track where you are and what to do next.",
+      "stages": {
+        "step1": "Land details",
+        "step2": "Soil test",
+        "step3": "Health card",
+        "step4": "Final report"
+      },
+      "statuses": {
+        "landPending": "Land details pending",
+        "kitPending": "Soil test pending",
+        "kitOrdered": "Kit on the way",
+        "valuesCaptured": "Soil values captured",
+        "cardPending": "Health card optional",
+        "ready": "Ready for report",
+        "completed": "Report ready",
+        "retest": "Retest recommended"
+      },
+      "nextAction": "Next action",
+      "primaryCta": "Take me there",
+      "editLand": "Edit land profile",
+      "retestBadge": "Retest needed",
+      "retestCta": "Start retest",
+      "retestStarted": "Retest started. Please add new pH + moisture values.",
+      "retestFailed": "Could not start retest. Try again.",
+      "actions": {
+        "land-pending": "Complete land details to continue.",
+        "kit-pending": "Start your soil test or order a kit.",
+        "kit-ordered": "Your kit is on the way. Track delivery or prepare the test.",
+        "values-captured": "You can upload a health card or move to report.",
+        "card-pending": "Upload the soil health card if available.",
+        "ready": "Generate your final soil report.",
+        "completed": "View or update your report anytime.",
+        "retest": "Your soil test is old. Take a fresh pH + moisture reading."
+      },
+      "activity": {
+        "title": "Recent activity",
+        "empty": "No activity yet.",
+        "kitOrdered": "Kit ordered",
+        "kitUpdated": "Soil values updated",
+        "cardUpdated": "Health card updated",
+        "profileSaved": "Land profile saved"
+      }
+    },
+    "buttons": {
+      "saveDraft": "Save draft",
+      "saveContinue": "Save & continue",
+      "saveValues": "Save values",
+      "skip": "Skip for now"
+    },
+    "step1": {
+      "stepLabel": "Step 1 of 4",
+      "title": "Land details",
+      "subtitle": "Fill details of the land you want to check.",
+      "titleShort": "Land details",
+      "hint": "Add land name and location to continue.",
+      "sections": {
+        "basics": "Basics",
+        "location": "Location",
+        "records": "Land records (optional)"
+      },
+      "required": "Required: land name, state, district."
+    },
+    "errors": {
+      "required": "Please add your land name, state, and district to continue."
+    },
+    "step2": {
+      "stepLabel": "Step 2 of 4",
+      "title": "Add pH + moisture",
+      "subtitle": "Use numbers you have, or order a kit.",
+      "titleShort": "Soil values",
+      "hint": "Enter pH + moisture or use the kit.",
+      "tabs": {
+        "manual": "I have numbers",
+        "kit": "I need a kit"
+      },
+      "fields": {
+        "ph": "pH",
+        "phPlaceholder": "e.g. 6.8",
+        "moisture": "Moisture (%)",
+        "moisturePlaceholder": "e.g. 18"
+      },
+      "manual": {
+        "label": "Manual entry",
+        "title": "Enter pH + moisture",
+        "subtitle": "Quick entry in under a minute.",
+        "badge": "Fast track",
+        "help": "We only need pH and moisture.",
+        "errors": {
+          "required": "Add pH and moisture before saving."
+        }
+      },
+      "kit": {
+        "label": "Kit path",
+        "title": "Order a strip kit",
+        "subtitle": "We deliver in 3-5 days.",
+        "options": {
+          "orderTitle": "Order a kit",
+          "orderDesc": "We deliver in 3-5 days.",
+          "uploadTitle": "I already have a kit",
+          "uploadDesc": "Upload the strip photo now."
+        },
+        "orderSummaryTitle": "Order summary",
+        "orderItemTitle": "Soil test strip kit",
+        "orderItemDesc": "Everything you need to read pH + moisture.",
+        "orderPaymentLabel": "Payment",
+        "orderPaymentValue": "Cash on delivery",
+        "orderPrice": "Pay when the kit arrives.",
+        "shippingTitle": "Shipping address",
+        "shippingHelp": "Add your address to unlock shipping.",
+        "orderStatusLabel": "Order confirmed",
+        "viewTracking": "Track order",
+        "trackingTitle": "Order tracking",
+        "trackingHelp": "We update your delivery status automatically.",
+        "orderIdLabel": "Tracking ID",
+        "orderDateLabel": "Order date",
+        "etaLabel": "ETA",
+        "etaDefault": "3-5 days",
+        "tracking": {
+          "ordered": "Ordered",
+          "packed": "Packed",
+          "shipped": "Shipped",
+          "outForDelivery": "Out for delivery",
+          "delivered": "Delivered"
+        },
+        "errors": {
+          "formInvalid": "Please complete all required address fields.",
+          "name": "Please enter the farmer name.",
+          "phone": "Please enter a phone number.",
+          "phoneInvalid": "Phone number must be 10 digits.",
+          "line1": "Please add the street/address line.",
+          "village": "Please enter the village name.",
+          "district": "Please enter the district.",
+          "state": "Please enter the state.",
+          "pincode": "Please enter the pincode.",
+          "pincodeInvalid": "Pincode must be 6 digits."
+        },
+        "steps": {
+          "step1": "Order the kit",
+          "step2": "Test your soil strip",
+          "step3": "Upload photo for pH + moisture"
+        },
+        "orderButton": "Order kit",
+        "hideForm": "Hide form",
+        "help": "Best when you do not have numbers.",
+        "uploadLabel": "Upload kit strip photo (optional)",
+        "readPhoto": "Read from photo",
+        "readHelp": "We only read pH and moisture.",
+        "deliveryTitle": "Delivery details",
+        "deliveryDesc": "We need your address for the kit.",
+        "confirmOrder": "Confirm kit order",
+        "altHelp": "You can still enter values manually."
+      }
+    },
+    "step3": {
+      "stepLabel": "Step 3 of 4",
+      "title": "Soil Health Card",
+      "subtitle": "Upload the card if you have it.",
+      "titleShort": "Health card",
+      "hint": "Upload card or skip for now.",
+      "uploadLabel": "Upload soil health card (optional)",
+      "readPhoto": "Read from photo",
+      "saveButton": "Save card"
+    },
+    "step4": {
+      "stepLabel": "Step 4 of 4",
+      "title": "Final report",
+      "subtitle": "We combine land details and soil values.",
+      "titleShort": "Final report",
+      "hint": "Review and generate the report.",
+      "rankingTitle": "Soil ranking",
+      "scoreLabel": "Score: {score}/100",
+      "insightsTitle": "Top insights",
+      "generateButton": "Generate report",
+      "generateHelp": "We will use this for crop advice.",
+      "rank": {
+        "excellent": "Excellent",
+        "good": "Good",
+        "moderate": "Moderate",
+        "needsImprovement": "Needs improvement"
+      },
+      "insights": {
+        "phLow": "Soil is acidic. Add lime and organic compost.",
+        "phHigh": "Soil is alkaline. Add gypsum and organic manure.",
+        "nLow": "Nitrogen is low. Apply urea/compost in split doses.",
+        "pLow": "Phosphorus is low. Use SSP/DAP at sowing.",
+        "kLow": "Potassium is low. Apply MOP or potash mix.",
+        "ocLow": "Organic carbon is low. Add FYM, green manure.",
+        "ecHigh": "EC is high. Check salinity and irrigation quality.",
+        "missing": "Add missing values for more specific advice."
+      },
+      "sources": {
+        "govtCard": "Govt card",
+        "kitResult": "Kit result",
+        "manual": "Manual"
+      },
+      "emptyValue": "--"
+    },
+    "soilTypes": {
+      "alluvial": "Alluvial",
+      "black": "Black",
+      "red": "Red",
+      "laterite": "Laterite",
+      "sandy": "Sandy",
+      "clay": "Clay",
+      "loamy": "Loamy"
+    },
+    "fields": {
+      "landName": { "label": "Land name", "placeholder": "e.g. North wheat field" },
+      "area": { "label": "Area (acres)", "placeholder": "e.g. 2.5" },
+      "soilType": { "label": "Soil type", "placeholder": "Select soil type" },
+      "state": { "label": "State", "placeholder": "e.g. Maharashtra" },
+      "district": { "label": "District", "placeholder": "e.g. Pune" },
+      "village": { "label": "Village", "placeholder": "e.g. Hinjewadi" },
+      "tehsil": { "label": "Tehsil / Taluk" },
+      "surveyNumber": { "label": "Survey number" },
+      "khasraNumber": { "label": "Khasra number" },
+      "khataNumber": { "label": "Khata number" },
+      "khewatNumber": { "label": "Khewat number" },
+      "pattaNumber": { "label": "Patta number" },
+      "farmerName": { "label": "Farmer name" },
+      "phone": { "label": "Phone number" },
+      "addressLine": { "label": "Address line" },
+      "pincode": { "label": "Pincode" }
+    },
+    "messages": {
+      "loadError": "Unable to load data.",
+      "kitOrderConfirmed": "Kit order confirmed.",
+      "kitOrderFailed": "Unable to place order.",
+      "ocrDone": "OCR done. Please check the values.",
+      "ocrFailed": "OCR failed.",
+      "kitSaved": "Kit values saved.",
+      "govtSaved": "Card saved.",
+      "saveReportFailed": "Unable to save report.",
+      "landSaved": "Land profile saved.",
+      "landSaveFailed": "Unable to save land profile.",
+      "finalSaved": "Final report saved.",
+      "finalSaveFailed": "Unable to save report.",
+      "dismissError": "Dismiss error",
+      "dismissMessage": "Dismiss message"
+    },
+    "report": {
+      "executiveSummary": "Executive Summary",
+      "analysisComplete": "AI analysis is completed. Review the metrics below.",
+      "soilChemistry": "Soil Chemistry Profile",
+      "nitrogen": "Nitrogen (N)",
+      "phosphorus": "Phosphorus (P)",
+      "potassium": "Potassium (K)",
+      "organicCarbon": "Organic Carbon (OC)",
+      "low": "Low",
+      "high": "High",
+      "actionPlan": "Action Plan",
+      "recommendedCrops": "Recommended Crops",
+      "match": "Match",
+      "seasonLabel": "SEASON",
+      "fertilizerGuide": "Fertilizer Guide"
     }
   }
 }

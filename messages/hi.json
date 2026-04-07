@@ -19,14 +19,21 @@
         "desc": "अपनी स्थानीय मिट्टी और मौसम के आधार पर बुवाई और कटाई का सही समय जानें।"
       },
       "sellPredictor": {
-        "title": "फसल बेचने का सही समय",
-        "desc": "सबसे ज्यादा मुनाफे के लिए अपनी फसल बेचने का सही समय जानें।"
+        "title": "बेचने का सर्वोत्तम समय",
+        "desc": "अधिकतम मुनाफे के लिए अपनी फसल बेचने का सही समय जानें।"
+      },
+      "voiceAssistant": {
+        "title": "कृषि सारथी वॉइस असिस्टेंट",
+        "desc": "अपनी स्थानीय भाषा में बोलकर तुरंत खेती की सलाह और मौसम की जानकारी प्राप्त करें।"
       },
       "diseaseVision": {
         "title": "फसल रोग स्कैनर",
         "desc": "बीमार पौधे की फोटो लें। तुरंत बीमारी और उसका इलाज जानें।"
       },
       "microClimate": {
+      "errors": {
+        "required": "Please fill land name, state, and district."
+      },
         "title": "7-दिन का स्थानीय मौसम",
         "desc": "अपने खेत के सटीक स्थान के लिए 7 दिन का मौसम पूर्वानुमान प्राप्त करें।"
       },
@@ -35,6 +42,18 @@
         "desc": "पूरे भारत में अपनी फसलों के लिए हर दिन के लाइव APMC मंडी भाव देखें।"
       },
       "community": {
+          "errors": {
+            "formInvalid": "Please fill all required fields.",
+            "name": "Enter farmer name.",
+            "phone": "Enter phone number.",
+            "phoneInvalid": "Enter a 10-digit phone number.",
+            "line1": "Enter address line.",
+            "village": "Enter village.",
+            "district": "Enter district.",
+            "state": "Enter state.",
+            "pincode": "Enter pincode.",
+            "pincodeInvalid": "Enter a 6-digit pincode."
+          },
         "title": "किसान समुदाय",
         "desc": "अन्य किसानों से जुड़ें। सवाल पूछें, सलाह साझा करें और एक-दूसरे की मदद करें।"
       },
@@ -43,8 +62,12 @@
         "desc": "उन सरकारी सब्सिडी और कृषि योजनाओं को आसानी से खोजें जिनके लिए आप योग्य हैं।"
       },
       "yieldAnalytics": {
-        "title": "फसल ट्रैकर",
-        "desc": "अगले मौसम के लिए बेहतर योजना बनाने के लिए अपनी पिछली फसलों का रिकॉर्ड रखें।"
+        "title": "उपज ट्रैकर",
+        "desc": "अगले मौसम के लिए बेहतर योजना बनाने हेतु अपनी पिछली फसल की उपज का रिकॉर्ड रखें।"
+      },
+      "soilIntelligence": {
+        "title": "मृदा स्वास्थ्य लैब",
+        "desc": "प्रमाणित मिट्टी परीक्षण लैब खोजें और अपनी फसल के लिए कस्टम सिफारिशें प्राप्त करें।"
       }
     }
   },
@@ -71,6 +94,29 @@
     "brandDesc": "स्मार्ट सलाह, लाइव बाज़ार भाव और आसान खेती उपकरणों के साथ भारतीय किसानों की मदद करना।",
     "helpline": "24/7 किसान हेल्पलाइन",
     "platformHeading": "प्लेटफ़ॉर्म",
+        "orderSummaryTitle": "Order summary",
+        "orderItemTitle": "Soil test strip kit",
+        "orderItemDesc": "Everything you need to read pH + moisture.",
+        "orderPaymentLabel": "Payment",
+        "orderPaymentValue": "Cash on delivery",
+        "orderPrice": "Pay when the kit arrives.",
+        "shippingTitle": "Shipping address",
+        "shippingHelp": "Add your address to unlock shipping.",
+        "orderStatusLabel": "Order confirmed",
+        "viewTracking": "Track order",
+        "trackingTitle": "Order tracking",
+        "trackingHelp": "We update your delivery status automatically.",
+        "orderIdLabel": "Tracking ID",
+        "orderDateLabel": "Order date",
+        "etaLabel": "ETA",
+        "etaDefault": "3-5 days",
+        "tracking": {
+          "ordered": "Ordered",
+          "packed": "Packed",
+          "shipped": "Shipped",
+          "outForDelivery": "Out for delivery",
+          "delivered": "Delivered"
+        },
     "platformLinks": {
       "intel": "स्मार्ट फसल गाइड",
       "mandi": "लाइव मंडी भाव",
@@ -104,6 +150,7 @@
       "disease": "रोग स्कैनर",
       "services": "किराया",
       "weather": "मौसम",
+      "soil": "मिट्टी पहचान",
       "community": "समुदाय",
       "schemes": "योजनाएं",
       "products": "उत्पाद",
@@ -488,6 +535,275 @@
       "Insurance": "फसल बीमा",
       "Credit & Loans": "कृषि ऋण (लोन)",
       "Other": "अन्य"
+    }
+  },
+  "Soil": {
+    "journey": {
+      "startLabel": "शुरू करें",
+      "badge": "मिट्टी पहचान",
+      "heroTitle": "खेत की प्रोफाइल बनाएं। तुरंत मिट्टी की जानकारी पाएं।",
+      "heroSubtitle": "चरण 1: खेत की प्रोफाइल। चरण 2: मिट्टी वैल्यू (मैन्युअल या किट)। चरण 3: हेल्थ कार्ड जोड़ें। चरण 4: रिपोर्ट लें।",
+      "profileUpdated": "प्रोफाइल अपडेट {date}",
+      "noProfile": "अभी मिट्टी की प्रोफाइल नहीं है",
+      "startTitle": "सबसे पहले खेत की जानकारी भरें",
+      "startDesc": "हम आपको चरण-दर-चरण मदद करेंगे। बाद में संपादन कर सकते हैं।",
+      "startButton": "शुरू करें",
+      "stepLabel": "चरण {current} / {total}",
+      "cards": {
+        "landFirst": {
+          "title": "खेत-फर्स्ट प्रोफाइल",
+          "desc": "जिस खेत की जांच करनी है, वही चुनें।"
+        },
+        "easyEntry": {
+          "title": "आसान वैल्यू एंट्री",
+          "desc": "नंबर लिखें या फोटो से पढ़ें।"
+        },
+        "merged": {
+          "title": "बेहतर सटीकता",
+          "desc": "हेल्थ कार्ड से लैब भरोसा बढ़ता है।"
+        }
+      }
+    },
+    "status": {
+      "autosaving": "सेव हो रहा है",
+      "saved": "सेव हो गया",
+      "saveFailed": "सेव नहीं हुआ",
+      "draft": "ड्राफ्ट"
+    },
+    "statusCard": {
+      "title": "खेत प्रोफाइल की स्थिति",
+      "subtitle": "आप कहाँ हैं और आगे क्या करना है, देखें।",
+      "stages": {
+        "step1": "खेत जानकारी",
+        "step2": "मिट्टी जांच",
+        "step3": "हेल्थ कार्ड",
+        "step4": "अंतिम रिपोर्ट"
+      },
+      "statuses": {
+        "landPending": "खेत जानकारी बाकी",
+        "kitPending": "मिट्टी जांच बाकी",
+        "kitOrdered": "किट रास्ते में है",
+        "valuesCaptured": "मिट्टी की वैल्यू मिल गई",
+        "cardPending": "हेल्थ कार्ड वैकल्पिक",
+        "ready": "रिपोर्ट के लिए तैयार",
+        "completed": "रिपोर्ट तैयार",
+        "retest": "फिर से जांच जरूरी"
+      },
+      "nextAction": "अगला कदम",
+      "primaryCta": "मुझे वहाँ ले चलो",
+      "editLand": "खेत जानकारी बदलें",
+      "retestBadge": "रीटेस्ट जरूरी",
+      "retestCta": "रीटेस्ट शुरू करें",
+      "retestStarted": "रीटेस्ट शुरू हो गया। नया pH और नमी भरें।",
+      "retestFailed": "रीटेस्ट शुरू नहीं हो पाया। फिर कोशिश करें।",
+      "actions": {
+        "land-pending": "आगे बढ़ने के लिए खेत की जानकारी भरें।",
+        "kit-pending": "मिट्टी जांच शुरू करें या किट मंगाएँ।",
+        "kit-ordered": "किट रास्ते में है। डिलीवरी ट्रैक करें या टेस्ट की तैयारी करें।",
+        "values-captured": "हेल्थ कार्ड अपलोड करें या रिपोर्ट पर जाएँ।",
+        "card-pending": "अगर कार्ड है तो अपलोड करें।",
+        "ready": "अंतिम रिपोर्ट बनाएं।",
+        "completed": "रिपोर्ट कभी भी देखें या अपडेट करें।",
+        "retest": "पुरानी जांच है। नया pH + नमी टेस्ट करें।"
+      },
+      "activity": {
+        "title": "हाल की गतिविधि",
+        "empty": "अभी कोई गतिविधि नहीं है।",
+        "kitOrdered": "किट ऑर्डर हुआ",
+        "kitUpdated": "मिट्टी की वैल्यू अपडेट हुई",
+        "cardUpdated": "हेल्थ कार्ड अपडेट हुआ",
+        "profileSaved": "खेत प्रोफाइल सेव हुई"
+      }
+    },
+    "buttons": {
+      "saveDraft": "ड्राफ्ट सेव करें",
+      "saveContinue": "सेव करें और आगे बढ़ें",
+      "saveValues": "वैल्यू सेव करें",
+      "skip": "अभी छोड़ें"
+    },
+    "step1": {
+      "stepLabel": "चरण 1 / 4",
+      "title": "खेत की जानकारी",
+      "subtitle": "जिस खेत की जानकारी चाहिए, वही भरें।",
+      "titleShort": "खेत की जानकारी",
+      "hint": "खेत का नाम और जगह भरें।",
+      "sections": {
+        "basics": "ज़रूरी जानकारी",
+        "location": "जगह",
+        "records": "जमीन के कागज़ (वैकल्पिक)"
+      },
+      "required": "ज़रूरी: खेत का नाम, राज्य, ज़िला।"
+    },
+    "errors": {
+      "required": "कृपया खेत का नाम, राज्य और जिला भरें।"
+    },
+    "step2": {
+      "stepLabel": "चरण 2 / 4",
+      "title": "pH और नमी भरें",
+      "subtitle": "नंबर हों तो लिखें, नहीं तो किट लें।",
+      "titleShort": "मिट्टी वैल्यू",
+      "hint": "pH और नमी लिखें या किट लें।",
+      "tabs": {
+        "manual": "नंबर हैं",
+        "kit": "किट चाहिए"
+      },
+      "fields": {
+        "ph": "pH",
+        "phPlaceholder": "जैसे, 6.8",
+        "moisture": "नमी (%)",
+        "moisturePlaceholder": "जैसे, 18"
+      },
+      "manual": {
+        "label": "सीधी एंट्री",
+        "title": "pH और नमी लिखें",
+        "subtitle": "1 मिनट से कम में हो जाएगा।",
+        "badge": "फास्ट",
+        "help": "सिर्फ pH और नमी चाहिए।",
+        "errors": {
+          "required": "सेव करने से पहले pH और नमी भरें।"
+        }
+      },
+      "kit": {
+        "label": "किट वाला रास्ता",
+        "title": "स्ट्रिप किट मंगाएँ",
+        "subtitle": "3-5 दिन में डिलीवरी।",
+        "options": {
+          "orderTitle": "किट मंगाएँ",
+          "orderDesc": "3-5 दिन में डिलीवरी।",
+          "uploadTitle": "मेरे पास किट है",
+          "uploadDesc": "अब फोटो अपलोड करें।"
+        },
+        "errors": {
+          "formInvalid": "कृपया सभी जरूरी पते की जानकारी भरें।",
+          "name": "कृपया किसान का नाम भरें।",
+          "phone": "कृपया मोबाइल नंबर भरें।",
+          "phoneInvalid": "मोबाइल नंबर 10 अंकों का होना चाहिए।",
+          "line1": "कृपया पता/गली भरें।",
+          "village": "कृपया गांव का नाम भरें।",
+          "district": "कृपया जिला भरें।",
+          "state": "कृपया राज्य भरें।",
+          "pincode": "कृपया पिनकोड भरें।",
+          "pincodeInvalid": "पिनकोड 6 अंकों का होना चाहिए।"
+        },
+        "steps": {
+          "step1": "किट ऑर्डर करें",
+          "step2": "मिट्टी स्ट्रिप टेस्ट करें",
+          "step3": "pH + नमी के लिए फोटो अपलोड करें"
+        },
+        "orderButton": "किट ऑर्डर करें",
+        "hideForm": "फॉर्म छुपाएँ",
+        "help": "जब नंबर न हों तब बेहतर।",
+        "uploadLabel": "किट स्ट्रिप फोटो अपलोड करें (वैकल्पिक)",
+        "readPhoto": "फोटो से पढ़ें",
+        "readHelp": "सिर्फ pH और नमी पढ़ेंगे।",
+        "deliveryTitle": "डिलीवरी जानकारी",
+        "deliveryDesc": "किट भेजने के लिए पता भरें।",
+        "confirmOrder": "किट ऑर्डर कन्फर्म करें",
+        "altHelp": "चाहें तो वैल्यू खुद भी लिख सकते हैं।"
+      }
+    },
+    "step3": {
+      "stepLabel": "चरण 3 / 4",
+      "title": "सॉइल हेल्थ कार्ड",
+      "subtitle": "कार्ड हो तो अपलोड करें।",
+      "titleShort": "हेल्थ कार्ड",
+      "hint": "कार्ड हो तो अपलोड करें या छोड़ें।",
+      "uploadLabel": "सॉइल हेल्थ कार्ड अपलोड करें (वैकल्पिक)",
+      "readPhoto": "फोटो से पढ़ें",
+      "saveButton": "कार्ड सेव करें"
+    },
+    "step4": {
+      "stepLabel": "चरण 4 / 4",
+      "title": "अंतिम रिपोर्ट",
+      "subtitle": "खेत की जानकारी और मिट्टी वैल्यू जोड़ेंगे।",
+      "titleShort": "अंतिम रिपोर्ट",
+      "hint": "रिपोर्ट देखें और बनाएं।",
+      "rankingTitle": "मिट्टी रैंकिंग",
+      "scoreLabel": "स्कोर: {score}/100",
+      "insightsTitle": "मुख्य सुझाव",
+      "generateButton": "रिपोर्ट बनाएं",
+      "generateHelp": "इससे फसल सलाह मिलेगी।",
+      "rank": {
+        "excellent": "बहुत अच्छा",
+        "good": "अच्छा",
+        "moderate": "मध्यम",
+        "needsImprovement": "सुधार की जरूरत"
+      },
+      "insights": {
+        "phLow": "मिट्टी अम्लीय है। चूना और जैविक खाद मिलाएं।",
+        "phHigh": "मिट्टी क्षारीय है। जिप्सम और जैविक खाद मिलाएं।",
+        "nLow": "नाइट्रोजन कम है। यूरिया/कम्पोस्ट को हिस्सों में दें।",
+        "pLow": "फॉस्फोरस कम है। बुवाई पर SSP/DAP दें।",
+        "kLow": "पोटाश कम है। MOP या पोटाश मिश्रण दें।",
+        "ocLow": "ऑर्गेनिक कार्बन कम है। गोबर खाद/हरी खाद दें।",
+        "ecHigh": "EC ज्यादा है। लवणता और सिंचाई की गुणवत्ता जांचें।",
+        "missing": "सटीक सलाह के लिए बाकी वैल्यू जोड़ें।"
+      },
+      "sources": {
+        "govtCard": "सरकारी कार्ड",
+        "kitResult": "किट रिजल्ट",
+        "manual": "मैन्युअल"
+      },
+      "emptyValue": "--"
+    },
+    "soilTypes": {
+      "alluvial": "जलोढ़",
+      "black": "काली मिट्टी",
+      "red": "लाल मिट्टी",
+      "laterite": "लेटराइट",
+      "sandy": "रेतीली",
+      "clay": "चिकनी",
+      "loamy": "दोमट"
+    },
+    "fields": {
+      "landName": { "label": "खेत का नाम", "placeholder": "जैसे, उत्तर वाला खेत" },
+      "area": { "label": "क्षेत्रफल (एकड़)", "placeholder": "जैसे, 2.5" },
+      "soilType": { "label": "मिट्टी का प्रकार", "placeholder": "मिट्टी चुनें" },
+      "state": { "label": "राज्य", "placeholder": "जैसे, महाराष्ट्र" },
+      "district": { "label": "ज़िला", "placeholder": "जैसे, पुणे" },
+      "village": { "label": "गाँव", "placeholder": "जैसे, हिन्जेवाड़ी" },
+      "tehsil": { "label": "तहसील / तालुका" },
+      "surveyNumber": { "label": "सर्वे नंबर" },
+      "khasraNumber": { "label": "खसरा नंबर" },
+      "khataNumber": { "label": "खाता नंबर" },
+      "khewatNumber": { "label": "खेवट नंबर" },
+      "pattaNumber": { "label": "पट्टा नंबर" },
+      "farmerName": { "label": "किसान का नाम" },
+      "phone": { "label": "मोबाइल नंबर" },
+      "addressLine": { "label": "पता" },
+      "pincode": { "label": "पिनकोड" }
+    },
+    "messages": {
+      "loadError": "डाटा लोड नहीं हो पाया।",
+      "kitOrderConfirmed": "किट ऑर्डर हो गया।",
+      "kitOrderFailed": "ऑर्डर नहीं हो पाया।",
+      "ocrDone": "फोटो पढ़ लिया। कृपया वैल्यू जांच लें।",
+      "ocrFailed": "फोटो पढ़ने में समस्या आई।",
+      "kitSaved": "किट वैल्यू सेव हो गई।",
+      "govtSaved": "कार्ड सेव हो गया।",
+      "saveReportFailed": "रिपोर्ट सेव नहीं हो पाई।",
+      "landSaved": "खेत की जानकारी सेव हो गई।",
+      "landSaveFailed": "खेत की जानकारी सेव नहीं हुई।",
+      "finalSaved": "अंतिम रिपोर्ट सेव हो गई।",
+      "finalSaveFailed": "रिपोर्ट सेव नहीं हो पाई।",
+      "dismissError": "त्रुटि हटाएं",
+      "dismissMessage": "संदेश हटाएं"
+    },
+    "report": {
+      "executiveSummary": "मुख्य सारांश",
+      "analysisComplete": "AI विश्लेषण पूरा हो गया है। नीचे दिए गए मेट्रिक्स की समीक्षा करें।",
+      "soilChemistry": "मिट्टी रासायनिक प्रोफाइल",
+      "nitrogen": "नाइट्रोजन (N)",
+      "phosphorus": "फॉस्फोरस (P)",
+      "potassium": "पोटाश (K)",
+      "organicCarbon": "ऑर्गेनिक कार्बन (OC)",
+      "low": "कम",
+      "high": "ज्यादा",
+      "actionPlan": "कार्य योजना",
+      "recommendedCrops": "अनुशंसित फसलें",
+      "match": "मैच",
+      "seasonLabel": "सीज़न",
+      "fertilizerGuide": "उर्वरक गाइड"
     }
   }
 }

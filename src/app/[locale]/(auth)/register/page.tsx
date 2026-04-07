@@ -232,13 +232,13 @@ export default function RegisterPage() {
 
 
       {/* LEFT SIDE: FORM */}
-      <div className="flex-1 flex flex-col px-6 sm:px-12 lg:flex-none lg:w-[50%] xl:w-[45%] relative z-10 bg-white overflow-y-auto hide-scrollbar border-r border-gray-100 shadow-xl py-12">
-        <div className="mx-auto w-full max-w-md relative z-10 my-auto">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-8">
-            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight mb-3">
+      <div className="flex-1 flex flex-col px-5 py-8 sm:px-12 lg:flex-none lg:w-[50%] xl:w-[45%] relative z-10 bg-white overflow-y-auto hide-scrollbar border-r border-gray-100 shadow-xl lg:py-12 min-h-[100dvh] pt-safe">
+        <div className="mx-auto w-full max-w-md relative z-10 my-auto pb-6">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-6 lg:mb-8">
+            <h2 className="text-[1.7rem] sm:text-4xl font-black text-gray-900 tracking-tight mb-2 leading-tight">
               {t('title')}
             </h2>
-            <p className="text-base text-gray-500 font-medium">
+            <p className="text-sm sm:text-base text-gray-500 font-medium">
               {t('switchText')}{' '}
               <Link href={`/${locale}/login`} className="text-emerald-600 font-bold hover:underline">
                 {t('switchLink')}
@@ -257,7 +257,7 @@ export default function RegisterPage() {
 
           <AnimatePresence mode="wait">
             {step === 1 ? (
-              <motion.form key="step1" variants={staggerContainer} initial="hidden" animate="show" exit={{ opacity: 0, x: -20 }} className="space-y-6" onSubmit={handleRequestOtp}>
+              <motion.form key="step1" variants={staggerContainer} initial="hidden" animate="show" exit={{ opacity: 0, x: -20 }} className="space-y-4 sm:space-y-5" onSubmit={handleRequestOtp}>
                 
                 {/* Name */}
                 <motion.div variants={itemVariant}>
@@ -291,7 +291,7 @@ export default function RegisterPage() {
                 </motion.div>
 
                 {/* 🔴 ALIGNMENT FIX: Grid Layout for Role and Language */}
-                <motion.div variants={itemVariant} className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <motion.div variants={itemVariant} className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div>
                     <label className="block text-sm font-bold text-gray-900 mb-1.5">Role</label>
                     <div className="relative group">
@@ -374,7 +374,7 @@ export default function RegisterPage() {
           {/* Back to Home Button */}
           <div className="mt-8 flex justify-center">
             <Link href={`/${locale}`} className="text-sm font-bold text-gray-500 hover:text-emerald-600 transition-colors flex items-center group">
-              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> Back to Landing Page
+              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> Back
             </Link>
           </div>
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { 
   Landmark, Search, Filter, ExternalLink, Sparkles,
@@ -258,6 +258,34 @@ export default function GovernmentSchemes() {
 
   const activeScheme = filteredSchemes[Math.min(activeReelIndex, Math.max(filteredSchemes.length - 1, 0))];
 
+  const buildAskAiPrompt = useCallback(() => {
+    const scheme = activeScheme;
+    const benefits = scheme?.benefits?.trim();
+    const eligibility = (scheme?.eligibility || []).filter(Boolean).slice(0, 3).join('; ');
+    const filters = [
+      activeCategory !== 'All' ? `Category filter: ${activeCategory}.` : '',
+      searchQuery ? `Search query: ${searchQuery}.` : ''
+    ].filter(Boolean).join(' ');
+
+    const schemeBlock = scheme
+      ? `Active scheme: ${scheme.name || 'unknown'}. State: ${scheme.state || 'unknown'}. ${benefits ? `Benefits: ${benefits}.` : ''} ${eligibility ? `Eligibility: ${eligibility}.` : ''}`
+      : 'No specific scheme is selected.';
+
+    return `I am on the Government Schemes page. ${filters} ${schemeBlock} Please explain who is eligible, required documents, and how to apply in short steps. If something important is missing, ask one short follow-up question. Use saved farmer profile if available.`;
+  }, [activeScheme, activeCategory, searchQuery]);
+
+  const handleAskAi = useCallback(() => {
+    requestKrishiSarthi({
+      prompt: buildAskAiPrompt(),
+      autoSend: true,
+      context: {
+        module: 'schemes',
+        route: '/dashboard/schemes',
+        summary: 'User is exploring schemes. Prioritize eligibility, documents, and application steps for the active scheme or filtered list.'
+      }
+    });
+  }, [buildAskAiPrompt]);
+
   const jumpToReel = (index: number) => {
     const container = reelsRef.current;
     if (!container) return;
@@ -427,19 +455,11 @@ export default function GovernmentSchemes() {
         </p>
         <button
           type="button"
-          onClick={() =>
-            requestKrishiSarthi({
-              prompt: 'KrishiSarthi, meri eligibility ke hisaab se sarkari yojana batao.',
-              context: {
-                module: 'schemes',
-                summary: 'User is exploring government schemes and needs eligibility/document/application guidance.'
-              }
-            })
-          }
+          onClick={handleAskAi}
           className="mt-4 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-agri-300 bg-agri-100 text-agri-900 font-black hover:bg-agri-200 transition shadow-sm"
         >
           <Landmark className="w-4 h-4" />
-          Ask KrishiSarthi
+          Ask Sarthi
         </button>
       </motion.div>
 
@@ -523,19 +543,11 @@ export default function GovernmentSchemes() {
                         <div className="mt-2 flex gap-2">
                           <button
                             type="button"
-                            onClick={() =>
-                              requestKrishiSarthi({
-                                prompt: 'KrishiSarthi, meri eligibility ke hisaab se sarkari yojana batao.',
-                                context: {
-                                  module: 'schemes',
-                                  summary: 'User is exploring government schemes and needs eligibility/document/application guidance.'
-                                }
-                              })
-                            }
+                            onClick={handleAskAi}
                             className="h-10 px-3 rounded-xl border border-emerald-200/30 bg-emerald-300/20 text-emerald-50 font-black text-sm inline-flex items-center gap-1.5"
                           >
                             <Sparkles className="w-4 h-4" />
-                            Ask AI
+                            Ask
                           </button>
 
                           <button
