@@ -36,7 +36,7 @@ interface Listing {
   serviceDetails?: { operatorIncluded: boolean; jobType: string; estimatedCapacity: string };
   location: { state: string; district: string; village?: string };
   images: string[];
-  providerId: Provider;
+  providerId: Provider | string;
   createdAt: string;
 }
 
@@ -48,6 +48,8 @@ export default function EquipmentExchange() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentUser, setCurrentUser] = useState<{ _id: string; name?: string } | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [activeTab, setActiveTab] = useState<'rent' | 'service'>('rent');
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,6 +79,43 @@ export default function EquipmentExchange() {
     const handler = setTimeout(() => setDebouncedSearch(searchQuery), 500);
     return () => clearTimeout(handler);
   }, [searchQuery]);
+
+  useEffect(() => {
+    const loadCurrentUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.user) {
+          setCurrentUser(data.user);
+        }
+      } catch {
+        // ignore silently
+      }
+    };
+
+    loadCurrentUser();
+  }, []);
+
+  const handleDeleteListing = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this listing?')) return;
+
+    try {
+      setDeletingId(id);
+      const res = await fetch(`/api/listings/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || 'Unable to delete listing.');
+
+      setListings(prev => prev.filter(listing => listing._id !== id));
+    } catch (err: any) {
+      window.alert(err.message || 'Unable to delete listing.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -343,10 +382,10 @@ export default function EquipmentExchange() {
 
                     <div className="flex items-center mb-4 bg-gray-50/80 w-max px-3 py-1.5 rounded-lg border border-gray-100">
                       <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mr-2 text-emerald-700 font-bold text-xs">
-                        {listing.providerId?.name ? listing.providerId.name.charAt(0).toUpperCase() : <User className="w-3 h-3" />}
+                        {typeof listing.providerId === 'object' && listing.providerId?.name ? listing.providerId.name.charAt(0).toUpperCase() : <User className="w-3 h-3" />}
                       </div>
                       <p className="text-xs font-semibold text-gray-500">
-                        {t('owner')} <span className="text-gray-900 font-bold">{listing.providerId?.name || t('verifiedFarmer')}</span>
+                        {t('owner')} <span className="text-gray-900 font-bold">{typeof listing.providerId === 'object' && listing.providerId?.name ? listing.providerId.name : t('verifiedFarmer')}</span>
                       </p>
                     </div>
 
@@ -366,12 +405,28 @@ export default function EquipmentExchange() {
 
                     <hr className="my-5 border-gray-100" />
 
+                    {currentUser && ((typeof listing.providerId === 'string' ? listing.providerId : listing.providerId._id) === currentUser._id) && (
+                      <div className="flex flex-wrap gap-3 mb-4">
+                        <Link href={`/dashboard/Services/post?listingId=${listing._id}`} className="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 px-4 py-2 text-sm font-semibold hover:bg-emerald-100 transition">
+                          {t('edit')}
+                        </Link>
+                        <button
+                          type="button"
+                          disabled={deletingId === listing._id}
+                          onClick={() => handleDeleteListing(listing._id)}
+                          className="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-2 text-sm font-semibold hover:bg-red-100 transition disabled:opacity-60"
+                        >
+                          {deletingId === listing._id ? 'Deleting...' : t('delete')}
+                        </button>
+                      </div>
+                    )}
+
                     <ListingContactFooter 
                       title={listing.title}
                       pricing={listing.pricing}
                       provider={{ 
-                        name: listing.providerId?.name || t('verifiedFarmer'), 
-                        phone: listing.providerId?.phone || '' 
+                        name: typeof listing.providerId === 'object' ? (listing.providerId?.name || t('verifiedFarmer')) : t('verifiedFarmer'), 
+                        phone: typeof listing.providerId === 'object' ? (listing.providerId?.phone || '') : '' 
                       }}
                       location={listing.location}
                       type={activeTab}

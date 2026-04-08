@@ -116,12 +116,27 @@ export default function DashboardOverview() {
   const [mandiAlerts, setMandiAlerts] = useState<MandiAlert[]>([]);
   const [isLoadingMandi, setIsLoadingMandi] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [formattedDate, setFormattedDate] = useState('');
 
   const season = getCurrentSeason();
 
+  /* ── Format date consistently (client-side only) ── */
+  const formatDateConsistently = (date: Date) => {
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dayName = days[date.getDay()];
+    const dayNum = date.getDate();
+    const monthName = months[date.getMonth()];
+    return `${dayName} ${dayNum} ${monthName}`;
+  };
+
   /* ── Clock tick ── */
   useEffect(() => {
-    const id = setInterval(() => setCurrentTime(new Date()), 60_000);
+    setFormattedDate(formatDateConsistently(new Date()));
+    const id = setInterval(() => {
+      setCurrentTime(new Date());
+      setFormattedDate(formatDateConsistently(new Date()));
+    }, 60_000);
     return () => clearInterval(id);
   }, []);
 
@@ -163,8 +178,11 @@ export default function DashboardOverview() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         pos => fetchLocation(pos.coords.latitude, pos.coords.longitude),
-        () => fetchLocation(28.9845, 77.7064)
+        () => fetchLocation(28.9845, 77.7064),
+        { timeout: 5000 }
       );
+    } else {
+      fetchLocation(28.9845, 77.7064);
     }
   }, [locale]);
 
@@ -219,7 +237,7 @@ export default function DashboardOverview() {
             </h1>
             <p className="text-emerald-200/70 mt-1.5 flex items-center gap-1.5 font-semibold text-sm">
               <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              {locationName} · {currentTime.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
+              {locationName} · {formattedDate || 'Loading...'}
             </p>
           </div>
 

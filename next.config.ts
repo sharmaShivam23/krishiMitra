@@ -13,7 +13,7 @@ const securityHeaders = [
   // Referrer leakage prevention
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   // Feature restrictions
-  { key: 'Permissions-Policy', value: 'geolocation=(), microphone=(), camera=()' },
+  { key: 'Permissions-Policy', value: 'microphone=(), camera=()' },
   // HSTS – force HTTPS for 2 years
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
   // Content Security Policy
