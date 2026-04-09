@@ -36,7 +36,7 @@ interface Listing {
   serviceDetails?: { operatorIncluded: boolean; jobType: string; estimatedCapacity: string };
   location: { state: string; district: string; village?: string };
   images: string[];
-  providerId: Provider | string;
+  providerId: Provider | string | null; // Added null type safety
   createdAt: string;
 }
 
@@ -405,7 +405,8 @@ export default function EquipmentExchange() {
 
                     <hr className="my-5 border-gray-100" />
 
-                    {currentUser && ((typeof listing.providerId === 'string' ? listing.providerId : listing.providerId._id) === currentUser._id) && (
+                    {/* 🚀 FIXED LINE HERE 🚀 */}
+                    {currentUser && listing.providerId && ((typeof listing.providerId === 'string' ? listing.providerId : listing.providerId?._id) === currentUser._id) && (
                       <div className="flex flex-wrap gap-3 mb-4">
                         <Link href={`/dashboard/Services/post?listingId=${listing._id}`} className="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 px-4 py-2 text-sm font-semibold hover:bg-emerald-100 transition">
                           {t('edit')}
