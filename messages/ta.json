@@ -340,6 +340,11 @@
     "equipmentLabel": "இயந்திரம்:",
     "jobTypeLabel": "வேலை வகை:",
     "generalJob": "பொது வேலை",
+    "edit": "திருத்து",
+    "delete": "நீக்கு",
+    "deleting": "நீக்கப்படுகிறது...",
+    "deleteConfirm": "நீங்கள் உண்மையிலேயே இந்த பட்டியலை நீக்க விரும்புகிறீர்களா?",
+    "deleteError": "பட்டியலை நீக்க முடியவில்லை।",
     "categories": {
       "All Equipment": "அனைத்து உபகரணங்கள்",
       "Tractor": "டிராக்டர்",

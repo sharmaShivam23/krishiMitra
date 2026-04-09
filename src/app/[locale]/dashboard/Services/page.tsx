@@ -36,7 +36,7 @@ interface Listing {
   serviceDetails?: { operatorIncluded: boolean; jobType: string; estimatedCapacity: string };
   location: { state: string; district: string; village?: string };
   images: string[];
-  providerId: Provider;
+  providerId: Provider | string | null;
   createdAt: string;
 }
 
@@ -48,6 +48,9 @@ export default function EquipmentExchange() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const [currentUser, setCurrentUser] = useState<{ _id: string; name?: string } | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [activeTab, setActiveTab] = useState<'rent' | 'service'>('rent');
   const [searchQuery, setSearchQuery] = useState('');
@@ -71,6 +74,13 @@ export default function EquipmentExchange() {
 
     window.addEventListener('locationUpdated', handleLocationUpdated);
     return () => window.removeEventListener('locationUpdated', handleLocationUpdated);
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => { if (d.user) setCurrentUser(d.user); })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -105,8 +115,8 @@ export default function EquipmentExchange() {
         }
         
         setListings(data.listings);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error fetching data.');
       } finally {
         setIsLoading(false);
       }
@@ -114,6 +124,21 @@ export default function EquipmentExchange() {
 
     fetchListings();
   }, [activeTab, debouncedSearch, selectedCategory, stateFilter, districtFilter]);
+
+  const handleDeleteListing = async (id: string) => {
+    if (!window.confirm(t('deleteConfirm'))) return;
+    try {
+      setDeletingId(id);
+      const res = await fetch(`/api/listings/${id}`, { method: 'DELETE', credentials: 'include' });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || t('deleteError'));
+      setListings(prev => prev.filter(l => l._id !== id));
+    } catch (err) {
+      window.alert(err instanceof Error ? err.message : t('deleteError'));
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50/50 pb-20 font-sans selection:bg-emerald-400 selection:text-emerald-950">
@@ -209,20 +234,20 @@ export default function EquipmentExchange() {
         <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 p-4 sm:p-5 flex flex-col mb-8 border border-gray-100 gap-4">
           <div className="flex w-full sm:w-max bg-gray-100 p-1.5 rounded-xl self-start">
             <button
-              onClick={() => setActiveTab('rent')}
+              onClick={() => { setActiveTab('rent'); setSelectedCategory('All Equipment'); setSearchQuery(''); }}
               className={`flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg font-bold text-sm transition-all ${
-                activeTab === 'rent' 
-                  ? 'bg-white text-emerald-700 shadow-sm' 
+                activeTab === 'rent'
+                  ? 'bg-white text-emerald-700 shadow-sm'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               <Tractor className="w-4 h-4" /> <span>{t('tabRent')}</span>
             </button>
             <button
-              onClick={() => setActiveTab('service')}
+              onClick={() => { setActiveTab('service'); setSelectedCategory('All Equipment'); setSearchQuery(''); }}
               className={`flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg font-bold text-sm transition-all ${
-                activeTab === 'service' 
-                  ? 'bg-white text-blue-700 shadow-sm' 
+                activeTab === 'service'
+                  ? 'bg-white text-blue-700 shadow-sm'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -289,7 +314,7 @@ export default function EquipmentExchange() {
           ) : listings.length === 0 ? (
             <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white border border-gray-200 border-dashed rounded-[2rem] p-16 text-center flex flex-col items-center">
               <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6">
-                <Tractor className="w-10 h-10 text-gray-300" />
+                {activeTab === 'rent' ? <Tractor className="w-10 h-10 text-gray-300" /> : <Wrench className="w-10 h-10 text-gray-300" />}
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">{t('emptyTitle')}</h3>
               <p className="text-gray-500 max-w-md mx-auto">
@@ -301,8 +326,21 @@ export default function EquipmentExchange() {
               hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } }
             }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               
-              {listings.map((listing) => (
-                <motion.div 
+              {listings.map((listing) => {
+                const providerId =
+                  typeof listing.providerId === 'string'
+                    ? listing.providerId
+                    : listing.providerId?._id;
+                const providerName =
+                  typeof listing.providerId === 'object' && listing.providerId !== null
+                    ? listing.providerId.name
+                    : undefined;
+                const providerPhone =
+                  typeof listing.providerId === 'object' && listing.providerId !== null
+                    ? listing.providerId.phone
+                    : undefined;
+
+                return (<motion.div
                   key={listing._id} 
                   variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
                   className="bg-white rounded-[1.5rem] border border-gray-100 shadow-sm hover:shadow-xl hover:border-emerald-200 transition-all duration-300 flex flex-col group overflow-hidden"
@@ -321,11 +359,11 @@ export default function EquipmentExchange() {
                         <span className="bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center shadow-sm">
                           <ShieldCheck className="w-3.5 h-3.5 mr-1 text-emerald-500" /> {t('condition')} {listing.equipment.condition}
                         </span>
-                      ) : (
+                      ) : listing.serviceDetails?.operatorIncluded ? (
                         <span className="bg-blue-600/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center shadow-sm">
                           <User className="w-3.5 h-3.5 mr-1" /> {t('operatorIncluded')}
                         </span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
 
@@ -343,10 +381,10 @@ export default function EquipmentExchange() {
 
                     <div className="flex items-center mb-4 bg-gray-50/80 w-max px-3 py-1.5 rounded-lg border border-gray-100">
                       <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mr-2 text-emerald-700 font-bold text-xs">
-                        {listing.providerId?.name ? listing.providerId.name.charAt(0).toUpperCase() : <User className="w-3 h-3" />}
+                        {providerName ? providerName.charAt(0).toUpperCase() : <User className="w-3 h-3" />}
                       </div>
                       <p className="text-xs font-semibold text-gray-500">
-                        {t('owner')} <span className="text-gray-900 font-bold">{listing.providerId?.name || t('verifiedFarmer')}</span>
+                        {t('owner')} <span className="text-gray-900 font-bold">{providerName || t('verifiedFarmer')}</span>
                       </p>
                     </div>
 
@@ -366,12 +404,31 @@ export default function EquipmentExchange() {
 
                     <hr className="my-5 border-gray-100" />
 
-                    <ListingContactFooter 
+                    {currentUser && providerId === currentUser._id && (
+                      <div className="flex flex-wrap gap-3 mb-4">
+                        <Link
+                          href={`/dashboard/Services/post?listingId=${listing._id}`}
+                          className="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 px-4 py-2 text-sm font-semibold hover:bg-emerald-100 transition"
+                        >
+                          {t('edit')}
+                        </Link>
+                        <button
+                          type="button"
+                          disabled={deletingId === listing._id}
+                          onClick={() => handleDeleteListing(listing._id)}
+                          className="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-2 text-sm font-semibold hover:bg-red-100 transition disabled:opacity-60"
+                        >
+                          {deletingId === listing._id ? t('deleting') : t('delete')}
+                        </button>
+                      </div>
+                    )}
+
+                    <ListingContactFooter
                       title={listing.title}
                       pricing={listing.pricing}
-                      provider={{ 
-                        name: listing.providerId?.name || t('verifiedFarmer'), 
-                        phone: listing.providerId?.phone || '' 
+                      provider={{
+                        name: providerName || t('verifiedFarmer'),
+                        phone: providerPhone || ''
                       }}
                       location={listing.location}
                       type={activeTab}
@@ -379,7 +436,8 @@ export default function EquipmentExchange() {
 
                   </div>
                 </motion.div>
-              ))}
+                );
+              })}
 
             </motion.div>
           )}

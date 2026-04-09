@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
-import { 
+import {
   Landmark, Search, Filter, ExternalLink, Sparkles,
   CheckCircle2, FileText, IndianRupee, ShieldCheck, AlertCircle, Loader2,
-  Volume2, VolumeX
+  Volume2, VolumeX, ChevronDown
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { requestKrishiSarthi } from '@/lib/krishiSarthi';
@@ -96,6 +96,7 @@ export default function GovernmentSchemes() {
   const [schemes, setSchemes] = useState<SchemeData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [activeSchemeId, setActiveSchemeId] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
@@ -294,147 +295,166 @@ export default function GovernmentSchemes() {
 
   const renderSchemeCard = (scheme: SchemeData, mode: 'grid' | 'reel' = 'grid') => {
     const isReel = mode === 'reel';
+    const isExpanded = !isReel && activeSchemeId === scheme._id;
 
+    if (!isReel) {
+      /* ── GRID MODE: accordion card ── */
+      return (
+        <motion.div
+          key={scheme._id}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.22 }}
+          className={`bg-white rounded-3xl border shadow-lg shadow-gray-200/40 overflow-hidden transition-all cursor-pointer ${isExpanded ? 'border-agri-200 shadow-xl shadow-agri-900/10' : 'border-gray-100 hover:border-agri-100 hover:shadow-xl'}`}
+          onClick={() => setActiveSchemeId(isExpanded ? null : scheme._id)}
+        >
+          {/* Always-visible header — only icon + title + audio + chevron */}
+          <div className="flex items-center gap-3 p-5">
+            <div className="p-2.5 bg-gray-50 rounded-2xl border border-gray-100 shrink-0">
+              {getCategoryIcon(scheme.category)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-black text-agri-900 leading-tight">{scheme.name || t('unnamed')}</h3>
+            </div>
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                onClick={(e) => { e.stopPropagation(); toggleAudio(scheme); }}
+                className={`p-2 rounded-full transition-colors ${playingId === scheme._id ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-400 hover:bg-agri-50 hover:text-agri-600'}`}
+              >
+                {playingId === scheme._id ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </button>
+              <div className={`p-1.5 rounded-full transition-all ${isExpanded ? 'bg-agri-100 text-agri-700' : 'bg-gray-100 text-gray-400'}`}>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+              </div>
+            </div>
+          </div>
+
+          {/* Expandable body */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="overflow-hidden"
+              >
+                <div className="px-5 pb-5 space-y-4 border-t border-gray-100 pt-4">
+                  <div className="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100/50">
+                    <h4 className="text-sm font-bold text-emerald-900 mb-1 flex items-center">
+                      <CheckCircle2 className="w-4 h-4 mr-1.5 text-emerald-600" /> {t('primaryBenefits')}
+                    </h4>
+                    <p className="text-emerald-800 text-sm font-medium leading-relaxed">{scheme.benefits || t('noDetails')}</p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-900 mb-2 flex items-center">
+                      <FileText className="w-4 h-4 mr-1.5 text-gray-400" /> {t('eligibility')}
+                    </h4>
+                    <ul className="space-y-1.5">
+                      {(scheme.eligibility || []).slice(0, 6).map((criterion, idx) => (
+                        <li key={idx} className="text-sm text-gray-600 font-medium flex items-start">
+                          <span className="w-1.5 h-1.5 rounded-full mt-1.5 mr-2 shrink-0 bg-agri-400" />
+                          {criterion}
+                        </li>
+                      ))}
+                      {(!scheme.eligibility || scheme.eligibility.length === 0) && (
+                        <li className="text-sm text-gray-500 italic">{t('noEligibility')}</li>
+                      )}
+                    </ul>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <div>
+                      <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5">{t('deadline')}</p>
+                      <p className="font-black text-agri-900">{scheme.deadline || t('ongoing')}</p>
+                    </div>
+                    {scheme.link ? (
+                      <a
+                        href={scheme.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center text-sm font-bold text-agri-900 bg-agri-400 hover:bg-agri-500 px-5 py-2.5 rounded-xl transition-colors shadow-lg shadow-agri-400/30 group"
+                      >
+                        {t('applyNow')} <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </a>
+                    ) : (
+                      <button onClick={(e) => e.stopPropagation()} className="flex items-center text-sm font-bold text-gray-500 bg-gray-100 px-5 py-2.5 rounded-xl cursor-not-allowed">
+                        {t('checkLocal')}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      );
+    }
+
+    /* ── REEL MODE: unchanged ── */
     return (
       <motion.div
         key={scheme._id}
-        layout={!isReel}
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.96 }}
         transition={{ duration: 0.22 }}
-        className={isReel
-          ? 'relative bg-linear-to-br from-[#04241d] via-[#07513c] to-[#0b6a50] text-white rounded-none pl-5 pr-16 pt-44 pb-20 shadow-[0_18px_50px_-26px_rgba(2,44,34,0.9)] flex flex-col min-h-full overflow-hidden'
-          : 'bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/40 border border-gray-100 flex flex-col h-full hover:shadow-2xl hover:shadow-agri-900/10 transition-all'
-        }
+        className="relative bg-linear-to-br from-[#04241d] via-[#07513c] to-[#0b6a50] text-white rounded-none pl-5 pr-16 pt-44 pb-20 shadow-[0_18px_50px_-26px_rgba(2,44,34,0.9)] flex flex-col min-h-full overflow-hidden"
       >
-        {isReel && (
-          <>
-            <div className="absolute -right-12 -top-10 h-44 w-44 rounded-full bg-emerald-300/20 blur-3xl" />
-            <div className="absolute -left-14 bottom-12 h-44 w-44 rounded-full bg-lime-300/15 blur-3xl" />
-            <div className="absolute inset-0 bg-linear-to-t from-black/40 via-black/15 to-black/20" />
-          </>
-        )}
+        <div className="absolute -right-12 -top-10 h-44 w-44 rounded-full bg-emerald-300/20 blur-3xl" />
+        <div className="absolute -left-14 bottom-12 h-44 w-44 rounded-full bg-lime-300/15 blur-3xl" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-black/15 to-black/20" />
 
-        <div className="relative z-10 flex justify-between items-start mb-4">
-          {isReel ? (
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[11px] font-bold text-emerald-100 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20">
-                {scheme.category || t('general')}
-              </span>
-              <span className="text-[11px] font-bold text-white/90 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20">
-                {scheme.state || t('allStates')}
-              </span>
-            </div>
-          ) : (
-            <div className="flex items-start space-x-3">
-              <div className="p-3 bg-gray-50 rounded-2xl border border-gray-100">
-                {getCategoryIcon(scheme.category)}
-              </div>
-
-              <div>
-                <h3 className="text-xl font-black text-agri-900 leading-tight pr-2">
-                  {scheme.name || t('unnamed')}
-                </h3>
-
-                <div className="flex flex-wrap items-center mt-2 gap-2">
-                  <span className="text-xs font-bold text-agri-600 bg-agri-50 px-2.5 py-1 rounded-lg border border-agri-200">
-                    {scheme.category || t('general')}
-                  </span>
-
-                  <span className="text-xs font-bold text-gray-500 bg-gray-100 px-2.5 py-1 rounded-lg border border-gray-200">
-                    {scheme.state || t('allStates')}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {!isReel && (
-            <button
-              onClick={() => toggleAudio(scheme)}
-              className={`p-2 rounded-full transition-colors shrink-0 ${playingId === scheme._id ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-400 hover:bg-agri-50 hover:text-agri-600'}`}
-            >
-              {playingId === scheme._id ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-            </button>
-          )}
+        <div className="relative z-10 flex flex-wrap items-center gap-2 mb-4">
+          <span className="text-[11px] font-bold text-emerald-100 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20">
+            {scheme.category || t('general')}
+          </span>
+          <span className="text-[11px] font-bold text-white/90 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20">
+            {scheme.state || t('allStates')}
+          </span>
         </div>
 
-        <div className={`relative z-10 flex-1 space-y-4 ${isReel ? 'my-1' : 'my-4'}`}>
-          <div className={isReel
-            ? 'bg-black/25 p-4 rounded-2xl border border-white/25 backdrop-blur-md'
-            : 'bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100/50'
-          }>
-            <h4 className={isReel
-              ? 'text-sm font-bold text-emerald-100 mb-1 flex items-center'
-              : 'text-sm font-bold text-emerald-900 mb-1 flex items-center'
-            }>
-              <CheckCircle2 className={`w-4 h-4 mr-1.5 ${isReel ? 'text-emerald-300' : 'text-emerald-600'}`} /> {t('primaryBenefits')}
+        <div className="relative z-10 flex-1 space-y-4 my-1">
+          <div className="bg-black/25 p-4 rounded-2xl border border-white/25 backdrop-blur-md">
+            <h4 className="text-sm font-bold text-emerald-100 mb-1 flex items-center">
+              <CheckCircle2 className="w-4 h-4 mr-1.5 text-emerald-300" /> {t('primaryBenefits')}
             </h4>
-
-            <p className={isReel
-              ? 'text-white text-sm font-semibold leading-relaxed'
-              : 'text-emerald-800 text-sm font-medium leading-relaxed'
-            }>
-              {scheme.benefits || t('noDetails')}
-            </p>
+            <p className="text-white text-sm font-semibold leading-relaxed">{scheme.benefits || t('noDetails')}</p>
           </div>
 
           <div>
-            <h4 className={isReel
-              ? 'text-sm font-bold text-white mb-2 flex items-center'
-              : 'text-sm font-bold text-gray-900 mb-2 flex items-center'
-            }>
-              <FileText className={`w-4 h-4 mr-1.5 ${isReel ? 'text-emerald-200' : 'text-gray-400'}`} /> {t('eligibility')}
+            <h4 className="text-sm font-bold text-white mb-2 flex items-center">
+              <FileText className="w-4 h-4 mr-1.5 text-emerald-200" /> {t('eligibility')}
             </h4>
-
             <ul className="space-y-2">
-              {(scheme.eligibility || []).slice(0, isReel ? 4 : 6).map((criterion, idx) => (
-                <li key={idx} className={isReel
-                  ? 'text-sm text-white/95 font-semibold flex items-start'
-                  : 'text-sm text-gray-600 font-medium flex items-start'
-                }>
-                  <span className={`w-1.5 h-1.5 rounded-full mt-1.5 mr-2 shrink-0 ${isReel ? 'bg-emerald-300' : 'bg-agri-400'}`} />
+              {(scheme.eligibility || []).slice(0, 4).map((criterion, idx) => (
+                <li key={idx} className="text-sm text-white/95 font-semibold flex items-start">
+                  <span className="w-1.5 h-1.5 rounded-full mt-1.5 mr-2 shrink-0 bg-emerald-300" />
                   {criterion}
                 </li>
               ))}
-
               {(!scheme.eligibility || scheme.eligibility.length === 0) && (
-                <li className={isReel ? 'text-sm text-white/70 italic' : 'text-sm text-gray-500 italic'}>{t('noEligibility')}</li>
+                <li className="text-sm text-white/70 italic">{t('noEligibility')}</li>
               )}
             </ul>
           </div>
         </div>
 
-        <div className={`relative z-10 flex items-center justify-between pt-4 mt-auto ${isReel ? 'border-t border-white/20' : 'border-t border-gray-100'}`}>
+        <div className="relative z-10 flex items-center justify-between pt-4 mt-auto border-t border-white/20">
           <div>
-            <p className={isReel
-              ? 'text-[11px] text-white/70 font-bold uppercase tracking-wider mb-0.5'
-              : 'text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5'
-            }>{t('deadline')}</p>
-
-            <p className={isReel ? 'font-black text-emerald-100' : 'font-black text-agri-900'}>
-              {scheme.deadline || t('ongoing')}
-            </p>
+            <p className="text-[11px] text-white/70 font-bold uppercase tracking-wider mb-0.5">{t('deadline')}</p>
+            <p className="font-black text-emerald-100">{scheme.deadline || t('ongoing')}</p>
           </div>
-
           {scheme.link ? (
-            <a
-              href={scheme.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={isReel
-                ? 'flex items-center text-sm font-bold text-agri-900 bg-emerald-300 hover:bg-emerald-200 px-4 py-2.5 rounded-xl transition-colors shadow-lg shadow-emerald-900/20 group'
-                : 'flex items-center text-sm font-bold text-agri-900 bg-agri-400 hover:bg-agri-500 px-5 py-2.5 rounded-xl transition-colors shadow-lg shadow-agri-400/30 group'
-              }
-            >
+            <a href={scheme.link} target="_blank" rel="noopener noreferrer"
+              className="flex items-center text-sm font-bold text-agri-900 bg-emerald-300 hover:bg-emerald-200 px-4 py-2.5 rounded-xl transition-colors shadow-lg shadow-emerald-900/20 group">
               {t('applyNow')} <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </a>
           ) : (
-            <button className={isReel
-              ? 'flex items-center text-sm font-bold text-white/80 bg-white/10 px-4 py-2.5 rounded-xl cursor-not-allowed border border-white/20'
-              : 'flex items-center text-sm font-bold text-gray-500 bg-gray-100 px-5 py-2.5 rounded-xl cursor-not-allowed'
-            }>
+            <button className="flex items-center text-sm font-bold text-white/80 bg-white/10 px-4 py-2.5 rounded-xl cursor-not-allowed border border-white/20">
               {t('checkLocal')}
             </button>
           )}
@@ -658,7 +678,7 @@ export default function GovernmentSchemes() {
             </AnimatePresence>
           </div>
 
-          <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="hidden md:flex md:flex-col gap-6">
             <AnimatePresence>
               {filteredSchemes.length === 0 ? (
                 <motion.div

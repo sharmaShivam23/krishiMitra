@@ -492,72 +492,67 @@ export default function CropIntelligence() {
 
             
               {!result && !isAnalyzing && !error && (
-                <motion.div key="db-grid" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col bg-white rounded-2xl p-6 shadow-sm border border-gray-200/60">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-bold text-gray-900 flex items-center">
-                      <Database className="w-5 h-5 mr-2 text-emerald-600" />
-                      {t('directoryTitle')}
-                    </h3>
-                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200/50">
-                      {availableCrops.length} {t('registered')}
-                    </span>
+                <motion.div key="welcome" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-150 flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200/60">
+                  {/* Hero image banner */}
+                  <div className="relative h-52 overflow-hidden shrink-0"
+                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=800&auto=format&fit=crop')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                    <div className="absolute inset-0 bg-linear-to-b from-emerald-950/30 via-emerald-900/60 to-emerald-950/85" />
+                    <div className="absolute inset-0 flex flex-col justify-end p-6">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-400/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold mb-3 w-fit">
+                        <Sparkles className="w-3 h-3" /> AI Crop Intelligence
+                      </div>
+                      <h3 className="text-white text-2xl md:text-3xl font-black leading-tight">
+                        Select a crop to unlock<br />AI-powered farm insights
+                      </h3>
+                      {availableCrops.length > 0 && (
+                        <p className="text-emerald-200/70 text-sm font-semibold mt-1.5">
+                          {availableCrops.length} crops in our AI database
+                        </p>
+                      )}
+                    </div>
                   </div>
 
-                  {isLoadingCrops ? (
-                    <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl bg-gray-50 min-h-100">
-                      <Loader2 className="w-8 h-8 animate-spin text-emerald-500 mb-3" />
-                      <p className="text-gray-500 font-medium text-sm">{t('loadingDb')}</p>
+                  {/* Body */}
+                  <div className="flex-1 p-6 flex flex-col gap-5">
+                    {/* Season highlight chips */}
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Popular crops this season</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { label: '🌾 Wheat', tag: 'Rabi', color: 'bg-amber-50 border-amber-200 text-amber-800' },
+                          { label: '🌿 Cotton', tag: 'Kharif', color: 'bg-emerald-50 border-emerald-200 text-emerald-800' },
+                          { label: '🧅 Onion', tag: 'Rabi', color: 'bg-orange-50 border-orange-200 text-orange-800' },
+                          { label: '🌽 Maize', tag: 'Kharif', color: 'bg-yellow-50 border-yellow-200 text-yellow-800' },
+                        ].map(({ label, tag, color }) => (
+                          <div key={label} className={`flex items-center justify-between text-sm font-semibold border rounded-xl px-3 py-2 ${color}`}>
+                            <span>{label}</span>
+                            <span className="text-[10px] font-bold opacity-60 uppercase">{tag}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-150 overflow-y-auto custom-scrollbar pr-2 pb-4">
-                      {availableCrops.map((crop) => (
-                        <div key={crop._id} onClick={() => setFormData({...formData, crop: crop.name})} className="bg-gray-50 p-5 rounded-xl border border-gray-200/60 hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden">
-                          <div className="absolute top-0 left-0 w-1 h-full bg-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                          
-                          <div className="flex justify-between items-start mb-4">
-                            <div>
-                              <h4 className="font-bold text-gray-900 text-lg group-hover:text-emerald-700 transition-colors leading-tight">
-                                {translateDBText(crop.name, locale)}
-                              </h4>
-                              {crop.localName && <p className="text-xs font-semibold text-gray-400 mt-0.5">{crop.localName}</p>}
-                            </div>
-                            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center group-hover:bg-emerald-100 transition-colors shrink-0 shadow-sm">
-                              <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-emerald-600" />
-                            </div>
-                          </div>
 
-                          <div className="space-y-2.5 mb-4 flex-1">
-                            {crop.harvestTimeDays && (
-                              <div className="flex items-center text-sm font-medium text-gray-600">
-                                <Calendar className="w-4 h-4 mr-2 text-amber-500" /> {crop.harvestTimeDays} {t('cycle')}
-                              </div>
-                            )}
-                            {crop.estimatedYield && (
-                              <div className="flex items-center text-sm font-medium text-gray-600">
-                                <TrendingUp className="w-4 h-4 mr-2 text-emerald-500" /> {crop.estimatedYield}
-                              </div>
-                            )}
-                            {crop.waterRequirements && (
-                              <div className="flex items-center text-sm font-medium text-gray-600">
-                                <Droplets className="w-4 h-4 mr-2 text-blue-500" /> {crop.waterRequirements}
-                              </div>
-                            )}
-                          </div>
-
-                          {crop.soilType && crop.soilType.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5 mt-auto pt-4 border-t border-gray-200/60">
-                              {crop.soilType.slice(0, 3).map((soil, i) => (
-                                <span key={i} className="text-[10px] font-bold px-2 py-1 bg-white border border-gray-200 text-gray-500 rounded-md">
-                                  {soil}
-                                </span>
-                              ))}
-                              {crop.soilType.length > 3 && <span className="text-[10px] font-bold px-2 py-1 text-gray-400">+{crop.soilType.length - 3}</span>}
-                            </div>
-                          )}
+                    {/* How to steps */}
+                    <div className="space-y-2.5">
+                      {[
+                        { n: '01', icon: Target,   text: 'Choose a crop from the dropdown' },
+                        { n: '02', icon: MapPin,    text: 'Add your region to auto-fetch weather' },
+                        { n: '03', icon: Sparkles,  text: 'Run AI analysis for actionable insights' },
+                      ].map(({ n, icon: Icon, text }) => (
+                        <div key={n} className="flex items-center gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                          <span className="text-xs font-black text-emerald-400 w-5 shrink-0">{n}</span>
+                          <Icon className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <p className="text-sm font-medium text-emerald-900">{text}</p>
                         </div>
                       ))}
                     </div>
-                  )}
+
+                    {isLoadingCrops && (
+                      <div className="flex items-center gap-2 text-sm text-gray-400 font-medium">
+                        <Loader2 className="w-4 h-4 animate-spin" /> {t('loadingDb')}
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               )}
 
