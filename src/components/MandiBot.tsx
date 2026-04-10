@@ -14,7 +14,7 @@ export default function AiAdvisorButton() {
       <div className="absolute w-14 h-14 bg-emerald-500 rounded-full animate-ping opacity-20 pointer-events-none"></div>
       
       <a 
-        href="/mandi-advisor"
+        href="/dashboard/mandi-prices/mandi-advisor2"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className="group relative flex items-center justify-center p-0.5 rounded-full bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600 shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:shadow-[0_0_50px_rgba(16,185,129,0.7)] transition-all duration-300"

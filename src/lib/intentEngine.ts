@@ -29,7 +29,7 @@ export const processVoiceCommand = (transcript: string, locale: string = 'hi'): 
     },
     {
       keywords: ['mandi', 'bhav', 'rate', 'kimat', 'price'],
-      path: `/${locale}/dashboard/mandi-prices/mandi-advisor`,
+      path: `/${locale}/dashboard/mandi-prices/mandi-advisor2`,
       responsePa: 'ਮੰਡੀ ਦੇ ਭਾਅ ਦਿਖਾ ਰਿਹਾ ਹਾਂ',
       responseDefault: 'Mandi ke bhav aur advisor khol raha hoon.'
     },
