@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { MapPin, ChevronDown } from 'lucide-react';
 import { STATES_DISTRICTS } from '@/utils/indiaStates';
+import { useTranslations } from 'next-intl';
 
 const STATE_LIST = Object.keys(STATES_DISTRICTS).sort();
 
@@ -30,11 +31,14 @@ export default function StateDistrictSelector({
   onStateChange,
   onDistrictChange,
   autoFillFromDB = false,
-  stateLabel = 'State',
-  districtLabel = 'District',
+  stateLabel,
+  districtLabel,
   required = false,
   className = '',
 }: Props) {
+  const t = useTranslations('LocationSelector');
+  const resolvedStateLabel = stateLabel ?? t('stateLabel');
+  const resolvedDistrictLabel = districtLabel ?? t('districtLabel');
   const [autoFilled, setAutoFilled] = useState(false);
   const districts = state ? (STATES_DISTRICTS[state] ?? []) : [];
 
@@ -75,10 +79,10 @@ export default function StateDistrictSelector({
       <div>
         <label className="block text-sm font-bold text-gray-700 mb-1.5 flex items-center gap-1.5">
           <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-          {stateLabel}
+          {resolvedStateLabel}
           {autoFilled && (
             <span className="ml-1 text-[10px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full">
-              from profile
+              {t('fromProfile')}
             </span>
           )}
           {required && <span className="text-red-500 ml-0.5">*</span>}
@@ -91,7 +95,7 @@ export default function StateDistrictSelector({
             onChange={handleStateChange}
             className={selectClass}
           >
-            <option value="">— Select State —</option>
+            <option value="">— {t('selectState')} —</option>
             {STATE_LIST.map(s => (
               <option key={s} value={s}>{s}</option>
             ))}
@@ -104,7 +108,7 @@ export default function StateDistrictSelector({
       <div>
         <label className="block text-sm font-bold text-gray-700 mb-1.5 flex items-center gap-1.5">
           <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-          {districtLabel}
+          {resolvedDistrictLabel}
           {required && <span className="text-red-500 ml-0.5">*</span>}
         </label>
         <div className="relative">
@@ -116,7 +120,7 @@ export default function StateDistrictSelector({
             disabled={!state}
             className={selectClass}
           >
-            <option value="">— Select District —</option>
+            <option value="">— {t('selectDistrict')} —</option>
             {districts.map(d => (
               <option key={d} value={d}>{d}</option>
             ))}

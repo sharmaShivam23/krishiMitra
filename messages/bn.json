@@ -8,10 +8,7 @@
     "title2": "কা ডিজিটাল মিত্র",
     "subtitle": "স্মার্ট ফার্মিং টুল, লাইভ মান্ডির দাম, এবং ভারতীয় কৃষকদের আরও বৃদ্ধি পেতে এবং আরও উপার্জন করতে সাহায্য করার জন্য তৈরি আবহাওয়ার আপডেট।",
     "btnAdvisor": "স্মার্ট অ্যাডভাইজার শুরু করুন",
-        "help": "আমরা শুধু pH ও আর্দ্রতা চাই।",
-        "errors": {
-          "required": "সংরক্ষণ করার আগে pH এবং আর্দ্রতা মান লিখুন।"
-        }
+    "btnProfile": "ফার্ম প্রোফাইল সেট আপ করুন"
   },
   "Features": {
     "heading": "একটি ভাল ফসলের জন্য সরঞ্জাম.",
@@ -25,14 +22,15 @@
         "title": "বিক্রি করার সেরা সময়",
         "desc": "সর্বোচ্চ লাভের জন্য আপনার ফসল বিক্রি করার সঠিক সময় খুঁজে বের করুন।"
       },
+      "voiceAssistant": {
+        "title": "কৃষিসার্থি ভয়েস এআই",
+        "desc": "স্থানীয় ভাষায় কথা বলুন, সঙ্গে সঙ্গে কৃষি পরামর্শ ও আবহাওয়ার আপডেট পান।"
+      },
       "diseaseVision": {
         "title": "ফসলের রোগ স্ক্যানার",
         "desc": "একটি অসুস্থ উদ্ভিদ একটি ছবি তুলুন. তাত্ক্ষণিকভাবে রোগটি এবং কীভাবে এটি চিকিত্সা করা যায় তা খুঁজে বের করুন।"
       },
       "microClimate": {
-      "errors": {
-        "required": "Please fill land name, state, and district."
-      },
         "title": "7 দিনের স্থানীয় আবহাওয়া",
         "desc": "আপনার সঠিক খামার অবস্থানের জন্য সঠিক 7-দিনের আবহাওয়ার পূর্বাভাস পান।"
       },
@@ -41,18 +39,6 @@
         "desc": "সারা ভারত জুড়ে আপনার ফসলের জন্য প্রতিদিন, লাইভ APMC মান্ডির দাম দেখুন।"
       },
       "community": {
-          "errors": {
-            "formInvalid": "Please fill all required fields.",
-            "name": "Enter farmer name.",
-            "phone": "Enter phone number.",
-            "phoneInvalid": "Enter a 10-digit phone number.",
-            "line1": "Enter address line.",
-            "village": "Enter village.",
-            "district": "Enter district.",
-            "state": "Enter state.",
-            "pincode": "Enter pincode.",
-            "pincodeInvalid": "Enter a 6-digit pincode."
-          },
         "title": "কৃষক সম্প্রদায়",
         "desc": "অন্যান্য কৃষকদের সাথে সংযোগ করুন। প্রশ্ন জিজ্ঞাসা করুন, পরামর্শ ভাগ করুন এবং একে অপরকে সাহায্য করুন।"
       },
@@ -63,10 +49,15 @@
       "yieldAnalytics": {
         "title": "ফসল ট্র্যাকার",
         "desc": "পরবর্তী মৌসুমের জন্য আরও ভাল পরিকল্পনা করতে আপনার অতীতের ফসলের একটি রেকর্ড রাখুন।"
+      },
+      "soilIntelligence": {
+        "title": "মাটি বুদ্ধিমত্তা ল্যাব",
+        "desc": "কাছাকাছি অনুমোদিত মাটি পরীক্ষার ল্যাব খুঁজুন এবং ব্যক্তিগত ফসল সুপারিশ পান।"
       }
     }
   },
   "TrustSection": {
+    "badge": "সারা ভারতে বিশ্বস্ত",
     "heading1": "সঙ্গে আপনার খামার ক্ষমতায়ন",
     "heading2": "প্রযুক্তি",
     "heading3": "এবং সম্প্রদায়।",
@@ -74,6 +65,17 @@
     "list1": "স্থানীয় এসএমএস সতর্কতার সাথে লাইভ APMC মান্ডি দাম",
     "list2": "স্থানীয় ট্রাক্টর, সরঞ্জাম, এবং কৃষি শ্রমিক ভাড়া করুন",
     "list3": "স্মার্ট কৃষি উপদেষ্টা এবং যাচাইকৃত সরকারী প্রকল্প",
+    "trustedBy": {
+      "ministry": "🏛️ কৃষি মন্ত্রণালয়",
+      "nabard": "🏦 NABARD",
+      "ncdex": "📊 NCDEX",
+      "apmc": "🌾 APMC"
+    },
+    "testimonials": {
+      "ramesh": "মন্ডির দাম সরাসরি আমার ফোনে — এখন আর দালালদের ঠকানো নয়!",
+      "priya": "এই মৌসুমে রোগ শনাক্তকরণ আমার পুরো গমের ফসল বাঁচিয়েছে।",
+      "sukhbir": "AI পরামর্শদাতা বিক্রির সঠিক সময় বলেছে। এ বছর অতিরিক্ত ₹18,000 পেয়েছি।"
+    },
     "stat1Label": "মান্ডি মূল্য",
     "stat1Value": "রিয়েল-টাইম",
     "stat2Label": "প্ল্যাটফর্ম কভারেজ",
@@ -88,30 +90,33 @@
     "smsDisclaimer": "স্ট্যান্ডার্ড এসএমএস রেট প্রযোজ্য হতে পারে। যেকোনো সময় বাতিল করুন।",
     "brandDesc": "স্মার্ট পরামর্শ, লাইভ বাজার মূল্য এবং সহজ চাষের সরঞ্জামগুলির মাধ্যমে ভারতীয় কৃষকদের আরও ভালভাবে বেড়ে উঠতে সাহায্য করা।",
     "helpline": "24/7 কিষাণ হেল্পলাইন",
+    "actions": {
+      "unsubscribe": "আনসাবস্ক্রাইব করুন",
+      "needUnsubscribe": "আনসাবস্ক্রাইব করতে চান?",
+      "subscribeToAlerts": "অ্যালার্ট সাবস্ক্রাইব করুন"
+    },
+    "subscribe": {
+      "invalidPhone": "অনুগ্রহ করে সঠিক 10-অংকের নম্বর লিখুন।",
+      "loginRequired": "সাবস্ক্রাইব করতে সাইন ইন করুন। লগইনে পাঠানো হচ্ছে...",
+      "actionSubscribe": "সাবস্ক্রিপশন",
+      "actionUnsubscribe": "আনসাবস্ক্রিপশন",
+      "actionFailed": "{action} ব্যর্থ হয়েছে।"
+    },
+    "call": {
+      "needSubscribe": "এই ফিচার ব্যবহার করতে আগে কিসান হেল্পলাইন সাবস্ক্রাইব করুন।",
+      "loginRequired": "এই ফিচার ব্যবহার করতে অনুগ্রহ করে লগ ইন করুন।",
+      "requestFailed": "কল অনুরোধ ব্যর্থ হয়েছে",
+      "initiated": "কল শুরু হয়েছে!",
+      "genericError": "কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+      "titleUnsubscribed": "আগে হেল্পলাইন সাবস্ক্রাইব করুন",
+      "titleDefault": "কলব্যাকের জন্য ক্লিক করুন",
+      "statusConnecting": "কানেক্ট হচ্ছে...",
+      "statusSuccess": "কল শুরু! ✓",
+      "statusError": "ব্যর্থ — আবার ট্যাপ করুন",
+      "statusUnsubscribed": "আগে সাবস্ক্রাইব করুন",
+      "helper": "কলব্যাকের জন্য ট্যাপ করুন • শুধু সাবস্ক্রাইবারদের জন্য"
+    },
     "platformHeading": "প্ল্যাটফর্ম",
-        "orderSummaryTitle": "Order summary",
-        "orderItemTitle": "Soil test strip kit",
-        "orderItemDesc": "Everything you need to read pH + moisture.",
-        "orderPaymentLabel": "Payment",
-        "orderPaymentValue": "Cash on delivery",
-        "orderPrice": "Pay when the kit arrives.",
-        "shippingTitle": "Shipping address",
-        "shippingHelp": "Add your address to unlock shipping.",
-        "orderStatusLabel": "Order confirmed",
-        "viewTracking": "Track order",
-        "trackingTitle": "Order tracking",
-        "trackingHelp": "We update your delivery status automatically.",
-        "orderIdLabel": "Tracking ID",
-        "orderDateLabel": "Order date",
-        "etaLabel": "ETA",
-        "etaDefault": "3-5 days",
-        "tracking": {
-          "ordered": "Ordered",
-          "packed": "Packed",
-          "shipped": "Shipped",
-          "outForDelivery": "Out for delivery",
-          "delivered": "Delivered"
-        },
     "platformLinks": {
       "intel": "স্মার্ট ক্রপ গাইড",
       "mandi": "লাইভ মান্ডি রেট",
@@ -163,6 +168,52 @@
     "systemStatus": "খামারের অবস্থা",
     "online": "অনলাইন",
     "runScan": "স্ক্যান ক্রপ",
+    "greetings": {
+      "morning": "শুভ সকাল",
+      "afternoon": "শুভ অপরাহ্ণ",
+      "evening": "শুভ সন্ধ্যা",
+      "fallbackName": "কৃষক"
+    },
+    "seasonBadge": "{season} মৌসুম",
+    "seasons": {
+      "kharif": "খরিফ",
+      "rabi": "রবি",
+      "zaid": "জায়েদ"
+    },
+    "tiles": {
+      "mandi": {
+        "label": "মান্ডি দাম",
+        "sub": "লাইভ বাজার দর",
+        "chip": "🌾 আজ"
+      },
+      "disease": {
+        "label": "ফসল ডাক্তার",
+        "sub": "AI রোগ সনাক্তকরণ",
+        "chip": "🔬 AI স্ক্যান"
+      },
+      "lifecycle": {
+        "label": "ফসল জীবনচক্র",
+        "sub": "বৃদ্ধি পরিকল্পক",
+        "chip": "🌱 পরিকল্পনা"
+      },
+      "advisor": {
+        "label": "AI পরামর্শক",
+        "sub": "স্মার্ট সুপারিশ",
+        "chip": "🤖 স্মার্ট"
+      }
+    },
+    "soilCard": {
+      "eyebrow": "মাটি পরিচিতি",
+      "title": "মাটি জানুন, আরও স্মার্টভাবে চাষ করুন।",
+      "description": "সরকারি রিপোর্ট বা হোম কিট। ক্ষেত-নির্দিষ্ট, বাংলা-বান্ধব।",
+      "tags": {
+        "ph": "pH",
+        "npk": "NPK",
+        "soilType": "মাটির ধরন"
+      },
+      "cta": "🌱 আমার মাটি পরীক্ষা করুন"
+    },
+    "growthProgress": "ফসলের অগ্রগতি",
     "weather": {
       "title": "লাইভ স্থানীয় আবহাওয়া",
       "loading": "আবহাওয়া পরীক্ষা করা হচ্ছে...",
@@ -198,6 +249,14 @@
       "optimalTitle": "ভালো আবহাওয়া",
       "optimalDesc": "বর্তমান আবহাওয়া আপনার ফসলের জন্য নিরাপদ। আপনি স্বাভাবিক হিসাবে আপনার ক্ষেত জল দিতে পারেন.",
       "button": "বুঝেছি"
+    },
+    "aiPanel": {
+      "intro": "আপনার মাটি, ফসল ও অবস্থানের ভিত্তিতে ব্যক্তিগত পরামর্শ।",
+      "alertTitle": "সর্বোত্তম নির্ভুলতার জন্য মাটির প্রোফাইল যোগ করুন",
+      "alertDesc": "pH ও NPK পেলে আমরা ফসল, সার এবং সেচের সুপারিশ করতে পারি।",
+      "insightLabel": "AI ইনসাইট",
+      "insightDesc": "আজকের স্বাস্থ্যকর মাটি আগামীকাল বেশি ফলন দেয়। মাটি স্বাস্থ্য কার্ড বা দ্রুত কিট টেস্ট দিয়ে শুরু করুন।",
+      "cta": "মাটি পরীক্ষা শুরু করুন"
     }
   },
   "Register": {
@@ -206,8 +265,26 @@
     "switchLink": "এখানে সাইন ইন করুন",
     "fullName": "পুরো নাম",
     "phone": "ফোন নম্বর",
+    "namePlaceholder": "রাম সিং",
+    "phonePlaceholder": "98765 43210",
     "region": "কৃষি অঞ্চল",
     "regionPlaceholder": "আপনার রাজ্য নির্বাচন করুন",
+    "district": "জেলা",
+    "roleLabel": "ভূমিকা",
+    "roles": {
+      "farmer": "কৃষক",
+      "provider": "প্রোভাইডার (বিক্রেতা)"
+    },
+    "languageLabel": "অ্যাপের ভাষা",
+    "languageOptions": {
+      "en": "English",
+      "hi": "Hindi (हिंदी)",
+      "mr": "Marathi (मराठी)",
+      "pa": "Punjabi (ਪੰਜਾਬੀ)",
+      "bn": "Bengali (বাংলা)",
+      "te": "Telugu (తెలుగు)",
+      "ta": "Tamil (தமிழ்)"
+    },
     "password": "পাসওয়ার্ড",
     "passwordPlaceholder": "একটি শক্তিশালী পাসওয়ার্ড তৈরি করুন",
     "button": "অ্যাকাউন্ট তৈরি করুন",
@@ -220,24 +297,110 @@
     "trusted": "50,000+ কৃষকদের দ্বারা বিশ্বস্ত",
     "getOtp": "OTP পান",
     "enterOtp": "6-ডিজিটের কোড লিখুন",
+    "otpPlaceholder": "------",
     "verifyBtn": "যাচাই করুন এবং নিবন্ধন করুন",
     "otpSentTo": "এসএমএসের মাধ্যমে কোড পাঠানো হয়েছে",
-    "back": "ফিরে"
+    "back": "ফিরে",
+    "errors": {
+      "providerIncomplete": "প্রোভাইডার যাচাইয়ের তথ্য অসম্পূর্ণ।",
+      "otpSendFailed": "OTP পাঠাতে ব্যর্থ",
+      "otpInvalid": "দয়া করে সঠিক ৬-সংখ্যার OTP লিখুন",
+      "registrationFailed": "রেজিস্ট্রেশন ব্যর্থ হয়েছে"
+    },
+    "providerModal": {
+      "title": "প্রোভাইডার যাচাই",
+      "subtitle": "শুধু অনুমোদিত বিক্রেতা",
+      "errorRequired": "অনুগ্রহ করে সব প্রয়োজনীয় যাচাই ক্ষেত্র পূরণ করুন।",
+      "shopName": "দোকানের নাম",
+      "shopPlaceholder": "যেমন, কৃষি কেন্দ্র",
+      "licenseNumber": "সরকারি লাইসেন্স নম্বর",
+      "licensePlaceholder": "কীটনাশক/সার লাইসেন্স নম্বর",
+      "licenseUrl": "লাইসেন্স ডকুমেন্ট URL",
+      "licenseUrlPlaceholder": "ডকুমেন্ট ছবির লিংক",
+      "gstNumber": "GST নম্বর",
+      "optional": "(ঐচ্ছিক)",
+      "cancel": "বাতিল করুন",
+      "save": "বিবরণ সেভ করুন"
+    }
   },
   "Login": {
     "title": "আবার স্বাগতম।",
     "switchText": "কৃষিমিত্রে নতুন?",
     "switchLink": "একটি অ্যাকাউন্ট তৈরি করুন",
     "phone": "ফোন নম্বর",
+    "phonePlaceholder": "98765 43210",
     "password": "পাসওয়ার্ড",
     "forgot": "পাসওয়ার্ড ভুলে গেছেন?",
     "placeholder": "আপনার পাসওয়ার্ড লিখুন",
     "button": "সাইন ইন করুন",
     "loading": "সাইন ইন করা হচ্ছে...",
     "success": "অ্যাকাউন্ট সফলভাবে তৈরি করা হয়েছে! অনুগ্রহ করে সাইন ইন করুন।",
+    "authFailed": "অথেনটিকেশন ব্যর্থ হয়েছে",
+    "back": "ফিরে যান",
     "featureTitle": "বুদ্ধিমান হও, ভাল ফসল কাটাও।",
     "featureDesc": "আপনার আবহাওয়া পরীক্ষা করুন, আপনার ফসল সুস্থ রাখুন এবং এক জায়গায় রিয়েল-টাইম বাজার মূল্য পান।",
     "systemStatus": "সিস্টেম অনলাইন"
+  },
+  "Splash": {
+    "initializing": "সিস্টেম চালু হচ্ছে...",
+    "tagline": "আধুনিক কৃষককে ক্ষমতায়ন",
+    "skip": "ইনিশিয়ালাইজেশন এড়িয়ে যান",
+    "steps": {
+      "starting": "কৃষিমিত্র শুরু হচ্ছে...",
+      "connectingMarkets": "আঞ্চলিক বাজারের সাথে সংযোগ হচ্ছে...",
+      "syncingWeather": "স্থানীয় আবহাওয়া ডাটা সিঙ্ক হচ্ছে...",
+      "preparingInsights": "ফসলের ইনসাইট প্রস্তুত হচ্ছে...",
+      "securing": "সংযোগ সুরক্ষিত করা হচ্ছে...",
+      "welcome": "কৃষিমিত্রে স্বাগতম।"
+    }
+  },
+  "ImageUpload": {
+    "label": "পণ্যের ছবি",
+    "tabs": {
+      "upload": "ফটো আপলোড করুন",
+      "url": "URL পেস্ট করুন"
+    },
+    "status": {
+      "uploading": "Cloudinary-এ আপলোড হচ্ছে...",
+      "imageSet": "ছবি সেট হয়েছে"
+    },
+    "prompt": {
+      "clickUpload": "আপলোড করতে ক্লিক করুন",
+      "dragDrop": "বা ড্র্যাগ & ড্রপ করুন",
+      "fileTypes": "PNG, JPG, WEBP — 10MB পর্যন্ত",
+      "urlPlaceholder": "https://example.com/image.jpg"
+    },
+    "actions": {
+      "use": "ব্যবহার করুন"
+    },
+    "alerts": {
+      "invalidFile": "অনুগ্রহ করে একটি ইমেজ ফাইল নির্বাচন করুন।",
+      "uploadFailed": "ইমেজ আপলোড ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।"
+    }
+  },
+  "LocationSelector": {
+    "stateLabel": "রাজ্য",
+    "districtLabel": "জেলা",
+    "fromProfile": "প্রোফাইল থেকে",
+    "selectState": "রাজ্য নির্বাচন করুন",
+    "selectDistrict": "জেলা নির্বাচন করুন"
+  },
+  "ListingContact": {
+    "rateLabel": "হার",
+    "perUnit": "/ {unit}",
+    "listenTitle": "শুনুন / থামান",
+    "whatsappTitle": "WhatsApp {name}",
+    "callTitle": "Call {name}",
+    "waMessage": "হাই {name}, KrishiMitra-এ আপনার \"{title}\" লিস্টিংয়ে আমি আগ্রহী।",
+    "units": {
+      "day": "দিন",
+      "hour": "ঘণ্টা",
+      "acre": "একর"
+    },
+    "audio": {
+      "rent": "এই কৃষক, {name}, {state} এর {district} থেকে। তিনি তার {title} ভাড়ায় দিতে চান, যার হার {rate} টাকা প্রতি {unit}। যোগাযোগের জন্য সবুজ ফোন আইকনে ক্লিক করুন।",
+      "service": "এই কৃষক, {name}, {state} এর {district} থেকে। তিনি তার {title} সেবার জন্য দিতে চান, যার হার {rate} টাকা প্রতি {unit}। যোগাযোগের জন্য সবুজ ফোন আইকনে ক্লিক করুন।"
+    }
   },
   "SellingPools": {
     "title": "গ্রুপ সেলিং",
@@ -509,6 +672,7 @@
   "GovernmentSchemes": {
     "title": "সরকারী স্কিম",
     "subtitle": "সরকারী ভর্তুকি, বীমা, এবং আর্থিক সাহায্য খুঁজুন আপনি সহজেই আবেদন করতে পারেন।",
+    "askSarthi": "সার্থীকে জিজ্ঞেস করুন",
     "searchPlaceholder": "নাম বা প্রকার দ্বারা স্কিম অনুসন্ধান করুন...",
     "syncing": "সরকারী পোর্টাল পরীক্ষা করা হচ্ছে...",
     "errorTitle": "স্কিমগুলি লোড করা যায়নি৷",
@@ -530,6 +694,228 @@
       "Insurance": "ফসল বীমা",
       "Credit & Loans": "কৃষি ঋণ",
       "Other": "অন্যান্য"
+    }
+  },
+  "SoilLabs": {
+    "back": "মাটি হাবে ফিরে যান",
+    "badge": "মাটি পরীক্ষা কেন্দ্র",
+    "title": "আপনার Soil Health Card পান",
+    "subtitle": "Soil Health Card (SHC) আপনার মাঠের পুষ্টি মাত্রার বিস্তারিত বিশ্লেষণ দেয়। নিচে নিকটবর্তী সরকারি অনুমোদিত ল্যাব খুঁজুন, 500g মাটির নমুনা জমা দিন এবং আপনার অফিসিয়াল প্রোফাইল পান।",
+    "locateTitle": "ল্যাব খুঁজুন",
+    "selectState": "১. রাজ্য নির্বাচন করুন",
+    "selectDistrict": "২. জেলা নির্বাচন করুন",
+    "chooseState": "রাজ্য নির্বাচন করুন...",
+    "chooseDistrict": "জেলা নির্বাচন করুন...",
+    "searching": "খোঁজা হচ্ছে...",
+    "findLabs": "ল্যাব খুঁজুন",
+    "howToSample": "মাটির নমুনা কীভাবে নেবেন",
+    "steps": {
+      "step1": "15cm গভীর V-আকৃতির গর্ত খনন করুন",
+      "step2": "খোলা দেওয়াল থেকে মাটির পাতলা স্তর নিন",
+      "step3": "ক্ষেতের 8-10টি স্থান থেকে নমুনা সংগ্রহ করুন",
+      "step4": "ভালভাবে মিশিয়ে 500g পরিষ্কার ব্যাগে রাখুন",
+      "step5": "ব্যাগে নাম, ফোন এবং ক্ষেতের বিবরণ লিখুন"
+    },
+    "noLabsTitle": "কোনো ল্যাব পাওয়া যায়নি",
+    "noLabsDesc": "রাজ্য ও জেলা নির্বাচন করে খুঁজুন যাতে কাছাকাছি সরকারি পরীক্ষা কেন্দ্র পাওয়া যায়।",
+    "labCard": {
+      "unnamed": "পরীক্ষাগার",
+      "unknownDistrict": "অজানা জেলা",
+      "unknownState": "অজানা রাজ্য"
+    },
+    "errors": {
+      "api": "API ত্রুটি: {message}",
+      "parse": "Parse ত্রুটি। সার্ভার পাঠিয়েছে: {snippet}",
+      "network": "নেটওয়ার্ক ত্রুটি: {message}",
+      "unknown": "অজানা সার্ভার ত্রুটি"
+    },
+    "noOptions": "কোনো বিকল্প নেই"
+  },
+  "MandiPrices": {
+    "title": "লাইভ মন্ডি দাম",
+    "subtitle": {
+      "locating": "আপনার রাজ্য খোঁজা হচ্ছে...",
+      "sync": "আপনার লোকেশনের সাথে সিঙ্ক"
+    },
+    "buttons": {
+      "predictor": "মন্ডি প্রেডিক্টর",
+      "ask": "সার্থীকে জিজ্ঞেস করুন",
+      "export": "CSV ডাউনলোড করুন"
+    },
+    "filters": {
+      "commodity": "ফসল",
+      "state": "রাজ্য",
+      "district": "জেলা",
+      "districtPlaceholder": "জেলার নাম লিখুন..."
+    },
+    "columns": {
+      "commodityVariety": "ফসল ও জাত",
+      "marketLocation": "মন্ডি ও অবস্থান",
+      "priceModal": "মডাল দাম"
+    },
+    "loading": {
+      "locating": "লোকেশন খুঁজে দেখা হচ্ছে...",
+      "fetching": "সর্বশেষ দাম লোড হচ্ছে..."
+    },
+    "error": {
+      "title": "দাম লোড করা যায়নি",
+      "connect": "মন্ডি ডেটা সোর্সে সংযোগ করা যায়নি।",
+      "invalidFormat": "মন্ডি ডেটা ফরম্যাট ভুল।",
+      "fetchFailed": "মন্ডি দাম আনতে সমস্যা হয়েছে।"
+    },
+    "empty": {
+      "title": "কোনো দাম পাওয়া যায়নি",
+      "desc": "ফিল্টার বদলে আবার চেষ্টা করুন।"
+    },
+    "labels": {
+      "modalPrice": "মডাল দাম",
+      "variety": "জাত",
+      "varietyFallback": "উপলব্ধ নয়",
+      "listen": "দাম শুনুন"
+    },
+    "csv": {
+      "commodity": "ফসল",
+      "variety": "জাত",
+      "state": "রাজ্য",
+      "district": "জেলা",
+      "market": "মন্ডি",
+      "minPrice": "সর্বনিম্ন দাম",
+      "maxPrice": "সর্বোচ্চ দাম",
+      "modalPrice": "মডাল দাম",
+      "date": "তারিখ"
+    },
+    "states": {
+      "all": "সব রাজ্য",
+      "uttarPradesh": "উত্তর প্রদেশ",
+      "punjab": "পাঞ্জাব",
+      "haryana": "হরিয়ানা",
+      "maharashtra": "মহারাষ্ট্র",
+      "madhyaPradesh": "মধ্য প্রদেশ",
+      "gujarat": "গুজরাট",
+      "rajasthan": "রাজস্থান",
+      "karnataka": "কর্ণাটক",
+      "andhraPradesh": "অন্ধ্র প্রদেশ",
+      "westBengal": "পশ্চিমবঙ্গ",
+      "bihar": "বিহার",
+      "kerala": "কেরালা",
+      "tamilNadu": "তামিলনাড়ু"
+    },
+    "commodities": {
+      "all": "সব ফসল",
+      "wheat": "গম",
+      "paddy": "ধান (ধান)",
+      "potato": "আলু",
+      "onion": "পেঁয়াজ",
+      "tomato": "টমেটো",
+      "mustard": "সরিষা",
+      "cotton": "কাপাস",
+      "sugarcane": "আখ",
+      "soyabean": "সয়াবিন",
+      "maize": "ভুট্টা",
+      "apple": "আপেল"
+    }
+  },
+  "SoilHub": {
+    "badge": "মাটি বুদ্ধিমত্তা",
+    "heroTitle": "আপনার মাটি জানুন,",
+    "heroTitleHighlight": "আর ভালো ফসল ফলান।",
+    "heroSubtitle": "প্রতিটি ক্ষেতের প্রোফাইল তৈরি করুন। অবস্থা পরীক্ষা করুন, Soil Health Card আপলোড করুন এবং AI-ভিত্তিক পরামর্শ পান।",
+    "howItWorks": "কীভাবে কাজ করে",
+    "steps": {
+      "register": {
+        "title": "আপনার ক্ষেত নিবন্ধন করুন",
+        "desc": "নাম, স্থান, এলাকা ও মাটির ধরন যোগ করুন"
+      },
+      "test": {
+        "title": "pH ও আর্দ্রতা পরীক্ষা করুন",
+        "desc": "ডেটা দিন বা ফিল্ড টেস্টার শিডিউল করুন"
+      },
+      "upload": {
+        "title": "Soil Health Card আপলোড করুন",
+        "desc": "AI ছবি থেকে NPK মান পড়ে"
+      },
+      "report": {
+        "title": "স্মার্ট রিপোর্ট পান",
+        "desc": "ফসলের পরামর্শ, স্কোর ও সমাধান"
+      }
+    },
+    "cta": {
+      "addFirst": "প্রথম ক্ষেত যোগ করুন",
+      "addLand": "ক্ষেত যোগ করুন",
+      "addNewLand": "নতুন ক্ষেত যোগ করুন"
+    },
+    "labCta": {
+      "needTitle": "Soil Health Card দরকার?",
+      "noCardTitle": "Soil Health Card নেই?",
+      "desc": "কাছের সরকারি মাটি পরীক্ষাগার খুঁজে নিন।",
+      "button": "ল্যাব খুঁজুন"
+    },
+    "header": {
+      "title": "আমার ক্ষেতগুলো",
+      "fields": "{count, plural, one {# ক্ষেত} other {# ক্ষেত}}",
+      "needsAttention": "{count, plural, one {#-টির নজর দরকার} other {#-টির নজর দরকার}}"
+    },
+    "addModal": {
+      "title": "ক্ষেত যোগ করুন",
+      "landName": {
+        "label": "ক্ষেতের নাম",
+        "placeholder": "যেমন, উত্তর ক্ষেত"
+      },
+      "area": {
+        "label": "এলাকা (একর)",
+        "placeholder": "2.5"
+      },
+      "soilType": "মাটির ধরন",
+      "soilTypePlaceholder": "নির্বাচন করুন...",
+      "location": "স্থান",
+      "statePlaceholder": "রাজ্য *",
+      "districtPlaceholder": "জেলা *",
+      "villagePlaceholder": "গ্রাম (ঐচ্ছিক)",
+      "errors": {
+        "landName": "ক্ষেতের নাম দিন",
+        "stateDistrict": "রাজ্য এবং জেলা প্রয়োজন"
+      },
+      "submit": {
+        "creating": "তৈরি হচ্ছে...",
+        "createContinue": "তৈরি করুন এবং এগিয়ে যান"
+      }
+    },
+    "soilTypes": {
+      "alluvial": "পলিমাটি",
+      "black": "কালো মাটি",
+      "red": "লাল মাটি",
+      "laterite": "ল্যাটেরাইট",
+      "sandy": "বালুকাময়",
+      "clay": "কাদামাটি",
+      "loamy": "দোআঁশ"
+    }
+  },
+  "SoilLandCard": {
+    "status": {
+      "completeSetup": "সেটআপ সম্পূর্ণ করুন",
+      "addSoilTest": "মাটি পরীক্ষার ডেটা যোগ করুন",
+      "testScheduled": "পরীক্ষা নির্ধারিত",
+      "uploadHealthCard": "হেলথ কার্ড আপলোড করুন",
+      "generateReport": "রিপোর্ট তৈরি করুন",
+      "viewReport": "রিপোর্ট দেখুন",
+      "retestNeeded": "পুনরায় পরীক্ষা দরকার"
+    },
+    "badges": {
+      "retestDue": "রিটেস্ট ডিউ",
+      "setup": "সেটআপ"
+    },
+    "tags": {
+      "acres": "একর",
+      "ph": "pH {value}"
+    },
+    "soilTypes": {
+      "alluvial": "পলিমাটি",
+      "black": "কালো মাটি",
+      "red": "লাল মাটি",
+      "laterite": "ল্যাটেরাইট",
+      "sandy": "বালুকাময়",
+      "clay": "কাদামাটি",
+      "loamy": "দোআঁশ"
     }
   },
   "Soil": {
@@ -630,7 +1016,7 @@
       "required": "প্রয়োজন: জমির নাম, রাজ্য, জেলা।"
     },
     "errors": {
-      "required": "Please fill land name, state, and district."
+      "required": "জমির নাম, রাজ্য ও জেলা যোগ করে এগিয়ে যান।"
     },
     "step2": {
       "stepLabel": "ধাপ 2 / 4",
@@ -668,17 +1054,40 @@
           "uploadTitle": "কিট আছে",
           "uploadDesc": "এখন ছবি আপলোড করুন।"
         },
+        "orderSummaryTitle": "অর্ডার সংক্ষেপ",
+        "orderItemTitle": "সয়েল টেস্ট স্ট্রিপ কিট",
+        "orderItemDesc": "pH ও আর্দ্রতা পড়ার জন্য প্রয়োজনীয় সবকিছু।",
+        "orderPaymentLabel": "পেমেন্ট",
+        "orderPaymentValue": "ডেলিভারিতে নগদ",
+        "orderPrice": "কিট এলে পেমেন্ট করুন।",
+        "shippingTitle": "শিপিং ঠিকানা",
+        "shippingHelp": "শিপিং চালু করতে ঠিকানা যোগ করুন।",
+        "orderStatusLabel": "অর্ডার নিশ্চিত",
+        "viewTracking": "অর্ডার ট্র্যাক করুন",
+        "trackingTitle": "অর্ডার ট্র্যাকিং",
+        "trackingHelp": "আমরা স্বয়ংক্রিয়ভাবে ডেলিভারি স্ট্যাটাস আপডেট করি।",
+        "orderIdLabel": "ট্র্যাকিং আইডি",
+        "orderDateLabel": "অর্ডারের তারিখ",
+        "etaLabel": "প্রত্যাশিত সময়",
+        "etaDefault": "৩-৫ দিন",
+        "tracking": {
+          "ordered": "অর্ডার হয়েছে",
+          "packed": "প্যাক করা হয়েছে",
+          "shipped": "পাঠানো হয়েছে",
+          "outForDelivery": "ডেলিভারির পথে",
+          "delivered": "ডেলিভারি হয়েছে"
+        },
         "errors": {
-          "formInvalid": "Please fill all required fields.",
-          "name": "Enter farmer name.",
-          "phone": "Enter phone number.",
-          "phoneInvalid": "Enter a 10-digit phone number.",
-          "line1": "Enter address line.",
-          "village": "Enter village.",
-          "district": "Enter district.",
-          "state": "Enter state.",
-          "pincode": "Enter pincode.",
-          "pincodeInvalid": "Enter a 6-digit pincode."
+          "formInvalid": "দয়া করে সব প্রয়োজনীয় ঠিকানার তথ্য পূরণ করুন।",
+          "name": "কৃষকের নাম লিখুন।",
+          "phone": "ফোন নম্বর লিখুন।",
+          "phoneInvalid": "ফোন নম্বর ১০ অঙ্কের হতে হবে।",
+          "line1": "রাস্তা/ঠিকানা লিখুন।",
+          "village": "গ্রামের নাম লিখুন।",
+          "district": "জেলার নাম লিখুন।",
+          "state": "রাজ্যের নাম লিখুন।",
+          "pincode": "পিনকোড লিখুন।",
+          "pincodeInvalid": "পিনকোড ৬ অঙ্কের হতে হবে।"
         },
         "steps": {
           "step1": "কিট অর্ডার করুন",
@@ -783,6 +1192,22 @@
       "finalSaveFailed": "রিপোর্ট সেভ করা যায়নি।",
       "dismissError": "ত্রুটি বন্ধ করুন",
       "dismissMessage": "বার্তা বন্ধ করুন"
+    },
+    "report": {
+      "executiveSummary": "কার্যনির্বাহী সারসংক্ষেপ",
+      "analysisComplete": "এআই বিশ্লেষণ সম্পন্ন হয়েছে। নিচের মেট্রিক্স দেখুন।",
+      "soilChemistry": "মাটির রসায়ন প্রোফাইল",
+      "nitrogen": "নাইট্রোজেন (N)",
+      "phosphorus": "ফসফরাস (P)",
+      "potassium": "পটাশিয়াম (K)",
+      "organicCarbon": "জৈব কার্বন (OC)",
+      "low": "কম",
+      "high": "বেশি",
+      "actionPlan": "অ্যাকশন প্ল্যান",
+      "recommendedCrops": "প্রস্তাবিত ফসল",
+      "match": "মিল",
+      "seasonLabel": "ঋতু",
+      "fertilizerGuide": "সারের নির্দেশিকা"
     }
   }
 }

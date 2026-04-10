@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { MapPin, ArrowRight, CheckCircle2, Clock, Leaf, FlaskConical, AlertTriangle } from 'lucide-react';
 
 type FarmlandCardData = {
@@ -28,22 +29,36 @@ const SOIL_COLORS: Record<string, { from: string; to: string; text: string; ligh
 };
 const DEFAULT_SOIL = { from: 'from-emerald-800', to: 'to-emerald-700', text: 'text-emerald-100', light: 'bg-emerald-50' };
 
-const STATUS_MAP: Record<string, { label: string; color: string; dot: string }> = {
-  draft:           { label: 'Complete setup', color: 'text-gray-600 bg-gray-50 border-gray-200', dot: 'bg-gray-400' },
-  'ph-pending':    { label: 'Add soil test data', color: 'text-orange-700 bg-orange-50 border-orange-200', dot: 'bg-orange-400' },
-  'test-scheduled':{ label: 'Test scheduled', color: 'text-blue-700 bg-blue-50 border-blue-200', dot: 'bg-blue-400' },
-  'card-pending':  { label: 'Upload health card', color: 'text-amber-700 bg-amber-50 border-amber-200', dot: 'bg-amber-400' },
-  ready:           { label: 'Generate report', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', dot: 'bg-emerald-500' },
-  completed:       { label: 'View report', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', dot: 'bg-emerald-500' },
-  'retest-due':    { label: 'Retest needed', color: 'text-red-700 bg-red-50 border-red-200', dot: 'bg-red-500 animate-pulse' },
+const STATUS_MAP: Record<string, { labelKey: string; color: string; dot: string }> = {
+  draft:           { labelKey: 'status.completeSetup', color: 'text-gray-600 bg-gray-50 border-gray-200', dot: 'bg-gray-400' },
+  'ph-pending':    { labelKey: 'status.addSoilTest', color: 'text-orange-700 bg-orange-50 border-orange-200', dot: 'bg-orange-400' },
+  'test-scheduled':{ labelKey: 'status.testScheduled', color: 'text-blue-700 bg-blue-50 border-blue-200', dot: 'bg-blue-400' },
+  'card-pending':  { labelKey: 'status.uploadHealthCard', color: 'text-amber-700 bg-amber-50 border-amber-200', dot: 'bg-amber-400' },
+  ready:           { labelKey: 'status.generateReport', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', dot: 'bg-emerald-500' },
+  completed:       { labelKey: 'status.viewReport', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', dot: 'bg-emerald-500' },
+  'retest-due':    { labelKey: 'status.retestNeeded', color: 'text-red-700 bg-red-50 border-red-200', dot: 'bg-red-500 animate-pulse' },
 };
 
 export default function LandCard({ farm, onClick }: { farm: FarmlandCardData; onClick: () => void }) {
+  const t = useTranslations('SoilLandCard');
+  const soilTypeLabels: Record<string, string> = {
+    alluvial: t('soilTypes.alluvial'),
+    black: t('soilTypes.black'),
+    red: t('soilTypes.red'),
+    laterite: t('soilTypes.laterite'),
+    sandy: t('soilTypes.sandy'),
+    clay: t('soilTypes.clay'),
+    loamy: t('soilTypes.loamy')
+  };
   const soil = SOIL_COLORS[farm.soilType || ''] || DEFAULT_SOIL;
   const st = STATUS_MAP[farm.status] || STATUS_MAP.draft;
   const hasScore = typeof farm.report?.score === 'number';
   const hasPh = typeof farm.phMoisture?.ph === 'number';
   const loc = [farm.location?.village, farm.location?.district].filter(Boolean).join(', ') || farm.location?.state || '';
+  const soilTypeKey = farm.soilType ? farm.soilType.toLowerCase().replace(/\s+/g, '') : '';
+  const soilTypeLabel = soilTypeKey ? soilTypeLabels[soilTypeKey] : '';
+  const statusLabel = t(st.labelKey);
+  const topBadgeLabel = farm.status === 'retest-due' ? t('badges.retestDue') : t('badges.setup');
 
   return (
     <motion.button
@@ -73,7 +88,7 @@ export default function LandCard({ farm, onClick }: { farm: FarmlandCardData; on
             </div>
           ) : (
             <div className={`shrink-0 px-2.5 py-1 rounded-full border text-[9px] font-black uppercase tracking-wider ${st.color}`}>
-              {st.label === 'Retest needed' ? 'Retest Due' : 'Setup'}
+              {topBadgeLabel}
             </div>
           )}
         </div>
@@ -82,17 +97,17 @@ export default function LandCard({ farm, onClick }: { farm: FarmlandCardData; on
         <div className="flex flex-wrap gap-2 mt-5">
           {farm.areaAcres && (
             <span className="inline-flex items-center rounded-lg bg-gray-50 border border-gray-100 px-2 py-1 text-[11px] font-bold text-gray-600">
-              {farm.areaAcres} acres
+              {farm.areaAcres} {t('tags.acres')}
             </span>
           )}
           {farm.soilType && (
             <span className={`inline-flex items-center rounded-lg bg-emerald-50 border border-emerald-100/50 px-2 py-1 text-[11px] font-bold text-emerald-700`}>
-              {farm.soilType}
+              {soilTypeLabel || farm.soilType}
             </span>
           )}
           {hasPh && (
             <span className="inline-flex items-center rounded-lg bg-blue-50 border border-blue-100/50 px-2 py-1 text-[11px] font-bold text-blue-700">
-              pH {farm.phMoisture!.ph}
+              {t('tags.ph', { value: farm.phMoisture!.ph })}
             </span>
           )}
         </div>
@@ -101,7 +116,7 @@ export default function LandCard({ farm, onClick }: { farm: FarmlandCardData; on
       <div className="px-5 py-3.5 mt-auto border-t border-gray-50 bg-gray-50/50 flex items-center justify-between group-hover:bg-emerald-50/40 transition-colors">
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 rounded-full ${st.dot}`} />
-          <span className="text-xs font-bold text-gray-700 group-hover:text-emerald-900 transition-colors">{st.label}</span>
+          <span className="text-xs font-bold text-gray-700 group-hover:text-emerald-900 transition-colors">{statusLabel}</span>
         </div>
         <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
       </div>

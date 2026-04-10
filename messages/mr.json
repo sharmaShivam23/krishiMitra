@@ -22,6 +22,10 @@
         "title": "विक्रीसाठी सर्वोत्तम वेळ",
         "desc": "सर्वाधिक नफ्यासाठी तुमची पिके विकण्याची योग्य वेळ शोधा."
       },
+      "voiceAssistant": {
+        "title": "कृषिसारथी व्हॉइस एआय",
+        "desc": "स्थानिक भाषेत बोला आणि त्वरित शेती सल्ला व हवामान अपडेट्स मिळवा."
+      },
       "diseaseVision": {
         "title": "पीक रोग स्कॅनर",
         "desc": "आजारी वनस्पतीचा फोटो घ्या. रोग आणि त्यावर उपचार कसे करावे हे त्वरित शोधा."
@@ -45,80 +49,98 @@
       "yieldAnalytics": {
         "title": "कापणी ट्रॅकर",
         "desc": "पुढील हंगामासाठी चांगले नियोजन करण्यासाठी तुमच्या मागील कापणीची नोंद ठेवा."
+      },
+      "soilIntelligence": {
+        "title": "माती इंटेलिजन्स लॅब्स",
+        "desc": "जवळच्या प्रमाणित माती परीक्षण लॅब शोधा आणि वैयक्तिक पीक शिफारसी मिळवा."
       }
     }
   },
   "TrustSection": {
-    "heading1": "आपल्या शेताला सक्षम करणे",
+    "badge": "भारतभर विश्वासार्ह",
+    "heading1": "आपल्या शेताला सक्षम करणे ",
     "heading2": "तंत्रज्ञान",
-    "heading3": "आणि समुदाय.",
-    "description": "थेट मंडीच्या किमती आणि रोजच्या एसएमएस सूचनांपासून ते स्थानिक पातळीवर ट्रॅक्टर भाड्याने घेण्यापर्यंत, कृषीमित्र तुमच्या फोनमध्ये शेतीची साधने ठेवते.",
-    "list1": "स्थानिक एसएमएस अलर्टसह थेट एपीएमसी मंडीच्या किमती",
-    "list2": "स्थानिक ट्रॅक्टर, उपकरणे आणि शेतमजूर भाड्याने द्या",
+    "heading3": " आणि समुदाय.",
+    "description": "थेट मंडीच्या किमती आणि रोजच्या एसएमएस सूचनांपासून ते स्थानिक पातळीवर ट्रॅक्टर भाड्याने घेण्यापर्यंत, कृषीमित्र शेतीची साधने थेट तुमच्या फोनमध्ये आणते.",
+    "list1": "स्थानिक एसएमएस अलर्टसह थेट एपीएमसी मंडीचे दर",
+    "list2": "स्थानिक ट्रॅक्टर, उपकरणे आणि शेतमजूर भाड्याने घ्या",
     "list3": "स्मार्ट शेती सल्लागार आणि सत्यापित सरकारी योजना",
-        "required": "Please fill land name, state, and district."
-      },
+    "trustedBy": {
+      "ministry": "🏛️ कृषी मंत्रालय",
+      "nabard": "🏦 NABARD",
+      "ncdex": "📊 NCDEX",
+      "apmc": "🌾 APMC"
+    },
+    "testimonials": {
+      "ramesh": "माझ्या फोनवर थेट मंडीचे भाव — आता मध्यस्थांची फसवणूक नाही!",
+      "priya": "या हंगामात रोग ओळखेमुळे माझी संपूर्ण गहू पिके वाचली.",
+      "sukhbir": "AI सल्लागाराने विक्रीची योग्य वेळ सांगितली. या वर्षी ₹18,000 जास्त मिळाले."
+    },
+    "stat1Label": "मंडी दरभाव",
     "stat1Value": "रिअल-टाइम",
     "stat2Label": "प्लॅटफॉर्म कव्हरेज",
     "stat2Value": "पॅन-भारत"
   },
   "Footer": {
-    "smsHeading1": "द्वारे दैनिक मंडी दर मिळवा",
-    "smsHeading2": "एसएमएस.",
-    "smsDesc": "स्थानिक बाजार अद्यतने मिळविण्यासाठी सदस्यता घ्या. आपल्या कापणीसाठी योग्य किंमत कधीही चुकवू नका.",
-    "smsPlaceholder": "10-अंकी मोबाइल नंबर प्रविष्ट करा",
-            "formInvalid": "Please fill all required fields.",
-            "name": "Enter farmer name.",
-            "phone": "Enter phone number.",
-            "phoneInvalid": "Enter a 10-digit phone number.",
-            "line1": "Enter address line.",
-            "village": "Enter village.",
-            "district": "Enter district.",
-            "state": "Enter state.",
-            "pincode": "Enter pincode.",
-            "pincodeInvalid": "Enter a 6-digit pincode."
-        "orderPrice": "Pay when the kit arrives.",
-        "shippingTitle": "Shipping address",
-        "shippingHelp": "Add your address to unlock shipping.",
-        "orderStatusLabel": "Order confirmed",
-        "viewTracking": "Track order",
-        "trackingTitle": "Order tracking",
-        "trackingHelp": "We update your delivery status automatically.",
-        "orderIdLabel": "Tracking ID",
-        "orderDateLabel": "Order date",
-        "etaLabel": "ETA",
-        "etaDefault": "3-5 days",
-        "tracking": {
-          "ordered": "Ordered",
-          "packed": "Packed",
-          "shipped": "Shipped",
-          "outForDelivery": "Out for delivery",
-          "delivered": "Delivered"
-        },
+    "smsHeading1": "दैनिक मंडी दर मिळवा ",
+    "smsHeading2": "SMS द्वारे.",
+    "smsDesc": "स्थानिक बाजार अपडेट्स मिळवण्यासाठी सदस्यता घ्या. तुमच्या कापणीसाठी योग्य दर कधीही चुकवू नका.",
+    "smsPlaceholder": "10-अंकी मोबाइल नंबर टाका",
+    "smsButton": "अलर्ट मिळवा",
+    "smsDisclaimer": "स्टँडर्ड SMS शुल्क लागू होऊ शकतात. कधीही रद्द करा.",
+    "brandDesc": "स्मार्ट सल्ला, लाईव्ह बाजारभाव आणि सोपी शेती साधने देऊन भारतीय शेतकऱ्यांना मदत करणे.",
+    "helpline": "24/7 किसान हेल्पलाइन",
+    "actions": {
+      "unsubscribe": "अनसब्सक्राइब करा",
+      "needUnsubscribe": "अनसब्सक्राइब करायचे आहे?",
+      "subscribeToAlerts": "अलर्ट सब्सक्राइब करा"
+    },
+    "subscribe": {
+      "invalidPhone": "कृपया वैध 10-अंकी नंबर टाका.",
+      "loginRequired": "सब्सक्राइब करण्यासाठी साइन इन करा. लॉगिनकडे पाठवत आहोत...",
+      "actionSubscribe": "सब्सक्रिप्शन",
+      "actionUnsubscribe": "अनसब्सक्रिप्शन",
+      "actionFailed": "{action} अयशस्वी झाले."
+    },
+    "call": {
+      "needSubscribe": "ही सुविधा वापरण्यासाठी आधी किसान हेल्पलाइन सब्सक्राइब करा.",
+      "loginRequired": "ही सुविधा वापरण्यासाठी कृपया लॉग इन करा.",
+      "requestFailed": "कॉल विनंती अयशस्वी झाली",
+      "initiated": "कॉल सुरू झाला!",
+      "genericError": "काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा.",
+      "titleUnsubscribed": "आधी हेल्पलाइन सब्सक्राइब करा",
+      "titleDefault": "कॉल बॅकसाठी क्लिक करा",
+      "statusConnecting": "कनेक्ट होत आहे...",
+      "statusSuccess": "कॉल सुरू! ✓",
+      "statusError": "अयशस्वी — पुन्हा टॅप करा",
+      "statusUnsubscribed": "आधी सब्सक्राइब करा",
+      "helper": "कॉल बॅकसाठी टॅप करा • फक्त सब्सक्राइबर्स"
+    },
+    "platformHeading": "प्लॅटफॉर्म",
     "platformLinks": {
       "intel": "स्मार्ट पीक मार्गदर्शक",
-      "mandi": "थेट मंडीचे दर",
+      "mandi": "थेट मंडी दर",
       "disease": "रोग स्कॅनर",
       "weather": "7-दिवस हवामान",
-      "schemes": "सरकारी योजना जुळतात"
+      "schemes": "सरकारी योजना जुळवा"
     },
     "resourcesHeading": "संसाधने",
     "resourcesLinks": {
-      "community": "शेतकरी समाज",
+      "community": "शेतकरी समुदाय",
       "guides": "शेती मार्गदर्शक",
       "market": "बाजार अहवाल",
       "success": "यशोगाथा",
       "help": "किसान मदत केंद्र"
     },
-    "connectHeading": "कनेक्ट करा",
-    "emailTitle": "ईमेल समर्थन",
+    "connectHeading": "संपर्क",
+    "emailTitle": "ईमेल सपोर्ट",
     "hqTitle": "मुख्यालय",
-    "hqAddress1": "ॲग्रीटेक हब, सेक्टर 4",
+    "hqAddress1": "अ‍ॅग्रीटेक हब, सेक्टर 4",
     "hqAddress2": "नवी दिल्ली, भारत 110001",
-    "rights": "कृषीमित्र टेक्नॉलॉजीज. सर्व हक्क राखीव.",
+    "rights": "कृषिमित्र टेक्नॉलॉजीज. सर्व हक्क राखीव.",
     "privacy": "गोपनीयता धोरण",
     "terms": "सेवा अटी",
-    "madeFor": "भारतासाठी बनवलेले 🇮🇳"
+    "madeFor": "भारतासाठी बनवले 🇮🇳"
   },
   "Dashboard": {
     "nav": {
@@ -146,6 +168,52 @@
     "systemStatus": "शेताची स्थिती",
     "online": "ऑनलाइन",
     "runScan": "क्रॉप स्कॅन करा",
+    "greetings": {
+      "morning": "शुभ सकाळ",
+      "afternoon": "शुभ दुपार",
+      "evening": "शुभ संध्याकाळ",
+      "fallbackName": "शेतकरी"
+    },
+    "seasonBadge": "{season} हंगाम",
+    "seasons": {
+      "kharif": "खरीप",
+      "rabi": "रबी",
+      "zaid": "झायद"
+    },
+    "tiles": {
+      "mandi": {
+        "label": "मंडी भाव",
+        "sub": "थेट बाजार दर",
+        "chip": "🌾 आज"
+      },
+      "disease": {
+        "label": "पीक डॉक्टर",
+        "sub": "AI रोग ओळख",
+        "chip": "🔬 AI स्कॅन"
+      },
+      "lifecycle": {
+        "label": "पीक जीवनचक्र",
+        "sub": "वाढ नियोजक",
+        "chip": "🌱 योजना"
+      },
+      "advisor": {
+        "label": "AI सल्लागार",
+        "sub": "स्मार्ट शिफारसी",
+        "chip": "🤖 स्मार्ट"
+      }
+    },
+    "soilCard": {
+      "eyebrow": "माती ओळख",
+      "title": "माती जाणून घ्या, शहाणपणाने पिकवा.",
+      "description": "सरकारी अहवाल किंवा होम किट. शेत-विशिष्ट, मराठी-मैत्रीपूर्ण.",
+      "tags": {
+        "ph": "pH",
+        "npk": "NPK",
+        "soilType": "मातीचा प्रकार"
+      },
+      "cta": "🌱 माझी माती तपासा"
+    },
+    "growthProgress": "पीक प्रगती",
     "weather": {
       "title": "थेट स्थानिक हवामान",
       "loading": "हवामान तपासत आहे...",
@@ -181,6 +249,14 @@
       "optimalTitle": "चांगली हवामान परिस्थिती",
       "optimalDesc": "सध्याचे हवामान तुमच्या पिकांसाठी सुरक्षित आहे. तुम्ही तुमच्या शेताला नेहमीप्रमाणे पाणी देऊ शकता.",
       "button": "समजले"
+    },
+    "aiPanel": {
+      "intro": "तुमच्या माती, पिके आणि स्थानावर आधारित वैयक्तिक सल्ला.",
+      "alertTitle": "सर्वोत्तम अचूकतेसाठी माती प्रोफाइल जोडा",
+      "alertDesc": "pH आणि NPK मिळाल्यावर आम्ही पिके, खत आणि सिंचनाची शिफारस करू शकतो.",
+      "insightLabel": "AI इनसाइट",
+      "insightDesc": "आजची निरोगी माती उद्या जास्त उत्पादन देते. माती आरोग्य कार्ड किंवा झटपट किट टेस्टने सुरुवात करा.",
+      "cta": "माती तपासणी सुरू करा"
     }
   },
   "Register": {
@@ -189,8 +265,26 @@
     "switchLink": "येथे साइन इन करा",
     "fullName": "पूर्ण नाव",
     "phone": "फोन नंबर",
+    "namePlaceholder": "राम सिंह",
+    "phonePlaceholder": "98765 43210",
     "region": "शेती क्षेत्र",
     "regionPlaceholder": "तुमचे राज्य निवडा",
+    "district": "जिल्हा",
+    "roleLabel": "भूमिका",
+    "roles": {
+      "farmer": "शेतकरी",
+      "provider": "प्रोव्हायडर (विक्रेता)"
+    },
+    "languageLabel": "अॅप भाषा",
+    "languageOptions": {
+      "en": "English",
+      "hi": "Hindi (हिंदी)",
+      "mr": "Marathi (मराठी)",
+      "pa": "Punjabi (ਪੰਜਾਬੀ)",
+      "bn": "Bengali (বাংলা)",
+      "te": "Telugu (తెలుగు)",
+      "ta": "Tamil (தமிழ்)"
+    },
     "password": "पासवर्ड",
     "passwordPlaceholder": "एक मजबूत पासवर्ड तयार करा",
     "button": "खाते तयार करा",
@@ -203,24 +297,110 @@
     "trusted": "50,000+ शेतकऱ्यांनी विश्वास ठेवला",
     "getOtp": "OTP मिळवा",
     "enterOtp": "6-अंकी कोड प्रविष्ट करा",
+    "otpPlaceholder": "------",
     "verifyBtn": "सत्यापित करा आणि नोंदणी करा",
     "otpSentTo": "यांना एसएमएसद्वारे कोड पाठवला",
-    "back": "मागे"
+    "back": "मागे",
+    "errors": {
+      "providerIncomplete": "प्रोव्हायडर पडताळणीची माहिती अपूर्ण आहे.",
+      "otpSendFailed": "OTP पाठवता आला नाही",
+      "otpInvalid": "कृपया वैध 6-अंकी OTP टाका",
+      "registrationFailed": "नोंदणी अयशस्वी झाली"
+    },
+    "providerModal": {
+      "title": "प्रोव्हायडर पडताळणी",
+      "subtitle": "फक्त अधिकृत विक्रेते",
+      "errorRequired": "कृपया सर्व आवश्यक पडताळणी माहिती भरा.",
+      "shopName": "दुकानाचे नाव",
+      "shopPlaceholder": "उदा., कृषी केंद्र",
+      "licenseNumber": "सरकारी परवाना क्रमांक",
+      "licensePlaceholder": "कीटकनाशक/खत परवाना क्रमांक",
+      "licenseUrl": "परवाना दस्तऐवज URL",
+      "licenseUrlPlaceholder": "दस्तऐवज प्रतिमेचा लिंक",
+      "gstNumber": "GST क्रमांक",
+      "optional": "(ऐच्छिक)",
+      "cancel": "रद्द करा",
+      "save": "माहिती सेव करा"
+    }
   },
   "Login": {
     "title": "परत स्वागत आहे.",
     "switchText": "कृषीमित्र नवीन?",
     "switchLink": "खाते तयार करा",
     "phone": "फोन नंबर",
+    "phonePlaceholder": "98765 43210",
     "password": "पासवर्ड",
     "forgot": "पासवर्ड विसरलात?",
     "placeholder": "तुमचा पासवर्ड टाका",
     "button": "साइन इन करा",
     "loading": "साइन इन करत आहे...",
     "success": "खाते यशस्वीरित्या तयार केले! कृपया साइन इन करा.",
+    "authFailed": "ऑथेंटिकेशन अयशस्वी झाले",
+    "back": "मागे",
     "featureTitle": "हुशार वाढवा, चांगली कापणी करा.",
     "featureDesc": "तुमचे हवामान तपासा, तुमची पिके निरोगी ठेवा आणि रिअल-टाइम बाजारभाव एकाच ठिकाणी मिळवा.",
     "systemStatus": "ऑनलाइन प्रणाली"
+  },
+  "Splash": {
+    "initializing": "सिस्टम सुरू होत आहेत...",
+    "tagline": "आधुनिक शेतकऱ्यांना सक्षम बनवणे",
+    "skip": "इनिशियलायझेशन वगळा",
+    "steps": {
+      "starting": "कृषीमित्र सुरू होत आहे...",
+      "connectingMarkets": "प्रादेशिक मंड्यांशी जोडत आहोत...",
+      "syncingWeather": "स्थानिक हवामान डेटा सिंक होत आहे...",
+      "preparingInsights": "पीक इनसाइट्स तयार होत आहेत...",
+      "securing": "कनेक्शन सुरक्षित केले जात आहे...",
+      "welcome": "कृषीमित्रमध्ये आपले स्वागत आहे."
+    }
+  },
+  "ImageUpload": {
+    "label": "प्रॉडक्ट इमेज",
+    "tabs": {
+      "upload": "फोटो अपलोड करा",
+      "url": "URL पेस्ट करा"
+    },
+    "status": {
+      "uploading": "Cloudinary वर अपलोड होत आहे...",
+      "imageSet": "इमेज सेट झाली"
+    },
+    "prompt": {
+      "clickUpload": "अपलोड करण्यासाठी क्लिक करा",
+      "dragDrop": "किंवा ड्रॅग & ड्रॉप करा",
+      "fileTypes": "PNG, JPG, WEBP — 10MB पर्यंत",
+      "urlPlaceholder": "https://example.com/image.jpg"
+    },
+    "actions": {
+      "use": "वापरा"
+    },
+    "alerts": {
+      "invalidFile": "कृपया इमेज फाईल निवडा.",
+      "uploadFailed": "इमेज अपलोड अयशस्वी. कृपया पुन्हा प्रयत्न करा."
+    }
+  },
+  "LocationSelector": {
+    "stateLabel": "राज्य",
+    "districtLabel": "जिल्हा",
+    "fromProfile": "प्रोफाइलमधून",
+    "selectState": "राज्य निवडा",
+    "selectDistrict": "जिल्हा निवडा"
+  },
+  "ListingContact": {
+    "rateLabel": "दर",
+    "perUnit": "/ {unit}",
+    "listenTitle": "ऐका / थांबा",
+    "whatsappTitle": "WhatsApp {name}",
+    "callTitle": "Call {name}",
+    "waMessage": "नमस्कार {name}, मला KrishiMitra वर तुमच्या \"{title}\" लिस्टिंगमध्ये रस आहे.",
+    "units": {
+      "day": "दिवस",
+      "hour": "तास",
+      "acre": "एकर"
+    },
+    "audio": {
+      "rent": "हे शेतकरी, {name}, {state}च्या {district} मधून आहेत. हे आपले {title} भाड्याने देऊ इच्छितात, ज्याचा दर {rate} रुपये प्रति {unit} आहे. संपर्कासाठी हिरव्या फोन आयकॉनवर क्लिक करा.",
+      "service": "हे शेतकरी, {name}, {state}च्या {district} मधून आहेत. हे आपले {title} सेवेसाठी देऊ इच्छितात, ज्याचा दर {rate} रुपये प्रति {unit} आहे. संपर्कासाठी हिरव्या फोन आयकॉनवर क्लिक करा."
+    }
   },
   "SellingPools": {
     "title": "गट विक्री",
@@ -492,6 +672,7 @@
   "GovernmentSchemes": {
     "title": "सरकारी योजना",
     "subtitle": "सरकारी अनुदान, विमा आणि आर्थिक मदत शोधा ज्यासाठी तुम्ही सहज अर्ज करू शकता.",
+    "askSarthi": "सार्थीला विचारा",
     "searchPlaceholder": "नाव किंवा प्रकारानुसार योजना शोधा...",
     "syncing": "सरकारी पोर्टल तपासत आहे...",
     "errorTitle": "योजना लोड करू शकलो नाही",
@@ -513,6 +694,228 @@
       "Insurance": "पीक विमा",
       "Credit & Loans": "शेती कर्ज",
       "Other": "इतर"
+    }
+  },
+  "SoilLabs": {
+    "back": "माती हबकडे परत",
+    "badge": "माती तपासणी केंद्रे",
+    "title": "तुमचा Soil Health Card मिळवा",
+    "subtitle": "Soil Health Card (SHC) तुमच्या शेतातील पोषक पातळ्यांचा सविस्तर अहवाल देतो. खालील शासकीय मान्यताप्राप्त लॅब शोधा, 500g मातीचा नमुना द्या आणि तुमची अधिकृत प्रोफाइल मिळवा.",
+    "locateTitle": "लॅब शोधा",
+    "selectState": "1. राज्य निवडा",
+    "selectDistrict": "2. जिल्हा निवडा",
+    "chooseState": "राज्य निवडा...",
+    "chooseDistrict": "जिल्हा निवडा...",
+    "searching": "शोधत आहोत...",
+    "findLabs": "लॅब शोधा",
+    "howToSample": "मातीचा नमुना कसा घ्यावा",
+    "steps": {
+      "step1": "15cm खोल V-आकाराचा खड्डा खोदा",
+      "step2": "उघड्या भिंतीतून मातीचा पातळ तुकडा घ्या",
+      "step3": "शेतातील 8-10 ठिकाणांहून नमुने घ्या",
+      "step4": "छान मिसळून 500g स्वच्छ पिशवीत ठेवा",
+      "step5": "पिशवीवर नाव, फोन आणि शेताची माहिती लिहा"
+    },
+    "noLabsTitle": "कोणतीही लॅब सापडली नाही",
+    "noLabsDesc": "राज्य आणि जिल्हा निवडून शोधा म्हणजे जवळची सरकारी तपासणी केंद्रे मिळतील.",
+    "labCard": {
+      "unnamed": "टेस्टिंग लॅब",
+      "unknownDistrict": "अज्ञात जिल्हा",
+      "unknownState": "अज्ञात राज्य"
+    },
+    "errors": {
+      "api": "API त्रुटी: {message}",
+      "parse": "पार्स त्रुटी. सर्व्हरने पाठवले: {snippet}",
+      "network": "नेटवर्क त्रुटी: {message}",
+      "unknown": "अज्ञात सर्व्हर त्रुटी"
+    },
+    "noOptions": "कोणतेही पर्याय उपलब्ध नाहीत"
+  },
+  "MandiPrices": {
+    "title": "मंडीचे ताजे दर",
+    "subtitle": {
+      "locating": "तुमचा राज्य शोधत आहोत...",
+      "sync": "तुमच्या लोकेशनशी सिंक"
+    },
+    "buttons": {
+      "predictor": "मंडी प्रेडिक्टर",
+      "ask": "सार्थीला विचारा",
+      "export": "CSV डाउनलोड करा"
+    },
+    "filters": {
+      "commodity": "पिक",
+      "state": "राज्य",
+      "district": "जिल्हा",
+      "districtPlaceholder": "जिल्ह्याचे नाव लिहा..."
+    },
+    "columns": {
+      "commodityVariety": "पिक आणि जात",
+      "marketLocation": "मंडी आणि स्थान",
+      "priceModal": "मॉडल दर"
+    },
+    "loading": {
+      "locating": "लोकेशन शोधत आहोत...",
+      "fetching": "ताजे दर लोड होत आहेत..."
+    },
+    "error": {
+      "title": "दर लोड होऊ शकले नाहीत",
+      "connect": "मंडी डेटा स्रोताशी कनेक्ट होऊ शकले नाही.",
+      "invalidFormat": "मंडी डेटा फॉरमॅट चुकीचा आहे.",
+      "fetchFailed": "मंडी दर मिळवण्यात अडचण आली."
+    },
+    "empty": {
+      "title": "कोणतेही दर नाहीत",
+      "desc": "फिल्टर बदलून पुन्हा प्रयत्न करा."
+    },
+    "labels": {
+      "modalPrice": "मॉडल दर",
+      "variety": "जात",
+      "varietyFallback": "उपलब्ध नाही",
+      "listen": "दर ऐका"
+    },
+    "csv": {
+      "commodity": "पिक",
+      "variety": "जात",
+      "state": "राज्य",
+      "district": "जिल्हा",
+      "market": "मंडी",
+      "minPrice": "किमान दर",
+      "maxPrice": "कमाल दर",
+      "modalPrice": "मॉडल दर",
+      "date": "तारीख"
+    },
+    "states": {
+      "all": "सर्व राज्ये",
+      "uttarPradesh": "उत्तर प्रदेश",
+      "punjab": "पंजाब",
+      "haryana": "हरियाणा",
+      "maharashtra": "महाराष्ट्र",
+      "madhyaPradesh": "मध्य प्रदेश",
+      "gujarat": "गुजरात",
+      "rajasthan": "राजस्थान",
+      "karnataka": "कर्नाटक",
+      "andhraPradesh": "आंध्र प्रदेश",
+      "westBengal": "पश्चिम बंगाल",
+      "bihar": "बिहार",
+      "kerala": "केरळ",
+      "tamilNadu": "तामिळनाडू"
+    },
+    "commodities": {
+      "all": "सर्व पिके",
+      "wheat": "गहू",
+      "paddy": "धान (धान)",
+      "potato": "बटाटा",
+      "onion": "कांदा",
+      "tomato": "टोमॅटो",
+      "mustard": "मोहरी",
+      "cotton": "कापूस",
+      "sugarcane": "ऊस",
+      "soyabean": "सोयाबीन",
+      "maize": "मका",
+      "apple": "सफरचंद"
+    }
+  },
+  "SoilHub": {
+    "badge": "माती बुद्धिमत्ता",
+    "heroTitle": "आपली माती ओळखा,",
+    "heroTitleHighlight": "आणि चांगली पिके घ्या.",
+    "heroSubtitle": "प्रत्येक शेतासाठी प्रोफाइल तयार करा. स्थिती तपासा, Soil Health Card अपलोड करा आणि AI शिफारसी मिळवा.",
+    "howItWorks": "कसे काम करते",
+    "steps": {
+      "register": {
+        "title": "आपले शेत नोंदवा",
+        "desc": "नाव, ठिकाण, क्षेत्रफळ आणि मातीचा प्रकार जोडा"
+      },
+      "test": {
+        "title": "pH आणि ओलावा तपासा",
+        "desc": "डेटा भरा किंवा फील्ड टेस्टर शेड्यूल करा"
+      },
+      "upload": {
+        "title": "Soil Health Card अपलोड करा",
+        "desc": "AI फोटोमधून NPK मूल्ये वाचतो"
+      },
+      "report": {
+        "title": "स्मार्ट रिपोर्ट मिळवा",
+        "desc": "पिक शिफारसी, स्कोर आणि उपाय"
+      }
+    },
+    "cta": {
+      "addFirst": "पहिले शेत जोडा",
+      "addLand": "शेत जोडा",
+      "addNewLand": "नवे शेत जोडा"
+    },
+    "labCta": {
+      "needTitle": "Soil Health Card हवा आहे?",
+      "noCardTitle": "Soil Health Card नाही?",
+      "desc": "जवळची सरकारी माती तपासणी लॅब शोधा.",
+      "button": "लॅब शोधा"
+    },
+    "header": {
+      "title": "माझी शेते",
+      "fields": "{count, plural, one {# शेत} other {# शेते}}",
+      "needsAttention": "{count, plural, one {# ला लक्ष हवे} other {# ला लक्ष हवे}}"
+    },
+    "addModal": {
+      "title": "शेत जोडा",
+      "landName": {
+        "label": "शेताचे नाव",
+        "placeholder": "उदा. उत्तर शेत"
+      },
+      "area": {
+        "label": "क्षेत्रफळ (एकर)",
+        "placeholder": "2.5"
+      },
+      "soilType": "मातीचा प्रकार",
+      "soilTypePlaceholder": "निवडा...",
+      "location": "स्थान",
+      "statePlaceholder": "राज्य *",
+      "districtPlaceholder": "जिल्हा *",
+      "villagePlaceholder": "गाव (ऐच्छिक)",
+      "errors": {
+        "landName": "शेताला नाव द्या",
+        "stateDistrict": "राज्य आणि जिल्हा आवश्यक आहेत"
+      },
+      "submit": {
+        "creating": "तयार होत आहे...",
+        "createContinue": "तयार करा आणि पुढे जा"
+      }
+    },
+    "soilTypes": {
+      "alluvial": "जलोढ",
+      "black": "काळी",
+      "red": "लाल",
+      "laterite": "लेटराइट",
+      "sandy": "वालुकामय",
+      "clay": "चिकणमाती",
+      "loamy": "दोमट"
+    }
+  },
+  "SoilLandCard": {
+    "status": {
+      "completeSetup": "सेटअप पूर्ण करा",
+      "addSoilTest": "माती चाचणी डेटा जोडा",
+      "testScheduled": "चाचणी शेड्यूल",
+      "uploadHealthCard": "हेल्थ कार्ड अपलोड करा",
+      "generateReport": "अहवाल तयार करा",
+      "viewReport": "अहवाल पहा",
+      "retestNeeded": "पुन्हा चाचणी आवश्यक"
+    },
+    "badges": {
+      "retestDue": "री-टेस्ट ड्यू",
+      "setup": "सेटअप"
+    },
+    "tags": {
+      "acres": "एकर",
+      "ph": "pH {value}"
+    },
+    "soilTypes": {
+      "alluvial": "जलोढ",
+      "black": "काळी",
+      "red": "लाल",
+      "laterite": "लेटराइट",
+      "sandy": "वालुकामय",
+      "clay": "चिकणमाती",
+      "loamy": "दोमट"
     }
   },
   "Soil": {
@@ -613,7 +1016,7 @@
       "required": "आवश्यक: शेताचे नाव, राज्य, जिल्हा."
     },
     "errors": {
-      "required": "Please fill land name, state, and district."
+      "required": "कृपया शेताचे नाव, राज्य आणि जिल्हा भरा."
     },
     "step2": {
       "stepLabel": "पायरी 2 / 4",
@@ -638,7 +1041,7 @@
         "badge": "जलद",
         "help": "आम्हाला फक्त pH आणि ओलावा हवा आहे.",
         "errors": {
-          "required": "Enter pH and moisture values before saving."
+          "required": "सेव करण्यापूर्वी pH आणि ओलावा मूल्ये भरा."
         }
       },
       "kit": {
@@ -651,17 +1054,40 @@
           "uploadTitle": "किट आहे",
           "uploadDesc": "आता फोटो अपलोड करा."
         },
+        "orderSummaryTitle": "ऑर्डर सारांश",
+        "orderItemTitle": "माती टेस्ट स्ट्रिप किट",
+        "orderItemDesc": "pH आणि ओलावा वाचण्यासाठी लागणारे सर्व काही.",
+        "orderPaymentLabel": "पेमेंट",
+        "orderPaymentValue": "डिलिव्हरीवर रोख",
+        "orderPrice": "किट आल्यावर पेमेंट करा.",
+        "shippingTitle": "शिपिंग पत्ता",
+        "shippingHelp": "शिपिंग सुरू करण्यासाठी पत्ता जोडा.",
+        "orderStatusLabel": "ऑर्डर कन्फर्म",
+        "viewTracking": "ऑर्डर ट्रॅक करा",
+        "trackingTitle": "ऑर्डर ट्रॅकिंग",
+        "trackingHelp": "आम्ही डिलिव्हरी स्थिती आपोआप अपडेट करतो.",
+        "orderIdLabel": "ट्रॅकिंग आयडी",
+        "orderDateLabel": "ऑर्डर तारीख",
+        "etaLabel": "अंदाजित वेळ",
+        "etaDefault": "3-5 दिवस",
+        "tracking": {
+          "ordered": "ऑर्डर झाले",
+          "packed": "पॅक झाले",
+          "shipped": "शिप झाले",
+          "outForDelivery": "डिलिव्हरीसाठी निघाले",
+          "delivered": "डिलिव्हर झाले"
+        },
         "errors": {
-          "formInvalid": "Please fill all required fields.",
-          "name": "Enter farmer name.",
-          "phone": "Enter phone number.",
-          "phoneInvalid": "Enter a 10-digit phone number.",
-          "line1": "Enter address line.",
-          "village": "Enter village.",
-          "district": "Enter district.",
-          "state": "Enter state.",
-          "pincode": "Enter pincode.",
-          "pincodeInvalid": "Enter a 6-digit pincode."
+          "formInvalid": "कृपया सर्व आवश्यक पत्त्याची माहिती भरा.",
+          "name": "कृपया शेतकऱ्याचे नाव भरा.",
+          "phone": "कृपया फोन नंबर भरा.",
+          "phoneInvalid": "फोन नंबर 10 अंकी असावा.",
+          "line1": "कृपया पत्ता/गल्लीतला तपशील भरा.",
+          "village": "कृपया गावाचे नाव भरा.",
+          "district": "कृपया जिल्हा भरा.",
+          "state": "कृपया राज्य भरा.",
+          "pincode": "कृपया पिनकोड भरा.",
+          "pincodeInvalid": "पिनकोड 6 अंकी असावा."
         },
         "steps": {
           "step1": "किट ऑर्डर करा",
@@ -766,6 +1192,22 @@
       "finalSaveFailed": "अहवाल सेव होऊ शकला नाही.",
       "dismissError": "त्रुटी बंद करा",
       "dismissMessage": "संदेश बंद करा"
+    },
+    "report": {
+      "executiveSummary": "कार्यकारी सारांश",
+      "analysisComplete": "एआय विश्लेषण पूर्ण झाले आहे. खालील मेट्रिक्स पाहा.",
+      "soilChemistry": "माती रसायनशास्त्र प्रोफाइल",
+      "nitrogen": "नायट्रोजन (N)",
+      "phosphorus": "फॉस्फरस (P)",
+      "potassium": "पोटॅशियम (K)",
+      "organicCarbon": "सेंद्रिय कार्बन (OC)",
+      "low": "कमी",
+      "high": "जास्त",
+      "actionPlan": "कृती आराखडा",
+      "recommendedCrops": "शिफारस केलेली पिके",
+      "match": "जुळणी",
+      "seasonLabel": "हंगाम",
+      "fertilizerGuide": "खत मार्गदर्शक"
     }
   }
 }

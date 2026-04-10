@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sprout, Sun, CloudRain, Leaf, ArrowRight } from 'lucide-react';
 import Logo from './common/Logo';
 import {DEFAULT_LOCALE, SUPPORTED_LOCALES} from '@/i18n/locales';
+import { useTranslations } from 'next-intl';
 
 const SUPPORTED_LOCALE_SET = new Set(SUPPORTED_LOCALES);
 
@@ -21,8 +22,9 @@ const getPreferredLocale = () => {
 };
 
 export default function SplashScreen() {
+  const t = useTranslations('Splash');
   const [progress, setProgress] = useState(0);
-  const [loadingText, setLoadingText] = useState('Initializing Systems...');
+  const [loadingText, setLoadingText] = useState(t('initializing'));
   const [isFinished, setIsFinished] = useState(false);
   
   // 🛠️ FIX: Track if the component has mounted on the client
@@ -30,12 +32,12 @@ export default function SplashScreen() {
 
   // Professional agricultural app loading sequence
   const loadingSteps = [
-    { threshold: 0, text: 'Starting KrishiMitra...' },
-    { threshold: 25, text: 'Connecting to regional markets...' },
-    { threshold: 50, text: 'Syncing local weather data...' },
-    { threshold: 75, text: 'Preparing crop insights...' },
-    { threshold: 90, text: 'Securing connection...' },
-    { threshold: 100, text: 'Welcome to KrishiMitra.' }
+    { threshold: 0, text: t('steps.starting') },
+    { threshold: 25, text: t('steps.connectingMarkets') },
+    { threshold: 50, text: t('steps.syncingWeather') },
+    { threshold: 75, text: t('steps.preparingInsights') },
+    { threshold: 90, text: t('steps.securing') },
+    { threshold: 100, text: t('steps.welcome') }
   ];
 
   useEffect(() => {
@@ -124,7 +126,7 @@ export default function SplashScreen() {
             Krishi<span className="text-emerald-400">Mitra</span>
           </h1>
           <p className="text-emerald-100/70 font-medium text-sm tracking-widest uppercase">
-            Empowering the Modern Farmer
+            {t('tagline')}
           </p>
         </motion.div>
 
@@ -181,7 +183,7 @@ export default function SplashScreen() {
           }}
           className="group flex items-center space-x-2 text-emerald-500/60 hover:text-emerald-400 transition-colors text-sm font-semibold"
         >
-          <span>Skip Initialization</span>
+          <span>{t('skip')}</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </motion.div>

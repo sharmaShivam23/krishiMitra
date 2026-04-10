@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   ArrowLeft, Search, MapPin, Building2,
   Phone, Mail, Loader2, FlaskConical, Map
@@ -15,6 +15,7 @@ type Lab = { name: string; address?: string; email?: string; STLdetails?: { phon
 export default function SoilHealthCardLabsPage() {
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations('SoilLabs');
 
   const [states, setStates] = useState<Item[]>([]);
   const [districts, setDistricts] = useState<Item[]>([]);
@@ -27,6 +28,13 @@ export default function SoilHealthCardLabsPage() {
   const [loadingDistr, setLoadingDistr] = useState(false);
   const [loadingLabs, setLoadingLabs] = useState(false);
   const [fetchError, setFetchError] = useState('');
+  const sampleSteps = [
+    t('steps.step1'),
+    t('steps.step2'),
+    t('steps.step3'),
+    t('steps.step4'),
+    t('steps.step5')
+  ];
 
   useEffect(() => {
     fetch('/api/shc/labs?type=states&t=' + Date.now())
@@ -38,18 +46,18 @@ export default function SoilHealthCardLabsPage() {
             setStates(d.data);
             setFetchError('');
           } else {
-            setFetchError('API Error: ' + (d.error || 'Unknown server error'));
+            setFetchError(t('errors.api', { message: d.error || t('errors.unknown') }));
           }
         } catch {
-          setFetchError('Parse Error. Server Returned: ' + text.substring(0, 80));
+          setFetchError(t('errors.parse', { snippet: text.substring(0, 80) }));
         }
         setLoadingStates(false);
       })
       .catch((err) => {
-        setFetchError('Network Error: ' + err.message);
+        setFetchError(t('errors.network', { message: err.message }));
         setLoadingStates(false);
-      });
-  }, []);
+        });
+      }, [t]);
 
   useEffect(() => {
     if (!selState) { setDistricts([]); setSelDistrict(''); setLabs([]); return; }
@@ -84,7 +92,7 @@ export default function SoilHealthCardLabsPage() {
         onClick={() => router.push(`/${locale}/dashboard/soil-intelligence`)}
         className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-emerald-700 transition-colors"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to Soil Hub
+        <ArrowLeft className="w-4 h-4" /> {t('back')}
       </button>
 
       {/* Hero Header */}
@@ -95,15 +103,13 @@ export default function SoilHealthCardLabsPage() {
         
         <div className="relative z-10 p-6 md:p-10 w-full">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] font-black text-amber-300 uppercase tracking-widest mb-3">
-            <FlaskConical className="w-3.5 h-3.5" /> Soil Testing Facilities
+            <FlaskConical className="w-3.5 h-3.5" /> {t('badge')}
           </div>
           <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
-            Get Your Soil Health Card
+            {t('title')}
           </h1>
           <p className="mt-3 text-emerald-100/70 text-sm md:text-base font-semibold max-w-2xl leading-relaxed">
-            A Soil Health Card (SHC) provides a detailed analysis of your field's nutrient levels. 
-            Find your nearest government-approved laboratory below, submit a 500g soil sample, 
-            and receive your official profile.
+            {t('subtitle')}
           </p>
         </div>
       </motion.div>
@@ -115,20 +121,20 @@ export default function SoilHealthCardLabsPage() {
         <div className="lg:col-span-4 space-y-4">
           <div className="bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-6 md:p-8">
             <h2 className="text-lg font-black text-gray-900 flex items-center gap-2 mb-6">
-              <Map className="w-5 h-5 text-emerald-500" /> Locate a Lab
+              <Map className="w-5 h-5 text-emerald-500" /> {t('locateTitle')}
             </h2>
 
             <div className="space-y-5">
               {/* State */}
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">1. Select State</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">{t('selectState')}</label>
                 <div className="relative">
                   <CustomSelect 
                     disabled={loadingStates}
                     value={selState}
                     onChange={setSelState}
                     options={states}
-                    placeholder="Choose State..."
+                    placeholder={t('chooseState')}
                   />
                   {loadingStates && <Loader2 className="absolute right-10 top-3.5 w-4 h-4 animate-spin text-emerald-500 pointer-events-none" />}
                 </div>
@@ -146,14 +152,14 @@ export default function SoilHealthCardLabsPage() {
                     initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} 
                     className="relative z-40"
                   >
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 mt-3 block">2. Select District</label>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 mt-3 block">{t('selectDistrict')}</label>
                     <div className="relative">
                       <CustomSelect 
                         disabled={loadingDistr}
                         value={selDistrict}
                         onChange={setSelDistrict}
                         options={districts}
-                        placeholder="Choose District..."
+                        placeholder={t('chooseDistrict')}
                       />
                       {loadingDistr && <Loader2 className="absolute right-10 top-3.5 w-4 h-4 animate-spin text-emerald-500 pointer-events-none" />}
                     </div>
@@ -167,22 +173,16 @@ export default function SoilHealthCardLabsPage() {
                 className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 text-white px-6 py-3.5 text-sm font-black shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:shadow-none active:scale-[0.98]"
               >
                 {loadingLabs ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
-                {loadingLabs ? 'Searching...' : 'Find Laboratories'}
+                {loadingLabs ? t('searching') : t('findLabs')}
               </button>
             </div>
           </div>
           
           {/* Quick Guide */}
           <div className="bg-emerald-50 rounded-3xl border border-emerald-100 p-6">
-            <h3 className="text-sm font-black text-emerald-900 mb-4 uppercase tracking-wider">How to Sample Soil</h3>
+            <h3 className="text-sm font-black text-emerald-900 mb-4 uppercase tracking-wider">{t('howToSample')}</h3>
             <ul className="space-y-3">
-              {[
-                "Dig a V-shaped hole 15cm deep",
-                "Take slice of soil from the exposed wall",
-                "Collect samples from 8-10 spots across field",
-                "Mix thoroughly, keep 500g in clean bag",
-                "Label bag with Name, Phone, and Field Details"
-              ].map((step, i) => (
+              {sampleSteps.map((step, i) => (
                 <li key={i} className="flex items-start gap-2.5 text-sm font-medium text-emerald-800">
                   <span className="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-200 text-emerald-700 flex items-center justify-center text-[10px] font-black mt-0.5">{i+1}</span>
                   <span className="leading-snug">{step}</span>
@@ -207,11 +207,11 @@ export default function SoilHealthCardLabsPage() {
                       <Building2 className="w-5 h-5 text-emerald-600" />
                     </div>
                     <div>
-                      <h3 className="text-[15px] font-black text-gray-900 leading-tight line-clamp-2">{lab.name || 'Testing Laboratory'}</h3>
+                      <h3 className="text-[15px] font-black text-gray-900 leading-tight line-clamp-2">{lab.name || t('labCard.unnamed')}</h3>
                       <p className="text-[11px] font-black text-gray-400 uppercase mt-1 tracking-wider">
-                        {typeof lab.district === 'object' ? (lab.district as any)?.name || (lab.district as any)?.districtName : lab.district || 'Unknown District'}, 
+                        {typeof lab.district === 'object' ? (lab.district as any)?.name || (lab.district as any)?.districtName : lab.district || t('labCard.unknownDistrict')}, 
                         {' '}
-                        {typeof lab.state === 'object' ? (lab.state as any)?.name || (lab.state as any)?.stateName : lab.state || 'Unknown State'}
+                        {typeof lab.state === 'object' ? (lab.state as any)?.name || (lab.state as any)?.stateName : lab.state || t('labCard.unknownState')}
                       </p>
                     </div>
                   </div>
@@ -244,8 +244,8 @@ export default function SoilHealthCardLabsPage() {
               <div className="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4">
                 <Search className="w-6 h-6 text-gray-300" />
               </div>
-              <h3 className="text-lg font-black text-gray-600">No Laboratories Found</h3>
-              <p className="text-sm font-semibold text-gray-400 max-w-sm text-center mt-1">Select your State and District then search to find nearest government approved testing centers.</p>
+              <h3 className="text-lg font-black text-gray-600">{t('noLabsTitle')}</h3>
+              <p className="text-sm font-semibold text-gray-400 max-w-sm text-center mt-1">{t('noLabsDesc')}</p>
             </div>
           )}
         </div>
@@ -256,6 +256,7 @@ export default function SoilHealthCardLabsPage() {
 }
 
 function CustomSelect({ options, value, onChange, placeholder, disabled }: any) {
+  const t = useTranslations('SoilLabs');
   const [open, setOpen] = useState(false);
   const selected = options.find((o: any) => o.id === value);
 
@@ -291,7 +292,7 @@ function CustomSelect({ options, value, onChange, placeholder, disabled }: any) 
                   {o.name}
                 </button>
               ))}
-              {options.length === 0 && <div className="px-4 py-3 text-sm text-gray-400 font-medium">No options available</div>}
+              {options.length === 0 && <div className="px-4 py-3 text-sm text-gray-400 font-medium">{t('noOptions')}</div>}
             </motion.div>
           </>
         )}

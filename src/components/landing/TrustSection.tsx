@@ -7,9 +7,9 @@ import { ShieldCheck, MapPin, Sprout, TrendingUp } from 'lucide-react';
 
 /* ── Testimonials ───────────────────────────────────────── */
 const TESTIMONIALS = [
-  { name: 'Ramesh Kumar', loc: 'Haryana', quote: 'Mandi prices directly on my phone — no more middlemen cheating us!', avatar: '👨‍🌾' },
-  { name: 'Priya Devi', loc: 'Punjab', quote: 'Disease detection saved my entire wheat crop this season.', avatar: '👩‍🌾' },
-  { name: 'Sukhbir Singh', loc: 'MP', quote: 'AI advisor told me the right time to sell. Made extra ₹18,000 this year.', avatar: '🧑‍🌾' },
+  { name: 'Ramesh Kumar', loc: 'Haryana', quoteKey: 'testimonials.ramesh', avatar: '👨‍🌾' },
+  { name: 'Priya Devi', loc: 'Punjab', quoteKey: 'testimonials.priya', avatar: '👩‍🌾' },
+  { name: 'Sukhbir Singh', loc: 'MP', quoteKey: 'testimonials.sukhbir', avatar: '🧑‍🌾' },
 ];
 
 export default function TrustSection() {
@@ -33,7 +33,7 @@ export default function TrustSection() {
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/25 mb-6">
                 <Sprout className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-xs font-bold text-emerald-300 uppercase tracking-widest">Trusted Across Bharat</span>
+                <span className="text-xs font-bold text-emerald-300 uppercase tracking-widest">{t('badge')}</span>
               </div>
               <h2 className="text-3xl md:text-5xl font-black text-white leading-tight mb-6">
                 {t('heading1')} <span className="text-amber-400">{t('heading2')}</span>{t('heading3')}
@@ -54,7 +54,7 @@ export default function TrustSection() {
 
               {/* Trusted by strip */}
               <div className="flex flex-wrap gap-3">
-                {['🏛️ Min. of Agriculture', '🏦 NABARD', '📊 NCDEX', '🌾 APMC'].map(label => (
+                {[t('trustedBy.ministry'), t('trustedBy.nabard'), t('trustedBy.ncdex'), t('trustedBy.apmc')].map(label => (
                   <span key={label} className="px-3 py-1.5 rounded-xl bg-white/8 border border-white/12 text-stone-400 text-xs font-semibold">
                     {label}
                   </span>
@@ -92,7 +92,7 @@ export default function TrustSection() {
                   transition={{ delay: i * 0.15 + 0.3 }}
                   className="bg-white/8 backdrop-blur-sm border border-white/10 p-4 rounded-2xl"
                 >
-                  <p className="text-stone-300 text-sm font-medium leading-relaxed mb-3">"{testimonial.quote}"</p>
+                  <p className="text-stone-300 text-sm font-medium leading-relaxed mb-3">"{t(testimonial.quoteKey)}"</p>
                   <div className="flex items-center gap-2">
                     <span className="text-xl">{testimonial.avatar}</span>
                     <div>

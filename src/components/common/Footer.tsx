@@ -42,20 +42,20 @@ export default function Footer() {
       const data = await res.json();
       if (res.status === 403 && data.notSubscribed) {
         setCallState('unsubscribed');
-        setCallMsg('Subscribe to the Kisan Helpline first to use this feature.');
+        setCallMsg(t('call.needSubscribe'));
         return;
       }
       if (res.status === 401) {
         setCallState('error');
-        setCallMsg('Please log in to use this feature.');
+        setCallMsg(t('call.loginRequired'));
         return;
       }
-      if (!res.ok || !data.success) throw new Error(data.error || 'Call request failed');
+      if (!res.ok || !data.success) throw new Error(data.error || t('call.requestFailed'));
       setCallState('success');
-      setCallMsg(data.message || 'Call initiated!');
+      setCallMsg(data.message || t('call.initiated'));
     } catch (err: any) {
       setCallState('error');
-      setCallMsg(err.message || 'Something went wrong. Please try again.');
+      setCallMsg(err.message || t('call.genericError'));
     } finally {
       setTimeout(() => {
         if (callState !== 'unsubscribed') {
@@ -69,7 +69,7 @@ export default function Footer() {
   
   const handleSubscribe = async () => {
     if (!phone || phone.length !== 10 || isNaN(Number(phone))) {
-      setStatus({ type: 'error', message: 'Please enter a valid 10-digit number.' });
+      setStatus({ type: 'error', message: t('subscribe.invalidPhone') });
       return;
     }
 
@@ -87,13 +87,16 @@ export default function Footer() {
 
       if (!res.ok || !data.success) {
         if (data.notRegistered) {
-          setStatus({ type: 'error', message: 'Sign in to subscribe. Redirecting to login...' });
+          setStatus({ type: 'error', message: t('subscribe.loginRequired') });
           setTimeout(() => {
             window.location.href = `/${locale}/login`;
           }, 2000);
           return;
         }
-        throw new Error(data.message || `${mode === 'subscribe' ? 'Subscription' : 'Unsubscription'} failed.`);
+        const actionLabel = mode === 'subscribe'
+          ? t('subscribe.actionSubscribe')
+          : t('subscribe.actionUnsubscribe');
+        throw new Error(data.message || t('subscribe.actionFailed', { action: actionLabel }));
       }
 
       setStatus({ type: 'success', message: data.message });
@@ -185,7 +188,7 @@ export default function Footer() {
                 ) : (
                   <>
                     <span className="hidden sm:inline-block mr-2">
-                      {mode === 'subscribe' ? t('smsButton') : 'Unsubscribe'}
+                      {mode === 'subscribe' ? t('smsButton') : t('actions.unsubscribe')}
                     </span>
                     <Send className="w-4 h-4" />
                   </>
@@ -207,7 +210,7 @@ export default function Footer() {
                     : 'text-emerald-500/80 hover:text-emerald-400'
                 }`}
               >
-                {mode === 'subscribe' ? 'Need to unsubscribe?' : 'Subscribe to alerts'}
+                {mode === 'subscribe' ? t('actions.needUnsubscribe') : t('actions.subscribeToAlerts')}
               </button>
             </div>
 
@@ -246,7 +249,7 @@ export default function Footer() {
                   ? 'border-red-500/30'
                   : 'border-emerald-800/30 hover:border-emerald-600/50 cursor-pointer'
               }`}
-              title={callState === 'unsubscribed' ? 'Subscribe to helpline first' : 'Click to request a call back'}
+              title={callState === 'unsubscribed' ? t('call.titleUnsubscribed') : t('call.titleDefault')}
             >
               {/* Glow on hover */}
               <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" style={{ background: 'radial-gradient(ellipse at 30% 50%,rgba(16,185,129,.08),transparent 70%)' }} />
@@ -277,10 +280,10 @@ export default function Footer() {
                   callState === 'error' ? 'text-red-400' :
                   'text-white group-hover:text-amber-400'
                 }`}>
-                  {callState === 'loading' ? 'Connecting...' :
-                   callState === 'success' ? 'Call Initiated! ✓' :
-                   callState === 'error' ? 'Failed — Tap to Retry' :
-                   callState === 'unsubscribed' ? 'Subscribe First' :
+                  {callState === 'loading' ? t('call.statusConnecting') :
+                   callState === 'success' ? t('call.statusSuccess') :
+                   callState === 'error' ? t('call.statusError') :
+                   callState === 'unsubscribed' ? t('call.statusUnsubscribed') :
                    '1800-180-1551'}
                 </p>
                 {callMsg ? (
@@ -290,7 +293,7 @@ export default function Footer() {
                     'text-red-400/80'
                   }`}>{callMsg}</p>
                 ) : (
-                  <p className="text-[11px] text-stone-500 font-medium mt-0.5">Tap to request a call back • Subscribers only</p>
+                  <p className="text-[11px] text-stone-500 font-medium mt-0.5">{t('call.helper')}</p>
                 )}
               </div>
             </button>

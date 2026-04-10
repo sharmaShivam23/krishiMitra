@@ -1,7 +1,9 @@
+
 'use client';
 
 import React, { useState, useRef } from 'react';
 import { Upload, Link2, X, Image as ImageIcon, Loader2, CheckCircle2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface Props {
   value: string;
@@ -12,7 +14,9 @@ interface Props {
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
 const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
 
-export default function CloudinaryImageUpload({ value, onChange, label = 'Product Image' }: Props) {
+export default function CloudinaryImageUpload({ value, onChange, label }: Props) {
+  const t = useTranslations('ImageUpload');
+  const resolvedLabel = label ?? t('label');
   const [tab, setTab] = useState<'upload' | 'url'>('upload');
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -22,7 +26,7 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
 
   const uploadToCloudinary = async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      alert('Please select an image file.');
+      alert(t('alerts.invalidFile'));
       return;
     }
     setUploading(true);
@@ -44,12 +48,12 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
       clearInterval(progressInterval);
       setProgress(100);
 
-      if (!res.ok) throw new Error('Cloudinary upload failed');
+      if (!res.ok) throw new Error(t('alerts.uploadFailed'));
       const data = await res.json();
       onChange(data.secure_url);
     } catch (err) {
       console.error('Upload error:', err);
-      alert('Image upload failed. Please try again.');
+      alert(t('alerts.uploadFailed'));
     } finally {
       setUploading(false);
       setTimeout(() => setProgress(0), 800);
@@ -82,7 +86,7 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
     <div className="space-y-3">
       <label className="block text-sm font-bold text-gray-700 flex items-center gap-1.5">
         <ImageIcon className="w-4 h-4 text-emerald-600" />
-        {label}
+        {resolvedLabel}
       </label>
 
       {/* Tab switcher */}
@@ -94,7 +98,7 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
             tab === 'upload' ? 'bg-white text-emerald-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
           }`}
         >
-          <Upload className="w-3.5 h-3.5" /> Upload Photo
+          <Upload className="w-3.5 h-3.5" /> {t('tabs.upload')}
         </button>
         <button
           type="button"
@@ -103,7 +107,7 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
             tab === 'url' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
           }`}
         >
-          <Link2 className="w-3.5 h-3.5" /> Paste URL
+          <Link2 className="w-3.5 h-3.5" /> {t('tabs.url')}
         </button>
       </div>
 
@@ -130,7 +134,7 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
           {uploading ? (
             <div className="space-y-3">
               <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mx-auto" />
-              <p className="text-sm font-semibold text-emerald-700">Uploading to Cloudinary...</p>
+              <p className="text-sm font-semibold text-emerald-700">{t('status.uploading')}</p>
               <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                 <div
                   className="bg-emerald-500 h-full rounded-full transition-all duration-300"
@@ -145,9 +149,9 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
                 <Upload className="w-6 h-6 text-emerald-600" />
               </div>
               <p className="text-sm font-bold text-gray-700">
-                Click to upload <span className="text-gray-400 font-normal">or drag & drop</span>
+                {t('prompt.clickUpload')} <span className="text-gray-400 font-normal">{t('prompt.dragDrop')}</span>
               </p>
-              <p className="text-xs text-gray-400">PNG, JPG, WEBP up to 10MB</p>
+              <p className="text-xs text-gray-400">{t('prompt.fileTypes')}</p>
             </div>
           )}
         </div>
@@ -162,7 +166,7 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
               type="url"
               value={urlInput}
               onChange={e => setUrlInput(e.target.value)}
-              placeholder="https://example.com/image.jpg"
+              placeholder={t('prompt.urlPlaceholder')}
               className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/30 outline-none text-sm font-medium text-gray-900"
               onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleUrlConfirm())}
             />
@@ -172,7 +176,7 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
             onClick={handleUrlConfirm}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-1.5"
           >
-            <CheckCircle2 className="w-4 h-4" /> Use
+            <CheckCircle2 className="w-4 h-4" /> {t('actions.use')}
           </button>
         </div>
       )}
@@ -191,7 +195,7 @@ export default function CloudinaryImageUpload({ value, onChange, label = 'Produc
             </button>
           </div>
           <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-lg flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Image set
+            <CheckCircle2 className="w-3 h-3 text-emerald-400" /> {t('status.imageSet')}
           </div>
         </div>
       )}

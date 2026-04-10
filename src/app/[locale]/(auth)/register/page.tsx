@@ -61,7 +61,7 @@ export default function RegisterPage() {
 
   const handleSaveProviderDetails = () => {
     if (!formData.shopName || !formData.licenseNumber || !formData.licenseImage) {
-      setModalError('Please fill all required verification fields.');
+      setModalError(t('providerModal.errorRequired'));
       return;
     }
     setModalError('');
@@ -78,7 +78,7 @@ export default function RegisterPage() {
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.role === 'provider' && (!formData.shopName || !formData.licenseNumber)) {
-      setError('Provider verification details are incomplete.');
+      setError(t('errors.providerIncomplete'));
       setIsProviderModalOpen(true);
       return;
     }
@@ -94,7 +94,7 @@ export default function RegisterPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
+      if (!res.ok) throw new Error(data.error || t('errors.otpSendFailed'));
 
       setStep(2);
     } catch (err: any) {
@@ -107,7 +107,7 @@ export default function RegisterPage() {
   const handleVerifyAndRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (otp.length !== 6) {
-      setError('Please enter a valid 6-digit OTP');
+      setError(t('errors.otpInvalid'));
       return;
     }
     
@@ -122,11 +122,11 @@ export default function RegisterPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Registration failed');
+      if (!res.ok) throw new Error(data.error || t('errors.registrationFailed'));
 
       window.location.href = `/${locale}/login?registered=true`;
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Registration failed');
+      setError(err instanceof Error ? err.message : t('errors.registrationFailed'));
     } finally {
       setLoading(false);
     }
@@ -169,8 +169,8 @@ export default function RegisterPage() {
                     <BadgeCheck className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-extrabold text-gray-900">Provider Verification</h3>
-                    <p className="text-xs text-gray-500 font-medium">Authorized Sellers Only</p>
+                    <h3 className="text-lg font-extrabold text-gray-900">{t('providerModal.title')}</h3>
+                    <p className="text-xs text-gray-500 font-medium">{t('providerModal.subtitle')}</p>
                   </div>
                 </div>
                 <button onClick={handleCancelProvider} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
@@ -187,31 +187,31 @@ export default function RegisterPage() {
                 )}
                 
                 <div>
-                  <label className="block text-sm font-bold text-gray-900 mb-1.5">Shop Name <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-bold text-gray-900 mb-1.5">{t('providerModal.shopName')} <span className="text-red-500">*</span></label>
                   <div className="relative group">
                     <Store className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                    <input name="shopName" type="text" value={formData.shopName} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl text-black bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" placeholder="E.g. Krishi Kendra" />
+                    <input name="shopName" type="text" value={formData.shopName} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl text-black bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" placeholder={t('providerModal.shopPlaceholder')} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-900 mb-1.5">Govt. License Number <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-bold text-gray-900 mb-1.5">{t('providerModal.licenseNumber')} <span className="text-red-500">*</span></label>
                   <div className="relative group">
                     <FileText className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                    <input name="licenseNumber" type="text" value={formData.licenseNumber} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl text-black bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" placeholder="Pesticide/Fertilizer License No." />
+                    <input name="licenseNumber" type="text" value={formData.licenseNumber} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl text-black bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" placeholder={t('providerModal.licensePlaceholder')} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-900 mb-1.5">License Document URL <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-bold text-gray-900 mb-1.5">{t('providerModal.licenseUrl')} <span className="text-red-500">*</span></label>
                   <div className="relative group">
                     <ImageIcon className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                    <input name="licenseImage" type="url" value={formData.licenseImage} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl text-black bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" placeholder="Link to document image" />
+                    <input name="licenseImage" type="url" value={formData.licenseImage} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl text-black bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" placeholder={t('providerModal.licenseUrlPlaceholder')} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-900 mb-1.5">GST Number <span className="text-gray-400 font-normal">(Optional)</span></label>
+                  <label className="block text-sm font-bold text-gray-900 mb-1.5">{t('providerModal.gstNumber')} <span className="text-gray-400 font-normal">{t('providerModal.optional')}</span></label>
                   <div className="relative group">
                     <FileText className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
                     <input name="gstNumber" type="text" value={formData.gstNumber} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl text-black bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" placeholder="22AAAAA0000A1Z5" />
@@ -221,8 +221,8 @@ export default function RegisterPage() {
 
               {/* Modal Footer */}
               <div className="px-6 py-5 border-t border-gray-100 bg-gray-50 flex gap-3">
-                <button onClick={handleCancelProvider} className="flex-1 py-3.5 rounded-xl font-bold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all">Cancel</button>
-                <button onClick={handleSaveProviderDetails} className="flex-1 py-3.5 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all">Save Details</button>
+                <button onClick={handleCancelProvider} className="flex-1 py-3.5 rounded-xl font-bold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all">{t('providerModal.cancel')}</button>
+                <button onClick={handleSaveProviderDetails} className="flex-1 py-3.5 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all">{t('providerModal.save')}</button>
               </div>
             </motion.div>
           </div>
@@ -264,7 +264,7 @@ export default function RegisterPage() {
                   <label className="block text-sm font-bold text-gray-900 mb-1.5">{t('fullName')}</label>
                   <div className="relative group">
                     <User className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                    <input name="name" type="text" required value={formData.name} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black outline-none transition-all shadow-sm" placeholder="Ram Singh" />
+                    <input name="name" type="text" required value={formData.name} onChange={handleChange} className="block w-full pl-11 pr-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black outline-none transition-all shadow-sm" placeholder={t('namePlaceholder')} />
                   </div>
                 </motion.div>
 
@@ -274,7 +274,7 @@ export default function RegisterPage() {
                   <div className="relative group">
                     <Phone className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
                     <span className="absolute left-11 top-3.5 text-gray-500 font-bold">+91</span>
-                    <input name="phone" type="tel" required maxLength={10} value={formData.phone} onChange={handleChange} className="block w-full pl-20 pr-4 py-3.5 border border-gray-200 rounded-xl text-black focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all shadow-sm font-medium tracking-wide" placeholder="98765 43210" />
+                    <input name="phone" type="tel" required maxLength={10} value={formData.phone} onChange={handleChange} className="block w-full pl-20 pr-4 py-3.5 border border-gray-200 rounded-xl text-black focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all shadow-sm font-medium tracking-wide" placeholder={t('phonePlaceholder')} />
                   </div>
                 </motion.div>
 
@@ -286,34 +286,34 @@ export default function RegisterPage() {
                     onDistrictChange={v => { setFormData(prev => ({ ...prev, district: v })); if (error) setError(''); }}
                     required
                     stateLabel={t('region')}
-                    districtLabel="District"
+                    districtLabel={t('district')}
                   />
                 </motion.div>
 
                 {/* 🔴 ALIGNMENT FIX: Grid Layout for Role and Language */}
                 <motion.div variants={itemVariant} className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-1.5">Role</label>
+                    <label className="block text-sm font-bold text-gray-900 mb-1.5">{t('roleLabel')}</label>
                     <div className="relative group">
                       <select name="role" required value={formData.role} onChange={handleRoleChange} className="block w-full pl-4 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer shadow-sm bg-white font-bold">
-                        <option value="farmer">Farmer</option>
-                        <option value="provider">Provider (Seller)</option>
+                        <option value="farmer">{t('roles.farmer')}</option>
+                        <option value="provider">{t('roles.provider')}</option>
                       </select>
                       <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-1.5">App Language</label>
+                    <label className="block text-sm font-bold text-gray-900 mb-1.5">{t('languageLabel')}</label>
                     <div className="relative group">
                       <select name="preferredLanguage" required value={formData.preferredLanguage} onChange={handleChange} className="block w-full pl-4 pr-10 py-3.5 border border-gray-200 rounded-xl focus:ring-2 text-black focus:ring-emerald-500 outline-none appearance-none cursor-pointer shadow-sm bg-white font-medium">
-                        <option value="en">English</option>
-                        <option value="hi">Hindi (हिंदी)</option>
-                        <option value="mr">Marathi (मराठी)</option>
-                        <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
-                        <option value="bn">Bengali (বাংলা)</option>
-                        <option value="te">Telugu (తెలుగు)</option>
-                        <option value="ta">Tamil (தமிழ்)</option>
+                        <option value="en">{t('languageOptions.en')}</option>
+                        <option value="hi">{t('languageOptions.hi')}</option>
+                        <option value="mr">{t('languageOptions.mr')}</option>
+                        <option value="pa">{t('languageOptions.pa')}</option>
+                        <option value="bn">{t('languageOptions.bn')}</option>
+                        <option value="te">{t('languageOptions.te')}</option>
+                        <option value="ta">{t('languageOptions.ta')}</option>
                       </select>
                       <ChevronDown className="absolute right-4 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
                     </div>
@@ -358,7 +358,7 @@ export default function RegisterPage() {
                   
                   <div className="relative group">
                     <KeyRound className="absolute left-4 top-4 h-6 w-6 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                    <input type="text" required maxLength={6} value={otp} onChange={(e) => { setOtp(e.target.value.replace(/\D/g, '')); setError(''); }} className="block w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-0 text-gray-900 outline-none font-black text-2xl tracking-[0.5em] text-center shadow-inner bg-gray-50 focus:bg-white transition-all" placeholder="------" />
+                    <input type="text" required maxLength={6} value={otp} onChange={(e) => { setOtp(e.target.value.replace(/\D/g, '')); setError(''); }} className="block w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-0 text-gray-900 outline-none font-black text-2xl tracking-[0.5em] text-center shadow-inner bg-gray-50 focus:bg-white transition-all" placeholder={t('otpPlaceholder')} />
                   </div>
                 </div>
 
@@ -374,7 +374,7 @@ export default function RegisterPage() {
           {/* Back to Home Button */}
           <div className="mt-8 flex justify-center">
             <Link href={`/${locale}`} className="text-sm font-bold text-gray-500 hover:text-emerald-600 transition-colors flex items-center group">
-              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> Back
+              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> {t('back')}
             </Link>
           </div>
         </div>

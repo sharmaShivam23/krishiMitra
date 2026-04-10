@@ -18,6 +18,10 @@
         "title": "ਸਮਾਰਟ ਫਸਲ ਗਾਈਡ",
         "desc": "ਆਪਣੀ ਸਥਾਨਕ ਮਿੱਟੀ ਅਤੇ ਮੌਸਮ ਦੇ ਆਧਾਰ 'ਤੇ ਬਿਜਾਈ ਅਤੇ ਵਾਢੀ ਦਾ ਸਹੀ ਸਮਾਂ ਜਾਣੋ।"
       },
+      "sellPredictor": {
+        "title": "ਵੇਚਣ ਦਾ ਸਭ ਤੋਂ ਵਧੀਆ ਸਮਾਂ",
+        "desc": "ਵੱਧ ਤੋਂ ਵੱਧ ਮੁਨਾਫ਼ੇ ਲਈ ਆਪਣੀ ਫਸਲ ਵੇਚਣ ਦਾ ਸਹੀ ਸਮਾਂ ਲੱਭੋ।"
+      },
       "voiceAssistant": {
         "title": "ਕ੍ਰਿਸ਼ੀ ਸਾਰਥੀ ਵੌਇਸ ਅਸਿਸਟੈਂਟ",
         "desc": "ਆਪਣੀ ਸਥਾਨਕ ਭਾਸ਼ਾ ਵਿੱਚ ਬੋਲ ਕੇ ਤੁਰੰਤ ਖੇਤੀ ਦੀ ਸਲਾਹ ਅਤੇ ਮੌਸਮ ਦੀ ਜਾਣਕਾਰੀ ਪ੍ਰਾਪਤ ਕਰੋ।"
@@ -45,10 +49,15 @@
       "yieldAnalytics": {
         "title": "ਫਸਲ ਟਰੈਕਰ",
         "desc": "ਅਗਲੇ ਮੌਸਮ ਲਈ ਬਿਹਤਰ ਯੋਜਨਾ ਬਣਾਉਣ ਲਈ ਆਪਣੀਆਂ ਪਿਛਲੀਆਂ ਫਸਲਾਂ ਦਾ ਰਿਕਾਰਡ ਰੱਖੋ।"
+      },
+      "soilIntelligence": {
+        "title": "ਮਿੱਟੀ ਇੰਟੈਲੀਜੈਂਸ ਲੈਬ",
+        "desc": "ਨੇੜੇ ਸਰਟੀਫਾਇਡ ਮਿੱਟੀ ਟੈਸਟ ਲੈਬ ਲੱਭੋ ਅਤੇ ਨਿੱਜੀ ਫਸਲ ਸਿਫ਼ਾਰਸ਼ਾਂ ਪਾਓ।"
       }
     }
   },
   "TrustSection": {
+    "badge": "ਭਾਰਤ ਭਰ ਵਿੱਚ ਭਰੋਸੇਯੋਗ",
     "heading1": "ਤੁਹਾਡੇ ਖੇਤ ਨੂੰ ",
     "heading2": "ਤਕਨੀਕ",
     "heading3": " ਅਤੇ ਭਾਈਚਾਰੇ ਨਾਲ ਮਜ਼ਬੂਤ ਬਣਾਉਣਾ।",
@@ -56,6 +65,17 @@
     "list1": "ਸਥਾਨਕ SMS ਅਲਰਟ ਦੇ ਨਾਲ ਲਾਈਵ APMC ਮੰਡੀ ਦੇ ਭਾਅ",
     "list2": "ਸਥਾਨਕ ਟਰੈਕਟਰ, ਮਸ਼ੀਨਰੀ ਅਤੇ ਖੇਤ ਮਜ਼ਦੂਰ ਕਿਰਾਏ 'ਤੇ ਲਓ",
     "list3": "ਸਮਾਰਟ ਖੇਤੀ ਸਲਾਹਕਾਰ ਅਤੇ ਪ੍ਰਮਾਣਿਤ ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ",
+    "trustedBy": {
+      "ministry": "🏛️ ਖੇਤੀਬਾੜੀ ਮੰਤਰਾਲਾ",
+      "nabard": "🏦 NABARD",
+      "ncdex": "📊 NCDEX",
+      "apmc": "🌾 APMC"
+    },
+    "testimonials": {
+      "ramesh": "ਮੰਡੀ ਦੇ ਭਾਅ ਸਿੱਧੇ ਮੇਰੇ ਫੋਨ 'ਤੇ — ਹੁਣ ਬਿਚੌਲੀਆਂ ਦੀ ਠੱਗੀ ਨਹੀਂ!",
+      "priya": "ਇਸ ਸੀਜ਼ਨ ਬਿਮਾਰੀ ਪਹਚਾਣ ਨੇ ਮੇਰੀ ਪੂਰੀ ਗੰਧਮ ਫਸਲ ਬਚਾ ਲਈ।",
+      "sukhbir": "AI ਸਲਾਹਕਾਰ ਨੇ ਵੇਚਣ ਦਾ ਸਹੀ ਸਮਾਂ ਦੱਸਿਆ। ਇਸ ਸਾਲ ₹18,000 ਵਾਧੂ ਮਿਲੇ।"
+    },
     "stat1Label": "ਮੰਡੀ ਦੇ ਭਾਅ",
     "stat1Value": "ਲਾਈਵ (Real-Time)",
     "stat2Label": "ਪਲੇਟਫਾਰਮ ਦੀ ਪਹੁੰਚ",
@@ -70,30 +90,33 @@
     "smsDisclaimer": "ਸਟੈਂਡਰਡ SMS ਚਾਰਜ ਲੱਗ ਸਕਦੇ ਹਨ। ਕਦੇ ਵੀ ਰੱਦ ਕਰੋ।",
     "brandDesc": "ਸਮਾਰਟ ਸਲਾਹ, ਲਾਈਵ ਬਾਜ਼ਾਰ ਦੇ ਭਾਅ ਅਤੇ ਆਸਾਨ ਖੇਤੀ ਸੰਦਾਂ ਨਾਲ ਭਾਰਤੀ ਕਿਸਾਨਾਂ ਦੀ ਮਦਦ ਕਰਨਾ।",
     "helpline": "24/7 ਕਿਸਾਨ ਹੈਲਪਲਾਈਨ",
+    "actions": {
+      "unsubscribe": "ਅਨਸਬਸਕ੍ਰਾਈਬ ਕਰੋ",
+      "needUnsubscribe": "ਅਨਸਬਸਕ੍ਰਾਈਬ ਕਰਨਾ ਹੈ?",
+      "subscribeToAlerts": "ਅਲਰਟ ਸਬਸਕ੍ਰਾਈਬ ਕਰੋ"
+    },
+    "subscribe": {
+      "invalidPhone": "ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ 10-ਅੰਕਾਂ ਦਾ ਨੰਬਰ ਭਰੋ।",
+      "loginRequired": "ਸਬਸਕ੍ਰਾਈਬ ਕਰਨ ਲਈ ਸਾਈਨ ਇਨ ਕਰੋ। ਲੌਗਿਨ 'ਤੇ ਭੇਜ ਰਹੇ ਹਾਂ...",
+      "actionSubscribe": "ਸਬਸਕ੍ਰਿਪਸ਼ਨ",
+      "actionUnsubscribe": "ਅਨਸਬਸਕ੍ਰਿਪਸ਼ਨ",
+      "actionFailed": "{action} ਫੇਲ੍ਹ ਹੋ ਗਿਆ।"
+    },
+    "call": {
+      "needSubscribe": "ਇਹ ਫੀਚਰ ਵਰਤਣ ਲਈ ਪਹਿਲਾਂ ਕਿਸਾਨ ਹੈਲਪਲਾਈਨ ਸਬਸਕ੍ਰਾਈਬ ਕਰੋ।",
+      "loginRequired": "ਇਹ ਫੀਚਰ ਵਰਤਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਲੌਗਿਨ ਕਰੋ।",
+      "requestFailed": "ਕਾਲ ਰਿਕਵੇਸਟ ਫੇਲ੍ਹ ਹੋ ਗਈ",
+      "initiated": "ਕਾਲ ਸ਼ੁਰੂ ਹੋ ਗਈ!",
+      "genericError": "ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+      "titleUnsubscribed": "ਪਹਿਲਾਂ ਹੈਲਪਲਾਈਨ ਸਬਸਕ੍ਰਾਈਬ ਕਰੋ",
+      "titleDefault": "ਕਾਲ ਬੈਕ ਲਈ ਕਲਿੱਕ ਕਰੋ",
+      "statusConnecting": "ਕਨੈਕਟ ਹੋ ਰਿਹਾ ਹੈ...",
+      "statusSuccess": "ਕਾਲ ਸ਼ੁਰੂ! ✓",
+      "statusError": "ਫੇਲ੍ਹ — ਦੁਬਾਰਾ ਟੈਪ ਕਰੋ",
+      "statusUnsubscribed": "ਪਹਿਲਾਂ ਸਬਸਕ੍ਰਾਈਬ ਕਰੋ",
+      "helper": "ਕਾਲ ਬੈਕ ਲਈ ਟੈਪ ਕਰੋ • ਕੇਵਲ ਸਬਸਕ੍ਰਾਈਬਰਾਂ ਲਈ"
+    },
     "platformHeading": "ਪਲੇਟਫਾਰਮ",
-        "orderSummaryTitle": "Order summary",
-        "orderItemTitle": "Soil test strip kit",
-        "orderItemDesc": "Everything you need to read pH + moisture.",
-        "orderPaymentLabel": "Payment",
-        "orderPaymentValue": "Cash on delivery",
-        "orderPrice": "Pay when the kit arrives.",
-        "shippingTitle": "Shipping address",
-        "shippingHelp": "Add your address to unlock shipping.",
-        "orderStatusLabel": "Order confirmed",
-        "viewTracking": "Track order",
-        "trackingTitle": "Order tracking",
-        "trackingHelp": "We update your delivery status automatically.",
-        "orderIdLabel": "Tracking ID",
-        "orderDateLabel": "Order date",
-        "etaLabel": "ETA",
-        "etaDefault": "3-5 days",
-        "tracking": {
-          "ordered": "Ordered",
-          "packed": "Packed",
-          "shipped": "Shipped",
-          "outForDelivery": "Out for delivery",
-          "delivered": "Delivered"
-        },
     "platformLinks": {
       "intel": "ਸਮਾਰਟ ਫਸਲ ਗਾਈਡ",
       "mandi": "ਲਾਈਵ ਮੰਡੀ ਦੇ ਭਾਅ",
@@ -126,6 +149,7 @@
       "mandi": "ਮੰਡੀ ਦੇ ਭਾਅ",
       "disease": "ਬਿਮਾਰੀ ਸਕੈਨਰ",
       "services": "ਕਿਰਾਏ 'ਤੇ ਲਓ",
+      "weather": "ਮੌਸਮ",
       "soil": "ਮਿੱਟੀ ਜਾਣਕਾਰੀ",
       "community": "ਭਾਈਚਾਰਾ",
       "schemes": "ਯੋਜਨਾਵਾਂ",
@@ -144,6 +168,52 @@
     "systemStatus": "ਫਾਰਮ ਸਟੇਟਸ",
     "online": "ਆਨਲਾਈਨ",
     "runScan": "ਫਸਲ ਸਕੈਨ ਕਰੋ",
+    "greetings": {
+      "morning": "ਸ਼ੁਭ ਸਵੇਰ",
+      "afternoon": "ਸ਼ੁਭ ਦੁਪਹਿਰ",
+      "evening": "ਸ਼ੁਭ ਸ਼ਾਮ",
+      "fallbackName": "ਕਿਸਾਨ"
+    },
+    "seasonBadge": "{season} ਸੀਜ਼ਨ",
+    "seasons": {
+      "kharif": "ਖਰੀਫ",
+      "rabi": "ਰਬੀ",
+      "zaid": "ਜ਼ਾਇਦ"
+    },
+    "tiles": {
+      "mandi": {
+        "label": "ਮੰਡੀ ਭਾਅ",
+        "sub": "ਲਾਈਵ ਬਾਜ਼ਾਰ ਰੇਟ",
+        "chip": "🌾 ਅੱਜ"
+      },
+      "disease": {
+        "label": "ਫਸਲ ਡਾਕਟਰ",
+        "sub": "AI ਬਿਮਾਰੀ ਪਛਾਣ",
+        "chip": "🔬 AI ਸਕੈਨ"
+      },
+      "lifecycle": {
+        "label": "ਫਸਲ ਜੀਵਨਚੱਕਰ",
+        "sub": "ਗ੍ਰੋਥ ਪਲਾਨਰ",
+        "chip": "🌱 ਪਲਾਨ"
+      },
+      "advisor": {
+        "label": "AI ਸਲਾਹਕਾਰ",
+        "sub": "ਸਮਾਰਟ ਸਿਫਾਰਸ਼ਾਂ",
+        "chip": "🤖 ਸਮਾਰਟ"
+      }
+    },
+    "soilCard": {
+      "eyebrow": "ਮਿੱਟੀ ਪਛਾਣ",
+      "title": "ਮਿੱਟੀ ਜਾਣੋ, ਸਮਝਦਾਰੀ ਨਾਲ ਉਗਾਓ।",
+      "description": "ਸਰਕਾਰੀ ਰਿਪੋਰਟ ਜਾਂ ਘਰ ਵਾਲੀ ਕਿੱਟ। ਖੇਤ-ਵਿਸ਼ੇਸ਼, ਪੰਜਾਬੀ-ਮਿੱਤਰ।",
+      "tags": {
+        "ph": "pH",
+        "npk": "NPK",
+        "soilType": "ਮਿੱਟੀ ਦੀ ਕਿਸਮ"
+      },
+      "cta": "🌱 ਮੇਰੀ ਮਿੱਟੀ ਜਾਂਚੋ"
+    },
+    "growthProgress": "ਫਸਲ ਦੀ ਪ੍ਰਗਤੀ",
     "weather": {
       "title": "ਲਾਈਵ ਸਥਾਨਕ ਮੌਸਮ",
       "loading": "ਮੌਸਮ ਦੀ ਜਾਂਚ ਹੋ ਰਹੀ ਹੈ...",
@@ -179,6 +249,14 @@
       "optimalTitle": "ਮੌਸਮ ਦੀ ਵਧੀਆ ਸਥਿਤੀ",
       "optimalDesc": "ਮੌਜੂਦਾ ਮੌਸਮ ਤੁਹਾਡੀਆਂ ਫਸਲਾਂ ਲਈ ਸੁਰੱਖਿਅਤ ਹੈ। ਤੁਸੀਂ ਹਮੇਸ਼ਾ ਵਾਂਗ ਆਪਣੇ ਖੇਤਾਂ ਵਿੱਚ ਪਾਣੀ ਦੇ ਸਕਦੇ ਹੋ।",
       "button": "ਸਮਝ ਗਿਆ"
+    },
+    "aiPanel": {
+      "intro": "ਤੁਹਾਡੀ ਮਿੱਟੀ, ਫਸਲ ਅਤੇ ਥਾਂ ਦੇ ਆਧਾਰ 'ਤੇ ਨਿੱਜੀ ਸਲਾਹ।",
+      "alertTitle": "ਸਭ ਤੋਂ ਵਧੀਆ ਸਹੀਤਾ ਲਈ ਮਿੱਟੀ ਪ੍ਰੋਫਾਈਲ ਜੋੜੋ",
+      "alertDesc": "ਜਦੋਂ pH ਅਤੇ NPK ਮਿਲ ਜਾਂਦੇ ਹਨ, ਅਸੀਂ ਫਸਲ, ਖਾਦ ਅਤੇ ਸਿੰਚਾਈ ਦੀ ਸਿਫਾਰਸ਼ ਕਰ ਸਕਦੇ ਹਾਂ।",
+      "insightLabel": "AI ਇਨਸਾਈਟ",
+      "insightDesc": "ਅੱਜ ਦੀ ਸਿਹਤਮੰਦ ਮਿੱਟੀ ਕੱਲ੍ਹ ਵਧੀਆ ਪੈਦਾਵਾਰ ਦਿੰਦੀ ਹੈ। ਮਿੱਟੀ ਸਿਹਤ ਕਾਰਡ ਜਾਂ ਤੇਜ਼ ਕਿਟ ਟੈਸਟ ਨਾਲ ਸ਼ੁਰੂ ਕਰੋ।",
+      "cta": "ਮਿੱਟੀ ਜਾਂਚ ਸ਼ੁਰੂ ਕਰੋ"
     }
   },
   "Register": {
@@ -187,8 +265,26 @@
     "switchLink": "ਇੱਥੇ ਸਾਈਨ ਇਨ ਕਰੋ",
     "fullName": "ਪੂਰਾ ਨਾਮ",
     "phone": "ਫੋਨ ਨੰਬਰ",
+    "namePlaceholder": "ਰਾਮ ਸਿੰਘ",
+    "phonePlaceholder": "98765 43210",
     "region": "ਖੇਤੀ ਦਾ ਖੇਤਰ",
     "regionPlaceholder": "ਆਪਣਾ ਰਾਜ ਚੁਣੋ",
+    "district": "ਜ਼ਿਲ੍ਹਾ",
+    "roleLabel": "ਭੂਮਿਕਾ",
+    "roles": {
+      "farmer": "ਕਿਸਾਨ",
+      "provider": "ਪ੍ਰੋਵਾਈਡਰ (ਵੇਚਣ ਵਾਲਾ)"
+    },
+    "languageLabel": "ਐਪ ਦੀ ਭਾਸ਼ਾ",
+    "languageOptions": {
+      "en": "English",
+      "hi": "Hindi (हिंदी)",
+      "mr": "Marathi (मराठी)",
+      "pa": "Punjabi (ਪੰਜਾਬੀ)",
+      "bn": "Bengali (বাংলা)",
+      "te": "Telugu (తెలుగు)",
+      "ta": "Tamil (தமிழ்)"
+    },
     "password": "ਪਾਸਵਰਡ",
     "passwordPlaceholder": "ਇੱਕ ਮਜ਼ਬੂਤ ਪਾਸਵਰਡ ਬਣਾਓ",
     "button": "ਖਾਤਾ ਬਣਾਓ",
@@ -201,24 +297,110 @@
     "trusted": "50,000+ ਕਿਸਾਨਾਂ ਦਾ ਭਰੋਸਾ",
     "getOtp": "OTP ਪ੍ਰਾਪਤ ਕਰੋ",
     "enterOtp": "6-ਅੰਕਾਂ ਦਾ ਕੋਡ ਭਰੋ",
+    "otpPlaceholder": "------",
     "verifyBtn": "ਪੁਸ਼ਟੀ ਕਰੋ ਅਤੇ ਰਜਿਸਟਰ ਕਰੋ",
     "otpSentTo": "ਇਸ ਨੰਬਰ 'ਤੇ SMS ਰਾਹੀਂ ਕੋਡ ਭੇਜਿਆ ਗਿਆ",
-    "back": "ਵਾਪਸ"
+    "back": "ਵਾਪਸ",
+    "errors": {
+      "providerIncomplete": "ਪ੍ਰੋਵਾਈਡਰ ਵੈਰੀਫਿਕੇਸ਼ਨ ਦੀ ਜਾਣਕਾਰੀ ਅਧੂਰੀ ਹੈ।",
+      "otpSendFailed": "OTP ਭੇਜਣ ਵਿੱਚ ਅਸਫ਼ਲ",
+      "otpInvalid": "ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ 6-ਅੰਕਾਂ ਦਾ OTP ਭਰੋ",
+      "registrationFailed": "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਫੇਲ੍ਹ ਹੋ ਗਿਆ"
+    },
+    "providerModal": {
+      "title": "ਪ੍ਰੋਵਾਈਡਰ ਵੈਰੀਫਿਕੇਸ਼ਨ",
+      "subtitle": "ਕੇਵਲ ਅਧਿਕ੍ਰਿਤ ਵਿਕਰੇਤਾ",
+      "errorRequired": "ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੇ ਜ਼ਰੂਰੀ ਵੈਰੀਫਿਕੇਸ਼ਨ ਫੀਲਡ ਭਰੋ।",
+      "shopName": "ਦੁਕਾਨ ਦਾ ਨਾਮ",
+      "shopPlaceholder": "ਜਿਵੇਂ, ਕ੍ਰਿਸ਼ੀ ਕੇਂਦਰ",
+      "licenseNumber": "ਸਰਕਾਰੀ ਲਾਇਸੈਂਸ ਨੰਬਰ",
+      "licensePlaceholder": "ਕੀਟਨਾਸ਼ਕ/ਖਾਦ ਲਾਇਸੈਂਸ ਨੰਬਰ",
+      "licenseUrl": "ਲਾਇਸੈਂਸ ਦਸਤਾਵੇਜ਼ URL",
+      "licenseUrlPlaceholder": "ਦਸਤਾਵੇਜ਼ ਚਿੱਤਰ ਦਾ ਲਿੰਕ",
+      "gstNumber": "GST ਨੰਬਰ",
+      "optional": "(ਚੋਣਯੋਗ)",
+      "cancel": "ਰੱਦ ਕਰੋ",
+      "save": "ਵੇਰਵੇ ਸੇਵ ਕਰੋ"
+    }
   },
   "Login": {
     "title": "ਵਾਪਸੀ 'ਤੇ ਸਵਾਗਤ ਹੈ।",
     "switchText": "ਕ੍ਰਿਸ਼ੀਮਿੱਤਰ 'ਤੇ ਨਵੇਂ ਹੋ?",
     "switchLink": "ਖਾਤਾ ਬਣਾਓ",
     "phone": "ਫੋਨ ਨੰਬਰ",
+    "phonePlaceholder": "98765 43210",
     "password": "ਪਾਸਵਰਡ",
     "forgot": "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ?",
     "placeholder": "ਆਪਣਾ ਪਾਸਵਰਡ ਭਰੋ",
     "button": "ਸਾਈਨ ਇਨ ਕਰੋ",
     "loading": "ਸਾਈਨ ਇਨ ਹੋ ਰਿਹਾ ਹੈ...",
     "success": "ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣ ਗਿਆ! ਕਿਰਪਾ ਕਰਕੇ ਸਾਈਨ ਇਨ ਕਰੋ।",
+    "authFailed": "ਆਥੈਂਟੀਕੇਸ਼ਨ ਫੇਲ੍ਹ ਹੋ ਗਿਆ",
+    "back": "ਵਾਪਸ",
     "featureTitle": "ਸਮਝਦਾਰੀ ਨਾਲ ਉਗਾਓ, ਬਿਹਤਰ ਫਸਲ ਪਾਓ।",
     "featureDesc": "ਆਪਣਾ ਮੌਸਮ ਦੇਖੋ, ਆਪਣੀਆਂ ਫਸਲਾਂ ਨੂੰ ਸਿਹਤਮੰਦ ਰੱਖੋ, ਅਤੇ ਲਾਈਵ ਬਾਜ਼ਾਰ ਦੇ ਭਾਅ ਇੱਕ ਹੀ ਜਗ੍ਹਾ 'ਤੇ ਪ੍ਰਾਪਤ ਕਰੋ।",
     "systemStatus": "ਸਿਸਟਮ ਆਨਲਾਈਨ ਹੈ"
+  },
+  "Splash": {
+    "initializing": "ਸਿਸਟਮ ਸ਼ੁਰੂ ਹੋ ਰਹੇ ਹਨ...",
+    "tagline": "ਆਧੁਨਿਕ ਕਿਸਾਨ ਨੂੰ ਸਸ਼ਕਤ ਬਣਾਉਣਾ",
+    "skip": "ਸ਼ੁਰੂਆਤੀ ਪ੍ਰਕਿਰਿਆ ਛੱਡੋ",
+    "steps": {
+      "starting": "ਕ੍ਰਿਸ਼ੀਮਿੱਤਰ ਸ਼ੁਰੂ ਹੋ ਰਿਹਾ ਹੈ...",
+      "connectingMarkets": "ਖੇਤਰੀ ਮੰਡੀਆਂ ਨਾਲ ਜੁੜ ਰਹੇ ਹਾਂ...",
+      "syncingWeather": "ਸਥਾਨਕ ਮੌਸਮ ਡਾਟਾ ਸਿੰਕ ਹੋ ਰਿਹਾ ਹੈ...",
+      "preparingInsights": "ਫਸਲ ਇਨਸਾਈਟਸ ਤਿਆਰ ਹੋ ਰਹੇ ਹਨ...",
+      "securing": "ਕਨੈਕਸ਼ਨ ਸੁਰੱਖਿਅਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+      "welcome": "ਕ੍ਰਿਸ਼ੀਮਿੱਤਰ ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ।"
+    }
+  },
+  "ImageUpload": {
+    "label": "ਪ੍ਰੋਡਕਟ ਚਿੱਤਰ",
+    "tabs": {
+      "upload": "ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ",
+      "url": "URL ਪੇਸਟ ਕਰੋ"
+    },
+    "status": {
+      "uploading": "Cloudinary ਉੱਤੇ ਅਪਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+      "imageSet": "ਚਿੱਤਰ ਸੈਟ ਹੈ"
+    },
+    "prompt": {
+      "clickUpload": "ਅਪਲੋਡ ਕਰਨ ਲਈ ਕਲਿੱਕ ਕਰੋ",
+      "dragDrop": "ਜਾਂ ਡਰੈਗ & ਡ੍ਰਾਪ ਕਰੋ",
+      "fileTypes": "PNG, JPG, WEBP — 10MB ਤੱਕ",
+      "urlPlaceholder": "https://example.com/image.jpg"
+    },
+    "actions": {
+      "use": "ਵਰਤੋ"
+    },
+    "alerts": {
+      "invalidFile": "ਕਿਰਪਾ ਕਰਕੇ ਇਮੇਜ ਫ਼ਾਈਲ ਚੁਣੋ।",
+      "uploadFailed": "ਇਮੇਜ ਅਪਲੋਡ ਫੇਲ੍ਹ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"
+    }
+  },
+  "LocationSelector": {
+    "stateLabel": "ਰਾਜ",
+    "districtLabel": "ਜ਼ਿਲ੍ਹਾ",
+    "fromProfile": "ਪ੍ਰੋਫਾਈਲ ਤੋਂ",
+    "selectState": "ਰਾਜ ਚੁਣੋ",
+    "selectDistrict": "ਜ਼ਿਲ੍ਹਾ ਚੁਣੋ"
+  },
+  "ListingContact": {
+    "rateLabel": "ਰੇਟ",
+    "perUnit": "/ {unit}",
+    "listenTitle": "ਸੁਣੋ / ਰੋਕੋ",
+    "whatsappTitle": "WhatsApp {name}",
+    "callTitle": "Call {name}",
+    "waMessage": "ਸਤ ਸ੍ਰੀ ਅਕਾਲ {name}, ਮੈਨੂੰ KrishiMitra 'ਤੇ ਤੁਹਾਡੀ \"{title}\" ਲਿਸਟਿੰਗ ਵਿੱਚ ਰੁਚੀ ਹੈ।",
+    "units": {
+      "day": "ਦਿਨ",
+      "hour": "ਘੰਟਾ",
+      "acre": "ਏਕੜ"
+    },
+    "audio": {
+      "rent": "ਇਹ ਕਿਸਾਨ, {name}, {state} ਦੇ {district} ਤੋਂ ਹਨ। ਇਹ ਆਪਣਾ {title} ਕਿਰਾਏ 'ਤੇ ਦੇਣਾ ਚਾਹੁੰਦੇ ਹਨ, ਜਿਸਦਾ ਰੇਟ {rate} ਰੁਪਏ ਪ੍ਰਤੀ {unit} ਹੈ। ਸੰਪਰਕ ਲਈ ਹਰੇ ਫੋਨ ਆਇਕਨ 'ਤੇ ਕਲਿੱਕ ਕਰੋ।",
+      "service": "ਇਹ ਕਿਸਾਨ, {name}, {state} ਦੇ {district} ਤੋਂ ਹਨ। ਇਹ ਆਪਣਾ {title} ਸੇਵਾ ਲਈ ਦੇਣਾ ਚਾਹੁੰਦੇ ਹਨ, ਜਿਸਦਾ ਰੇਟ {rate} ਰੁਪਏ ਪ੍ਰਤੀ {unit} ਹੈ। ਸੰਪਰਕ ਲਈ ਹਰੇ ਫੋਨ ਆਇਕਨ 'ਤੇ ਕਲਿੱਕ ਕਰੋ।"
+    }
   },
   "SellingPools": {
     "title": "ਸਮੂਹ ਵਿੱਚ ਵੇਚਣਾ (Group Selling)",
@@ -490,6 +672,7 @@
   "GovernmentSchemes": {
     "title": "ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ",
     "subtitle": "ਸਰਕਾਰੀ ਸਬਸਿਡੀਆਂ, ਬੀਮਾ ਅਤੇ ਵਿੱਤੀ ਮਦਦ ਲੱਭੋ ਜਿਸ ਲਈ ਤੁਸੀਂ ਆਸਾਨੀ ਨਾਲ ਅਪਲਾਈ ਕਰ ਸਕਦੇ ਹੋ।",
+    "askSarthi": "ਸਾਰਥੀ ਤੋਂ ਪੁੱਛੋ",
     "searchPlaceholder": "ਨਾਮ ਜਾਂ ਕਿਸਮ ਮੁਤਾਬਕ ਯੋਜਨਾਵਾਂ ਖੋਜੋ...",
     "syncing": "ਸਰਕਾਰੀ ਪੋਰਟਲ ਚੈੱਕ ਕੀਤੇ ਜਾ ਰਹੇ ਹਨ...",
     "errorTitle": "ਯੋਜਨਾਵਾਂ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀਆਂ",
@@ -511,6 +694,228 @@
       "Insurance": "ਫਸਲ ਬੀਮਾ",
       "Credit & Loans": "ਖੇਤੀ ਲੋਨ",
       "Other": "ਹੋਰ"
+    }
+  },
+  "SoilLabs": {
+    "back": "ਮਿੱਟੀ ਹਬ 'ਤੇ ਵਾਪਸ",
+    "badge": "ਮਿੱਟੀ ਟੈਸਟਿੰਗ ਸਹੂਲਤਾਂ",
+    "title": "ਆਪਣਾ Soil Health Card ਪ੍ਰਾਪਤ ਕਰੋ",
+    "subtitle": "Soil Health Card (SHC) ਤੁਹਾਡੇ ਖੇਤ ਦੇ ਪੋਸ਼ਕ ਪੱਧਰਾਂ ਦੀ ਵਿਸਥਾਰ ਨਾਲ ਜਾਂਚ ਦਿੰਦਾ ਹੈ। ਹੇਠਾਂ ਨਜ਼ਦੀਕੀ ਸਰਕਾਰੀ ਲੈਬ ਲੱਭੋ, 500g ਮਿੱਟੀ ਦਾ ਨਮੂਨਾ ਜਮ੍ਹਾਂ ਕਰੋ ਅਤੇ ਆਪਣੀ ਅਧਿਕਾਰਤ ਪ੍ਰੋਫਾਈਲ ਪ੍ਰਾਪਤ ਕਰੋ।",
+    "locateTitle": "ਲੈਬ ਲੱਭੋ",
+    "selectState": "1. ਰਾਜ ਚੁਣੋ",
+    "selectDistrict": "2. ਜ਼ਿਲ੍ਹਾ ਚੁਣੋ",
+    "chooseState": "ਰਾਜ ਚੁਣੋ...",
+    "chooseDistrict": "ਜ਼ਿਲ੍ਹਾ ਚੁਣੋ...",
+    "searching": "ਲੱਭ ਰਹੇ ਹਾਂ...",
+    "findLabs": "ਲੈਬ ਲੱਭੋ",
+    "howToSample": "ਮਿੱਟੀ ਦਾ ਨਮੂਨਾ ਕਿਵੇਂ ਲੈਣਾ",
+    "steps": {
+      "step1": "15cm ਗਹਿਰਾ V-ਆਕਾਰ ਦਾ ਗੱਡਾ ਖੋਦੋ",
+      "step2": "ਖੁੱਲ੍ਹੀ ਭਿੱਟ ਤੋਂ ਮਿੱਟੀ ਦੀ ਪਰਤ ਲਓ",
+      "step3": "ਖੇਤ ਦੇ 8-10 ਸਥਾਨਾਂ ਤੋਂ ਨਮੂਨੇ ਲਓ",
+      "step4": "ਚੰਗੀ ਤਰ੍ਹਾਂ ਮਿਲਾ ਕੇ 500g ਸਾਫ਼ ਬੈਗ ਵਿੱਚ ਰੱਖੋ",
+      "step5": "ਬੈਗ 'ਤੇ ਨਾਮ, ਫ਼ੋਨ ਅਤੇ ਖੇਤ ਦੀ ਜਾਣਕਾਰੀ ਲਿਖੋ"
+    },
+    "noLabsTitle": "ਕੋਈ ਲੈਬ ਨਹੀਂ ਮਿਲੀ",
+    "noLabsDesc": "ਰਾਜ ਅਤੇ ਜ਼ਿਲ੍ਹਾ ਚੁਣ ਕੇ ਖੋਜੋ ਤਾਂ ਨਜ਼ਦੀਕੀ ਸਰਕਾਰੀ ਟੈਸਟਿੰਗ ਸੈਂਟਰ ਮਿਲ ਸਕਣ।",
+    "labCard": {
+      "unnamed": "ਟੈਸਟਿੰਗ ਲੈਬ",
+      "unknownDistrict": "ਅਣਜਾਣ ਜ਼ਿਲ੍ਹਾ",
+      "unknownState": "ਅਣਜਾਣ ਰਾਜ"
+    },
+    "errors": {
+      "api": "API ਗਲਤੀ: {message}",
+      "parse": "Parse ਗਲਤੀ. ਸਰਵਰ ਨੇ ਭੇਜਿਆ: {snippet}",
+      "network": "ਨੈੱਟਵਰਕ ਗਲਤੀ: {message}",
+      "unknown": "ਅਣਜਾਣ ਸਰਵਰ ਗਲਤੀ"
+    },
+    "noOptions": "ਕੋਈ ਵਿਕਲਪ ਉਪਲਬਧ ਨਹੀਂ"
+  },
+  "MandiPrices": {
+    "title": "ਮੰਡੀ ਦੇ ਤਾਜ਼ਾ ਭਾਅ",
+    "subtitle": {
+      "locating": "ਤੁਹਾਡਾ ਰਾਜ ਲੱਭ ਰਹੇ ਹਾਂ...",
+      "sync": "ਤੁਹਾਡੇ ਲੋਕੇਸ਼ਨ ਨਾਲ ਸਿੰਕ"
+    },
+    "buttons": {
+      "predictor": "ਮੰਡੀ ਪ੍ਰਿਡਿਕਟਰ",
+      "ask": "ਸਾਰਥੀ ਤੋਂ ਪੁੱਛੋ",
+      "export": "CSV ਡਾਊਨਲੋਡ ਕਰੋ"
+    },
+    "filters": {
+      "commodity": "ਫਸਲ",
+      "state": "ਰਾਜ",
+      "district": "ਜ਼ਿਲ੍ਹਾ",
+      "districtPlaceholder": "ਜ਼ਿਲ੍ਹੇ ਦਾ ਨਾਮ ਲਿਖੋ..."
+    },
+    "columns": {
+      "commodityVariety": "ਫਸਲ ਅਤੇ ਕਿਸਮ",
+      "marketLocation": "ਮੰਡੀ ਅਤੇ ਸਥਾਨ",
+      "priceModal": "ਮੋਡਲ ਭਾਅ"
+    },
+    "loading": {
+      "locating": "ਲੋਕੇਸ਼ਨ ਲੱਭੀ ਜਾ ਰਹੀ ਹੈ...",
+      "fetching": "ਤਾਜ਼ਾ ਭਾਅ ਲੋਡ ਹੋ ਰਹੇ ਹਨ..."
+    },
+    "error": {
+      "title": "ਭਾਅ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ",
+      "connect": "ਮੰਡੀ ਡਾਟਾ ਸੋਰਸ ਨਾਲ ਕਨੈਕਟ ਨਹੀਂ ਹੋਇਆ।",
+      "invalidFormat": "ਮੰਡੀ ਡਾਟਾ ਫਾਰਮੈਟ ਗਲਤ ਹੈ।",
+      "fetchFailed": "ਮੰਡੀ ਭਾਅ ਲਿਆਉਣ ਵਿੱਚ ਸਮੱਸਿਆ ਆਈ।"
+    },
+    "empty": {
+      "title": "ਕੋਈ ਭਾਅ ਨਹੀਂ ਮਿਲੇ",
+      "desc": "ਫਿਲਟਰ ਬਦਲ ਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"
+    },
+    "labels": {
+      "modalPrice": "ਮੋਡਲ ਭਾਅ",
+      "variety": "ਕਿਸਮ",
+      "varietyFallback": "ਉਪਲਬਧ ਨਹੀਂ",
+      "listen": "ਭਾਅ ਸੁਣੋ"
+    },
+    "csv": {
+      "commodity": "ਫਸਲ",
+      "variety": "ਕਿਸਮ",
+      "state": "ਰਾਜ",
+      "district": "ਜ਼ਿਲ੍ਹਾ",
+      "market": "ਮੰਡੀ",
+      "minPrice": "ਘੱਟੋ-ਘੱਟ ਭਾਅ",
+      "maxPrice": "ਵੱਧ ਤੋਂ ਵੱਧ ਭਾਅ",
+      "modalPrice": "ਮੋਡਲ ਭਾਅ",
+      "date": "ਤਾਰੀਖ"
+    },
+    "states": {
+      "all": "ਸਾਰੇ ਰਾਜ",
+      "uttarPradesh": "ਉੱਤਰ ਪ੍ਰਦੇਸ਼",
+      "punjab": "ਪੰਜਾਬ",
+      "haryana": "ਹਰਿਆਣਾ",
+      "maharashtra": "ਮਹਾਰਾਸ਼ਟਰ",
+      "madhyaPradesh": "ਮੱਧ ਪ੍ਰਦੇਸ਼",
+      "gujarat": "ਗੁਜਰਾਤ",
+      "rajasthan": "ਰਾਜਸਥਾਨ",
+      "karnataka": "ਕਰਨਾਟਕ",
+      "andhraPradesh": "ਆਂਧ੍ਰ ਪ੍ਰਦੇਸ਼",
+      "westBengal": "ਪੱਛਿਮ ਬੰਗਾਲ",
+      "bihar": "ਬਿਹਾਰ",
+      "kerala": "ਕੇਰਲ",
+      "tamilNadu": "ਤਮਿਲਨਾਡੂ"
+    },
+    "commodities": {
+      "all": "ਸਭ ਫਸਲਾਂ",
+      "wheat": "ਕਣਕ",
+      "paddy": "ਧਾਨ (ਧਾਨ)",
+      "potato": "ਆਲੂ",
+      "onion": "ਪਿਆਜ਼",
+      "tomato": "ਟਮਾਟਰ",
+      "mustard": "ਸਰੋਂ",
+      "cotton": "ਕਪਾਹ",
+      "sugarcane": "ਗੰਨਾ",
+      "soyabean": "ਸੋਇਆਬੀਨ",
+      "maize": "ਮੱਕੀ",
+      "apple": "ਸੇਬ"
+    }
+  },
+  "SoilHub": {
+    "badge": "ਮਿੱਟੀ ਸਮਝ",
+    "heroTitle": "ਆਪਣੀ ਮਿੱਟੀ ਜਾਣੋ,",
+    "heroTitleHighlight": "ਹੋਰ ਵਧੀਆ ਫਸਲ ਉਗਾਓ।",
+    "heroSubtitle": "ਹਰ ਖੇਤ ਦੀ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ। ਹਾਲਾਤ ਚੈੱਕ ਕਰੋ, Soil Health Card ਅੱਪਲੋਡ ਕਰੋ ਅਤੇ AI ਤੋਂ ਫਸਲ ਸਿਫਾਰਿਸ਼ਾਂ ਲਓ।",
+    "howItWorks": "ਇਹ ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ",
+    "steps": {
+      "register": {
+        "title": "ਆਪਣਾ ਖੇਤ ਦਰਜ ਕਰੋ",
+        "desc": "ਨਾਮ, ਥਾਂ, ਖੇਤਰਫਲ ਅਤੇ ਮਿੱਟੀ ਦੀ ਕਿਸਮ ਜੋੜੋ"
+      },
+      "test": {
+        "title": "pH ਅਤੇ ਨਮੀ ਜਾਂਚੋ",
+        "desc": "ਡਾਟਾ ਭਰੋ ਜਾਂ ਫੀਲਡ ਟੈਸਟਰ ਸ਼ਡਿਊਲ ਕਰੋ"
+      },
+      "upload": {
+        "title": "Soil Health Card ਅੱਪਲੋਡ ਕਰੋ",
+        "desc": "AI ਫੋਟੋ ਤੋਂ NPK ਮੁੱਲ ਪੜ੍ਹਦਾ ਹੈ"
+      },
+      "report": {
+        "title": "ਸਮਾਰਟ ਰਿਪੋਰਟ ਲਓ",
+        "desc": "ਫਸਲ ਸਿਫਾਰਿਸ਼ਾਂ, ਸਕੋਰ ਅਤੇ ਸੁਧਾਰ"
+      }
+    },
+    "cta": {
+      "addFirst": "ਪਹਿਲਾ ਖੇਤ ਜੋੜੋ",
+      "addLand": "ਖੇਤ ਜੋੜੋ",
+      "addNewLand": "ਨਵਾਂ ਖੇਤ ਜੋੜੋ"
+    },
+    "labCta": {
+      "needTitle": "Soil Health Card ਚਾਹੀਦਾ ਹੈ?",
+      "noCardTitle": "Soil Health Card ਨਹੀਂ ਹੈ?",
+      "desc": "ਆਪਣੇ ਨੇੜੇ ਸਰਕਾਰੀ ਮਿੱਟੀ ਟੈਸਟਿੰਗ ਲੈਬ ਲੱਭੋ।",
+      "button": "ਲੈਬ ਲੱਭੋ"
+    },
+    "header": {
+      "title": "ਮੇਰੇ ਖੇਤ",
+      "fields": "{count, plural, one {# ਖੇਤ} other {# ਖੇਤ}}",
+      "needsAttention": "{count, plural, one {# ਨੂੰ ਧਿਆਨ ਚਾਹੀਦਾ ਹੈ} other {# ਨੂੰ ਧਿਆਨ ਚਾਹੀਦਾ ਹੈ}}"
+    },
+    "addModal": {
+      "title": "ਖੇਤ ਜੋੜੋ",
+      "landName": {
+        "label": "ਖੇਤ ਦਾ ਨਾਮ",
+        "placeholder": "ਜਿਵੇਂ, ਉੱਤਰੀ ਖੇਤ"
+      },
+      "area": {
+        "label": "ਖੇਤਰਫਲ (ਏਕੜ)",
+        "placeholder": "2.5"
+      },
+      "soilType": "ਮਿੱਟੀ ਦੀ ਕਿਸਮ",
+      "soilTypePlaceholder": "ਚੁਣੋ...",
+      "location": "ਥਾਂ",
+      "statePlaceholder": "ਰਾਜ *",
+      "districtPlaceholder": "ਜ਼ਿਲ੍ਹਾ *",
+      "villagePlaceholder": "ਪਿੰਡ (ਵਿਕਲਪਿਕ)",
+      "errors": {
+        "landName": "ਖੇਤ ਨੂੰ ਨਾਮ ਦਿਓ",
+        "stateDistrict": "ਰਾਜ ਅਤੇ ਜ਼ਿਲ੍ਹਾ ਲਾਜ਼ਮੀ ਹਨ"
+      },
+      "submit": {
+        "creating": "ਬਣ ਰਿਹਾ ਹੈ...",
+        "createContinue": "ਬਣਾਓ ਅਤੇ ਅੱਗੇ ਵਧੋ"
+      }
+    },
+    "soilTypes": {
+      "alluvial": "ਗਾਦੀਲੀ",
+      "black": "ਕਾਲੀ",
+      "red": "ਲਾਲ",
+      "laterite": "ਲੇਟਰਾਈਟ",
+      "sandy": "ਰੇਤਲੀ",
+      "clay": "ਚਿਕਣੀ",
+      "loamy": "ਦੋਮਟ"
+    }
+  },
+  "SoilLandCard": {
+    "status": {
+      "completeSetup": "ਸੈਟਅੱਪ ਪੂਰਾ ਕਰੋ",
+      "addSoilTest": "ਮਿੱਟੀ ਟੈਸਟ ਡਾਟਾ ਜੋੜੋ",
+      "testScheduled": "ਟੈਸਟ ਸ਼ਡਿਊਲ ਹੈ",
+      "uploadHealthCard": "ਹੈਲਥ ਕਾਰਡ ਅੱਪਲੋਡ ਕਰੋ",
+      "generateReport": "ਰਿਪੋਰਟ ਬਣਾਓ",
+      "viewReport": "ਰਿਪੋਰਟ ਵੇਖੋ",
+      "retestNeeded": "ਰੀ-ਟੈਸਟ ਲੋੜੀਂਦਾ"
+    },
+    "badges": {
+      "retestDue": "ਰੀ-ਟੈਸਟ ਡਿਊ",
+      "setup": "ਸੈਟਅੱਪ"
+    },
+    "tags": {
+      "acres": "ਏਕੜ",
+      "ph": "pH {value}"
+    },
+    "soilTypes": {
+      "alluvial": "ਗਾਦੀਲੀ",
+      "black": "ਕਾਲੀ",
+      "red": "ਲਾਲ",
+      "laterite": "ਲੇਟਰਾਈਟ",
+      "sandy": "ਰੇਤਲੀ",
+      "clay": "ਚਿਕਣੀ",
+      "loamy": "ਦੋਮਟ"
     }
   },
   "Soil": {
@@ -611,7 +1016,7 @@
       "required": "ਜ਼ਰੂਰੀ: ਖੇਤ ਦਾ ਨਾਮ, ਰਾਜ, ਜ਼ਿਲ੍ਹਾ।"
     },
     "errors": {
-      "required": "Please fill land name, state, and district."
+      "required": "ਖੇਤ ਦਾ ਨਾਮ, ਰਾਜ ਅਤੇ ਜ਼ਿਲ੍ਹਾ ਭਰ ਕੇ ਅੱਗੇ ਵਧੋ।"
     },
     "step2": {
       "stepLabel": "ਕਦਮ 2 / 4",
@@ -636,7 +1041,7 @@
         "badge": "ਤੇਜ਼",
         "help": "ਸਾਨੂੰ ਸਿਰਫ pH ਅਤੇ ਨਮੀ ਚਾਹੀਦੀ ਹੈ।",
         "errors": {
-          "required": "Enter pH and moisture values before saving."
+          "required": "ਸੇਵ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ pH ਅਤੇ ਨਮੀ ਦੇ ਮੁੱਲ ਭਰੋ।"
         }
       },
       "kit": {
@@ -649,17 +1054,40 @@
           "uploadTitle": "ਮੇਰੇ ਕੋਲ ਕਿਟ ਹੈ",
           "uploadDesc": "ਹੁਣ ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ।"
         },
+        "orderSummaryTitle": "ਆਰਡਰ ਸੰਖੇਪ",
+        "orderItemTitle": "ਮਿੱਟੀ ਟੈਸਟ ਸਟਰਿਪ ਕਿਟ",
+        "orderItemDesc": "pH ਅਤੇ ਨਮੀ ਪੜ੍ਹਨ ਲਈ ਲੋੜੀਂਦੀ ਹਰ ਚੀਜ਼।",
+        "orderPaymentLabel": "ਭੁਗਤਾਨ",
+        "orderPaymentValue": "ਡਿਲੀਵਰੀ 'ਤੇ ਨਕਦ",
+        "orderPrice": "ਕਿਟ ਆਉਣ 'ਤੇ ਭੁਗਤਾਨ ਕਰੋ।",
+        "shippingTitle": "ਸ਼ਿਪਿੰਗ ਪਤਾ",
+        "shippingHelp": "ਸ਼ਿਪਿੰਗ ਚਾਲੂ ਕਰਨ ਲਈ ਆਪਣਾ ਪਤਾ ਜੋੜੋ।",
+        "orderStatusLabel": "ਆਰਡਰ ਪੱਕਾ",
+        "viewTracking": "ਆਰਡਰ ਟ੍ਰੈਕ ਕਰੋ",
+        "trackingTitle": "ਆਰਡਰ ਟ੍ਰੈਕਿੰਗ",
+        "trackingHelp": "ਅਸੀਂ ਤੁਹਾਡਾ ਡਿਲੀਵਰੀ ਸਟੇਟਸ ਆਪਣੇ ਆਪ ਅਪਡੇਟ ਕਰਦੇ ਹਾਂ।",
+        "orderIdLabel": "ਟ੍ਰੈਕਿੰਗ ਆਈਡੀ",
+        "orderDateLabel": "ਆਰਡਰ ਦੀ ਤਾਰੀਖ",
+        "etaLabel": "ਅੰਦਾਜ਼ੇ ਵਾਲਾ ਸਮਾਂ",
+        "etaDefault": "3-5 ਦਿਨ",
+        "tracking": {
+          "ordered": "ਆਰਡਰ ਹੋਇਆ",
+          "packed": "ਪੈਕ ਕੀਤਾ ਗਿਆ",
+          "shipped": "ਭੇਜਿਆ ਗਿਆ",
+          "outForDelivery": "ਡਿਲੀਵਰੀ ਲਈ ਨਿਕਲਿਆ",
+          "delivered": "ਡਿਲੀਵਰ ਹੋ ਗਿਆ"
+        },
         "errors": {
-          "formInvalid": "Please fill all required fields.",
-          "name": "Enter farmer name.",
-          "phone": "Enter phone number.",
-          "phoneInvalid": "Enter a 10-digit phone number.",
-          "line1": "Enter address line.",
-          "village": "Enter village.",
-          "district": "Enter district.",
-          "state": "Enter state.",
-          "pincode": "Enter pincode.",
-          "pincodeInvalid": "Enter a 6-digit pincode."
+          "formInvalid": "ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੇ ਜ਼ਰੂਰੀ ਪਤੇ ਵਾਲੇ ਫੀਲਡ ਭਰੋ।",
+          "name": "ਕਿਰਪਾ ਕਰਕੇ ਕਿਸਾਨ ਦਾ ਨਾਮ ਭਰੋ।",
+          "phone": "ਕਿਰਪਾ ਕਰਕੇ ਫ਼ੋਨ ਨੰਬਰ ਭਰੋ।",
+          "phoneInvalid": "ਫ਼ੋਨ ਨੰਬਰ 10 ਅੰਕਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।",
+          "line1": "ਕਿਰਪਾ ਕਰਕੇ ਪਤਾ/ਗਲੀ ਭਰੋ।",
+          "village": "ਕਿਰਪਾ ਕਰਕੇ ਪਿੰਡ ਦਾ ਨਾਮ ਭਰੋ।",
+          "district": "ਕਿਰਪਾ ਕਰਕੇ ਜ਼ਿਲ੍ਹਾ ਭਰੋ।",
+          "state": "ਕਿਰਪਾ ਕਰਕੇ ਰਾਜ ਭਰੋ।",
+          "pincode": "ਕਿਰਪਾ ਕਰਕੇ ਪਿਨਕੋਡ ਭਰੋ।",
+          "pincodeInvalid": "ਪਿਨਕੋਡ 6 ਅੰਕਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।"
         },
         "steps": {
           "step1": "ਕਿਟ ਆਰਡਰ ਕਰੋ",
@@ -764,6 +1192,22 @@
       "finalSaveFailed": "ਰਿਪੋਰਟ ਸੇਵ ਨਹੀਂ ਹੋ ਸਕੀ।",
       "dismissError": "ਗਲਤੀ ਬੰਦ ਕਰੋ",
       "dismissMessage": "ਸੁਨੇਹਾ ਬੰਦ ਕਰੋ"
+    },
+    "report": {
+      "executiveSummary": "ਕਾਰਜਕਾਰੀ ਸਾਰ",
+      "analysisComplete": "ਏਆਈ ਵਿਸ਼ਲੇਸ਼ਣ ਪੂਰਾ ਹੋ ਗਿਆ ਹੈ। ਹੇਠਾਂ ਦਿੱਤੇ ਮੈਟ੍ਰਿਕਸ ਵੇਖੋ।",
+      "soilChemistry": "ਮਿੱਟੀ ਰਸਾਇਣ ਪ੍ਰੋਫ਼ਾਈਲ",
+      "nitrogen": "ਨਾਈਟ੍ਰੋਜਨ (N)",
+      "phosphorus": "ਫਾਸਫੋਰਸ (P)",
+      "potassium": "ਪੋਟਾਸ਼ੀਅਮ (K)",
+      "organicCarbon": "ਜੈਵਿਕ ਕਾਰਬਨ (OC)",
+      "low": "ਘੱਟ",
+      "high": "ਉੱਚ",
+      "actionPlan": "ਕਾਰਵਾਈ ਯੋਜਨਾ",
+      "recommendedCrops": "ਸਿਫ਼ਾਰਸ਼ੀ ਪਸਲਾਂ",
+      "match": "ਮੈਚ",
+      "seasonLabel": "ਮੌਸਮ",
+      "fertilizerGuide": "ਖਾਦ ਗਾਈਡ"
     }
   }
 }
