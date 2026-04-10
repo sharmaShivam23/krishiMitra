@@ -3,6 +3,31 @@ import { connectDB } from "@/lib/mongodb";
 import { Crop } from "@/models";
 import { generateCropAdvice } from "@/lib/gemini";
 
+// Helper function to clean and parse AI response
+const parseAIResponse = (text: string) => {
+  try {
+    // Remove markdown code blocks if present
+    let cleaned = text
+      .replace(/```json\n?/g, "")
+      .replace(/```\n?/g, "")
+      .trim();
+
+    // Try to extract JSON object
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      return {
+        success: true,
+        data: parsed,
+      };
+    }
+
+    return { success: false, data: null };
+  } catch (err) {
+    console.error("JSON Parse Error:", err);
+    return { success: false, data: null };
+  }
+};
 
 export async function GET(req: NextRequest) {
   try {
@@ -92,7 +117,31 @@ export async function POST(req: NextRequest) {
           setTimeout(() => reject(new Error("AI request timeout")), 30000)
         );
 
-        advice = await Promise.race([aiPromise, timeoutPromise]);
+        const rawResponse = await Promise.race([aiPromise, timeoutPromise]);
+
+        // Parse the response - handle both object and string responses
+        if (typeof rawResponse === "string") {
+          const parseResult = parseAIResponse(rawResponse);
+          if (parseResult.success) {
+            advice = parseResult.data;
+          } else {
+            throw new Error("Failed to parse AI response");
+          }
+        } else {
+          advice = rawResponse;
+        }
+
+        // Ensure recommendations and risks are arrays of strings (remove markdown formatting if needed)
+        if (advice.recommendations && Array.isArray(advice.recommendations)) {
+          advice.recommendations = advice.recommendations.map((rec: string) =>
+            rec.replace(/\*\*/g, "").trim()
+          );
+        }
+        if (advice.risks && Array.isArray(advice.risks)) {
+          advice.risks = advice.risks.map((risk: string) =>
+            risk.replace(/\*\*/g, "").trim()
+          );
+        }
       } catch (aiError: any) {
         console.warn(
           "⚠️ Gemini AI Failed for Crop Advice. Using Mock Data!",
@@ -108,15 +157,17 @@ export async function POST(req: NextRequest) {
           }. Weather patterns and soil conditions appear favorable for healthy crop growth.`,
           healthScore: 80,
           recommendations: [
-            "Maintain current irrigation schedule based on upcoming weather forecasts.",
-            "Apply a balanced NPK fertilizer top-up within the next 5-7 days.",
-            "Monitor lower leaves for signs of early blight due to humidity levels.",
-            "Scout for pests weekly and apply preventive measures as needed.",
+            "Soil Testing: Conduct comprehensive soil tests to determine pH, NPK, and micronutrient levels.",
+            "Water Management: Monitor soil moisture closely and provide supplemental irrigation during dry spells.",
+            "Nutrient Application: Apply balanced NPK fertilizers based on soil test results.",
+            "Weed Control: Implement timely weed management to minimize competition.",
+            "Pest & Disease Scouting: Regularly scout for common pests and diseases and take preventive measures.",
           ],
           risks: [
-            "Moderate risk of fungal infection if humidity remains elevated.",
-            "Watch for nutrient deficiencies if soil quality is poor.",
-            "Weather changes could impact irrigation requirements.",
+            "Nutrient Imbalance/Deficiency: Unknown soil type and fertility can impact growth and yield.",
+            "Water Stress: Potential for drought stress if dry spells persist without irrigation.",
+            "Weed Competition: Uncontrolled weeds can significantly reduce yields.",
+            "Pest & Disease Outbreaks: Untreated pest pressure can lead to significant crop loss.",
           ],
         };
       }
