@@ -54,14 +54,14 @@ function LoginForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Authentication failed');
+        throw new Error(data.error || t('authFailed'));
       }
 
       // Redirect using standard web API
       window.location.href = `/${locale}/dashboard`;
       
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Authentication failed');
+      setError(err instanceof Error ? err.message : t('authFailed'));
     } finally {
       setLoading(false);
     }
@@ -127,7 +127,7 @@ function LoginForm() {
           </div>
           <input id="phone" name="phone" type="tel" inputMode="numeric" pattern="[0-9]{10}" required value={formData.phone} onChange={handleChange}
             className="block w-full pl-20 pr-4 py-3.5 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-medium transition-all bg-white hover:border-gray-300 text-gray-900"
-            placeholder="98765 43210"
+            placeholder={t('phonePlaceholder')}
             maxLength={10}
           />
         </div>
@@ -235,7 +235,7 @@ export default function LoginPage() {
           {/* Back to Home Button */}
           <div className="mt-8 flex justify-center">
             <Link href={`/${locale}`} className="text-sm font-bold text-gray-500 hover:text-emerald-600 transition-colors flex items-center group">
-              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> Back
+              <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> {t('back')}
             </Link>
           </div>
 

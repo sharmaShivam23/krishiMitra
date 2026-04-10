@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   Plus, Loader2, AlertTriangle,
   MapPin, X, ArrowRight, Leaf,
@@ -20,34 +20,47 @@ type FarmlandItem = {
   _statusMeta?: { retestNeeded?: boolean; shcExpired?: boolean };
 };
 type Stats = { total: number; completed: number; needsAttention: number; testScheduled: number };
-const SOIL_TYPES = ['Alluvial', 'Black', 'Red', 'Laterite', 'Sandy', 'Clay', 'Loamy'] as const;
+const SOIL_TYPES = [
+  { value: 'Alluvial', key: 'alluvial' },
+  { value: 'Black', key: 'black' },
+  { value: 'Red', key: 'red' },
+  { value: 'Laterite', key: 'laterite' },
+  { value: 'Sandy', key: 'sandy' },
+  { value: 'Clay', key: 'clay' },
+  { value: 'Loamy', key: 'loamy' }
+] as const;
 
 const STEPS = [
   {
-    icon: MapPin, color: 'bg-emerald-500', ring: 'ring-emerald-500/20',
-    title: 'Register Your Farmland',
-    desc: 'Add name, location, area & soil type',
+    key: 'register',
+    icon: MapPin,
+    color: 'bg-emerald-500',
+    ring: 'ring-emerald-500/20'
   },
   {
-    icon: Droplets, color: 'bg-blue-500', ring: 'ring-blue-500/20',
-    title: 'Test pH & Moisture',
-    desc: 'Enter data or schedule a field tester',
+    key: 'test',
+    icon: Droplets,
+    color: 'bg-blue-500',
+    ring: 'ring-blue-500/20'
   },
   {
-    icon: FileText, color: 'bg-amber-500', ring: 'ring-amber-500/20',
-    title: 'Upload Soil Health Card',
-    desc: 'AI reads NPK values from your photo',
+    key: 'upload',
+    icon: FileText,
+    color: 'bg-amber-500',
+    ring: 'ring-amber-500/20'
   },
   {
-    icon: BarChart3, color: 'bg-violet-500', ring: 'ring-violet-500/20',
-    title: 'Get Smart Report',
-    desc: 'Crop recommendations, score & fixes',
-  },
+    key: 'report',
+    icon: BarChart3,
+    color: 'bg-violet-500',
+    ring: 'ring-violet-500/20'
+  }
 ];
 
 export default function SoilIntelligenceHub() {
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations('SoilHub');
   const [farmlands, setFarmlands] = useState<FarmlandItem[]>([]);
   const [stats, setStats] = useState<Stats>({ total: 0, completed: 0, needsAttention: 0, testScheduled: 0 });
   const [loading, setLoading] = useState(true);
@@ -92,14 +105,14 @@ export default function SoilIntelligenceHub() {
 
         <div className="relative z-10 p-7 md:p-10 flex flex-col justify-end h-full min-h-[260px] md:min-h-[300px]">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-400/15 border border-emerald-400/25 text-[10px] font-black text-emerald-300 uppercase tracking-widest mb-3 w-fit">
-            <FlaskConical className="w-3 h-3" /> Soil Intelligence
+            <FlaskConical className="w-3 h-3" /> {t('badge')}
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1]">
-            Know your soil,<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-amber-400">grow smarter crops.</span>
+            {t('heroTitle')}<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-amber-400">{t('heroTitleHighlight')}</span>
           </h1>
           <p className="mt-3 text-emerald-200/60 text-sm md:text-base font-semibold max-w-lg">
-            Create profiles for each field. Test conditions, upload your Soil Health Card, and get AI-powered crop recommendations.
+            {t('heroSubtitle')}
           </p>
         </div>
       </motion.div>
@@ -109,7 +122,7 @@ export default function SoilIntelligenceHub() {
         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
         className="mt-5 md:mt-6"
       >
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 px-1">How it works</p>
+        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 px-1">{t('howItWorks')}</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {STEPS.map((step, i) => (
             <motion.div
@@ -124,9 +137,9 @@ export default function SoilIntelligenceHub() {
               </div>
               <div className="flex items-center gap-1.5 mb-1">
                 <span className="text-[10px] font-black text-gray-300">0{i + 1}</span>
-                <h3 className="text-sm font-bold text-gray-900 leading-tight">{step.title}</h3>
+                <h3 className="text-sm font-bold text-gray-900 leading-tight">{t(`steps.${step.key}.title`)}</h3>
               </div>
-              <p className="text-xs text-gray-500 font-medium leading-snug">{step.desc}</p>
+              <p className="text-xs text-gray-500 font-medium leading-snug">{t(`steps.${step.key}.desc`)}</p>
             </motion.div>
           ))}
         </div>
@@ -140,7 +153,7 @@ export default function SoilIntelligenceHub() {
         <button type="button" onClick={() => setShowAdd(true)}
           className="group w-full flex items-center justify-center gap-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 text-base font-black transition-all shadow-[0_12px_28px_-8px_rgba(16,185,129,0.55)] active:scale-[0.98]">
           <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
-          Add Your First Farmland
+          {t('cta.addFirst')}
           <ArrowRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
         </button>
 
@@ -154,12 +167,12 @@ export default function SoilIntelligenceHub() {
               <FlaskConical className="w-6 h-6 text-emerald-600" />
             </div>
             <div>
-              <h3 className="text-base font-black text-emerald-950">Need a Soil Health Card?</h3>
-              <p className="text-xs font-semibold text-emerald-800/80 mt-0.5 max-w-sm">Find a government testing laboratory near you to get your soil tested.</p>
+              <h3 className="text-base font-black text-emerald-950">{t('labCta.needTitle')}</h3>
+              <p className="text-xs font-semibold text-emerald-800/80 mt-0.5 max-w-sm">{t('labCta.desc')}</p>
             </div>
           </div>
           <button className="whitespace-nowrap shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-white text-emerald-700 px-5 py-2.5 text-xs font-bold shadow-sm shadow-emerald-200/50 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-            Locate Lab <ArrowRight className="w-3.5 h-3.5" />
+            {t('labCta.button')} <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </motion.div>
@@ -180,17 +193,17 @@ export default function SoilIntelligenceHub() {
         <div className="relative z-10 p-5 md:p-7 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-bold text-emerald-200 uppercase tracking-widest mb-2">
-              <Leaf className="w-3 h-3" /> Soil Intelligence
+              <Leaf className="w-3 h-3" /> {t('badge')}
             </div>
-            <h1 className="text-2xl md:text-3xl font-black text-white">My Farmlands</h1>
+            <h1 className="text-2xl md:text-3xl font-black text-white">{t('header.title')}</h1>
             <p className="text-emerald-200/50 text-sm font-semibold mt-0.5">
-              {stats.total} field{stats.total !== 1 ? 's' : ''}
-              {stats.needsAttention > 0 && <span className="text-amber-300 ml-2">· {stats.needsAttention} need attention</span>}
+              {t('header.fields', { count: stats.total })}
+              {stats.needsAttention > 0 && <span className="text-amber-300 ml-2">· {t('header.needsAttention', { count: stats.needsAttention })}</span>}
             </p>
           </div>
           <button type="button" onClick={() => setShowAdd(true)}
             className="inline-flex items-center gap-2 rounded-2xl bg-emerald-400 hover:bg-amber-400 text-emerald-950 px-5 py-2.5 text-sm font-black transition-all shadow-lg active:scale-95 shrink-0">
-            <Plus className="w-4 h-4" /> Add Land
+            <Plus className="w-4 h-4" /> {t('cta.addLand')}
           </button>
         </div>
       </div>
@@ -222,7 +235,7 @@ export default function SoilIntelligenceHub() {
           <div className="w-11 h-11 rounded-xl bg-gray-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
             <Plus className="w-5 h-5 text-gray-400 group-hover:text-emerald-600" />
           </div>
-          <p className="text-sm font-semibold text-gray-500 group-hover:text-emerald-700 transition-colors">Add New Land</p>
+          <p className="text-sm font-semibold text-gray-500 group-hover:text-emerald-700 transition-colors">{t('cta.addNewLand')}</p>
         </button>
       </div>
 
@@ -236,12 +249,12 @@ export default function SoilIntelligenceHub() {
             <FlaskConical className="w-7 h-7 text-emerald-600" />
           </div>
           <div>
-            <h3 className="text-lg font-black text-emerald-950">Don't have a Soil Health Card?</h3>
-            <p className="text-sm font-semibold text-emerald-800/80 mt-1">Find a government testing laboratory near you to get your soil tested.</p>
+            <h3 className="text-lg font-black text-emerald-950">{t('labCta.noCardTitle')}</h3>
+            <p className="text-sm font-semibold text-emerald-800/80 mt-1">{t('labCta.desc')}</p>
           </div>
         </div>
         <button className="whitespace-nowrap shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-white text-emerald-700 px-6 py-3 text-sm font-bold shadow-sm shadow-emerald-200/50 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-          Locate Lab <ArrowRight className="w-4 h-4" />
+          {t('labCta.button')} <ArrowRight className="w-4 h-4" />
         </button>
       </motion.div>
 
@@ -252,6 +265,7 @@ export default function SoilIntelligenceHub() {
 
 /* ═══════════ ADD MODAL ═══════════ */
 function AddModal({ open, onClose, onDone }: { open: boolean; onClose: () => void; onDone: (id?: string) => void }) {
+  const t = useTranslations('SoilHub');
   const [n, setN] = useState('');
   const [a, setA] = useState('');
   const [s, setS] = useState('');
@@ -284,8 +298,8 @@ function AddModal({ open, onClose, onDone }: { open: boolean; onClose: () => voi
   }, [st, statesList]);
 
   const submit = async () => {
-    if (!n.trim()) { setErr('Give your land a name'); return; }
-    if (!st.trim() || !d.trim()) { setErr('State and district are required'); return; }
+    if (!n.trim()) { setErr(t('addModal.errors.landName')); return; }
+    if (!st.trim() || !d.trim()) { setErr(t('addModal.errors.stateDistrict')); return; }
     setSaving(true); setErr('');
     try {
       const res = await fetch('/api/farmlands', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
@@ -308,29 +322,31 @@ function AddModal({ open, onClose, onDone }: { open: boolean; onClose: () => voi
             className="w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
 
             <div className="flex items-center justify-between p-4 border-b border-gray-100">
-              <h3 className="text-base font-black text-gray-900">Add Farmland</h3>
+              <h3 className="text-base font-black text-gray-900">{t('addModal.title')}</h3>
               <button type="button" onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>
             </div>
 
             <div className="p-4 space-y-3">
-              <Field label="Land Name" value={n} onChange={v2 => { setN(v2); setErr(''); }} ph="e.g. North Field" />
+              <Field label={t('addModal.landName.label')} value={n} onChange={v2 => { setN(v2); setErr(''); }} ph={t('addModal.landName.placeholder')} />
               <div className="grid grid-cols-2 gap-2.5">
-                <Field label="Area (acres)" value={a} onChange={setA} ph="2.5" type="number" />
+                <Field label={t('addModal.area.label')} value={a} onChange={setA} ph={t('addModal.area.placeholder')} type="number" />
                 <div>
-                  <label className="text-xs font-semibold text-gray-500 block mb-1">Soil Type</label>
+                  <label className="text-xs font-semibold text-gray-500 block mb-1">{t('addModal.soilType')}</label>
                   <select value={s} onChange={e => setS(e.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-medium text-gray-900 focus:border-emerald-400 outline-none">
-                    <option value="">Select...</option>
-                    {SOIL_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                    <option value="">{t('addModal.soilTypePlaceholder')}</option>
+                    {SOIL_TYPES.map(type => (
+                      <option key={type.value} value={type.value}>{t(`soilTypes.${type.key}`)}</option>
+                    ))}
                   </select>
                 </div>
               </div>
               <div className="rounded-xl bg-gray-50 border border-gray-100 p-3 space-y-2">
-                <p className="text-xs font-semibold text-gray-500 flex items-center gap-1"><MapPin className="w-3 h-3" /> Location</p>
+                <p className="text-xs font-semibold text-gray-500 flex items-center gap-1"><MapPin className="w-3 h-3" /> {t('addModal.location')}</p>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="relative">
                     <select value={st} onChange={e => { setSt(e.target.value); setErr(''); }} disabled={loadingStates}
                       className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm font-medium text-gray-900 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-50 outline-none transition-all disabled:opacity-60 disabled:bg-gray-50 pr-8 truncate">
-                      <option value="">State *</option>
+                      <option value="">{t('addModal.statePlaceholder')}</option>
                       {statesList.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
                     </select>
                     {loadingStates ? <Loader2 className="absolute right-2.5 top-3 w-3.5 h-3.5 animate-spin text-emerald-500 pointer-events-none" /> : 
@@ -339,14 +355,14 @@ function AddModal({ open, onClose, onDone }: { open: boolean; onClose: () => voi
                   <div className="relative">
                     <select value={d} onChange={e => { setD(e.target.value); setErr(''); }} disabled={loadingDistrs || !st}
                       className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm font-medium text-gray-900 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-50 outline-none transition-all disabled:opacity-60 disabled:bg-gray-50 pr-8 truncate">
-                      <option value="">District *</option>
+                      <option value="">{t('addModal.districtPlaceholder')}</option>
                       {districtsList.map(dMap => <option key={dMap.id} value={dMap.name}>{dMap.name}</option>)}
                     </select>
                     {loadingDistrs ? <Loader2 className="absolute right-2.5 top-3 w-3.5 h-3.5 animate-spin text-emerald-500 pointer-events-none" /> : 
                      <ChevronDown className="absolute right-2.5 top-3 w-3.5 h-3.5 text-gray-400 pointer-events-none" />}
                   </div>
                 </div>
-                <input value={v} onChange={e => setV(e.target.value)} placeholder="Village (optional)"
+                <input value={v} onChange={e => setV(e.target.value)} placeholder={t('addModal.villagePlaceholder')}
                   className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm font-medium text-gray-900 placeholder:text-gray-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-50 outline-none transition-all" />
               </div>
 
@@ -355,7 +371,7 @@ function AddModal({ open, onClose, onDone }: { open: boolean; onClose: () => voi
               <button type="button" onClick={submit} disabled={saving}
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 text-sm font-bold transition-colors shadow-lg shadow-emerald-200 disabled:opacity-60">
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
-                {saving ? 'Creating...' : 'Create & Continue'}
+                {saving ? t('addModal.submit.creating') : t('addModal.submit.createContinue')}
               </button>
             </div>
           </motion.div>

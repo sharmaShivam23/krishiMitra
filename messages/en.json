@@ -57,6 +57,7 @@
     }
   },
   "TrustSection": {
+    "badge": "Trusted Across Bharat",
     "heading1": "Empowering your farm with ",
     "heading2": "technology",
     "heading3": " and community.",
@@ -64,6 +65,17 @@
     "list1": "Live APMC Mandi prices with local SMS alerts",
     "list2": "Rent local tractors, equipment, and farm labor",
     "list3": "Smart farming advisor & verified government schemes",
+    "trustedBy": {
+      "ministry": "🏛️ Min. of Agriculture",
+      "nabard": "🏦 NABARD",
+      "ncdex": "📊 NCDEX",
+      "apmc": "🌾 APMC"
+    },
+    "testimonials": {
+      "ramesh": "Mandi prices directly on my phone — no more middlemen cheating us!",
+      "priya": "Disease detection saved my entire wheat crop this season.",
+      "sukhbir": "AI advisor told me the right time to sell. Made extra ₹18,000 this year."
+    },
     "stat1Label": "Mandi Pricing",
     "stat1Value": "Real-Time",
     "stat2Label": "Platform Coverage",
@@ -78,6 +90,32 @@
     "smsDisclaimer": "Standard SMS rates may apply. Cancel anytime.",
     "brandDesc": "Helping Indian farmers grow better with smart advice, live market prices, and simple farming tools.",
     "helpline": "24/7 Kisan Helpline",
+    "actions": {
+      "unsubscribe": "Unsubscribe",
+      "needUnsubscribe": "Need to unsubscribe?",
+      "subscribeToAlerts": "Subscribe to alerts"
+    },
+    "subscribe": {
+      "invalidPhone": "Please enter a valid 10-digit number.",
+      "loginRequired": "Sign in to subscribe. Redirecting to login...",
+      "actionSubscribe": "Subscription",
+      "actionUnsubscribe": "Unsubscription",
+      "actionFailed": "{action} failed."
+    },
+    "call": {
+      "needSubscribe": "Subscribe to the Kisan Helpline first to use this feature.",
+      "loginRequired": "Please log in to use this feature.",
+      "requestFailed": "Call request failed",
+      "initiated": "Call initiated!",
+      "genericError": "Something went wrong. Please try again.",
+      "titleUnsubscribed": "Subscribe to helpline first",
+      "titleDefault": "Click to request a call back",
+      "statusConnecting": "Connecting...",
+      "statusSuccess": "Call Initiated! ✓",
+      "statusError": "Failed — Tap to Retry",
+      "statusUnsubscribed": "Subscribe First",
+      "helper": "Tap to request a call back • Subscribers only"
+    },
     "platformHeading": "Platform",
     "platformLinks": {
       "intel": "Smart Crop Guide",
@@ -130,6 +168,52 @@
     "systemStatus": "Farm Status",
     "online": "Online",
     "runScan": "Scan Crop",
+    "greetings": {
+      "morning": "Good Morning",
+      "afternoon": "Good Afternoon",
+      "evening": "Good Evening",
+      "fallbackName": "Kisan"
+    },
+    "seasonBadge": "{season} Season",
+    "seasons": {
+      "kharif": "Kharif",
+      "rabi": "Rabi",
+      "zaid": "Zaid"
+    },
+    "tiles": {
+      "mandi": {
+        "label": "Mandi Prices",
+        "sub": "Live market rates",
+        "chip": "🌾 Today"
+      },
+      "disease": {
+        "label": "Crop Doctor",
+        "sub": "AI disease detection",
+        "chip": "🔬 AI Scan"
+      },
+      "lifecycle": {
+        "label": "Crop Lifecycle",
+        "sub": "Growth planner",
+        "chip": "🌱 Plan"
+      },
+      "advisor": {
+        "label": "AI Advisor",
+        "sub": "Smart recommendations",
+        "chip": "🤖 Smart"
+      }
+    },
+    "soilCard": {
+      "eyebrow": "Mitti Pehchaan",
+      "title": "Know your soil, grow smarter.",
+      "description": "Government report or home kit. Field-specific, Hindi-friendly.",
+      "tags": {
+        "ph": "pH",
+        "npk": "NPK",
+        "soilType": "Soil Type"
+      },
+      "cta": "🌱 Check My Soil"
+    },
+    "growthProgress": "Growth Progress",
     "weather": {
       "title": "Live Local Weather",
       "loading": "Checking weather...",
@@ -165,6 +249,14 @@
       "optimalTitle": "Good Weather Conditions",
       "optimalDesc": "The current weather is safe for your crops. You can water your fields as normal.",
       "button": "Got It"
+    },
+    "aiPanel": {
+      "intro": "Personalized advice based on your soil, crop, and location.",
+      "alertTitle": "Add soil profile for best accuracy",
+      "alertDesc": "Once we have pH and NPK, we can recommend crops, fertilizer, and irrigation.",
+      "insightLabel": "AI Insight",
+      "insightDesc": "Healthy soil today means higher yield tomorrow. Start with your soil health card or a quick kit test.",
+      "cta": "Start Soil Check"
     }
   },
   "Register": {
@@ -173,8 +265,26 @@
     "switchLink": "Sign in here",
     "fullName": "Full Name",
     "phone": "Phone Number",
+    "namePlaceholder": "Ram Singh",
+    "phonePlaceholder": "98765 43210",
     "region": "Farming Region",
     "regionPlaceholder": "Select your state",
+    "district": "District",
+    "roleLabel": "Role",
+    "roles": {
+      "farmer": "Farmer",
+      "provider": "Provider (Seller)"
+    },
+    "languageLabel": "App Language",
+    "languageOptions": {
+      "en": "English",
+      "hi": "Hindi (हिंदी)",
+      "mr": "Marathi (मराठी)",
+      "pa": "Punjabi (ਪੰਜਾਬੀ)",
+      "bn": "Bengali (বাংলা)",
+      "te": "Telugu (తెలుగు)",
+      "ta": "Tamil (தமிழ்)"
+    },
     "password": "Password",
     "passwordPlaceholder": "Create a strong password",
     "button": "Create Account",
@@ -187,24 +297,110 @@
     "trusted": "Trusted by 50,000+ farmers",
     "getOtp": "Get OTP",
     "enterOtp": "Enter 6-Digit Code",
+    "otpPlaceholder": "------",
     "verifyBtn": "Verify & Register",
     "otpSentTo": "Code sent via SMS to",
-    "back": "Back"
+    "back": "Back",
+    "errors": {
+      "providerIncomplete": "Provider verification details are incomplete.",
+      "otpSendFailed": "Failed to send OTP",
+      "otpInvalid": "Please enter a valid 6-digit OTP",
+      "registrationFailed": "Registration failed"
+    },
+    "providerModal": {
+      "title": "Provider Verification",
+      "subtitle": "Authorized Sellers Only",
+      "errorRequired": "Please fill all required verification fields.",
+      "shopName": "Shop Name",
+      "shopPlaceholder": "E.g. Krishi Kendra",
+      "licenseNumber": "Govt. License Number",
+      "licensePlaceholder": "Pesticide/Fertilizer License No.",
+      "licenseUrl": "License Document URL",
+      "licenseUrlPlaceholder": "Link to document image",
+      "gstNumber": "GST Number",
+      "optional": "(Optional)",
+      "cancel": "Cancel",
+      "save": "Save Details"
+    }
   },
   "Login": {
     "title": "Welcome back.",
     "switchText": "New to KrishiMitra?",
     "switchLink": "Create an account",
     "phone": "Phone Number",
+    "phonePlaceholder": "98765 43210",
     "password": "Password",
     "forgot": "Forgot password?",
     "placeholder": "Enter your password",
     "button": "Sign In",
     "loading": "Signing in...",
     "success": "Account created successfully! Please sign in.",
+    "authFailed": "Authentication failed",
+    "back": "Back",
     "featureTitle": "Grow smarter, harvest better.",
     "featureDesc": "Check your weather, keep your crops healthy, and get real-time market prices all in one place.",
     "systemStatus": "SYSTEM ONLINE"
+  },
+  "Splash": {
+    "initializing": "Initializing Systems...",
+    "tagline": "Empowering the Modern Farmer",
+    "skip": "Skip Initialization",
+    "steps": {
+      "starting": "Starting KrishiMitra...",
+      "connectingMarkets": "Connecting to regional markets...",
+      "syncingWeather": "Syncing local weather data...",
+      "preparingInsights": "Preparing crop insights...",
+      "securing": "Securing connection...",
+      "welcome": "Welcome to KrishiMitra."
+    }
+  },
+  "ImageUpload": {
+    "label": "Product Image",
+    "tabs": {
+      "upload": "Upload Photo",
+      "url": "Paste URL"
+    },
+    "status": {
+      "uploading": "Uploading to Cloudinary...",
+      "imageSet": "Image set"
+    },
+    "prompt": {
+      "clickUpload": "Click to upload",
+      "dragDrop": "or drag & drop",
+      "fileTypes": "PNG, JPG, WEBP up to 10MB",
+      "urlPlaceholder": "https://example.com/image.jpg"
+    },
+    "actions": {
+      "use": "Use"
+    },
+    "alerts": {
+      "invalidFile": "Please select an image file.",
+      "uploadFailed": "Image upload failed. Please try again."
+    }
+  },
+  "LocationSelector": {
+    "stateLabel": "State",
+    "districtLabel": "District",
+    "fromProfile": "from profile",
+    "selectState": "Select State",
+    "selectDistrict": "Select District"
+  },
+  "ListingContact": {
+    "rateLabel": "Rate",
+    "perUnit": "/ {unit}",
+    "listenTitle": "Listen / Stop",
+    "whatsappTitle": "WhatsApp {name}",
+    "callTitle": "Call {name}",
+    "waMessage": "Hi {name}, I am interested in your \"{title}\" listed on KrishiMitra.",
+    "units": {
+      "day": "day",
+      "hour": "hour",
+      "acre": "acre"
+    },
+    "audio": {
+      "rent": "Ye kisan, {name}, {state} ke {district} se hain. Ye apna {title} rent par dena chahte hain, jiska rate {rate} rupees per {unit} hai. Inse sampark karne ke liye, hare phone icon par click karein.",
+      "service": "Ye kisan, {name}, {state} ke {district} se hain. Ye apna {title} service ke liye dena chahte hain, jiska rate {rate} rupees per {unit} hai. Inse sampark karne ke liye, hare phone icon par click karein."
+    }
   },
   "SellingPools": {
     "title": "Group Selling",
@@ -485,6 +681,7 @@
   "GovernmentSchemes": {
     "title": "Government Schemes",
     "subtitle": "Find government subsidies, insurance, and financial help you can easily apply for.",
+    "askSarthi": "Ask Sarthi",
     "searchPlaceholder": "Search schemes by name or type...",
     "syncing": "Checking government portals...",
     "errorTitle": "Could not load schemes",
@@ -506,6 +703,228 @@
       "Insurance": "Crop Insurance",
       "Credit & Loans": "Farm Loans",
       "Other": "Other"
+    }
+  },
+  "SoilLabs": {
+    "back": "Back to Soil Hub",
+    "badge": "Soil Testing Facilities",
+    "title": "Get Your Soil Health Card",
+    "subtitle": "A Soil Health Card (SHC) provides a detailed analysis of your field's nutrient levels. Find your nearest government-approved laboratory below, submit a 500g soil sample, and receive your official profile.",
+    "locateTitle": "Locate a Lab",
+    "selectState": "1. Select State",
+    "selectDistrict": "2. Select District",
+    "chooseState": "Choose State...",
+    "chooseDistrict": "Choose District...",
+    "searching": "Searching...",
+    "findLabs": "Find Laboratories",
+    "howToSample": "How to Sample Soil",
+    "steps": {
+      "step1": "Dig a V-shaped hole 15cm deep",
+      "step2": "Take slice of soil from the exposed wall",
+      "step3": "Collect samples from 8-10 spots across field",
+      "step4": "Mix thoroughly, keep 500g in clean bag",
+      "step5": "Label bag with Name, Phone, and Field Details"
+    },
+    "noLabsTitle": "No Laboratories Found",
+    "noLabsDesc": "Select your State and District then search to find nearest government approved testing centers.",
+    "labCard": {
+      "unnamed": "Testing Laboratory",
+      "unknownDistrict": "Unknown District",
+      "unknownState": "Unknown State"
+    },
+    "errors": {
+      "api": "API Error: {message}",
+      "parse": "Parse Error. Server Returned: {snippet}",
+      "network": "Network Error: {message}",
+      "unknown": "Unknown server error"
+    },
+    "noOptions": "No options available"
+  },
+  "MandiPrices": {
+    "title": "Live Mandi Prices",
+    "subtitle": {
+      "locating": "Locating your state...",
+      "sync": "Synced with your location"
+    },
+    "buttons": {
+      "predictor": "Mandi Predictor",
+      "ask": "Ask Sarthi",
+      "export": "Export CSV"
+    },
+    "filters": {
+      "commodity": "Commodity",
+      "state": "State",
+      "district": "District",
+      "districtPlaceholder": "Type district name..."
+    },
+    "columns": {
+      "commodityVariety": "Commodity & Variety",
+      "marketLocation": "Market & Location",
+      "priceModal": "Modal Price"
+    },
+    "loading": {
+      "locating": "Finding your location...",
+      "fetching": "Fetching latest prices..."
+    },
+    "error": {
+      "title": "Could not load prices",
+      "connect": "Unable to reach mandi data source.",
+      "invalidFormat": "Mandi data format is invalid.",
+      "fetchFailed": "Failed to fetch mandi prices."
+    },
+    "empty": {
+      "title": "No prices found",
+      "desc": "Try adjusting your filters."
+    },
+    "labels": {
+      "modalPrice": "Modal Price",
+      "variety": "Variety",
+      "varietyFallback": "N/A",
+      "listen": "Listen price"
+    },
+    "csv": {
+      "commodity": "Commodity",
+      "variety": "Variety",
+      "state": "State",
+      "district": "District",
+      "market": "Market",
+      "minPrice": "Min Price",
+      "maxPrice": "Max Price",
+      "modalPrice": "Modal Price",
+      "date": "Date"
+    },
+    "states": {
+      "all": "All States",
+      "uttarPradesh": "Uttar Pradesh",
+      "punjab": "Punjab",
+      "haryana": "Haryana",
+      "maharashtra": "Maharashtra",
+      "madhyaPradesh": "Madhya Pradesh",
+      "gujarat": "Gujarat",
+      "rajasthan": "Rajasthan",
+      "karnataka": "Karnataka",
+      "andhraPradesh": "Andhra Pradesh",
+      "westBengal": "West Bengal",
+      "bihar": "Bihar",
+      "kerala": "Kerala",
+      "tamilNadu": "Tamil Nadu"
+    },
+    "commodities": {
+      "all": "All Commodities",
+      "wheat": "Wheat",
+      "paddy": "Paddy (Dhan)",
+      "potato": "Potato",
+      "onion": "Onion",
+      "tomato": "Tomato",
+      "mustard": "Mustard",
+      "cotton": "Cotton",
+      "sugarcane": "Sugarcane",
+      "soyabean": "Soyabean",
+      "maize": "Maize",
+      "apple": "Apple"
+    }
+  },
+  "SoilHub": {
+    "badge": "Soil Intelligence",
+    "heroTitle": "Know your soil,",
+    "heroTitleHighlight": "grow smarter crops.",
+    "heroSubtitle": "Create profiles for each field. Test conditions, upload your Soil Health Card, and get AI-powered crop recommendations.",
+    "howItWorks": "How it works",
+    "steps": {
+      "register": {
+        "title": "Register Your Farmland",
+        "desc": "Add name, location, area & soil type"
+      },
+      "test": {
+        "title": "Test pH & Moisture",
+        "desc": "Enter data or schedule a field tester"
+      },
+      "upload": {
+        "title": "Upload Soil Health Card",
+        "desc": "AI reads NPK values from your photo"
+      },
+      "report": {
+        "title": "Get Smart Report",
+        "desc": "Crop recommendations, score & fixes"
+      }
+    },
+    "cta": {
+      "addFirst": "Add Your First Farmland",
+      "addLand": "Add Land",
+      "addNewLand": "Add New Land"
+    },
+    "labCta": {
+      "needTitle": "Need a Soil Health Card?",
+      "noCardTitle": "Don't have a Soil Health Card?",
+      "desc": "Find a government testing laboratory near you to get your soil tested.",
+      "button": "Locate Lab"
+    },
+    "header": {
+      "title": "My Farmlands",
+      "fields": "{count, plural, one {# field} other {# fields}}",
+      "needsAttention": "{count, plural, one {# need attention} other {# need attention}}"
+    },
+    "addModal": {
+      "title": "Add Farmland",
+      "landName": {
+        "label": "Land Name",
+        "placeholder": "e.g. North Field"
+      },
+      "area": {
+        "label": "Area (acres)",
+        "placeholder": "2.5"
+      },
+      "soilType": "Soil Type",
+      "soilTypePlaceholder": "Select...",
+      "location": "Location",
+      "statePlaceholder": "State *",
+      "districtPlaceholder": "District *",
+      "villagePlaceholder": "Village (optional)",
+      "errors": {
+        "landName": "Give your land a name",
+        "stateDistrict": "State and district are required"
+      },
+      "submit": {
+        "creating": "Creating...",
+        "createContinue": "Create & Continue"
+      }
+    },
+    "soilTypes": {
+      "alluvial": "Alluvial",
+      "black": "Black",
+      "red": "Red",
+      "laterite": "Laterite",
+      "sandy": "Sandy",
+      "clay": "Clay",
+      "loamy": "Loamy"
+    }
+  },
+  "SoilLandCard": {
+    "status": {
+      "completeSetup": "Complete setup",
+      "addSoilTest": "Add soil test data",
+      "testScheduled": "Test scheduled",
+      "uploadHealthCard": "Upload health card",
+      "generateReport": "Generate report",
+      "viewReport": "View report",
+      "retestNeeded": "Retest needed"
+    },
+    "badges": {
+      "retestDue": "Retest Due",
+      "setup": "Setup"
+    },
+    "tags": {
+      "acres": "acres",
+      "ph": "pH {value}"
+    },
+    "soilTypes": {
+      "alluvial": "Alluvial",
+      "black": "Black",
+      "red": "Red",
+      "laterite": "Laterite",
+      "sandy": "Sandy",
+      "clay": "Clay",
+      "loamy": "Loamy"
     }
   },
   "Soil": {

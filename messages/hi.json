@@ -6,72 +6,201 @@
   "Hero": {
     "title1": "देश के किसानों",
     "title2": "का डिजिटल मित्र",
-    "subtitle": "स्मार्ट खेती के उपकरण, लाइव मंडी भाव और मौसम की जानकारी जो भारतीय किसानों को अधिक उगाने और अधिक कमाने में मदद करती है।",
+    "subtitle": "स्मार्ट खेती के टूल्स, लाइव मंडी भाव और मौसम अपडेट — भारतीय किसानों को अधिक उगाने और अधिक कमाने में मदद के लिए।",
     "btnAdvisor": "स्मार्ट सलाहकार शुरू करें",
-    "btnProfile": "फार्म प्रोफाइल बनाएं"
+    "btnProfile": "फार्म प्रोफ़ाइल सेट करें"
   },
   "Features": {
-    "heading": "बेहतर फसल के लिए उपकरण।",
-    "subheading": "अंदाजा लगाना बंद करें। भारतीय कृषि के लिए बनाए गए हमारे आसान उपकरणों के साथ भरोसे के साथ खेती करें।",
+    "heading": "बेहतर फसल के लिए टूल्स।",
+    "subheading": "अंदाज़ा लगाना बंद करें। भारतीय कृषि के लिए बने आसान टूल्स के साथ भरोसे से खेती करें।",
     "items": {
       "cropIntel": {
         "title": "स्मार्ट फसल गाइड",
         "desc": "अपनी स्थानीय मिट्टी और मौसम के आधार पर बुवाई और कटाई का सही समय जानें।"
       },
       "sellPredictor": {
-        "title": "बेचने का सर्वोत्तम समय",
-        "desc": "अधिकतम मुनाफे के लिए अपनी फसल बेचने का सही समय जानें।"
+        "title": "बेचने का सही समय",
+        "desc": "अधिकतम लाभ के लिए फसल बेचने का सही समय खोजें।"
       },
       "voiceAssistant": {
-        "title": "कृषि सारथी वॉइस असिस्टेंट",
-        "desc": "अपनी स्थानीय भाषा में बोलकर तुरंत खेती की सलाह और मौसम की जानकारी प्राप्त करें।"
+        "title": "कृषिसार्थी वॉइस AI",
+        "desc": "अपनी स्थानीय भाषा में बोलकर तुरंत खेती सलाह और मौसम अपडेट पाएं।"
       },
       "diseaseVision": {
         "title": "फसल रोग स्कैनर",
-        "desc": "बीमार पौधे की फोटो लें। तुरंत बीमारी और उसका इलाज जानें।"
+        "desc": "बीमार पौधे की फोटो लें। तुरंत बीमारी पता करें और इलाज जानें।"
       },
       "microClimate": {
-      "errors": {
-        "required": "Please fill land name, state, and district."
-      },
         "title": "7-दिन का स्थानीय मौसम",
-        "desc": "अपने खेत के सटीक स्थान के लिए 7 दिन का मौसम पूर्वानुमान प्राप्त करें।"
+        "desc": "अपने खेत के सटीक लोकेशन के लिए 7-दिन का सही मौसम पूर्वानुमान पाएं।"
       },
       "mandiRates": {
         "title": "लाइव मंडी भाव",
-        "desc": "पूरे भारत में अपनी फसलों के लिए हर दिन के लाइव APMC मंडी भाव देखें।"
+        "desc": "पूरे भारत में अपनी फसल के लिए दैनिक लाइव APMC मंडी भाव देखें।"
       },
       "community": {
-          "errors": {
-            "formInvalid": "Please fill all required fields.",
-            "name": "Enter farmer name.",
-            "phone": "Enter phone number.",
-            "phoneInvalid": "Enter a 10-digit phone number.",
-            "line1": "Enter address line.",
-            "village": "Enter village.",
-            "district": "Enter district.",
-            "state": "Enter state.",
-            "pincode": "Enter pincode.",
-            "pincodeInvalid": "Enter a 6-digit pincode."
-          },
         "title": "किसान समुदाय",
-        "desc": "अन्य किसानों से जुड़ें। सवाल पूछें, सलाह साझा करें और एक-दूसरे की मदद करें।"
+        "desc": "दूसरे किसानों से जुड़ें। सवाल पूछें, सलाह साझा करें और एक-दूसरे की मदद करें।"
       },
       "schemes": {
-        "title": "सरकारी योजना खोजक",
-        "desc": "उन सरकारी सब्सिडी और कृषि योजनाओं को आसानी से खोजें जिनके लिए आप योग्य हैं।"
+        "title": "सरकारी योजनाएं खोजें",
+        "desc": "अपने लिए उपयुक्त सरकारी सब्सिडी और खेती योजनाएं आसानी से खोजें।"
       },
       "yieldAnalytics": {
         "title": "उपज ट्रैकर",
-        "desc": "अगले मौसम के लिए बेहतर योजना बनाने हेतु अपनी पिछली फसल की उपज का रिकॉर्ड रखें।"
+        "desc": "अगले मौसम की बेहतर योजना के लिए पिछली फसल की उपज ट्रैक करें।"
       },
       "soilIntelligence": {
         "title": "मृदा स्वास्थ्य लैब",
-        "desc": "प्रमाणित मिट्टी परीक्षण लैब खोजें और अपनी फसल के लिए कस्टम सिफारिशें प्राप्त करें।"
+        "desc": "पास के प्रमाणित मिट्टी परीक्षण लैब खोजें और अपनी फसल के लिए निजी सिफारिशें पाएं।"
       }
     }
   },
+  "Register": {
+    "title": "खेती के भविष्य से जुड़ें।",
+    "switchText": "क्या पहले से खाता है?",
+    "switchLink": "यहाँ साइन इन करें",
+    "fullName": "पूरा नाम",
+    "phone": "फ़ोन नंबर",
+    "namePlaceholder": "राम सिंह",
+    "phonePlaceholder": "98765 43210",
+    "region": "खेती का क्षेत्र",
+    "regionPlaceholder": "अपना राज्य चुनें",
+    "district": "जिला",
+    "roleLabel": "भूमिका",
+    "roles": {
+      "farmer": "किसान",
+      "provider": "प्रोवाइडर (विक्रेता)"
+    },
+    "languageLabel": "ऐप की भाषा",
+    "languageOptions": {
+      "en": "English",
+      "hi": "Hindi (हिंदी)",
+      "mr": "Marathi (मराठी)",
+      "pa": "Punjabi (ਪੰਜਾਬੀ)",
+      "bn": "Bengali (বাংলা)",
+      "te": "Telugu (తెలుగు)",
+      "ta": "Tamil (தமிழ்)"
+    },
+    "password": "पासवर्ड",
+    "passwordPlaceholder": "एक मजबूत पासवर्ड बनाएं",
+    "button": "खाता बनाएं",
+    "loading": "खाता बन रहा है...",
+    "terms": "जुड़कर, आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत होते हैं।",
+    "featureTitle": "खेती को सरल और स्मार्ट बनाना।",
+    "feature1": "लाइव मंडी बाज़ार भाव",
+    "feature2": "फसल की बीमारियों का पता लगाने के लिए पत्ते स्कैन करें",
+    "feature3": "दैनिक मौसम और फसल अलर्ट",
+    "trusted": "50,000+ किसानों का भरोसा",
+    "getOtp": "OTP प्राप्त करें",
+    "enterOtp": "6-अंकों का कोड दर्ज करें",
+    "otpPlaceholder": "------",
+    "verifyBtn": "सत्यापित करें और रजिस्टर करें",
+    "otpSentTo": "इस नंबर पर SMS के ज़रिए कोड भेजा गया",
+    "back": "वापस",
+    "errors": {
+      "providerIncomplete": "प्रोवाइडर सत्यापन विवरण अधूरे हैं।",
+      "otpSendFailed": "OTP भेजने में विफल",
+      "otpInvalid": "कृपया सही 6-अंकों का OTP दर्ज करें",
+      "registrationFailed": "रजिस्ट्रेशन विफल रहा"
+    },
+    "providerModal": {
+      "title": "प्रोवाइडर सत्यापन",
+      "subtitle": "केवल अधिकृत विक्रेता",
+      "errorRequired": "कृपया सभी जरूरी सत्यापन विवरण भरें।",
+      "shopName": "दुकान का नाम",
+      "shopPlaceholder": "जैसे, कृषि केंद्र",
+      "licenseNumber": "सरकारी लाइसेंस नंबर",
+      "licensePlaceholder": "कीटनाशक/खाद लाइसेंस नंबर",
+      "licenseUrl": "लाइसेंस दस्तावेज़ URL",
+      "licenseUrlPlaceholder": "दस्तावेज़ इमेज का लिंक",
+      "gstNumber": "GST नंबर",
+      "optional": "(वैकल्पिक)",
+      "cancel": "रद्द करें",
+      "save": "विवरण सेव करें"
+    }
+  },
+  "Login": {
+    "title": "वापसी पर स्वागत है।",
+    "switchText": "कृषिमित्र पर नए हैं?",
+    "switchLink": "खाता बनाएं",
+    "phone": "फ़ोन नंबर",
+    "phonePlaceholder": "98765 43210",
+    "password": "पासवर्ड",
+    "forgot": "पासवर्ड भूल गए?",
+    "placeholder": "अपना पासवर्ड दर्ज करें",
+    "button": "साइन इन करें",
+    "loading": "साइन इन हो रहा है...",
+    "success": "खाता सफलतापूर्वक बन गया! कृपया साइन इन करें।",
+    "authFailed": "ऑथेंटिकेशन विफल रहा",
+    "back": "वापस",
+    "featureTitle": "समझदारी से उगाएं, बेहतर फसल पाएं।",
+    "featureDesc": "अपना मौसम जांचें, अपनी फसलों को स्वस्थ रखें, और वास्तविक समय में बाज़ार के भाव एक ही जगह पाएं।",
+    "systemStatus": "सिस्टम ऑनलाइन है"
+  },
+  "Splash": {
+    "initializing": "सिस्टम शुरू हो रहे हैं...",
+    "tagline": "आधुनिक किसान को सशक्त बनाना",
+    "skip": "इनिशियलाइज़ेशन छोड़ें",
+    "steps": {
+      "starting": "कृषिमित्र शुरू हो रहा है...",
+      "connectingMarkets": "क्षेत्रीय मंडियों से जुड़ रहे हैं...",
+      "syncingWeather": "स्थानीय मौसम डेटा सिंक हो रहा है...",
+      "preparingInsights": "फसल इनसाइट्स तैयार हो रहे हैं...",
+      "securing": "कनेक्शन सुरक्षित किया जा रहा है...",
+      "welcome": "कृषिमित्र में आपका स्वागत है।"
+    }
+  },
+  "ImageUpload": {
+    "label": "प्रोडक्ट इमेज",
+    "tabs": {
+      "upload": "फोटो अपलोड करें",
+      "url": "URL पेस्ट करें"
+    },
+    "status": {
+      "uploading": "Cloudinary पर अपलोड हो रहा है...",
+      "imageSet": "इमेज सेट है"
+    },
+    "prompt": {
+      "clickUpload": "अपलोड करने के लिए क्लिक करें",
+      "dragDrop": "या ड्रैग & ड्रॉप करें",
+      "fileTypes": "PNG, JPG, WEBP — 10MB तक",
+      "urlPlaceholder": "https://example.com/image.jpg"
+    },
+    "actions": {
+      "use": "उपयोग करें"
+    },
+    "alerts": {
+      "invalidFile": "कृपया कोई इमेज फ़ाइल चुनें।",
+      "uploadFailed": "इमेज अपलोड विफल। कृपया फिर से प्रयास करें।"
+    }
+  },
+  "LocationSelector": {
+    "stateLabel": "राज्य",
+    "districtLabel": "जिला",
+    "fromProfile": "प्रोफ़ाइल से",
+    "selectState": "राज्य चुनें",
+    "selectDistrict": "जिला चुनें"
+  },
+  "ListingContact": {
+    "rateLabel": "दर",
+    "perUnit": "/ {unit}",
+    "listenTitle": "सुनें / रोकें",
+    "whatsappTitle": "WhatsApp {name}",
+    "callTitle": "Call {name}",
+    "waMessage": "नमस्ते {name}, मुझे KrishiMitra पर आपकी \"{title}\" लिस्टिंग में रुचि है।",
+    "units": {
+      "day": "दिन",
+      "hour": "घंटा",
+      "acre": "एकड़"
+    },
+    "audio": {
+      "rent": "यह किसान, {name}, {state} के {district} से हैं। यह अपना {title} किराए पर देना चाहते हैं, जिसका रेट {rate} रुपये प्रति {unit} है। इनसे संपर्क करने के लिए, हरे फोन आइकन पर क्लिक करें।",
+      "service": "यह किसान, {name}, {state} के {district} से हैं। यह अपना {title} सेवा के लिए देना चाहते हैं, जिसका रेट {rate} रुपये प्रति {unit} है। इनसे संपर्क करने के लिए, हरे फोन आइकन पर क्लिक करें।"
+    }
+  },
   "TrustSection": {
+    "badge": "भारत भर में भरोसेमंद",
     "heading1": "आपके खेत को ",
     "heading2": "तकनीक",
     "heading3": " और समुदाय से मजबूत बनाना।",
@@ -79,6 +208,17 @@
     "list1": "स्थानीय SMS अलर्ट के साथ लाइव APMC मंडी भाव",
     "list2": "स्थानीय ट्रैक्टर, मशीनरी और खेत मजदूर किराए पर लें",
     "list3": "स्मार्ट खेती सलाहकार और सत्यापित सरकारी योजनाएं",
+    "trustedBy": {
+      "ministry": "🏛️ कृषि मंत्रालय",
+      "nabard": "🏦 NABARD",
+      "ncdex": "📊 NCDEX",
+      "apmc": "🌾 APMC"
+    },
+    "testimonials": {
+      "ramesh": "मेरे फोन पर सीधे मंडी भाव — अब बिचौलियों की ठगी नहीं!",
+      "priya": "इस सीज़न बीमारी पहचान ने मेरी पूरी गेहूं फसल बचा ली।",
+      "sukhbir": "AI सलाहकार ने बेचने का सही समय बताया। इस साल ₹18,000 अतिरिक्त मिले।"
+    },
     "stat1Label": "मंडी भाव",
     "stat1Value": "लाइव (Real-Time)",
     "stat2Label": "प्लेटफ़ॉर्म की पहुँच",
@@ -93,30 +233,33 @@
     "smsDisclaimer": "स्टैंडर्ड SMS शुल्क लग सकते हैं। कभी भी रद्द करें।",
     "brandDesc": "स्मार्ट सलाह, लाइव बाज़ार भाव और आसान खेती उपकरणों के साथ भारतीय किसानों की मदद करना।",
     "helpline": "24/7 किसान हेल्पलाइन",
+    "actions": {
+      "unsubscribe": "अनसब्सक्राइब करें",
+      "needUnsubscribe": "अनसब्सक्राइब करना है?",
+      "subscribeToAlerts": "अलर्ट सब्सक्राइब करें"
+    },
+    "subscribe": {
+      "invalidPhone": "कृपया सही 10-अंकों का नंबर दर्ज करें।",
+      "loginRequired": "सब्सक्राइब करने के लिए साइन इन करें। लॉगिन पर भेज रहे हैं...",
+      "actionSubscribe": "सब्सक्रिप्शन",
+      "actionUnsubscribe": "अनसब्सक्रिप्शन",
+      "actionFailed": "{action} विफल रहा।"
+    },
+    "call": {
+      "needSubscribe": "यह सुविधा इस्तेमाल करने के लिए पहले किसान हेल्पलाइन सब्सक्राइब करें।",
+      "loginRequired": "यह सुविधा इस्तेमाल करने के लिए कृपया लॉग इन करें।",
+      "requestFailed": "कॉल अनुरोध विफल रहा",
+      "initiated": "कॉल शुरू हो गई!",
+      "genericError": "कुछ गलत हुआ। कृपया फिर से प्रयास करें।",
+      "titleUnsubscribed": "पहले हेल्पलाइन सब्सक्राइब करें",
+      "titleDefault": "कॉल बैक के लिए क्लिक करें",
+      "statusConnecting": "कनेक्ट हो रहा है...",
+      "statusSuccess": "कॉल शुरू! ✓",
+      "statusError": "विफल — फिर से टैप करें",
+      "statusUnsubscribed": "पहले सब्सक्राइब करें",
+      "helper": "कॉल बैक के लिए टैप करें • केवल सब्सक्राइबर्स"
+    },
     "platformHeading": "प्लेटफ़ॉर्म",
-        "orderSummaryTitle": "Order summary",
-        "orderItemTitle": "Soil test strip kit",
-        "orderItemDesc": "Everything you need to read pH + moisture.",
-        "orderPaymentLabel": "Payment",
-        "orderPaymentValue": "Cash on delivery",
-        "orderPrice": "Pay when the kit arrives.",
-        "shippingTitle": "Shipping address",
-        "shippingHelp": "Add your address to unlock shipping.",
-        "orderStatusLabel": "Order confirmed",
-        "viewTracking": "Track order",
-        "trackingTitle": "Order tracking",
-        "trackingHelp": "We update your delivery status automatically.",
-        "orderIdLabel": "Tracking ID",
-        "orderDateLabel": "Order date",
-        "etaLabel": "ETA",
-        "etaDefault": "3-5 days",
-        "tracking": {
-          "ordered": "Ordered",
-          "packed": "Packed",
-          "shipped": "Shipped",
-          "outForDelivery": "Out for delivery",
-          "delivered": "Delivered"
-        },
     "platformLinks": {
       "intel": "स्मार्ट फसल गाइड",
       "mandi": "लाइव मंडी भाव",
@@ -168,6 +311,52 @@
     "systemStatus": "फार्म स्टेटस",
     "online": "ऑनलाइन",
     "runScan": "फसल स्कैन करें",
+    "greetings": {
+      "morning": "सुप्रभात",
+      "afternoon": "शुभ दोपहर",
+      "evening": "शुभ संध्या",
+      "fallbackName": "किसान"
+    },
+    "seasonBadge": "{season} सीज़न",
+    "seasons": {
+      "kharif": "खरीफ",
+      "rabi": "रबी",
+      "zaid": "ज़ायद"
+    },
+    "tiles": {
+      "mandi": {
+        "label": "मंडी भाव",
+        "sub": "लाइव बाजार दरें",
+        "chip": "🌾 आज"
+      },
+      "disease": {
+        "label": "फसल डॉक्टर",
+        "sub": "AI रोग पहचान",
+        "chip": "🔬 AI स्कैन"
+      },
+      "lifecycle": {
+        "label": "फसल जीवनचक्र",
+        "sub": "ग्रोथ प्लानर",
+        "chip": "🌱 प्लान"
+      },
+      "advisor": {
+        "label": "AI सलाहकार",
+        "sub": "स्मार्ट सुझाव",
+        "chip": "🤖 स्मार्ट"
+      }
+    },
+    "soilCard": {
+      "eyebrow": "मिट्टी पहचान",
+      "title": "मिट्टी जानें, समझदारी से उगाएं।",
+      "description": "सरकारी रिपोर्ट या होम किट। खेत-विशेष और हिंदी में सरल।",
+      "tags": {
+        "ph": "pH",
+        "npk": "NPK",
+        "soilType": "मिट्टी का प्रकार"
+      },
+      "cta": "🌱 मेरी मिट्टी जांचें"
+    },
+    "growthProgress": "फसल प्रगति",
     "weather": {
       "title": "लाइव स्थानीय मौसम",
       "loading": "मौसम की जाँच हो रही है...",
@@ -203,46 +392,15 @@
       "optimalTitle": "मौसम की अच्छी स्थिति",
       "optimalDesc": "वर्तमान मौसम आपकी फसलों के लिए सुरक्षित है। आप हमेशा की तरह अपने खेतों में पानी दे सकते हैं।",
       "button": "समझ गया"
+    },
+    "aiPanel": {
+      "intro": "आपकी मिट्टी, फसल और स्थान के आधार पर व्यक्तिगत सलाह।",
+      "alertTitle": "सबसे अच्छी सटीकता के लिए मिट्टी प्रोफ़ाइल जोड़ें",
+      "alertDesc": "pH और NPK मिलने के बाद हम फसल, उर्वरक और सिंचाई की सिफारिश कर सकते हैं।",
+      "insightLabel": "AI इनसाइट",
+      "insightDesc": "आज स्वस्थ मिट्टी, कल अधिक पैदावार। मृदा स्वास्थ्य कार्ड या त्वरित किट टेस्ट से शुरुआत करें।",
+      "cta": "मिट्टी जांच शुरू करें"
     }
-  },
-  "Register": {
-    "title": "खेती के भविष्य से जुड़ें।",
-    "switchText": "क्या पहले से खाता है?",
-    "switchLink": "यहाँ साइन इन करें",
-    "fullName": "पूरा नाम",
-    "phone": "फ़ोन नंबर",
-    "region": "खेती का क्षेत्र",
-    "regionPlaceholder": "अपना राज्य चुनें",
-    "password": "पासवर्ड",
-    "passwordPlaceholder": "एक मजबूत पासवर्ड बनाएं",
-    "button": "खाता बनाएं",
-    "loading": "खाता बन रहा है...",
-    "terms": "जुड़कर, आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत होते हैं।",
-    "featureTitle": "खेती को सरल और स्मार्ट बनाना।",
-    "feature1": "लाइव मंडी बाज़ार भाव",
-    "feature2": "फसल की बीमारियों का पता लगाने के लिए पत्ते स्कैन करें",
-    "feature3": "दैनिक मौसम और फसल अलर्ट",
-    "trusted": "50,000+ किसानों का भरोसा",
-    "getOtp": "OTP प्राप्त करें",
-    "enterOtp": "6-अंकों का कोड दर्ज करें",
-    "verifyBtn": "सत्यापित करें और रजिस्टर करें",
-    "otpSentTo": "इस नंबर पर SMS के ज़रिए कोड भेजा गया",
-    "back": "वापस"
-  },
-  "Login": {
-    "title": "वापसी पर स्वागत है।",
-    "switchText": "कृषिमित्र पर नए हैं?",
-    "switchLink": "खाता बनाएं",
-    "phone": "फ़ोन नंबर",
-    "password": "पासवर्ड",
-    "forgot": "पासवर्ड भूल गए?",
-    "placeholder": "अपना पासवर्ड दर्ज करें",
-    "button": "साइन इन करें",
-    "loading": "साइन इन हो रहा है...",
-    "success": "खाता सफलतापूर्वक बन गया! कृपया साइन इन करें।",
-    "featureTitle": "समझदारी से उगाएं, बेहतर फसल पाएं।",
-    "featureDesc": "अपना मौसम जांचें, अपनी फसलों को स्वस्थ रखें, और वास्तविक समय में बाज़ार के भाव एक ही जगह पाएं।",
-    "systemStatus": "सिस्टम ऑनलाइन है"
   },
   "SellingPools": {
     "title": "समूह बिक्री (ग्रुप सेलिंग)",
@@ -519,6 +677,7 @@
   "GovernmentSchemes": {
     "title": "सरकारी योजनाएं",
     "subtitle": "सरकारी सब्सिडी, बीमा और वित्तीय सहायता खोजें जिसके लिए आप आसानी से आवेदन कर सकते हैं।",
+    "askSarthi": "सार्थी से पूछें",
     "searchPlaceholder": "नाम या प्रकार के अनुसार योजनाएं खोजें...",
     "syncing": "सरकारी पोर्टल जाँचे जा रहे हैं...",
     "errorTitle": "योजनाएं लोड नहीं हो सकीं",
@@ -540,6 +699,228 @@
       "Insurance": "फसल बीमा",
       "Credit & Loans": "कृषि ऋण (लोन)",
       "Other": "अन्य"
+    }
+  },
+  "SoilLabs": {
+    "back": "मिट्टी हब पर वापस",
+    "badge": "मिट्टी परीक्षण केंद्र",
+    "title": "अपना Soil Health Card प्राप्त करें",
+    "subtitle": "Soil Health Card (SHC) आपके खेत के पोषक स्तरों का विस्तृत विश्लेषण देता है। नीचे नज़दीकी सरकारी लैब ढूंढें, 500g मिट्टी का नमूना जमा करें और अपनी आधिकारिक प्रोफाइल प्राप्त करें।",
+    "locateTitle": "लैब खोजें",
+    "selectState": "1. राज्य चुनें",
+    "selectDistrict": "2. जिला चुनें",
+    "chooseState": "राज्य चुनें...",
+    "chooseDistrict": "जिला चुनें...",
+    "searching": "खोज रहे हैं...",
+    "findLabs": "लैब खोजें",
+    "howToSample": "मिट्टी का नमूना कैसे लें",
+    "steps": {
+      "step1": "15cm गहरा V-आकार का गड्ढा खोदें",
+      "step2": "खुले हुए हिस्से से मिट्टी की पतली परत लें",
+      "step3": "खेत के 8-10 स्थानों से नमूने लें",
+      "step4": "अच्छी तरह मिलाकर 500g साफ बैग में रखें",
+      "step5": "बैग पर नाम, फोन और खेत की जानकारी लिखें"
+    },
+    "noLabsTitle": "कोई लैब नहीं मिली",
+    "noLabsDesc": "राज्य और जिला चुनकर खोजें ताकि नज़दीकी सरकारी परीक्षण केंद्र मिल सकें।",
+    "labCard": {
+      "unnamed": "टेस्टिंग लैब",
+      "unknownDistrict": "अज्ञात जिला",
+      "unknownState": "अज्ञात राज्य"
+    },
+    "errors": {
+      "api": "API त्रुटि: {message}",
+      "parse": "Parse त्रुटि. सर्वर ने भेजा: {snippet}",
+      "network": "नेटवर्क त्रुटि: {message}",
+      "unknown": "अज्ञात सर्वर त्रुटि"
+    },
+    "noOptions": "कोई विकल्प उपलब्ध नहीं"
+  },
+  "MandiPrices": {
+    "title": "मंडी के ताज़ा भाव",
+    "subtitle": {
+      "locating": "आपका राज्य खोज रहे हैं...",
+      "sync": "आपके लोकेशन से सिंक"
+    },
+    "buttons": {
+      "predictor": "मंडी प्रेडिक्टर",
+      "ask": "सार्थी से पूछें",
+      "export": "CSV डाउनलोड करें"
+    },
+    "filters": {
+      "commodity": "फसल",
+      "state": "राज्य",
+      "district": "जिला",
+      "districtPlaceholder": "जिले का नाम लिखें..."
+    },
+    "columns": {
+      "commodityVariety": "फसल और किस्म",
+      "marketLocation": "मंडी और स्थान",
+      "priceModal": "मॉडल भाव"
+    },
+    "loading": {
+      "locating": "लोकेशन पता कर रहे हैं...",
+      "fetching": "ताज़ा भाव लोड हो रहे हैं..."
+    },
+    "error": {
+      "title": "भाव लोड नहीं हो सके",
+      "connect": "मंडी डेटा स्रोत से कनेक्ट नहीं हो सका।",
+      "invalidFormat": "मंडी डेटा फॉर्मेट गलत है।",
+      "fetchFailed": "मंडी भाव लाने में समस्या हुई।"
+    },
+    "empty": {
+      "title": "कोई भाव नहीं मिले",
+      "desc": "फ़िल्टर बदलकर फिर कोशिश करें।"
+    },
+    "labels": {
+      "modalPrice": "मॉडल भाव",
+      "variety": "किस्म",
+      "varietyFallback": "उपलब्ध नहीं",
+      "listen": "भाव सुनें"
+    },
+    "csv": {
+      "commodity": "फसल",
+      "variety": "किस्म",
+      "state": "राज्य",
+      "district": "जिला",
+      "market": "मंडी",
+      "minPrice": "न्यूनतम भाव",
+      "maxPrice": "अधिकतम भाव",
+      "modalPrice": "मॉडल भाव",
+      "date": "तारीख"
+    },
+    "states": {
+      "all": "सभी राज्य",
+      "uttarPradesh": "उत्तर प्रदेश",
+      "punjab": "पंजाब",
+      "haryana": "हरियाणा",
+      "maharashtra": "महाराष्ट्र",
+      "madhyaPradesh": "मध्य प्रदेश",
+      "gujarat": "गुजरात",
+      "rajasthan": "राजस्थान",
+      "karnataka": "कर्नाटक",
+      "andhraPradesh": "आंध्र प्रदेश",
+      "westBengal": "पश्चिम बंगाल",
+      "bihar": "बिहार",
+      "kerala": "केरल",
+      "tamilNadu": "तमिलनाडु"
+    },
+    "commodities": {
+      "all": "सभी फसलें",
+      "wheat": "गेहूं",
+      "paddy": "धान (धन)",
+      "potato": "आलू",
+      "onion": "प्याज़",
+      "tomato": "टमाटर",
+      "mustard": "सरसों",
+      "cotton": "कपास",
+      "sugarcane": "गन्ना",
+      "soyabean": "सोयाबीन",
+      "maize": "मक्का",
+      "apple": "सेब"
+    }
+  },
+  "SoilHub": {
+    "badge": "मिट्टी पहचान",
+    "heroTitle": "अपनी मिट्टी जानें,",
+    "heroTitleHighlight": "बेहतर फसल उगाएँ।",
+    "heroSubtitle": "हर खेत की प्रोफाइल बनाएं। स्थिति जांचें, Soil Health Card अपलोड करें और AI आधारित फसल सुझाव पाएं।",
+    "howItWorks": "कैसे काम करता है",
+    "steps": {
+      "register": {
+        "title": "अपना खेत दर्ज करें",
+        "desc": "नाम, स्थान, क्षेत्रफल और मिट्टी का प्रकार जोड़ें"
+      },
+      "test": {
+        "title": "pH और नमी जांचें",
+        "desc": "डेटा भरें या फील्ड टेस्टर शेड्यूल करें"
+      },
+      "upload": {
+        "title": "Soil Health Card अपलोड करें",
+        "desc": "AI फोटो से NPK वैल्यू पढ़ता है"
+      },
+      "report": {
+        "title": "स्मार्ट रिपोर्ट पाएँ",
+        "desc": "फसल सुझाव, स्कोर और सुधार"
+      }
+    },
+    "cta": {
+      "addFirst": "पहला खेत जोड़ें",
+      "addLand": "खेत जोड़ें",
+      "addNewLand": "नया खेत जोड़ें"
+    },
+    "labCta": {
+      "needTitle": "Soil Health Card चाहिए?",
+      "noCardTitle": "Soil Health Card नहीं है?",
+      "desc": "अपने पास की सरकारी मिट्टी परीक्षण लैब ढूंढें और मिट्टी जांचें।",
+      "button": "लैब खोजें"
+    },
+    "header": {
+      "title": "मेरे खेत",
+      "fields": "{count, plural, one {# खेत} other {# खेत}}",
+      "needsAttention": "{count, plural, one {# को ध्यान चाहिए} other {# को ध्यान चाहिए}}"
+    },
+    "addModal": {
+      "title": "खेत जोड़ें",
+      "landName": {
+        "label": "खेत का नाम",
+        "placeholder": "जैसे, उत्तर खेत"
+      },
+      "area": {
+        "label": "क्षेत्रफल (एकड़)",
+        "placeholder": "2.5"
+      },
+      "soilType": "मिट्टी का प्रकार",
+      "soilTypePlaceholder": "चुनें...",
+      "location": "स्थान",
+      "statePlaceholder": "राज्य *",
+      "districtPlaceholder": "जिला *",
+      "villagePlaceholder": "गाँव (वैकल्पिक)",
+      "errors": {
+        "landName": "खेत को नाम दें",
+        "stateDistrict": "राज्य और जिला आवश्यक हैं"
+      },
+      "submit": {
+        "creating": "बन रहा है...",
+        "createContinue": "बनाएं और आगे बढ़ें"
+      }
+    },
+    "soilTypes": {
+      "alluvial": "जलोढ़",
+      "black": "काली",
+      "red": "लाल",
+      "laterite": "लेटराइट",
+      "sandy": "रेतीली",
+      "clay": "चिकनी",
+      "loamy": "दोमट"
+    }
+  },
+  "SoilLandCard": {
+    "status": {
+      "completeSetup": "सेटअप पूरा करें",
+      "addSoilTest": "मिट्टी टेस्ट डेटा जोड़ें",
+      "testScheduled": "टेस्ट शेड्यूल",
+      "uploadHealthCard": "हेल्थ कार्ड अपलोड करें",
+      "generateReport": "रिपोर्ट बनाएं",
+      "viewReport": "रिपोर्ट देखें",
+      "retestNeeded": "री-टेस्ट जरूरी"
+    },
+    "badges": {
+      "retestDue": "री-टेस्ट ड्यू",
+      "setup": "सेटअप"
+    },
+    "tags": {
+      "acres": "एकड़",
+      "ph": "pH {value}"
+    },
+    "soilTypes": {
+      "alluvial": "जलोढ़",
+      "black": "काली",
+      "red": "लाल",
+      "laterite": "लेटराइट",
+      "sandy": "रेतीली",
+      "clay": "चिकनी",
+      "loamy": "दोमट"
     }
   },
   "Soil": {
@@ -677,6 +1058,29 @@
           "orderDesc": "3-5 दिन में डिलीवरी।",
           "uploadTitle": "मेरे पास किट है",
           "uploadDesc": "अब फोटो अपलोड करें।"
+        },
+        "orderSummaryTitle": "ऑर्डर सारांश",
+        "orderItemTitle": "मिट्टी टेस्ट स्ट्रिप किट",
+        "orderItemDesc": "pH और नमी पढ़ने के लिए ज़रूरी सब कुछ।",
+        "orderPaymentLabel": "भुगतान",
+        "orderPaymentValue": "डिलीवरी पर नकद",
+        "orderPrice": "किट आने पर भुगतान करें।",
+        "shippingTitle": "शिपिंग पता",
+        "shippingHelp": "शिपिंग शुरू करने के लिए अपना पता जोड़ें।",
+        "orderStatusLabel": "ऑर्डर कन्फर्म",
+        "viewTracking": "ऑर्डर ट्रैक करें",
+        "trackingTitle": "ऑर्डर ट्रैकिंग",
+        "trackingHelp": "हम आपकी डिलीवरी स्थिति अपने आप अपडेट करते हैं।",
+        "orderIdLabel": "ट्रैकिंग आईडी",
+        "orderDateLabel": "ऑर्डर की तारीख",
+        "etaLabel": "अनुमानित समय",
+        "etaDefault": "3-5 दिन",
+        "tracking": {
+          "ordered": "ऑर्डर हुआ",
+          "packed": "पैक हुआ",
+          "shipped": "शिप किया गया",
+          "outForDelivery": "डिलीवरी के लिए निकला",
+          "delivered": "डिलीवर हो गया"
         },
         "errors": {
           "formInvalid": "कृपया सभी जरूरी पते की जानकारी भरें।",

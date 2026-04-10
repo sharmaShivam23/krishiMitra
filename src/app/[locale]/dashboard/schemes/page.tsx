@@ -479,7 +479,7 @@ export default function GovernmentSchemes() {
           className="mt-4 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-agri-300 bg-agri-100 text-agri-900 font-black hover:bg-agri-200 transition shadow-sm"
         >
           <Landmark className="w-4 h-4" />
-          Ask Sarthi
+          {t('askSarthi')}
         </button>
       </motion.div>
 

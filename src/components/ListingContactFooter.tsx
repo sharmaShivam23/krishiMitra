@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { IndianRupee, Volume2, VolumeX, MessageCircle, Phone } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface ListingContactFooterProps {
   title: string;
@@ -27,6 +28,7 @@ export default function ListingContactFooter({
   location,
   type = 'rent'
 }: ListingContactFooterProps) {
+  const t = useTranslations('ListingContact');
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -41,7 +43,14 @@ export default function ListingContactFooter({
     ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white' 
     : 'bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white';
 
-  const waMessage = encodeURIComponent(`Hi ${provider.name}, I am interested in your "${title}" listed on KrishiMitra.`);
+  let unitKey: 'day' | 'hour' | 'acre' | undefined;
+  if (pricing.unit.includes('day')) unitKey = 'day';
+  else if (pricing.unit.includes('hour')) unitKey = 'hour';
+  else if (pricing.unit.includes('acre')) unitKey = 'acre';
+
+  const localizedUnit = unitKey ? t(`units.${unitKey}`) : pricing.unit;
+
+  const waMessage = encodeURIComponent(t('waMessage', { name: provider.name, title }));
 
   const toggleAudio = () => {
     if (!('speechSynthesis' in window)) return;
@@ -52,15 +61,16 @@ export default function ListingContactFooter({
     } else {
       window.speechSynthesis.cancel();
 
-      let unitHinglish = pricing.unit;
-      if (pricing.unit.includes('day')) unitHinglish = 'din';
-      else if (pricing.unit.includes('hour')) unitHinglish = 'ghanta';
-      else if (pricing.unit.includes('acre')) unitHinglish = 'acre';
+      const audioText = t(`audio.${type}`, {
+        name: provider.name,
+        state: location.state,
+        district: location.district,
+        title,
+        rate: pricing.rate,
+        unit: localizedUnit
+      });
       
-      const actionText = type === 'rent' ? 'rent par dena chahte hain' : 'service ke liye dena chahte hain';
-      const hinglishText = `Ye kisan, ${provider.name}, ${location.state} ke ${location.district} se hain. Ye apna ${title} ${actionText}, jiska rate ${pricing.rate} rupees per ${unitHinglish} hai. Inse sampark karne ke liye, hare phone icon par click karein.`;
-      
-      const utterance = new SpeechSynthesisUtterance(hinglishText);
+      const utterance = new SpeechSynthesisUtterance(audioText);
       
       utterance.onend = () => setIsPlaying(false);
       utterance.onerror = () => setIsPlaying(false);
@@ -73,18 +83,18 @@ export default function ListingContactFooter({
   return (
     <div className="flex items-end justify-between">
       <div>
-        <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400 mb-0.5">Rate</p>
+        <p className="text-[10px] uppercase tracking-wider font-bold text-gray-400 mb-0.5">{t('rateLabel')}</p>
         <div className="flex items-baseline text-gray-900">
           <IndianRupee className="w-5 h-5 mr-0.5 text-emerald-600" />
           <span className="text-2xl font-black">{pricing.rate}</span>
-          <span className="text-xs font-bold text-gray-500 ml-1">/ {pricing.unit}</span>
+          <span className="text-xs font-bold text-gray-500 ml-1">{t('perUnit', { unit: localizedUnit })}</span>
         </div>
       </div>
 
       <div className="flex gap-2">
         <button 
           onClick={toggleAudio}
-          title="Listen / Stop"
+          title={t('listenTitle')}
           className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all shadow-sm active:scale-95 ${
             isPlaying 
               ? 'bg-amber-100 text-amber-600 shadow-inner' 
@@ -98,7 +108,7 @@ export default function ListingContactFooter({
           href={`https://wa.me/91${provider.phone}?text=${waMessage}`}
           target="_blank"
           rel="noopener noreferrer"
-          title={`WhatsApp ${provider.name}`}
+          title={t('whatsappTitle', { name: provider.name })}
           className="w-12 h-12 rounded-xl flex items-center justify-center transition-all shadow-sm bg-green-50 text-green-600 hover:bg-green-600 hover:text-white active:scale-95"
         >
           <MessageCircle className="w-5 h-5" /> 
@@ -106,7 +116,7 @@ export default function ListingContactFooter({
 
         <a 
           href={`tel:${provider.phone}`}
-          title={`Call ${provider.name}`}
+          title={t('callTitle', { name: provider.name })}
           className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all shadow-sm active:scale-95 ${phoneThemeClass}`}
         >
           <Phone className="w-5 h-5" />

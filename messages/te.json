@@ -22,6 +22,10 @@
         "title": "విక్రయించడానికి ఉత్తమ సమయం",
         "desc": "అత్యధిక లాభం కోసం మీ పంటలను విక్రయించడానికి సరైన సమయాన్ని తెలుసుకోండి."
       },
+      "voiceAssistant": {
+        "title": "కృషిసారథి వాయిస్ ఏఐ",
+        "desc": "మీ స్థానిక భాషలో మాట్లాడండి; వెంటనే వ్యవసాయ సలహాలు మరియు వాతావరణ అప్‌డేట్‌లు పొందండి."
+      },
       "diseaseVision": {
         "title": "పంట వ్యాధి స్కానర్",
         "desc": "జబ్బుపడిన మొక్క ఫోటో తీయండి. వెంటనే వ్యాధిని మరియు దానికి ఎలా చికిత్స చేయాలో తెలుసుకోండి."
@@ -45,10 +49,15 @@
       "yieldAnalytics": {
         "title": "హార్వెస్ట్ ట్రాకర్",
         "desc": "తదుపరి సీజన్ కోసం మెరుగైన ప్రణాళిక చేసుకోవడానికి మీ గత కోతల రికార్డును ఉంచండి."
+      },
+      "soilIntelligence": {
+        "title": "మట్టి ఇంటెలిజెన్స్ ల్యాబ్స్",
+        "desc": "దగ్గరలోని ధృవీకరించిన మట్టి పరీక్ష ల్యాబ్‌లను కనుగొని వ్యక్తిగత పంట సిఫార్సులు పొందండి."
       }
     }
   },
   "TrustSection": {
+    "badge": "భారతదేశమంతా విశ్వసనీయం",
     "heading1": "మీ పొలాన్ని ",
     "heading2": "సాంకేతికత",
     "heading3": " మరియు సంఘంతో శక్తివంతం చేయడం.",
@@ -56,6 +65,17 @@
     "list1": "స్థానిక SMS అలర్ట్‌లతో లైవ్ APMC మండి ధరలు",
     "list2": "స్థానిక ట్రాక్టర్లు, పరికరాలు మరియు వ్యవసాయ కార్మికులను అద్దెకు తీసుకోండి",
     "list3": "స్మార్ట్ వ్యవసాయ సలహాదారు మరియు ధృవీకరించబడిన ప్రభుత్వ పథకాలు",
+    "trustedBy": {
+      "ministry": "🏛️ వ్యవసాయ మంత్రిత్వ శాఖ",
+      "nabard": "🏦 NABARD",
+      "ncdex": "📊 NCDEX",
+      "apmc": "🌾 APMC"
+    },
+    "testimonials": {
+      "ramesh": "మండీ ధరలు నేరుగా నా ఫోన్‌లో — ఇక మధ్యవర్తుల మోసం కాదు!",
+      "priya": "ఈ సీజన్‌లో వ్యాధి గుర్తింపు నా మొత్తం గోధుమ పంటను కాపాడింది.",
+      "sukhbir": "AI సలహాదారు అమ్మడానికి సరైన సమయాన్ని చెప్పాడు. ఈ సంవత్సరం ₹18,000 అదనంగా వచ్చాయి."
+    },
     "stat1Label": "మండి ధర",
     "stat1Value": "రియల్-టైమ్",
     "stat2Label": "ప్లాట్‌ఫారమ్ కవరేజ్",
@@ -70,30 +90,33 @@
     "smsDisclaimer": "ప్రామాణిక SMS రేట్లు వర్తించవచ్చు. ఎప్పుడైనా రద్దు చేయండి.",
     "brandDesc": "స్మార్ట్ సలహాలు, లైవ్ మార్కెట్ ధరలు మరియు సులభమైన వ్యవసాయ సాధనాలతో భారతీయ రైతులు మరింత మెరుగ్గా ఎదగడానికి సహాయం చేస్తుంది.",
     "helpline": "24/7 కిసాన్ హెల్ప్‌లైన్",
+    "actions": {
+      "unsubscribe": "అన్‌సబ్‌స్క్రైబ్ చేయండి",
+      "needUnsubscribe": "అన్‌సబ్‌స్క్రైబ్ చేయాలా?",
+      "subscribeToAlerts": "అలర్ట్‌లకు సబ్‌స్క్రైబ్ చేయండి"
+    },
+    "subscribe": {
+      "invalidPhone": "దయచేసి సరైన 10 అంకెల నంబర్ నమోదు చేయండి.",
+      "loginRequired": "సబ్‌స్క్రైబ్ చేయడానికి సైన్ ఇన్ చేయండి. లాగిన్‌కు మళ్లిస్తున్నాం...",
+      "actionSubscribe": "సబ్‌స్క్రిప్షన్",
+      "actionUnsubscribe": "అన్‌సబ్‌స్క్రిప్షన్",
+      "actionFailed": "{action} విఫలమైంది."
+    },
+    "call": {
+      "needSubscribe": "ఈ ఫీచర్ ఉపయోగించడానికి ముందుగా కిసాన్ హెల్ప్‌లైన్ సబ్‌స్క్రైబ్ చేయండి.",
+      "loginRequired": "ఈ ఫీచర్ ఉపయోగించడానికి దయచేసి లాగిన్ చేయండి.",
+      "requestFailed": "కాల్ అభ్యర్థన విఫలమైంది",
+      "initiated": "కాల్ ప్రారంభమైంది!",
+      "genericError": "ఏదో తప్పు జరిగింది. దయచేసి మళ్లీ ప్రయత్నించండి.",
+      "titleUnsubscribed": "ముందుగా హెల్ప్‌లైన్ సబ్‌స్క్రైబ్ చేయండి",
+      "titleDefault": "కాల్ బ్యాక్ కోసం క్లిక్ చేయండి",
+      "statusConnecting": "కనెక్ట్ అవుతోంది...",
+      "statusSuccess": "కాల్ ప్రారంభం! ✓",
+      "statusError": "విఫలం — మళ్లీ ట్యాప్ చేయండి",
+      "statusUnsubscribed": "ముందుగా సబ్‌స్క్రైబ్ చేయండి",
+      "helper": "కాల్ బ్యాక్ కోసం ట్యాప్ చేయండి • సబ్‌స్క్రైబర్లు మాత్రమే"
+    },
     "platformHeading": "ప్లాట్‌ఫారమ్",
-        "orderSummaryTitle": "Order summary",
-        "orderItemTitle": "Soil test strip kit",
-        "orderItemDesc": "Everything you need to read pH + moisture.",
-        "orderPaymentLabel": "Payment",
-        "orderPaymentValue": "Cash on delivery",
-        "orderPrice": "Pay when the kit arrives.",
-        "shippingTitle": "Shipping address",
-        "shippingHelp": "Add your address to unlock shipping.",
-        "orderStatusLabel": "Order confirmed",
-        "viewTracking": "Track order",
-        "trackingTitle": "Order tracking",
-        "trackingHelp": "We update your delivery status automatically.",
-        "orderIdLabel": "Tracking ID",
-        "orderDateLabel": "Order date",
-        "etaLabel": "ETA",
-        "etaDefault": "3-5 days",
-        "tracking": {
-          "ordered": "Ordered",
-          "packed": "Packed",
-          "shipped": "Shipped",
-          "outForDelivery": "Out for delivery",
-          "delivered": "Delivered"
-        },
     "platformLinks": {
       "intel": "స్మార్ట్ పంట గైడ్",
       "mandi": "లైవ్ మండి ధరలు",
@@ -126,6 +149,7 @@
       "mandi": "మండి ధరలు",
       "disease": "వ్యాధి స్కానర్",
       "services": "అద్దెలు",
+      "weather": "వాతావరణం",
       "soil": "మట్టి సమాచారం",
       "community": "సంఘం",
       "schemes": "పథకాలు",
@@ -144,6 +168,52 @@
     "systemStatus": "పొలం స్థితి",
     "online": "ఆన్‌లైన్",
     "runScan": "పంటను స్కాన్ చేయండి",
+    "greetings": {
+      "morning": "శుభోదయం",
+      "afternoon": "శుభ మధ్యాహ్నం",
+      "evening": "శుభ సాయంత్రం",
+      "fallbackName": "రైతు"
+    },
+    "seasonBadge": "{season} సీజన్",
+    "seasons": {
+      "kharif": "ఖరీఫ్",
+      "rabi": "రబీ",
+      "zaid": "జాయిద్"
+    },
+    "tiles": {
+      "mandi": {
+        "label": "మండి ధరలు",
+        "sub": "లైవ్ మార్కెట్ ధరలు",
+        "chip": "🌾 ఈరోజు"
+      },
+      "disease": {
+        "label": "పంట డాక్టర్",
+        "sub": "AI రోగ గుర్తింపు",
+        "chip": "🔬 AI స్కాన్"
+      },
+      "lifecycle": {
+        "label": "పంట జీవచక్రం",
+        "sub": "వృద్ధి ప్లానర్",
+        "chip": "🌱 ప్లాన్"
+      },
+      "advisor": {
+        "label": "AI సలహాదారు",
+        "sub": "స్మార్ట్ సిఫార్సులు",
+        "chip": "🤖 స్మార్ట్"
+      }
+    },
+    "soilCard": {
+      "eyebrow": "మట్టి గుర్తింపు",
+      "title": "మట్టిని తెలుసుకోండి, తెలివిగా పండించండి.",
+      "description": "ప్రభుత్వ నివేదిక లేదా హోమ్ కిట్. పొలం-నిర్దిష్టం, తెలుగు-స్నేహపూర్వకం.",
+      "tags": {
+        "ph": "pH",
+        "npk": "NPK",
+        "soilType": "మట్టి రకం"
+      },
+      "cta": "🌱 నా మట్టిని పరీక్షించండి"
+    },
+    "growthProgress": "పంట పురోగతి",
     "weather": {
       "title": "లైవ్ స్థానిక వాతావరణం",
       "loading": "వాతావరణాన్ని తనిఖీ చేస్తోంది...",
@@ -179,6 +249,14 @@
       "optimalTitle": "మంచి వాతావరణ పరిస్థితులు",
       "optimalDesc": "ప్రస్తుత వాతావరణం మీ పంటలకు సురక్షితం. మీరు సాధారణంగా మీ పొలాలకు నీరు పెట్టవచ్చు.",
       "button": "అర్థమైంది"
+    },
+    "aiPanel": {
+      "intro": "మీ మట్టి, పంట మరియు స్థానం ఆధారంగా వ్యక్తిగత సలహా.",
+      "alertTitle": "అత్యుత్తమ ఖచ్చితత్వం కోసం మట్టి ప్రొఫైల్ జోడించండి",
+      "alertDesc": "pH మరియు NPK లభించిన తరువాత మేము పంట, ఎరువు, మరియు నీటిపారుదలపై సిఫార్సు చేయగలము.",
+      "insightLabel": "AI ఇన్‌సైట్",
+      "insightDesc": "ఈరోజు ఆరోగ్యకరమైన మట్టి రేపు ఎక్కువ దిగుబడిని ఇస్తుంది. మట్టి ఆరోగ్య కార్డు లేదా త్వరిత కిట్ పరీక్షతో ప్రారంభించండి.",
+      "cta": "మట్టి పరీక్ష ప్రారంభించండి"
     }
   },
   "Register": {
@@ -187,8 +265,26 @@
     "switchLink": "ఇక్కడ సైన్ ఇన్ చేయండి",
     "fullName": "పూర్తి పేరు",
     "phone": "ఫోన్ నంబర్",
+    "namePlaceholder": "రామ్ సింగ్",
+    "phonePlaceholder": "98765 43210",
     "region": "వ్యవసాయ ప్రాంతం",
     "regionPlaceholder": "మీ రాష్ట్రాన్ని ఎంచుకోండి",
+    "district": "జిల్లా",
+    "roleLabel": "పాత్ర",
+    "roles": {
+      "farmer": "రైతు",
+      "provider": "ప్రొవైడర్ (విక్రేత)"
+    },
+    "languageLabel": "యాప్ భాష",
+    "languageOptions": {
+      "en": "English",
+      "hi": "Hindi (हिंदी)",
+      "mr": "Marathi (मराठी)",
+      "pa": "Punjabi (ਪੰਜਾਬੀ)",
+      "bn": "Bengali (বাংলা)",
+      "te": "Telugu (తెలుగు)",
+      "ta": "Tamil (தமிழ்)"
+    },
     "password": "పాస్‌వర్డ్",
     "passwordPlaceholder": "బలమైన పాస్‌వర్డ్‌ను సృష్టించండి",
     "button": "ఖాతాను సృష్టించండి",
@@ -201,24 +297,110 @@
     "trusted": "50,000+ రైతుల నమ్మకం",
     "getOtp": "OTP పొందండి",
     "enterOtp": "6-అంకెల కోడ్‌ను నమోదు చేయండి",
+    "otpPlaceholder": "------",
     "verifyBtn": "ధృవీకరించండి & నమోదు చేయండి",
     "otpSentTo": "కోడ్ SMS ద్వారా ఇక్కడికి పంపబడింది",
-    "back": "వెనుకకు"
+    "back": "వెనుకకు",
+    "errors": {
+      "providerIncomplete": "ప్రొవైడర్ ధృవీకరణ వివరాలు పూర్తిగా లేవు.",
+      "otpSendFailed": "OTP పంపడం విఫలమైంది",
+      "otpInvalid": "దయచేసి సరైన 6 అంకెల OTP నమోదు చేయండి",
+      "registrationFailed": "నమోదు విఫలమైంది"
+    },
+    "providerModal": {
+      "title": "ప్రొవైడర్ ధృవీకరణ",
+      "subtitle": "అధికారిక విక్రేతలు మాత్రమే",
+      "errorRequired": "దయచేసి అవసరమైన ధృవీకరణ వివరాలన్నీ నింపండి.",
+      "shopName": "దుకాణం పేరు",
+      "shopPlaceholder": "ఉదా., కృషి కేంద్రం",
+      "licenseNumber": "ప్రభుత్వ లైసెన్స్ నంబర్",
+      "licensePlaceholder": "పెస్టిసైడ్/ఎరువు లైసెన్స్ నం.",
+      "licenseUrl": "లైసెన్స్ డాక్యుమెంట్ URL",
+      "licenseUrlPlaceholder": "డాక్యుమెంట్ చిత్ర లింక్",
+      "gstNumber": "GST నంబర్",
+      "optional": "(ఐచ్ఛికం)",
+      "cancel": "రద్దు చేయండి",
+      "save": "వివరాలు సేవ్ చేయండి"
+    }
   },
   "Login": {
     "title": "తిరిగి స్వాగతం.",
     "switchText": "కృషిమిత్రకు కొత్తా?",
     "switchLink": "ఖాతాను సృష్టించండి",
     "phone": "ఫోన్ నంబర్",
+    "phonePlaceholder": "98765 43210",
     "password": "పాస్‌వర్డ్",
     "forgot": "పాస్‌వర్డ్ మర్చిపోయారా?",
     "placeholder": "మీ పాస్‌వర్డ్‌ను నమోదు చేయండి",
     "button": "సైన్ ఇన్ చేయండి",
     "loading": "సైన్ ఇన్ అవుతోంది...",
     "success": "ఖాతా విజయవంతంగా సృష్టించబడింది! దయచేసి సైన్ ఇన్ చేయండి.",
+    "authFailed": "అథెంటికేషన్ విఫలమైంది",
+    "back": "వెనక్కి",
     "featureTitle": "స్మార్ట్‌గా పెంచండి, మెరుగ్గా పండించండి.",
     "featureDesc": "మీ వాతావరణాన్ని తనిఖీ చేయండి, మీ పంటలను ఆరోగ్యంగా ఉంచండి మరియు రియల్-టైమ్ మార్కెట్ ధరలను ఒకే చోట పొందండి.",
     "systemStatus": "సిస్టమ్ ఆన్‌లైన్"
+  },
+  "Splash": {
+    "initializing": "సిస్టమ్ ప్రారంభమవుతోంది...",
+    "tagline": "ఆధునిక రైతును శక్తివంతం చేయడం",
+    "skip": "ఇనిషియలైజేషన్‌ను దాటండి",
+    "steps": {
+      "starting": "కృషిమిత్ర ప్రారంభమవుతోంది...",
+      "connectingMarkets": "ప్రాంతీయ మార్కెట్లతో కనెక్ట్ అవుతోంది...",
+      "syncingWeather": "స్థానిక వాతావరణ డేటా సింక్ అవుతోంది...",
+      "preparingInsights": "పంట ఇన్సైట్స్ సిద్ధమవుతున్నాయి...",
+      "securing": "కనెక్షన్ సురక్షితంగా అవుతోంది...",
+      "welcome": "కృషిమిత్రకు స్వాగతం."
+    }
+  },
+  "ImageUpload": {
+    "label": "ప్రోడక్ట్ చిత్రం",
+    "tabs": {
+      "upload": "ఫోటో అప్‌లోడ్ చేయండి",
+      "url": "URL పేస్ట్ చేయండి"
+    },
+    "status": {
+      "uploading": "Cloudinaryకి అప్‌లోడ్ అవుతోంది...",
+      "imageSet": "చిత్రం సెటైంది"
+    },
+    "prompt": {
+      "clickUpload": "అప్‌లోడ్ చేయడానికి క్లిక్ చేయండి",
+      "dragDrop": "లేదా డ్రాగ్ & డ్రాప్ చేయండి",
+      "fileTypes": "PNG, JPG, WEBP — 10MB వరకు",
+      "urlPlaceholder": "https://example.com/image.jpg"
+    },
+    "actions": {
+      "use": "వాడండి"
+    },
+    "alerts": {
+      "invalidFile": "దయచేసి చిత్రం ఫైల్‌ను ఎంచుకోండి.",
+      "uploadFailed": "చిత్రం అప్‌లోడ్ విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి."
+    }
+  },
+  "LocationSelector": {
+    "stateLabel": "రాష్ట్రం",
+    "districtLabel": "జిల్లా",
+    "fromProfile": "ప్రొఫైల్ నుండి",
+    "selectState": "రాష్ట్రాన్ని ఎంచుకోండి",
+    "selectDistrict": "జిల్లాను ఎంచుకోండి"
+  },
+  "ListingContact": {
+    "rateLabel": "రేటు",
+    "perUnit": "/ {unit}",
+    "listenTitle": "వినండి / ఆపండి",
+    "whatsappTitle": "WhatsApp {name}",
+    "callTitle": "Call {name}",
+    "waMessage": "హాయ్ {name}, KrishiMitraలో మీ \"{title}\" లిస్టింగ్‌పై నాకు ఆసక్తి ఉంది.",
+    "units": {
+      "day": "రోజు",
+      "hour": "గంట",
+      "acre": "ఎకరం"
+    },
+    "audio": {
+      "rent": "ఈ రైతు {name}, {state} రాష్ట్రం {district} నుంచి. అతను తన {title}ను అద్దెకు ఇవ్వాలని కోరుకుంటున్నాడు, రేటు {rate} రూపాయలు प्रति {unit}. సంప్రదించేందుకు పచ్చ ఫోన్ ఐకాన్‌పై క్లిక్ చేయండి.",
+      "service": "ఈ రైతు {name}, {state} రాష్ట్రం {district} నుంచి. అతను తన {title}ను సేవ కోసం ఇవ్వాలని కోరుకుంటున్నాడు, రేటు {rate} రూపాయలు प्रति {unit}. సంప్రదించేందుకు పచ్చ ఫోన్ ఐకాన్‌పై క్లిక్ చేయండి."
+    }
   },
   "SellingPools": {
     "title": "సమూహ విక్రయం",
@@ -495,6 +677,7 @@
   "GovernmentSchemes": {
     "title": "ప్రభుత్వ పథకాలు",
     "subtitle": "మీరు సులభంగా దరఖాస్తు చేసుకోగల ప్రభుత్వ సబ్సిడీలు, బీమా మరియు ఆర్థిక సహాయాన్ని కనుగొనండి.",
+    "askSarthi": "సార్థిని అడగండి",
     "searchPlaceholder": "పేరు లేదా రకం ద్వారా పథకాలను వెతకండి...",
     "syncing": "ప్రభుత్వ పోర్టల్‌లను తనిఖీ చేస్తోంది...",
     "errorTitle": "పథకాలను లోడ్ చేయడం సాధ్యపడలేదు",
@@ -516,6 +699,228 @@
       "Insurance": "పంట బీమా",
       "Credit & Loans": "వ్యవసాయ రుణాలు",
       "Other": "ఇతర"
+    }
+  },
+  "SoilLabs": {
+    "back": "మట్టి హబ్‌కు తిరిగి",
+    "badge": "మట్టి పరీక్ష కేంద్రాలు",
+    "title": "మీ Soil Health Card పొందండి",
+    "subtitle": "Soil Health Card (SHC) మీ పొలంలోని పోషక స్థాయులపై విపులమైన విశ్లేషణ అందిస్తుంది. దిగువలో సమీప ప్రభుత్వ ల్యాబ్‌ను కనుగొని, 500g మట్టి నమూనా సమర్పించి మీ అధికారిక ప్రొఫైల్ పొందండి.",
+    "locateTitle": "ల్యాబ్ కనుగొనండి",
+    "selectState": "1. రాష్ట్రాన్ని ఎంచుకోండి",
+    "selectDistrict": "2. జిల్లాను ఎంచుకోండి",
+    "chooseState": "రాష్ట్రాన్ని ఎంచుకోండి...",
+    "chooseDistrict": "జిల్లాను ఎంచుకోండి...",
+    "searching": "వెతుకుతున్నాం...",
+    "findLabs": "ల్యాబ్స్ కనుగొనండి",
+    "howToSample": "మట్టి నమూనా ఎలా తీసుకోవాలి",
+    "steps": {
+      "step1": "15cm లోతుగా V-ఆకారపు గుంత తవ్వండి",
+      "step2": "బయటకు కనిపించే గోడ నుండి మట్టి పొర తీసుకోండి",
+      "step3": "పొలం అంతటా 8-10 చోట్ల నుంచి నమూనాలు తీసుకోండి",
+      "step4": "మిశ్రమం చేసి 500g శుభ్రమైన బ్యాగ్‌లో ఉంచండి",
+      "step5": "బ్యాగ్‌పై పేరు, ఫోన్ మరియు పొల వివరాలు రాయండి"
+    },
+    "noLabsTitle": "ల్యాబ్స్ లభించలేదు",
+    "noLabsDesc": "రాష్ట్రం మరియు జిల్లా ఎంచుకుని శోధిస్తే సమీప ప్రభుత్వ పరీక్ష కేంద్రాలు కనిపిస్తాయి.",
+    "labCard": {
+      "unnamed": "టెస్టింగ్ ల్యాబ్",
+      "unknownDistrict": "తెలియని జిల్లా",
+      "unknownState": "తెలియని రాష్ట్రం"
+    },
+    "errors": {
+      "api": "API లోపం: {message}",
+      "parse": "Parse లోపం. సర్వర్ పంపింది: {snippet}",
+      "network": "నెట్‌వర్క్ లోపం: {message}",
+      "unknown": "తెలియని సర్వర్ లోపం"
+    },
+    "noOptions": "ఎటువంటి ఎంపికలు లేవు"
+  },
+  "MandiPrices": {
+    "title": "మండి తాజా ధరలు",
+    "subtitle": {
+      "locating": "మీ రాష్ట్రాన్ని గుర్తిస్తున్నాం...",
+      "sync": "మీ లొకేషన్‌తో సింక్"
+    },
+    "buttons": {
+      "predictor": "మండి ప్రెడిక్టర్",
+      "ask": "సార్థిని అడగండి",
+      "export": "CSV డౌన్‌లోడ్"
+    },
+    "filters": {
+      "commodity": "పంట",
+      "state": "రాష్ట్రం",
+      "district": "జిల్లా",
+      "districtPlaceholder": "జిల్లా పేరు టైప్ చేయండి..."
+    },
+    "columns": {
+      "commodityVariety": "పంట & రకం",
+      "marketLocation": "మండి & స్థానం",
+      "priceModal": "మోడల్ ధర"
+    },
+    "loading": {
+      "locating": "లొకేషన్ గుర్తిస్తోంది...",
+      "fetching": "తాజా ధరలు లోడ్ అవుతున్నాయి..."
+    },
+    "error": {
+      "title": "ధరలు లోడ్ కాలేదు",
+      "connect": "మండి డేటా సోర్స్‌కు కనెక్ట్ కాలేకపోయాం.",
+      "invalidFormat": "మండి డేటా ఫార్మాట్ తప్పు.",
+      "fetchFailed": "మండి ధరలు తీసుకురాలేకపోయాం."
+    },
+    "empty": {
+      "title": "ధరలు లభించలేదు",
+      "desc": "ఫిల్టర్లను మార్చి మళ్లీ ప్రయత్నించండి."
+    },
+    "labels": {
+      "modalPrice": "మోడల్ ధర",
+      "variety": "రకం",
+      "varietyFallback": "అందుబాటులో లేదు",
+      "listen": "ధర వినండి"
+    },
+    "csv": {
+      "commodity": "పంట",
+      "variety": "రకం",
+      "state": "రాష్ట్రం",
+      "district": "జిల్లా",
+      "market": "మండి",
+      "minPrice": "కనిష్ఠ ధర",
+      "maxPrice": "గరిష్ఠ ధర",
+      "modalPrice": "మోడల్ ధర",
+      "date": "తేదీ"
+    },
+    "states": {
+      "all": "అన్ని రాష్ట్రాలు",
+      "uttarPradesh": "ఉత్తర ప్రదేశ్",
+      "punjab": "పంజాబ్",
+      "haryana": "హర్యానా",
+      "maharashtra": "మహారాష్ట్ర",
+      "madhyaPradesh": "మధ్య ప్రదేశ్",
+      "gujarat": "గుజరాత్",
+      "rajasthan": "రాజస్థాన్",
+      "karnataka": "కర్ణాటక",
+      "andhraPradesh": "ఆంధ్ర ప్రదేశ్",
+      "westBengal": "పడమర బెంగాల్",
+      "bihar": "బిహార్",
+      "kerala": "కేరళ",
+      "tamilNadu": "తమిళనాడు"
+    },
+    "commodities": {
+      "all": "అన్ని పంటలు",
+      "wheat": "గోధుమ",
+      "paddy": "వరి (ధాన్)",
+      "potato": "ఆలుగడ్డ",
+      "onion": "ఉల్లి",
+      "tomato": "టమోటా",
+      "mustard": "ఆవాలు",
+      "cotton": "పత్తి",
+      "sugarcane": "చెక్కర చెరకు",
+      "soyabean": "సోయాబీన్",
+      "maize": "మొక్కజొన్న",
+      "apple": "ఆపిల్"
+    }
+  },
+  "SoilHub": {
+    "badge": "మట్టి తెలివి",
+    "heroTitle": "మీ మట్టిని తెలుసుకోండి,",
+    "heroTitleHighlight": "మంచి పంటలు పండించండి.",
+    "heroSubtitle": "ప్రతి పొలానికి ప్రొఫైల్ సృష్టించండి. పరిస్థితులు పరీక్షించండి, Soil Health Card అప్లోడ్ చేసి AI సూచనలు పొందండి.",
+    "howItWorks": "ఇది ఎలా పనిచేస్తుంది",
+    "steps": {
+      "register": {
+        "title": "మీ పొలం నమోదు చేయండి",
+        "desc": "పేరు, స్థలం, విస్తీర్ణం & మట్టి రకం జోడించండి"
+      },
+      "test": {
+        "title": "pH & తేమ పరీక్షించండి",
+        "desc": "డేటా నమోదు చేయండి లేదా ఫీల్డ్ టెస్టర్ షెడ్యూల్ చేయండి"
+      },
+      "upload": {
+        "title": "Soil Health Card అప్లోడ్ చేయండి",
+        "desc": "AI ఫోటో నుంచి NPK విలువలు చదువుతుంది"
+      },
+      "report": {
+        "title": "స్మార్ట్ రిపోర్ట్ పొందండి",
+        "desc": "పంట సూచనలు, స్కోర్ & పరిష్కారాలు"
+      }
+    },
+    "cta": {
+      "addFirst": "మొదటి పొలం జోడించండి",
+      "addLand": "పొలం జోడించండి",
+      "addNewLand": "కొత్త పొలం జోడించండి"
+    },
+    "labCta": {
+      "needTitle": "Soil Health Card కావాలా?",
+      "noCardTitle": "Soil Health Card లేదు?",
+      "desc": "మీ దగ్గర ప్రభుత్వ మట్టి పరీక్ష ల్యాబ్‌ను కనుగొనండి.",
+      "button": "ల్యాబ్ కనుగొనండి"
+    },
+    "header": {
+      "title": "నా పొలాలు",
+      "fields": "{count, plural, one {# పొలం} other {# పొలాలు}}",
+      "needsAttention": "{count, plural, one {# కు దృష్టి అవసరం} other {# కు దృష్టి అవసరం}}"
+    },
+    "addModal": {
+      "title": "పొలం జోడించండి",
+      "landName": {
+        "label": "పొలం పేరు",
+        "placeholder": "ఉదా. ఉత్తర పొలం"
+      },
+      "area": {
+        "label": "విస్తీర్ణం (ఎకరాలు)",
+        "placeholder": "2.5"
+      },
+      "soilType": "మట్టి రకం",
+      "soilTypePlaceholder": "ఎంచుకోండి...",
+      "location": "స్థానం",
+      "statePlaceholder": "రాష్ట్రం *",
+      "districtPlaceholder": "జిల్లా *",
+      "villagePlaceholder": "గ్రామం (ఐచ్చికం)",
+      "errors": {
+        "landName": "పొలానికి పేరు ఇవ్వండి",
+        "stateDistrict": "రాష్ట్రం మరియు జిల్లా అవసరం"
+      },
+      "submit": {
+        "creating": "సృష్టిస్తున్నాం...",
+        "createContinue": "సృష్టించి కొనసాగించండి"
+      }
+    },
+    "soilTypes": {
+      "alluvial": "జలరేణు",
+      "black": "నల్ల మట్టి",
+      "red": "ఎర్ర మట్టి",
+      "laterite": "లేటరైట్",
+      "sandy": "ఇసుక మట్టి",
+      "clay": "బంక మట్టి",
+      "loamy": "లోమీ"
+    }
+  },
+  "SoilLandCard": {
+    "status": {
+      "completeSetup": "సెట్‌అప్ పూర్తి చేయండి",
+      "addSoilTest": "మట్టి పరీక్ష డేటా జోడించండి",
+      "testScheduled": "టెస్ట్ షెడ్యూల్ అయ్యింది",
+      "uploadHealthCard": "హెల్త్ కార్డ్ అప్లోడ్ చేయండి",
+      "generateReport": "రిపోర్ట్ సృష్టించండి",
+      "viewReport": "రిపోర్ట్ చూడండి",
+      "retestNeeded": "మళ్లీ పరీక్ష అవసరం"
+    },
+    "badges": {
+      "retestDue": "రీటెస్ట్ డ్యూ",
+      "setup": "సెట్‌అప్"
+    },
+    "tags": {
+      "acres": "ఎకరాలు",
+      "ph": "pH {value}"
+    },
+    "soilTypes": {
+      "alluvial": "జలరేణు",
+      "black": "నల్ల మట్టి",
+      "red": "ఎర్ర మట్టి",
+      "laterite": "లేటరైట్",
+      "sandy": "ఇసుక మట్టి",
+      "clay": "బంక మట్టి",
+      "loamy": "లోమీ"
     }
   },
   "Soil": {
@@ -616,7 +1021,7 @@
       "required": "అవసరం: పొలం పేరు, రాష్ట్రం, జిల్లా."
     },
     "errors": {
-      "required": "Please fill land name, state, and district."
+      "required": "భూమి పేరు, రాష్ట్రం, జిల్లా తప్పనిసరిగా నింపండి."
     },
     "step2": {
       "stepLabel": "దశ 2 / 4",
@@ -641,7 +1046,7 @@
         "badge": "త్వరిత",
         "help": "మాకు pH మరియు తేమ మాత్రమే అవసరం.",
         "errors": {
-          "required": "Enter pH and moisture values before saving."
+          "required": "సేవ్ చేసే ముందు pH మరియు తేమ విలువలు జోడించండి."
         }
       },
       "kit": {
@@ -654,17 +1059,40 @@
           "uploadTitle": "కిట్ ఉంది",
           "uploadDesc": "ఇప్పుడు ఫోటో అప్‌లోడ్ చేయండి."
         },
+        "orderSummaryTitle": "ఆర్డర్ సారాంశం",
+        "orderItemTitle": "మట్టి పరీక్ష స్ట్రిప్ కిట్",
+        "orderItemDesc": "pH మరియు తేమ చదవడానికి అవసరమైన అన్ని వస్తువులు.",
+        "orderPaymentLabel": "చెల్లింపు",
+        "orderPaymentValue": "డెలివరీపై నగదు",
+        "orderPrice": "కిట్ వచ్చినప్పుడు చెల్లించండి.",
+        "shippingTitle": "షిప్పింగ్ చిరునామా",
+        "shippingHelp": "షిప్పింగ్ కోసం మీ చిరునామా జోడించండి.",
+        "orderStatusLabel": "ఆర్డర్ నిర్ధారించబడింది",
+        "viewTracking": "ఆర్డర్ ట్రాక్ చేయండి",
+        "trackingTitle": "ఆర్డర్ ట్రాకింగ్",
+        "trackingHelp": "డెలివరీ స్థితిని మేము ఆటోమేటిక్‌గా అప్‌డేట్ చేస్తాం.",
+        "orderIdLabel": "ట్రాకింగ్ ఐడి",
+        "orderDateLabel": "ఆర్డర్ తేదీ",
+        "etaLabel": "అంచనా సమయం",
+        "etaDefault": "3-5 రోజులు",
+        "tracking": {
+          "ordered": "ఆర్డర్ అయింది",
+          "packed": "ప్యాక్ అయింది",
+          "shipped": "షిప్ అయింది",
+          "outForDelivery": "డెలివరీకి బయలుదేరింది",
+          "delivered": "డెలివరీ అయింది"
+        },
         "errors": {
-          "formInvalid": "Please fill all required fields.",
-          "name": "Enter farmer name.",
-          "phone": "Enter phone number.",
-          "phoneInvalid": "Enter a 10-digit phone number.",
-          "line1": "Enter address line.",
-          "village": "Enter village.",
-          "district": "Enter district.",
-          "state": "Enter state.",
-          "pincode": "Enter pincode.",
-          "pincodeInvalid": "Enter a 6-digit pincode."
+          "formInvalid": "దయచేసి అవసరమైన చిరునామా వివరాలన్నీ నింపండి.",
+          "name": "రైతు పేరు నమోదు చేయండి.",
+          "phone": "ఫోన్ నంబర్ నమోదు చేయండి.",
+          "phoneInvalid": "ఫోన్ నంబర్ 10 అంకెలు ఉండాలి.",
+          "line1": "చిరునామా/వీధి వివరాలు నమోదు చేయండి.",
+          "village": "గ్రామం పేరు నమోదు చేయండి.",
+          "district": "జిల్లా నమోదు చేయండి.",
+          "state": "రాష్ట్రం నమోదు చేయండి.",
+          "pincode": "పిన్‌కోడ్ నమోదు చేయండి.",
+          "pincodeInvalid": "పిన్‌కోడ్ 6 అంకెలు ఉండాలి."
         },
         "steps": {
           "step1": "కిట్ ఆర్డర్ చేయండి",
@@ -769,6 +1197,22 @@
       "finalSaveFailed": "నివేదిక సేవ్ కాలేదు.",
       "dismissError": "తప్పు మూసివేయండి",
       "dismissMessage": "సందేశం మూసివేయండి"
+    },
+    "report": {
+      "executiveSummary": "ఎగ్జిక్యూటివ్ సారాంశం",
+      "analysisComplete": "ఏఐ విశ్లేషణ పూర్తైంది. కింది మెట్రిక్స్ చూడండి.",
+      "soilChemistry": "మట్టి రసాయన ప్రొఫైల్",
+      "nitrogen": "నైట్రోజన్ (N)",
+      "phosphorus": "ఫాస్ఫరస్ (P)",
+      "potassium": "పొటాషియం (K)",
+      "organicCarbon": "సేంద్రీయ కార్బన్ (OC)",
+      "low": "తక్కువ",
+      "high": "ఎక్కువ",
+      "actionPlan": "చర్యా ప్రణాళిక",
+      "recommendedCrops": "సిఫార్సు చేసిన పంటలు",
+      "match": "సరిపోలిక",
+      "seasonLabel": "సీజన్",
+      "fertilizerGuide": "ఎరువు మార్గదర్శకం"
     }
   }
 }

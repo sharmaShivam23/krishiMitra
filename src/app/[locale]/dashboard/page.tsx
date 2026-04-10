@@ -46,9 +46,9 @@ const WEATHER_CODES: Record<number, { label: string; emoji: string }> = {
 ═══════════════════════════════════════════════════════ */
 const getCurrentSeason = () => {
   const m = new Date().getMonth() + 1;
-  if (m >= 6 && m <= 10) return { name: 'Kharif', emoji: '🌧️', color: 'bg-blue-900/60 text-blue-300 border-blue-500/30' };
-  if (m >= 11 || m <= 3)  return { name: 'Rabi',   emoji: '❄️', color: 'bg-indigo-900/60 text-indigo-300 border-indigo-500/30' };
-  return { name: 'Zaid', emoji: '☀️', color: 'bg-amber-900/60 text-amber-300 border-amber-500/30' };
+  if (m >= 6 && m <= 10) return { key: 'kharif', emoji: '🌧️', color: 'bg-blue-900/60 text-blue-300 border-blue-500/30' };
+  if (m >= 11 || m <= 3)  return { key: 'rabi',   emoji: '❄️', color: 'bg-indigo-900/60 text-indigo-300 border-indigo-500/30' };
+  return { key: 'zaid', emoji: '☀️', color: 'bg-amber-900/60 text-amber-300 border-amber-500/30' };
 };
 
 
@@ -58,47 +58,47 @@ const getCurrentSeason = () => {
 const QUICK_TILES = [
   {
     id: 'mandi',
-    label: 'Mandi Prices',
-    sub: 'Live market rates',
+    labelKey: 'tiles.mandi.label',
+    subKey: 'tiles.mandi.sub',
     icon: BarChart3,
     href: '/dashboard/mandi-prices',
     image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop',
     accent: 'from-amber-500/70 to-orange-600/70',
     glow: 'shadow-amber-900/40',
-    chip: '🌾 Today',
+    chipKey: 'tiles.mandi.chip',
   },
   {
     id: 'disease',
-    label: 'Crop Doctor',
-    sub: 'AI disease detection',
+    labelKey: 'tiles.disease.label',
+    subKey: 'tiles.disease.sub',
     icon: Microscope,
     href: '/dashboard/disease-detection',
     image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=800&auto=format&fit=crop',
     accent: 'from-emerald-600/70 to-green-700/70',
     glow: 'shadow-emerald-900/40',
-    chip: '🔬 AI Scan',
+    chipKey: 'tiles.disease.chip',
   },
   {
     id: 'lifecycle',
-    label: 'Crop Lifecycle',
-    sub: 'Growth planner',
+    labelKey: 'tiles.lifecycle.label',
+    subKey: 'tiles.lifecycle.sub',
     icon: Sprout,
     href: '/dashboard/crop-lifecycle',
     image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=800&auto=format&fit=crop',
     accent: 'from-green-600/70 to-teal-700/70',
     glow: 'shadow-green-900/40',
-    chip: '🌱 Plan',
+    chipKey: 'tiles.lifecycle.chip',
   },
   {
     id: 'advisor',
-    label: 'AI Advisor',
-    sub: 'Smart recommendations',
+    labelKey: 'tiles.advisor.label',
+    subKey: 'tiles.advisor.sub',
     icon: Brain,
     href: '/dashboard/mandi-prices/mandi-advisor',
     image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800&auto=format&fit=crop',
     accent: 'from-violet-600/70 to-purple-700/70',
     glow: 'shadow-violet-900/40',
-    chip: '🤖 Smart',
+    chipKey: 'tiles.advisor.chip',
   },
 ];
 
@@ -139,6 +139,7 @@ export default function DashboardOverview() {
   const [isLoadingWeather, setIsLoadingWeather] = useState(true);
 
   const season = getCurrentSeason();
+  const seasonName = t(`seasons.${season.key}`);
 
   /* ── Format date consistently (client-side only) ── */
   const formatDateConsistently = (date: Date) => {
@@ -162,9 +163,9 @@ export default function DashboardOverview() {
 
   const greeting = () => {
     const h = currentTime.getHours();
-    if (h < 12) return 'Good Morning';
-    if (h < 17) return 'Good Afternoon';
-    return 'Good Evening';
+    if (h < 12) return t('greetings.morning');
+    if (h < 17) return t('greetings.afternoon');
+    return t('greetings.evening');
   };
 
 
@@ -285,19 +286,19 @@ export default function DashboardOverview() {
           <div>
             {/* Season badge */}
             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest border mb-3 ${season.color}`}>
-              <span>{season.emoji}</span> {season.name} Season
+              <span>{season.emoji}</span> {t('seasonBadge', { season: seasonName })}
             </div>
 
             {/* Greeting */}
             <h1 className="text-2xl md:text-4xl font-black text-white leading-tight">
               {greeting()},{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-amber-400">
-                {userName ? `${userName}!` : 'Kisan!'}
+                {userName ? `${userName}!` : `${t('greetings.fallbackName')}!`}
               </span>
             </h1>
             <p className="text-emerald-200/70 mt-1.5 flex items-center gap-1.5 font-semibold text-sm">
               <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              {locationName} · {formattedDate || 'Loading...'}
+              {locationName} · {currentTime.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
             </p>
           </div>
 
@@ -332,12 +333,12 @@ export default function DashboardOverview() {
             <div className="relative z-10 p-4 h-full flex flex-col justify-between">
               {/* Chip */}
               <span className="self-start text-[10px] font-black bg-white/15 backdrop-blur-sm border border-white/20 px-2 py-0.5 rounded-full text-white">
-                {tile.chip}
+                {t(tile.chipKey)}
               </span>
               <div>
                 <tile.icon className="w-6 h-6 text-white mb-1.5 drop-shadow-md" />
-                <div className="text-white font-black text-base leading-tight drop-shadow-md">{tile.label}</div>
-                <div className="text-white/70 text-[11px] font-semibold mt-0.5">{tile.sub}</div>
+                <div className="text-white font-black text-base leading-tight drop-shadow-md">{t(tile.labelKey)}</div>
+                <div className="text-white/70 text-[11px] font-semibold mt-0.5">{t(tile.subKey)}</div>
               </div>
             </div>
           </Link>
@@ -356,36 +357,30 @@ export default function DashboardOverview() {
 
           <div className="relative z-10 flex flex-col h-full">
             <div className="flex items-start justify-between mb-3">
-              <h3 className="font-bold text-sky-100 text-sm uppercase tracking-wider">Live Weather</h3>
-              <div className="w-10 h-10 rounded-2xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-xl">
-                {isLoadingWeather ? '🌡️' : (weather?.emoji ?? '🌡️')}
+              <h3 className="font-bold text-emerald-100 text-sm uppercase tracking-wider">{t('soilCard.eyebrow')}</h3>
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center">
+                <Thermometer className="w-5 h-5 text-emerald-200" />
               </div>
             </div>
 
-            {isLoadingWeather ? (
-              <div className="flex-1 flex items-center justify-center py-4">
-                <Loader2 className="w-8 h-8 animate-spin text-sky-400" />
-              </div>
-            ) : weather ? (
-              <>
-                <div className="text-4xl font-black leading-tight mb-1">{weather.temp}°C</div>
-                <p className="text-sky-100/80 text-sm font-semibold mb-4">
-                  {weather.condition} · {locationName.split(',')[0]}
-                </p>
-                <div className="flex flex-wrap gap-2 text-[11px] font-bold mb-4">
-                  <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">💧 {weather.humidity}%</span>
-                  <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">💨 {weather.wind} km/h</span>
-                </div>
-              </>
-            ) : (
-              <p className="text-sky-100/60 text-sm font-semibold mb-4 flex-1">Weather data unavailable</p>
-            )}
+            <div className="text-2xl font-black leading-tight mb-2">
+              {t('soilCard.title')}
+            </div>
+            <p className="text-emerald-100/70 text-sm font-semibold mb-4">
+              {t('soilCard.description')}
+            </p>
+
+            <div className="flex flex-wrap gap-2 text-[11px] font-bold mb-4">
+              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">{t('soilCard.tags.ph')}</span>
+              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">{t('soilCard.tags.npk')}</span>
+              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">{t('soilCard.tags.soilType')}</span>
+            </div>
 
             <Link
               href={`/${locale}/dashboard/weather`}
               className="mt-auto inline-flex items-center justify-center gap-2 bg-sky-400 text-sky-950 px-4 py-2.5 rounded-2xl font-black hover:bg-sky-300 transition-all shadow-lg active:scale-95"
             >
-              🌦️ Full Forecast <ArrowRight className="w-4 h-4" />
+              {t('soilCard.cta')} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </motion.div>
@@ -411,7 +406,7 @@ export default function DashboardOverview() {
                   {t('deployment.dayTracker', { current: 42, total: 120 })}
                 </span>
                 <span className={`px-2.5 py-1 text-[10px] font-black rounded-full border ${season.color}`}>
-                  {season.emoji} {season.name}
+                  {season.emoji} {seasonName}
                 </span>
               </div>
             </div>
@@ -442,7 +437,7 @@ export default function DashboardOverview() {
 
             <div className="mt-auto">
               <div className="flex justify-between items-center mb-1.5">
-                <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Growth Progress</span>
+                <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('growthProgress')}</span>
                 <span className="text-xs font-black text-emerald-600">{t('deployment.harvestProgress', { percent: 35 })}</span>
               </div>
               <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
@@ -547,15 +542,15 @@ export default function DashboardOverview() {
               <ShieldCheck className="w-5 h-5 text-emerald-400" />
               <h3 className="text-lg font-black">{t('aiAssistant.title')}</h3>
             </div>
-            <p className="text-emerald-100/60 text-sm mb-6">Personalized advice based on your soil, crop, and location.</p>
+            <p className="text-emerald-100/60 text-sm mb-6">{t('aiPanel.intro')}</p>
 
             <div className="space-y-3">
               <div className="bg-white/8 border border-white/10 rounded-2xl p-4 flex items-start gap-3">
                 <AlertTriangle className="w-4 h-4 text-amber-300 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-black text-amber-200">Add soil profile for best accuracy</h4>
+                  <h4 className="text-sm font-black text-amber-200">{t('aiPanel.alertTitle')}</h4>
                   <p className="text-xs text-emerald-100/60 mt-1">
-                    Once we have pH and NPK, we can recommend crops, fertilizer, and irrigation.
+                    {t('aiPanel.alertDesc')}
                   </p>
                 </div>
               </div>
@@ -564,10 +559,10 @@ export default function DashboardOverview() {
               <div className="bg-white/5 border border-white/8 rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Brain className="w-4 h-4 text-violet-400" />
-                  <span className="text-xs font-black text-violet-300 uppercase tracking-wider">AI Insight</span>
+                  <span className="text-xs font-black text-violet-300 uppercase tracking-wider">{t('aiPanel.insightLabel')}</span>
                 </div>
                 <p className="text-xs text-emerald-100/70 leading-relaxed">
-                  Healthy soil today means higher yield tomorrow. Start with your soil health card or a quick kit test.
+                  {t('aiPanel.insightDesc')}
                 </p>
               </div>
             </div>
@@ -576,7 +571,7 @@ export default function DashboardOverview() {
           <Link href={`/${locale}/dashboard/soil-intelligence`}>
             <button className="relative z-10 mt-6 w-full bg-emerald-400 hover:bg-amber-400 text-emerald-950 font-black py-3.5 rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2 group">
               <Brain className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              Start Soil Check
+              {t('aiPanel.cta')}
             </button>
           </Link>
         </motion.div>

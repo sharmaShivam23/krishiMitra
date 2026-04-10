@@ -430,7 +430,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </nav>
 
       {/* 📦 MAIN CONTENT AREA */}
-      <main className={`flex-1 md:ml-72 w-full ${isSchemesPage ? 'pb-24 md:pb-0 bg-[#021c17] min-h-[100dvh]' : 'pb-36 md:pb-0'} overflow-x-hidden relative`}>
+      <main className={`flex-1 md:ml-72 w-full ${isSchemesPage ? 'pb-24 md:pb-0 md:bg-[#021c17] min-h-[100dvh]' : 'pb-36 md:pb-0'} overflow-x-hidden relative`}>
         {!isSchemesPage && (
           <header className="md:hidden fixed top-0 left-0 right-0 flex items-center justify-between px-3.5 py-3 bg-white/95 backdrop-blur-md border-b border-agri-100 z-50 shadow-[0_6px_24px_rgba(2,44,34,0.08)]">
             <div className="flex items-center space-x-2 min-w-0">
