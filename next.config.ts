@@ -12,8 +12,8 @@ const securityHeaders = [
   { key: 'X-XSS-Protection', value: '1; mode=block' },
   // Referrer leakage prevention
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-  // Feature restrictions
-  { key: 'Permissions-Policy', value: 'microphone=(), camera=()' },
+  // Feature restrictions - FIXED: Allows self to use camera and microphone
+  { key: 'Permissions-Policy', value: 'microphone=(self), camera=(self)' },
   // HSTS – force HTTPS for 2 years
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
   // Content Security Policy
@@ -46,6 +46,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // FIXED: Prevents double-mounting in dev which locks the camera hardware
+  reactStrictMode: false, 
   output: 'standalone',
 
   // Attach security headers to every page + API response

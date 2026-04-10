@@ -76,37 +76,68 @@ export default function DiseaseDetection() {
 
     cameraAbortRef.current = false;
 
-    const initCamera = async () => {
-      setError('');
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' },
-          audio: true
-        });
+   const initCamera = async () => {
+    setError('');
+    try {
+      // 1st Attempt: Try to get the rear camera (Ideal for mobile farmers)
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' },
+        audio: true
+      });
 
-        if (cameraAbortRef.current) {
-          stream.getTracks().forEach(t => t.stop());
-          return;
-        }
+      if (cameraAbortRef.current) {
+        stream.getTracks().forEach(t => t.stop());
+        return;
+      }
 
-        streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (err: any) {
-        if (cameraAbortRef.current) return;
-        console.error('Camera error:', err.name, err.message);
-        if (err.name === 'NotAllowedError') {
-          setError('Camera permission denied. Please allow camera access in your browser settings and reload.');
-        } else if (err.name === 'NotFoundError') {
-          setError('No camera found. Please connect a camera and try again.');
-        } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-          setError('Camera is in use by another app. Close Zoom, Teams, or other camera apps and try again.');
-        } else {
-          setError(`Camera error: ${err.message}`);
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err: any) {
+      if (cameraAbortRef.current) return;
+      console.warn('Initial camera attempt failed:', err.name, err.message);
+
+      // Fallback: If 'environment' fails or is rejected, try the default desktop webcam
+      if (err.name === 'NotAllowedError' || err.name === 'OverconstrainedError') {
+        try {
+          const fallbackStream = await navigator.mediaDevices.getUserMedia({
+            video: true, // No facingMode constraint, just give me ANY camera
+            audio: true
+          });
+
+          if (cameraAbortRef.current) {
+            fallbackStream.getTracks().forEach(t => t.stop());
+            return;
+          }
+
+          streamRef.current = fallbackStream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = fallbackStream;
+          }
+          return; // Success on fallback, exit the function
+        } catch (fallbackErr: any) {
+          // If fallback also fails, override the error so our UI shows the final reason
+          err = fallbackErr; 
         }
       }
-    };
+
+      // ---------------------------------------------
+      // Existing Error Handling logic below
+      // ---------------------------------------------
+      console.error('Camera error:', err.name, err.message);
+      
+      if (err.name === 'NotAllowedError') {
+        setError('Camera permission denied. Please check your Windows Privacy settings and browser settings, then reload.');
+      } else if (err.name === 'NotFoundError') {
+        setError('No camera found. Please connect a camera and try again.');
+      } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+        setError('Camera is in use by another app. Close Zoom, Teams, or other camera apps and try again.');
+      } else {
+        setError(`Camera error: ${err.message}`);
+      }
+    }
+  };
 
     initCamera();
 
