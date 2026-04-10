@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { 
@@ -20,11 +20,15 @@ const STATES = ['Uttar Pradesh', 'Punjab', 'Haryana', 'Maharashtra', 'Madhya Pra
 export default function PostListing() {
   const t = useTranslations('PostListing');
   const router = useRouter();
+  const searchParams = useSearchParams();
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [offlineQueued, setOfflineQueued] = useState(false);
+  const [listingId, setListingId] = useState<string | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [fetchError, setFetchError] = useState('');
 
   const [formData, setFormData] = useState({
     listingType: 'rent',
@@ -38,6 +42,63 @@ export default function PostListing() {
     images: [] as string[],
     imageUrl: '',
   });
+
+  useEffect(() => {
+    const id = searchParams.get('listingId');
+    if (!id) {
+      setListingId(null);
+      setIsEditMode(false);
+      return;
+    }
+
+    setListingId(id);
+    setIsEditMode(true);
+    setLoading(true);
+    setFetchError('');
+
+    const loadListing = async () => {
+      try {
+        const res = await fetch(`/api/listings/${id}`, { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || 'Unable to load listing.');
+        }
+
+        const listing = data.listing;
+        setFormData({
+          listingType: listing.listingType || 'rent',
+          title: listing.title || '',
+          description: listing.description || '',
+          category: listing.category || 'Tractor',
+          pricing: {
+            rate: listing.pricing?.rate?.toString() || '',
+            unit: listing.pricing?.unit || 'per day',
+          },
+          equipment: {
+            name: listing.equipment?.name || '',
+            condition: listing.equipment?.condition || 'Good',
+          },
+          serviceDetails: {
+            jobType: listing.serviceDetails?.jobType || '',
+            estimatedCapacity: listing.serviceDetails?.estimatedCapacity || '',
+          },
+          location: {
+            state: listing.location?.state || '',
+            district: listing.location?.district || '',
+            village: listing.location?.village || '',
+          },
+          images: listing.images || [],
+          imageUrl: listing.images?.[0] || '',
+        });
+      } catch (err: any) {
+        setFetchError(err.message || 'Unable to load listing.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadListing();
+  }, [searchParams]);
 
   const handleTypeChange = (type: 'rent' | 'service') => {
     setFormData({ 
@@ -74,16 +135,20 @@ export default function PostListing() {
         images: formData.imageUrl ? [formData.imageUrl] : []
       };
 
-      if (!navigator.onLine) {
+      if (!navigator.onLine && !isEditMode) {
         addToQueue('listing', '/api/listing', 'POST', payload);
         setOfflineQueued(true);
         setLoading(false);
         return;
       }
 
-      const res = await fetch('/api/listing', {
-        method: 'POST',
+      const url = listingId ? `/api/listings/${listingId}` : '/api/listing';
+      const method = listingId ? 'PATCH' : 'POST';
+
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(payload)
       });
 
@@ -102,11 +167,10 @@ export default function PostListing() {
       setSuccess(true);
       setTimeout(() => {
         router.push('/dashboard/Services');
-        router.refresh();
       }, 2000);
 
     } catch (err: any) {
-      if (!navigator.onLine) {
+      if (!navigator.onLine && !isEditMode) {
         const payload = {
           ...formData,
           pricing: { ...formData.pricing, rate: Number(formData.pricing.rate) },
@@ -131,7 +195,7 @@ export default function PostListing() {
             <ArrowLeft className="w-4 h-4 mr-1.5" /> {t('back')}
           </Link>
           <h1 className="text-3xl font-black text-gray-900 tracking-tight flex items-center">
-            {t('title')}
+            {isEditMode ? t('editTitle') : t('title')}
           </h1>
           <p className="text-gray-500 mt-2 font-medium">
             {t('subtitle')}
@@ -170,6 +234,11 @@ export default function PostListing() {
           <form onSubmit={handleSubmit} className="p-6 md:p-10 space-y-8">
             
             <AnimatePresence mode="wait">
+              {fetchError && !error && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl flex items-start text-sm font-bold">
+                  <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" /> {fetchError}
+                </motion.div>
+              )}
               {error && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl flex items-start text-sm font-bold">
                   <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" /> {error}
@@ -177,7 +246,7 @@ export default function PostListing() {
               )}
               {success && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-xl flex items-start text-sm font-bold">
-                  <CheckCircle2 className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" /> {t('successMsg')}
+                  <CheckCircle2 className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" /> {isEditMode ? t('successUpdateMsg') : t('successMsg')}
                 </motion.div>
               )}
               {offlineQueued && (
@@ -315,7 +384,7 @@ export default function PostListing() {
                   formData.listingType === 'rent' ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/30' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-600/30'
                 } disabled:opacity-70 disabled:cursor-not-allowed`}
               >
-                {loading ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {t('publishing')}</> : t('publishListing')}
+                {loading ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> {isEditMode ? t('updating') : t('publishing')}</> : (isEditMode ? t('updateListing') : t('publishListing'))}
               </button>
             </div>
 

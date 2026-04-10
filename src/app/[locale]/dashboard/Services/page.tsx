@@ -48,6 +48,8 @@ export default function EquipmentExchange() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentUser, setCurrentUser] = useState<{ _id: string; name?: string } | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [currentUser, setCurrentUser] = useState<{ _id: string; name?: string } | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -87,6 +89,43 @@ export default function EquipmentExchange() {
     const handler = setTimeout(() => setDebouncedSearch(searchQuery), 500);
     return () => clearTimeout(handler);
   }, [searchQuery]);
+
+  useEffect(() => {
+    const loadCurrentUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.user) {
+          setCurrentUser(data.user);
+        }
+      } catch {
+        // ignore silently
+      }
+    };
+
+    loadCurrentUser();
+  }, []);
+
+  const handleDeleteListing = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this listing?')) return;
+
+    try {
+      setDeletingId(id);
+      const res = await fetch(`/api/listings/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || 'Unable to delete listing.');
+
+      setListings(prev => prev.filter(listing => listing._id !== id));
+    } catch (err: any) {
+      window.alert(err.message || 'Unable to delete listing.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   useEffect(() => {
     const fetchListings = async () => {

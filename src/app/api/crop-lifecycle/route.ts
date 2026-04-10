@@ -39,6 +39,9 @@ export async function GET(req: Request) {
 // ==========================================
 // POST: Generate a new AI plan using Gemini
 // ==========================================
+// ==========================================
+// POST: Generate a new AI plan using Gemini (WITH AUTO-RETRY)
+// ==========================================
 export async function POST(req: Request) {
   try {
     const cookieStore = await cookies();
@@ -61,9 +64,6 @@ export async function POST(req: Request) {
     const localeCode = cookieStore.get('preferredLocale')?.value || 'en';
     const aiLanguage = getAiLanguage(localeCode);
 
-    // Call Gemini with the localized prompt
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-    
     // UPDATED PROMPT: Added strict Indian agriculture seasonality rules
     const prompt = `
       You are an expert Indian agronomist. 
@@ -97,8 +97,33 @@ export async function POST(req: Request) {
       Include 10 to 15 critical stages: Land Preparation, Seed Treatment, Sowing, First Irrigation, Fertilization, Weed Control, Disease Check, and Harvesting. Use realistic day offsets. Priorities must be exactly "high", "medium", or "low".
     `;
 
-    const result = await model.generateContent(prompt);
-    let aiText = result.response.text().trim();
+    // 🚀 BULLETPROOF RETRY LOGIC
+    let aiText = "";
+    let attempts = 0;
+    const maxRetries = 3;
+
+    while (attempts < maxRetries) {
+      try {
+        // First try the newest model, if it fails on attempt 3, fallback to the stable 1.5 model
+        const modelName = attempts === maxRetries - 1 ? "gemini-1.5-flash" : "gemini-2.5-flash";
+        const model = genAI.getGenerativeModel({ model: modelName });
+        
+        const result = await model.generateContent(prompt);
+        aiText = result.response.text().trim();
+        break; // If successful, exit the retry loop
+        
+      } catch (apiError: any) {
+        attempts++;
+        console.warn(`⚠️ Gemini API Attempt ${attempts} failed:`, apiError.message);
+        
+        if (attempts >= maxRetries) {
+          throw new Error("Google AI servers are currently overloaded. Please try again in a few minutes.");
+        }
+        
+        // Wait 1.5 seconds before retrying (Exponential Backoff approach)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+      }
+    }
     
     let parsedData;
     try {
@@ -140,45 +165,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, activeCrop: newActiveCrop, warning: warningText });
   } catch (error: any) {
     console.error("Gemini/DB Error:", error);
-    return NextResponse.json({ success: false, error: "Failed to generate plan. Please try again." }, { status: 500 });
-  }
-}
-
-// ==========================================
-// DELETE: Remove an active crop plan
-// ==========================================
-export async function DELETE(req: Request) {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('auth_token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ success: false, error: 'Unauthorized: No token provided' }, { status: 401 });
-    }
-
-    const decoded: any = verifyToken(token);
-    if (!decoded) {
-      return NextResponse.json({ success: false, error: 'Session invalid or expired. Please log in again.' }, { status: 401 });
-    }
-    
-    const url = new URL(req.url);
-    const cropId = url.searchParams.get('cropId');
-
-    if (!cropId) {
-      return NextResponse.json({ success: false, error: 'cropId is required' }, { status: 400 });
-    }
-
-    await connectDB();
-    
-    const deletedCrop = await ActiveCrop.findOneAndDelete({ _id: cropId, userId: decoded.userId });
-    
-    if (!deletedCrop) {
-      return NextResponse.json({ success: false, error: 'Crop not found or unauthorized' }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true, deletedCropId: cropId });
-  } catch (error: any) {
-    console.error("DELETE Crop Lifecycle Error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message || "Failed to generate plan. Please try again." }, { status: 500 });
   }
 }

@@ -1,12 +1,12 @@
 import { Brain, Bot, Scan, CloudSun, IndianRupee, MessageSquare, Landmark, LineChart } from 'lucide-react';
-import intelligence from "../../../public/ToolsImages/intelligence.avif"
-import predict from "../../../public/ToolsImages/predict.avif"
-import disease from "../../../public/ToolsImages/disease.avif"
-import weather from "../../../public/ToolsImages/weather.avif"
-import mandirates from "../../../public/ToolsImages/mandirates.avif"
-import community from "../../../public/ToolsImages/community.avif"
-import scheme from "../../../public/ToolsImages/scheme.avif"
-import yieldImg from "../../../public/ToolsImages/yield.avif"
+import intelligence from "../../../public/ToolsImages/intelligence.webp"
+import predict from "../../../public/ToolsImages/predict.webp"
+import disease from "../../../public/ToolsImages/disease.webp"
+import weather from "../../../public/ToolsImages/weather.webp"
+import mandirates from "../../../public/ToolsImages/mandirates.webp"
+import community from "../../../public/ToolsImages/community.webp"
+import scheme from "../../../public/ToolsImages/scheme.webp"
+import yieldImg from "../../../public/ToolsImages/yield.webp"
 
 export const features = [
   {
