@@ -2,10 +2,14 @@ import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import { ActiveCrop, User } from '@/models';
 import { verifyToken } from '@/lib/auth';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 import { cookies } from 'next/headers';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+// 1. Initialize OpenAI pointing to GitHub Models
+const openai = new OpenAI({
+  baseURL: "https://models.inference.ai.azure.com",
+  apiKey: process.env.GITHUB_TOKEN2, 
+});
 
 export async function POST(req: Request) {
   try {
@@ -14,36 +18,45 @@ export async function POST(req: Request) {
     const decoded: any = token ? verifyToken(token) : null;
 
     const { message } = await req.json();
-    let systemContext = "You are KrishiMitra, an expert AI farming assistant.";
+    let systemContext = "You are KrishiMitra, an expert AI farming assistant. Respond helpfully, clearly, and concisely to the farmer.";
 
-    // 🧠 AI AWARENESS LOGIC: Inject database state into the prompt!
+    // 🧠 AI AWARENESS LOGIC
     if (decoded) {
       await mongoose.connect(process.env.MONGODB_URI || '');
       const user = await User.findById(decoded.userId);
       const activeCrop = await ActiveCrop.findOne({ userId: decoded.userId, status: 'Active' });
 
-      if (activeCrop) {
-        // Find tasks that are NOT completed and their date has passed (Overdue)
+      if (activeCrop && user) {
         const missedTasks = activeCrop.tasks.filter((t: any) => 
           !t.isCompleted && new Date(t.scheduledDate) < new Date()
         );
 
-        systemContext += `\nThe user (${user.name}) is currently growing ${activeCrop.cropName}. `;
+        systemContext += `\n\nContext: The user (${user.name}) is currently growing ${activeCrop.cropName}.`;
         
         if (missedTasks.length > 0) {
-          systemContext += `\nCRITICAL: The user has missed these tasks: ${missedTasks.map((t:any)=>t.title).join(', ')}. 
-          Before answering their question, gently remind them they skipped this and need to do it urgently.`;
+          const taskNames = missedTasks.map((t: any) => t.title).join(', ');
+          systemContext += `\nCRITICAL INSTRUCTION: The user has missed these scheduled tasks: ${taskNames}. Before answering their question, gently but firmly remind them that they skipped these tasks and need to complete them urgently for a healthy yield.`;
         }
       }
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = `${systemContext}\n\nFarmer: ${message}\nKrishiMitra:`;
-    
-    const result = await model.generateContent(prompt);
-    return NextResponse.json({ reply: result.response.text() });
+    // 2. Call GitHub Models using o3-mini
+    const response = await openai.chat.completions.create({
+      model: "o3-mini", // 🚀 Switched to o3-mini
+      messages: [
+        // ⚠️ For o3 models, 'system' is replaced by 'developer'
+        { role: "developer", content: systemContext }, 
+        { role: "user", content: message }
+      ]
+      // ⚠️ Temperature is intentionally removed because o3 models do not support it!
+    });
 
-  } catch (error) {
+    const reply = response.choices[0].message.content;
+
+    return NextResponse.json({ reply });
+
+  } catch (error: any) {
+    console.error("Chat API Error:", error.message);
     return NextResponse.json({ error: "Failed to process chat" }, { status: 500 });
   }
 }

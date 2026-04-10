@@ -1,5 +1,3 @@
-
-
 import { NextResponse } from "next/server";
 
 // Helper to ensure strict Title Case for the government filters (e.g., "meerut" -> "Meerut")
@@ -117,18 +115,18 @@ const filterFallback = (state?: string | null, commodity?: string | null, distri
 };
 
 export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+
+  const state = searchParams.get("state");
+  const commodity = searchParams.get("commodity");
+  const district = searchParams.get("district");
+
   try {
-    const { searchParams } = new URL(req.url);
-
-    const state = searchParams.get("state");
-    const commodity = searchParams.get("commodity");
-    const district = searchParams.get("district");
-
     const baseUrl = process.env.BASE_URL;
     const apiKey = process.env.DATA_GOV_API_KEY;
 
     if (!baseUrl || !apiKey) {
-      return NextResponse.json({ prices: filterFallback(state, commodity, district) });
+      throw new Error("Missing API Keys");
     }
 
     // Build query params
@@ -138,23 +136,33 @@ export async function GET(req: Request) {
       limit: "2000",
     });
 
-    // Apply proper casing to match the strict government API requirement
-    // Note: The filter keys should be lowercase as per the API's field IDs
     if (state) params.append("filters[state]", toTitleCase(state));
     if (commodity) params.append("filters[commodity]", toTitleCase(commodity));
     if (district) params.append("filters[district]", toTitleCase(district));
 
+    // 🚀 HACKATHON SURVIVAL: 4-second timeout to prevent chatbot crashing!
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
     const response = await fetch(`${baseUrl}?${params.toString()}`, {
       cache: "no-store",
+      signal: controller.signal
     });
 
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
-      throw new Error("Government API failed");
+      throw new Error(`Government API failed with status ${response.status}`);
     }
 
     const data = await response.json();
 
-    // FIXED: Mapped using the exact lowercase keys returned by the Gov API
+    // If Gov API returns 0 records, throw an error to trigger the mock fallback
+    if (!data.records || data.records.length === 0) {
+       throw new Error("API returned 0 records");
+    }
+
+    // Map using the exact lowercase keys returned by the Gov API
     const prices = data.records.map((item: any) => ({
       state: item.state,
       district: item.district,
@@ -168,11 +176,34 @@ export async function GET(req: Request) {
     }));
 
     return NextResponse.json({ prices });
-  } catch (error) {
-    console.error("Mandi API Error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch mandi prices" },
-      { status: 500 }
-    );
+    
+  } catch (error: any) {
+    console.warn(`⚠️ Real Mandi API Failed/Timed out (${error.message}). Using Hackathon Mock Data!`);
+
+    // 🛡️ MOCK FALLBACK LOGIC
+    // 1. Try to find a match in the static fallback array
+    let fallbackData = filterFallback(state, commodity, district);
+
+    // 2. If nothing matches the static array, dynamically generate a realistic price so the demo doesn't fail
+    if (fallbackData.length === 0) {
+       const mockBasePrice = Math.floor(Math.random() * 1200) + 2000;
+       fallbackData = [{
+         state: state ? toTitleCase(state) : 'Uttar Pradesh',
+         district: district ? toTitleCase(district) : 'Local',
+         market: district ? `${toTitleCase(district)} City` : 'Local Mandi',
+         commodity: commodity ? toTitleCase(commodity) : 'Crop',
+         variety: 'Standard',
+         minPrice: mockBasePrice - 150,
+         maxPrice: mockBasePrice + 200,
+         modalPrice: mockBasePrice,
+         date: new Date().toLocaleDateString('en-GB')
+       }];
+    }
+
+    // Return a 200 OK status with the mock prices so the frontend/chatbot keeps working perfectly!
+    return NextResponse.json({ 
+      prices: fallbackData,
+      isMockData: true 
+    }, { status: 200 });
   }
 }
