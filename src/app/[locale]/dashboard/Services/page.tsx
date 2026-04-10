@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Tractor, Wrench, MapPin, Search, Filter, 
   User, ShieldCheck, PlusCircle, 
-  Loader2, AlertCircle 
+  Loader2, AlertCircle, ClipboardList, Calendar 
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
@@ -179,13 +179,22 @@ export default function EquipmentExchange() {
             </p>
           </div>
 
-          <Link 
-            href="/dashboard/Services/post" 
-            className="w-full md:w-auto flex items-center justify-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-6 py-3.5 rounded-xl font-bold transition-all shadow-[0_0_30px_-5px_rgba(16,185,129,0.4)] active:scale-95 group mb-6 shrink-0"
-          >
-            <PlusCircle className="w-5 h-5 group-hover:rotate-90 transition-transform" />
-            <span>{t('postListingBtn')}</span>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 mb-6 shrink-0 w-full md:w-auto">
+            <Link 
+              href="/dashboard/Services/rentals" 
+              className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-emerald-800/50 hover:bg-emerald-700/60 text-emerald-200 px-5 py-3.5 rounded-xl font-bold transition-all border border-emerald-600/30 active:scale-95 group"
+            >
+              <ClipboardList className="w-5 h-5" />
+              <span>My Rentals</span>
+            </Link>
+            <Link 
+              href="/dashboard/Services/post" 
+              className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-6 py-3.5 rounded-xl font-bold transition-all shadow-[0_0_30px_-5px_rgba(16,185,129,0.4)] active:scale-95 group"
+            >
+              <PlusCircle className="w-5 h-5 group-hover:rotate-90 transition-transform" />
+              <span>{t('postListingBtn')}</span>
+            </Link>
+          </div>
         </div>
 
         {/* ── TRACTOR ROAD STRIP ── */}
@@ -346,6 +355,7 @@ export default function EquipmentExchange() {
                   variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
                   className="bg-white rounded-[1.5rem] border border-gray-100 shadow-sm hover:shadow-xl hover:border-emerald-200 transition-all duration-300 flex flex-col group overflow-hidden"
                 >
+                  <Link href={`/dashboard/Services/${listing._id}`} className="block">
                   <div className="h-48 bg-slate-100 relative overflow-hidden flex items-center justify-center shrink-0">
                     {listing.images && listing.images.length > 0 ? (
                       <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -367,6 +377,7 @@ export default function EquipmentExchange() {
                       )}
                     </div>
                   </div>
+                  </Link>
 
                   {/* Added min-w-0 to flex column to prevent content from expanding beyond card width */}
                   <div className="p-5 sm:p-6 flex-1 flex flex-col min-w-0">
@@ -421,6 +432,13 @@ export default function EquipmentExchange() {
                         </button>
                       </div>
                     )}
+
+                    <div className="flex gap-2 mb-3">
+                      <Link href={`/dashboard/Services/${listing._id}`}
+                        className="flex-1 py-2.5 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95">
+                        <Calendar className="w-4 h-4" /> Book Now
+                      </Link>
+                    </div>
 
                     <ListingContactFooter 
                       title={listing.title}
