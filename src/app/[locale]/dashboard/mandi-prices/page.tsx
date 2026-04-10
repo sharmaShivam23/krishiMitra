@@ -15,6 +15,7 @@ import {
 
 // 🔊 IMPORT THE SPEECH HOOK
 import { useSpeech } from '@/hooks/useSpeech';
+import { requestKrishiSarthi } from '@/lib/krishiSarthi';
 
 /* ======================================================
    TYPES & CONSTANTS
