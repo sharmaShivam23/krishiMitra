@@ -115,39 +115,89 @@ export default function AIPredictionPage() {
   const isProfit = expectedProfit >= 0;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-10 font-sans pb-16">
+    <div className="relative max-w-7xl mx-auto space-y-10 font-sans pb-16 px-3 sm:px-6 lg:px-8">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-emerald-200/30 blur-3xl" />
+        <div className="absolute top-40 -left-20 h-64 w-64 rounded-full bg-sky-200/20 blur-3xl" />
+        <div className="absolute bottom-0 right-16 h-72 w-72 rounded-full bg-emerald-100/40 blur-3xl" />
+      </div>
       
       {/* 🌟 PREMIUM HERO SECTION */}
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-[#041a13] px-8 py-12 md:p-16 shadow-2xl border border-emerald-900/50">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[80px] pointer-events-none" />
-        <BrainCircuit className="absolute -right-12 -bottom-10 w-80 h-80 text-white/[0.03] pointer-events-none" />
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="relative overflow-hidden rounded-[2.5rem] bg-[#041a13] px-8 py-12 md:p-16 shadow-2xl border border-emerald-900/50"
+      >
+        <div className="absolute top-0 right-0 w-[520px] h-[520px] bg-emerald-500/10 rounded-full blur-[110px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[340px] h-[340px] bg-blue-500/10 rounded-full blur-[90px] pointer-events-none" />
+        <BrainCircuit className="absolute -right-12 -bottom-10 w-80 h-80 text-white/[0.04] pointer-events-none" />
         
-        <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center space-x-2 bg-blue-500/10 text-blue-400 px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase mb-6 border border-blue-500/20">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-            Machine Learning Engine Active
+        <div className="relative z-10 grid gap-10 lg:grid-cols-[1.15fr,0.85fr] items-center">
+          <div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4 tracking-tight">
+              AI Mandi <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Forecasting</span>
+            </h1>
+            <p className="text-lg text-emerald-100/70 font-medium leading-relaxed max-w-2xl">
+              Leverage predictive analytics to anticipate market movements. Enter your crop details below to generate a comprehensive financial and risk trajectory.
+            </p>
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4 tracking-tight">
-            AI Mandi <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Forecasting</span>
-          </h1>
-          <p className="text-lg text-emerald-100/70 font-medium leading-relaxed max-w-2xl">
-            Leverage predictive analytics to anticipate market movements. Enter your crop details below to generate a comprehensive financial and risk trajectory.
-          </p>
+          <div className="hidden lg:block">
+            <div className="rounded-3xl border border-emerald-400/20 bg-emerald-950/45 p-6 backdrop-blur">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-200">Forecast Scope</p>
+              </div>
+              <div className="mt-5 space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 rounded-xl bg-emerald-500/15 p-2 text-emerald-200">
+                    <Calendar className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-white">7-day horizon</p>
+                    <p className="text-xs text-emerald-100/70">Daily price curve with confidence bands</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 rounded-xl bg-blue-500/15 p-2 text-blue-200">
+                    <Activity className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-white">Trend & volatility</p>
+                    <p className="text-xs text-emerald-100/70">Risk flags for unstable markets</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 rounded-xl bg-emerald-500/15 p-2 text-emerald-200">
+                    <ShieldCheck className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-white">Action-ready verdict</p>
+                    <p className="text-xs text-emerald-100/70">Sell/hold guidance with confidence</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </motion.section>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* 🌟 INPUT FORM (Left Column) */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-stone-200 relative overflow-hidden sticky top-6">
+          <div className="bg-white/90 rounded-[2rem] p-7 sm:p-8 shadow-sm border border-stone-200/80 backdrop-blur relative overflow-hidden sticky top-6">
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-blue-500" />
-            <h2 className="text-2xl font-black text-black mb-6 flex items-center">
-              <BarChart3 className="w-6 h-6 mr-2 text-emerald-600" /> Parameters
-            </h2>
+            <div className="flex items-start justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-black text-black flex items-center">
+                  <BarChart3 className="w-6 h-6 mr-2 text-emerald-600" /> Parameters
+                </h2>
+                <p className="text-sm text-stone-500 font-medium mt-1">Add crop, market, and volume for a precise forecast.</p>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-black uppercase tracking-widest border border-emerald-100">Step 01</span>
+            </div>
             
-            <form onSubmit={handlePredict} className="space-y-5">
+            <form onSubmit={handlePredict} className="space-y-4">
               {/* <div className="space-y-1.5">
                 <label className="block text-sm font-black text-black">Commodity</label>
                 <select required className="w-full px-4 py-3.5 bg-stone-50 border border-stone-200 rounded-2xl text-black font-bold outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all cursor-pointer appearance-none" onChange={e => setFormData({...formData, commodity: e.target.value})}>
@@ -164,7 +214,7 @@ export default function AIPredictionPage() {
                 <label className="block text-sm font-black text-black">Commodity</label>
                 <select 
                   required 
-                  className="w-full px-4 py-3.5 bg-stone-50 border border-stone-200 rounded-2xl text-black font-bold outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all cursor-pointer appearance-none" 
+                  className="w-full px-4 py-3.5 bg-white border border-stone-200 rounded-2xl text-black font-bold outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all cursor-pointer appearance-none hover:border-emerald-300" 
                   onChange={e => setFormData({...formData, commodity: e.target.value})}
                 >
                   <option value="">Select Crop...</option>
@@ -217,7 +267,7 @@ export default function AIPredictionPage() {
                 <label className="block text-sm font-black text-black">State</label>
                 <div className="relative">
                   <MapPin className="absolute left-4 top-3.5 w-5 h-5 text-stone-400" />
-                  <select required className="w-full pl-11 pr-4 py-3.5 bg-stone-50 border border-stone-200 rounded-2xl text-black font-bold outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all cursor-pointer appearance-none" onChange={e => setFormData({...formData, state: e.target.value})}>
+                  <select required className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-200 rounded-2xl text-black font-bold outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all cursor-pointer appearance-none hover:border-emerald-300" onChange={e => setFormData({...formData, state: e.target.value})}>
                     <option value="">Select State...</option>
                     {STATES_OF_INDIA.map(state => (
                       <option key={state} value={state}>{state}</option>
@@ -228,18 +278,18 @@ export default function AIPredictionPage() {
 
               <div className="space-y-1.5">
                 <label className="block text-sm font-black text-black">District</label>
-                <input required type="text" placeholder="E.g. Ahmedabad" className="w-full px-4 py-3.5 bg-stone-50 border border-stone-200 rounded-2xl text-black font-bold outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-stone-400 placeholder:font-medium" onChange={e => setFormData({...formData, district: e.target.value})} />
+                <input required type="text" placeholder="E.g. Ahmedabad" className="w-full px-4 py-3.5 bg-white border border-stone-200 rounded-2xl text-black font-bold outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-stone-400 placeholder:font-medium hover:border-emerald-300" onChange={e => setFormData({...formData, district: e.target.value})} />
               </div>
 
               <div className="space-y-1.5">
                 <label className="block text-sm font-black text-black">Quantity (Quintals)</label>
                 <div className="relative">
                   <Scale className="absolute left-4 top-3.5 w-5 h-5 text-stone-400" />
-                  <input required type="number" min="1" placeholder="100" className="w-full pl-11 pr-4 py-3.5 bg-stone-50 border border-stone-200 rounded-2xl text-black font-bold outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-stone-400 placeholder:font-medium" onChange={e => setFormData({...formData, quantity: e.target.value})} />
+                  <input required type="number" min="1" placeholder="100" className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-200 rounded-2xl text-black font-bold outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-stone-400 placeholder:font-medium hover:border-emerald-300" onChange={e => setFormData({...formData, quantity: e.target.value})} />
                 </div>
               </div>
 
-              <button type="submit" disabled={isLoading} className="w-full py-4 mt-4 bg-[#041a13] text-white rounded-2xl font-black text-lg hover:bg-emerald-900 shadow-lg shadow-emerald-900/20 active:scale-[0.98] transition-all flex justify-center items-center disabled:opacity-70 group">
+              <button type="submit" disabled={isLoading} className="w-full py-4 mt-4 bg-gradient-to-r from-emerald-800 via-emerald-900 to-teal-900 text-white rounded-2xl font-black text-lg hover:from-emerald-700 hover:to-teal-800 shadow-lg shadow-emerald-900/25 active:scale-[0.98] transition-all flex justify-center items-center disabled:opacity-70 group">
                 {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
                   <>Run Analysis <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" /></>
                 )}
@@ -259,24 +309,28 @@ export default function AIPredictionPage() {
           
           {/* Empty / Loading States */}
           {!result && !isLoading && (
-            <div className="h-full min-h-[400px] flex flex-col items-center justify-center bg-stone-50/50 rounded-[2rem] border-2 border-dashed border-stone-200 p-8 text-center">
-              <div className="w-20 h-20 bg-white shadow-sm rounded-full flex items-center justify-center mb-6">
-                <BrainCircuit className="w-10 h-10 text-stone-300" />
+            <div className="relative h-full min-h-[420px] flex flex-col items-center justify-center bg-white/80 rounded-[2rem] border border-emerald-100/60 p-10 text-center shadow-sm overflow-hidden">
+              <div aria-hidden="true" className="absolute inset-0">
+                <div className="absolute -top-12 right-10 h-40 w-40 rounded-full bg-emerald-100/60 blur-3xl" />
+                <div className="absolute bottom-0 left-12 h-40 w-40 rounded-full bg-sky-100/60 blur-3xl" />
               </div>
-              <h3 className="text-2xl font-black text-stone-400 mb-2">Awaiting Parameters</h3>
-              <p className="text-stone-500 font-medium max-w-sm">Enter your harvest details on the left to generate an AI-powered financial and market forecast.</p>
+              <div className="relative z-10 w-20 h-20 bg-white shadow-sm rounded-full flex items-center justify-center mb-6 border border-emerald-100">
+                <BrainCircuit className="w-10 h-10 text-emerald-300" />
+              </div>
+              <h3 className="relative z-10 text-2xl font-black text-emerald-900 mb-2">Awaiting Parameters</h3>
+              <p className="relative z-10 text-stone-500 font-medium max-w-sm">Add crop, state, district, and quantity to unlock the 7-day forecast.</p>
             </div>
           )}
 
           {isLoading && (
-            <div className="h-full min-h-[400px] flex flex-col items-center justify-center bg-white rounded-[2rem] border border-stone-200 shadow-sm p-8 text-center">
+            <div className="h-full min-h-[420px] flex flex-col items-center justify-center bg-white rounded-[2rem] border border-emerald-100/70 shadow-sm p-8 text-center">
               <div className="relative w-24 h-24 mb-8">
                 <div className="absolute inset-0 border-4 border-emerald-100 rounded-full"></div>
                 <div className="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
                 <BrainCircuit className="absolute inset-0 m-auto w-8 h-8 text-emerald-600 animate-pulse" />
               </div>
               <h3 className="text-2xl font-black text-black mb-2">Computing Financial Projections...</h3>
-              <p className="text-stone-500 font-medium animate-pulse">Analyzing market volatility and historical data.</p>
+              <p className="text-stone-500 font-medium animate-pulse">Analyzing market volatility, supply signals, and local demand.</p>
             </div>
           )}
 
