@@ -7,7 +7,7 @@ import {
   ShieldCheck, ArrowRight, MapPin, Activity,
   Loader2, IndianRupee,
   CheckCircle2, Sprout, Brain, Microscope, BarChart3, Leaf,
-  AlertTriangle, Zap
+  AlertTriangle, Zap, Thermometer
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
