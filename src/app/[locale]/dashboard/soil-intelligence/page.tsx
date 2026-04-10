@@ -208,6 +208,21 @@ export default function SoilIntelligenceHub() {
         </div>
       </div>
 
+      {/* Stats strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {([
+          { label: 'Total Fields',    value: stats.total,          cls: 'border-emerald-200 bg-emerald-50 text-emerald-700' },
+          { label: 'Completed',       value: stats.completed,      cls: 'border-green-200 bg-green-50 text-green-700' },
+          { label: 'Need Attention',  value: stats.needsAttention, cls: 'border-amber-200 bg-amber-50 text-amber-700' },
+          { label: 'Test Scheduled',  value: stats.testScheduled,  cls: 'border-blue-200 bg-blue-50 text-blue-700' },
+        ] as const).map(stat => (
+          <div key={stat.label} className={`rounded-2xl border p-4 ${stat.cls}`}>
+            <p className="text-2xl font-black">{stat.value}</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide opacity-70 mt-0.5">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
         {farmlands.map((f, i) => (

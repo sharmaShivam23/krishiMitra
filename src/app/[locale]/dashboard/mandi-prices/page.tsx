@@ -15,7 +15,6 @@ import {
 
 // 🔊 IMPORT THE SPEECH HOOK
 import { useSpeech } from '@/hooks/useSpeech';
-import { requestKrishiSarthi } from '@/lib/krishiSarthi';
 
 /* ======================================================
    TYPES & CONSTANTS
@@ -111,14 +110,9 @@ export default function MandiPrices() {
     return () => window.removeEventListener('locationUpdated', handleLocationUpdated);
   }, []);
 
-  /* ======================================================
-     DEBOUNCE EFFECT FOR DISTRICT TYPING
-  ====================================================== */
+  /* district dropdown: keep debouncedDistrict in sync immediately */
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedDistrict(districtQuery);
-    }, 500);
-    return () => clearTimeout(handler);
+    setDebouncedDistrict(districtQuery);
   }, [districtQuery]);
 
   /* ======================================================
@@ -347,7 +341,7 @@ export default function MandiPrices() {
             <div className="absolute inset-y-0 bottom-0 left-0 pl-4 flex items-center pointer-events-none mt-6">
               <Filter className="h-4 w-4 text-gray-400" />
             </div>
-            <select value={selectedState} onChange={(e) => setSelectedState(e.target.value)} className="block w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500/20 font-bold text-gray-900 appearance-none cursor-pointer text-sm transition-all outline-none">
+            <select value={selectedState} onChange={(e) => { setSelectedState(e.target.value); setDistrictQuery(''); }} className="block w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500/20 font-bold text-gray-900 appearance-none cursor-pointer text-sm transition-all outline-none">
               {INDIAN_STATES.map(state => (
                 <option key={state.value} value={state.value}>{t(`states.${state.key}`)}</option>
               ))}

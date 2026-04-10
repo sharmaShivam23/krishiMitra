@@ -522,6 +522,11 @@
     "equipmentLabel": "ਮਸ਼ੀਨ:",
     "jobTypeLabel": "ਕੰਮ ਦੀ ਕਿਸਮ:",
     "generalJob": "ਆਮ ਕੰਮ",
+    "edit": "ਸੰਪਾਦਿਤ ਕਰੋ",
+    "delete": "ਹਟਾਓ",
+    "deleting": "ਹਟਾਇਆ ਜਾ ਰਿਹਾ ਹੈ...",
+    "deleteConfirm": "ਕੀ ਤੁਸੀਂ ਸੱਚਮੁੱਚ ਇਸ ਲਿਸਟਿੰਗ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+    "deleteError": "ਲਿਸਟਿੰਗ ਹਟਾਉਣ ਵਿੱਚ ਅਸਮਰੱਥ।",
     "categories": {
       "All Equipment": "ਸਾਰੀਆਂ ਮਸ਼ੀਨਾਂ",
       "Tractor": "ਟਰੈਕਟਰ",

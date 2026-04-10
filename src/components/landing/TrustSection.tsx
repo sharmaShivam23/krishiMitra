@@ -31,14 +31,16 @@ export default function TrustSection() {
           <div className="relative z-10 p-10 lg:p-20 flex flex-col lg:flex-row items-start justify-between gap-12">
             {/* Left */}
             <div className="max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/25 mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-emerald-500/20 to-amber-500/10 border border-emerald-400/30 backdrop-blur-sm mb-6">
                 <Sprout className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="text-xs font-bold text-emerald-300 uppercase tracking-widest">{t('badge')}</span>
               </div>
-              <h2 className="text-3xl md:text-5xl font-black text-white leading-tight mb-6">
-                {t('heading1')} <span className="text-amber-400">{t('heading2')}</span>{t('heading3')}
+              <h2 className="text-3xl md:text-[2.75rem] lg:text-5xl font-black text-white leading-[1.15] mb-5 tracking-tight">
+                {t('heading1')}<br className="hidden md:block" />
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-300 via-amber-400 to-orange-400">{t('heading2')}</span>
+                {t('heading3')}
               </h2>
-              <p className="text-stone-300 font-medium text-lg mb-8">
+              <p className="text-stone-300/90 font-medium text-base md:text-lg mb-8 leading-relaxed max-w-lg">
                 {t('description')}
               </p>
               <ul className="space-y-4 mb-8">

@@ -522,6 +522,11 @@
     "equipmentLabel": "মেশিন:",
     "jobTypeLabel": "কাজের ধরন:",
     "generalJob": "সাধারণ কাজ",
+    "edit": "সম্পাদনা করুন",
+    "delete": "মুছুন",
+    "deleting": "মুছে ফেলা হচ্ছে...",
+    "deleteConfirm": "আপনি কি সত্যিই এই তালিকাটি মুছতে চান?",
+    "deleteError": "তালিকা মুছতে অক্ষম।",
     "categories": {
       "All Equipment": "সমস্ত সরঞ্জাম",
       "Tractor": "ট্রাক্টর",

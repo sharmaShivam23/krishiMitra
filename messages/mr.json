@@ -522,6 +522,11 @@
     "equipmentLabel": "मशीन:",
     "jobTypeLabel": "कामाचा प्रकार:",
     "generalJob": "सामान्य काम",
+    "edit": "संपादित करा",
+    "delete": "हटवा",
+    "deleting": "हटवले जात आहे...",
+    "deleteConfirm": "तुम्हाला खरोखर ही यादी हटवायची आहे का?",
+    "deleteError": "यादी हटवणे शक्य नाही।",
     "categories": {
       "All Equipment": "सर्व उपकरणे",
       "Tractor": "ट्रॅक्टर",
