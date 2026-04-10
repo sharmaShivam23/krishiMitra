@@ -406,6 +406,144 @@ const ProductReviewSchema = new Schema({
 export const PesticideProduct = mongoose.models.PesticideProduct || mongoose.model('PesticideProduct', PesticideProductSchema);
 export const ProductReview = mongoose.models.ProductReview || mongoose.model('ProductReview', ProductReviewSchema);
 
+// ─── 🚜 RENTAL ORDER SYSTEM ───
+
+const RentalTimelineEntrySchema = new Schema({
+  event: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now },
+  actor: { type: String }, // 'renter' | 'owner' | 'admin' | 'system'
+  actorId: { type: Schema.Types.ObjectId, ref: 'User' },
+  note: { type: String }
+}, { _id: false });
+
+const InspectionSchema = new Schema({
+  photos: [{ type: String }], // Cloudinary URLs
+  condition: { type: String, enum: ['Excellent', 'Good', 'Fair', 'Damaged'], default: 'Good' },
+  notes: { type: String },
+  inspectedAt: { type: Date },
+  inspectedBy: { type: Schema.Types.ObjectId, ref: 'User' }
+}, { _id: false });
+
+const RentalOrderSchema = new Schema({
+  // Parties
+  listingId: { type: Schema.Types.ObjectId, ref: 'Listing', required: true },
+  renterId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+
+  // Status lifecycle
+  status: {
+    type: String,
+    enum: [
+      'requested',        // Renter submitted a booking request
+      'approved',         // Owner approved the request
+      'rejected',         // Owner rejected the request
+      'agreement_pending',// Waiting for both parties to sign
+      'deposit_pending',  // Agreement signed, awaiting deposit
+      'active',           // Equipment handed over, rental in progress
+      'return_pending',   // Renter initiated return
+      'inspecting',       // Post-return inspection in progress
+      'completed',        // Rental finished, deposit settled
+      'disputed',         // Damage dispute raised
+      'cancelled'         // Cancelled by either party
+    ],
+    default: 'requested'
+  },
+
+  // Rental period
+  rentalPeriod: {
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+    totalDays: { type: Number, required: true }
+  },
+
+  // Pricing
+  pricing: {
+    dailyRate: { type: Number, required: true },
+    rateUnit: { type: String, default: 'per day' },
+    totalAmount: { type: Number, required: true },
+    securityDeposit: { type: Number, required: true },
+    protectionFee: { type: Number, default: 0 },
+    protectionTier: { type: String, enum: ['none', 'basic', 'standard', 'premium'], default: 'none' }
+  },
+
+  // Digital Agreement
+  agreement: {
+    acceptedByRenter: { type: Boolean, default: false },
+    acceptedByOwner: { type: Boolean, default: false },
+    renterAcceptedAt: { type: Date },
+    ownerAcceptedAt: { type: Date },
+    terms: [{ type: String }] // Snapshot of T&C at time of booking
+  },
+
+  // Pre-inspection (before handover)
+  preInspection: InspectionSchema,
+
+  // Post-inspection (after return)
+  postInspection: InspectionSchema,
+
+  // Damage report
+  damageReport: {
+    hasDamage: { type: Boolean, default: false },
+    description: { type: String },
+    claimAmount: { type: Number, default: 0 },
+    photos: [{ type: String }],
+    coveredByProtection: { type: Number, default: 0 }, // Amount covered by plan
+    renterLiability: { type: Number, default: 0 },     // Amount renter must pay
+    status: { type: String, enum: ['none', 'filed', 'accepted', 'disputed', 'resolved'], default: 'none' },
+    resolution: { type: String }, // Admin or agreement resolution notes
+    resolvedAt: { type: Date },
+    resolvedBy: { type: Schema.Types.ObjectId, ref: 'User' }
+  },
+
+  // Payment tracking (offline — Cash / UPI / Bank)
+  payment: {
+    method: { type: String, enum: ['cash', 'upi', 'bank_transfer', 'other'], default: 'cash' },
+    depositStatus: { type: String, enum: ['pending', 'collected', 'refunded', 'partially_deducted', 'forfeited'], default: 'pending' },
+    rentalPaidStatus: { type: String, enum: ['pending', 'paid', 'partial'], default: 'pending' },
+    damageDeducted: { type: Number, default: 0 }
+  },
+
+  // Cancellation
+  cancellation: {
+    cancelledBy: { type: String, enum: ['renter', 'owner', 'admin'] },
+    reason: { type: String },
+    cancelledAt: { type: Date }
+  },
+
+  // Renter message (optional note when booking)
+  renterMessage: { type: String },
+
+  // Audit trail
+  timeline: [RentalTimelineEntrySchema]
+}, { timestamps: true });
+
+RentalOrderSchema.index({ renterId: 1, status: 1 });
+RentalOrderSchema.index({ ownerId: 1, status: 1 });
+RentalOrderSchema.index({ listingId: 1 });
+RentalOrderSchema.index({ status: 1, createdAt: -1 });
+
+// ─── RENTAL POLICY (Platform Configuration) ───
+
+const RentalPolicySchema = new Schema({
+  isActive: { type: Boolean, default: true },
+
+  protectionTiers: {
+    none: { feePercent: { type: Number, default: 0 }, coveragePercent: { type: Number, default: 0 }, label: { type: String, default: 'No Protection' } },
+    basic: { feePercent: { type: Number, default: 0 }, coveragePercent: { type: Number, default: 0 }, label: { type: String, default: 'Basic' } },
+    standard: { feePercent: { type: Number, default: 5 }, coveragePercent: { type: Number, default: 50 }, label: { type: String, default: 'Standard' } },
+    premium: { feePercent: { type: Number, default: 12 }, coveragePercent: { type: Number, default: 90 }, label: { type: String, default: 'Premium' } }
+  },
+
+  defaultDepositPercent: { type: Number, default: 25 },
+  maxRentalDays: { type: Number, default: 30 },
+  cancellationWindowHours: { type: Number, default: 24 },
+
+  termsAndConditions: [{ type: String }]
+}, { timestamps: true });
+
+export const RentalOrder = mongoose.models.RentalOrder || mongoose.model('RentalOrder', RentalOrderSchema);
+export const RentalPolicy = mongoose.models.RentalPolicy || mongoose.model('RentalPolicy', RentalPolicySchema);
+
 // Re-export Farmland
 export { Farmland } from './FarmlandModel';
 export type { IFarmland, FarmlandStatus } from './FarmlandModel';
