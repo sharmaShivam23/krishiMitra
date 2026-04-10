@@ -49,7 +49,7 @@ export default function EquipmentExchange() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentUser, setCurrentUser] = useState<{ _id: string; name?: string } | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [activeTab, setActiveTab] = useState<'rent' | 'service'>('rent');
   const [searchQuery, setSearchQuery] = useState('');
