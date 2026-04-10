@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
+import { STATES_DISTRICTS } from '@/utils/indiaStates';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { 
   Search, MapPin, Filter, ArrowDownToLine, 
@@ -15,7 +16,6 @@ import {
 
 // 🔊 IMPORT THE SPEECH HOOK
 import { useSpeech } from '@/hooks/useSpeech';
-import { requestKrishiSarthi } from '@/lib/krishiSarthi';
 
 /* ======================================================
    TYPES & CONSTANTS
@@ -88,14 +88,9 @@ export default function MandiPrices() {
     return () => window.removeEventListener('locationUpdated', handleLocationUpdated);
   }, []);
 
-  /* ======================================================
-     DEBOUNCE EFFECT FOR DISTRICT TYPING
-  ====================================================== */
+  /* district dropdown: keep debouncedDistrict in sync immediately */
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedDistrict(districtQuery);
-    }, 500);
-    return () => clearTimeout(handler);
+    setDebouncedDistrict(districtQuery);
   }, [districtQuery]);
 
   /* ======================================================
@@ -262,21 +257,6 @@ export default function MandiPrices() {
               <Bot className="w-4 h-4" />
               <span className="text-sm">AI Market Predictor</span>
             </button>
-            <button
-              onClick={() =>
-                requestKrishiSarthi({
-                  prompt: 'KrishiSarthi, mandi ke bhav samjhao.',
-                  context: {
-                    module: 'mandi-prices',
-                    summary: 'User is reviewing mandi prices and needs market-rate interpretation plus timing advice.'
-                  }
-                })
-              }
-              className="flex items-center justify-center space-x-2 bg-agri-100 border border-agri-300 text-agri-900 px-4 py-2.5 rounded-2xl font-black hover:bg-agri-200 transition shadow-sm active:scale-95"
-            >
-              <Bot className="w-4 h-4" />
-              <span className="text-sm">Ask KrishiSarthi</span>
-            </button>
             <button 
               onClick={handleExportCSV}
               className="hidden md:flex items-center space-x-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-bold hover:bg-gray-50 transition shadow-sm active:scale-95"
@@ -314,7 +294,7 @@ export default function MandiPrices() {
             <div className="absolute inset-y-0 bottom-0 left-0 pl-4 flex items-center pointer-events-none mt-6">
               <Filter className="h-4 w-4 text-gray-400" />
             </div>
-            <select value={selectedState} onChange={(e) => setSelectedState(e.target.value)} className="block w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500/20 font-bold text-gray-900 appearance-none cursor-pointer text-sm transition-all outline-none">
+            <select value={selectedState} onChange={(e) => { setSelectedState(e.target.value); setDistrictQuery(''); }} className="block w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500/20 font-bold text-gray-900 appearance-none cursor-pointer text-sm transition-all outline-none">
               {INDIAN_STATES.map(state => (
                 <option key={state} value={state}>{state}</option>
               ))}
@@ -322,14 +302,21 @@ export default function MandiPrices() {
           </div>
 
           <div className="relative">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 flex justify-between">
-              <span>District Filter</span>
-              {isLocating && <Loader2 className="w-3 h-3 animate-spin text-emerald-500" />}
-            </label>
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">District</label>
             <div className="absolute inset-y-0 bottom-0 left-0 pl-4 flex items-center pointer-events-none mt-6">
               <MapPin className="h-4 w-4 text-gray-400" />
             </div>
-            <input type="text" placeholder="Type district name..." value={districtQuery} onChange={(e) => setDistrictQuery(e.target.value)} className="block w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500/20 text-gray-900 font-medium text-sm transition-all outline-none" />
+            <select
+              value={districtQuery}
+              onChange={(e) => setDistrictQuery(e.target.value)}
+              disabled={selectedState === 'All States'}
+              className="block w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500/20 font-bold text-gray-900 appearance-none cursor-pointer text-sm transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option value="">All Districts</option>
+              {selectedState !== 'All States' && (STATES_DISTRICTS as Record<string, string[]>)[selectedState]?.map((d: string) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
           </div>
 
         </motion.div>

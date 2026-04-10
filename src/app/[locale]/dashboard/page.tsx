@@ -7,7 +7,7 @@ import {
   ShieldCheck, ArrowRight, MapPin, Activity,
   Loader2, IndianRupee,
   CheckCircle2, Sprout, Brain, Microscope, BarChart3, Leaf,
-  Thermometer, AlertTriangle, Zap
+  AlertTriangle, Zap
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
@@ -22,6 +22,24 @@ interface MandiAlert {
   minPrice: number | string;
   maxPrice: number | string;
 }
+
+/* ════════════════════════════════════════════════════════
+   WEATHER CODE MAP
+═══════════════════════════════════════════════════════ */
+const WEATHER_CODES: Record<number, { label: string; emoji: string }> = {
+  0:  { label: 'Clear Sky',      emoji: '☀️' },
+  1:  { label: 'Mainly Clear',   emoji: '🌤️' },
+  2:  { label: 'Partly Cloudy',  emoji: '⛅' },
+  3:  { label: 'Overcast',       emoji: '☁️' },
+  45: { label: 'Foggy',          emoji: '🌫️' },
+  48: { label: 'Foggy',          emoji: '🌫️' },
+  51: { label: 'Light Drizzle',  emoji: '🌦️' },
+  61: { label: 'Light Rain',     emoji: '🌧️' },
+  63: { label: 'Rain',           emoji: '🌧️' },
+  65: { label: 'Heavy Rain',     emoji: '🌩️' },
+  80: { label: 'Rain Showers',   emoji: '🌦️' },
+  95: { label: 'Thunderstorm',   emoji: '⛈️' },
+};
 
 /* ════════════════════════════════════════════════════════
    FARMING UTILS
@@ -116,7 +134,8 @@ export default function DashboardOverview() {
   const [mandiAlerts, setMandiAlerts] = useState<MandiAlert[]>([]);
   const [isLoadingMandi, setIsLoadingMandi] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [formattedDate, setFormattedDate] = useState('');
+  const [weather, setWeather] = useState<{ temp: number; condition: string; emoji: string; humidity: number; wind: number } | null>(null);
+  const [isLoadingWeather, setIsLoadingWeather] = useState(true);
 
   const season = getCurrentSeason();
 
@@ -164,25 +183,35 @@ export default function DashboardOverview() {
     }).catch(() => {});
   }, []);
 
-  /* ── Resolve location (no weather fetch) ── */
+  /* ── Resolve location + weather ── */
   useEffect(() => {
-    const fetchLocation = async (lat: number, lon: number) => {
+    const fetchLocationAndWeather = async (lat: number, lon: number) => {
       try {
-        const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+        const [geoRes, weatherRes] = await Promise.all([
+          fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`),
+          fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`)
+        ]);
         const geoData = await geoRes.json();
         if (geoData.city || geoData.locality) {
           setLocationName(`${geoData.city || geoData.locality}, ${geoData.principalSubdivision}`);
         }
-      } catch { /* silently fail */ }
+        const weatherData = await weatherRes.json();
+        const cur = weatherData?.current;
+        if (cur) {
+          const info = WEATHER_CODES[cur.weather_code as number] ?? { label: 'Clear Sky', emoji: '🌡️' };
+          setWeather({ temp: Math.round(cur.temperature_2m), condition: info.label, emoji: info.emoji, humidity: cur.relative_humidity_2m, wind: Math.round(cur.wind_speed_10m) });
+        }
+      } catch { /* silently fail */ } finally {
+        setIsLoadingWeather(false);
+      }
     };
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        pos => fetchLocation(pos.coords.latitude, pos.coords.longitude),
-        () => fetchLocation(28.9845, 77.7064),
-        { timeout: 5000 }
+        pos => fetchLocationAndWeather(pos.coords.latitude, pos.coords.longitude),
+        () => fetchLocationAndWeather(28.9845, 77.7064)
       );
     } else {
-      fetchLocation(28.9845, 77.7064);
+      fetchLocationAndWeather(28.9845, 77.7064);
     }
   }, [locale]);
 
@@ -289,41 +318,43 @@ export default function DashboardOverview() {
       ═════════════════════════════════════════════════════ */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
 
-        {/* ── Soil Intelligence Card ── */}
-        <motion.div variants={item} className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-800 rounded-3xl p-6 text-white shadow-[0_18px_50px_-22px_rgba(2,44,34,0.85)] border border-emerald-700/40">
-
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-10"
-            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=800&auto=format&fit=crop')" }}
-          />
-          <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-300/10 rounded-full blur-2xl" />
+        {/* ── Weather Card ── */}
+        <motion.div variants={item} className="relative overflow-hidden bg-linear-to-br from-sky-900 via-blue-800 to-indigo-900 rounded-3xl p-6 text-white shadow-[0_18px_50px_-22px_rgba(14,34,84,0.85)] border border-sky-700/40">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-sky-300/10 rounded-full blur-2xl" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-400/10 rounded-full blur-2xl" />
 
           <div className="relative z-10 flex flex-col h-full">
             <div className="flex items-start justify-between mb-3">
-              <h3 className="font-bold text-emerald-100 text-sm uppercase tracking-wider">Mitti Pehchaan</h3>
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center">
-                <Thermometer className="w-5 h-5 text-emerald-200" />
+              <h3 className="font-bold text-sky-100 text-sm uppercase tracking-wider">Live Weather</h3>
+              <div className="w-10 h-10 rounded-2xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-xl">
+                {isLoadingWeather ? '🌡️' : (weather?.emoji ?? '🌡️')}
               </div>
             </div>
 
-            <div className="text-2xl font-black leading-tight mb-2">
-              Know your soil, grow smarter.
-            </div>
-            <p className="text-emerald-100/70 text-sm font-semibold mb-4">
-              Government report or home kit. Field‑specific, Hindi‑friendly.
-            </p>
-
-            <div className="flex flex-wrap gap-2 text-[11px] font-bold mb-4">
-              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">pH</span>
-              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">NPK</span>
-              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">Soil Type</span>
-            </div>
+            {isLoadingWeather ? (
+              <div className="flex-1 flex items-center justify-center py-4">
+                <Loader2 className="w-8 h-8 animate-spin text-sky-400" />
+              </div>
+            ) : weather ? (
+              <>
+                <div className="text-4xl font-black leading-tight mb-1">{weather.temp}°C</div>
+                <p className="text-sky-100/80 text-sm font-semibold mb-4">
+                  {weather.condition} · {locationName.split(',')[0]}
+                </p>
+                <div className="flex flex-wrap gap-2 text-[11px] font-bold mb-4">
+                  <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">💧 {weather.humidity}%</span>
+                  <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">💨 {weather.wind} km/h</span>
+                </div>
+              </>
+            ) : (
+              <p className="text-sky-100/60 text-sm font-semibold mb-4 flex-1">Weather data unavailable</p>
+            )}
 
             <Link
-              href={`/${locale}/dashboard/soil-intelligence`}
-              className="mt-auto inline-flex items-center justify-center gap-2 bg-emerald-300 text-emerald-950 px-4 py-2.5 rounded-2xl font-black hover:bg-amber-300 transition-all shadow-lg active:scale-95"
+              href={`/${locale}/dashboard/weather`}
+              className="mt-auto inline-flex items-center justify-center gap-2 bg-sky-400 text-sky-950 px-4 py-2.5 rounded-2xl font-black hover:bg-sky-300 transition-all shadow-lg active:scale-95"
             >
-              🌱 Check My Soil <ArrowRight className="w-4 h-4" />
+              🌦️ Full Forecast <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </motion.div>

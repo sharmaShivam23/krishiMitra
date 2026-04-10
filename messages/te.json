@@ -340,6 +340,11 @@
     "equipmentLabel": "యంత్రం:",
     "jobTypeLabel": "పని రకం:",
     "generalJob": "సాధారణ పని",
+    "edit": "సవరించు",
+    "delete": "తొలగించు",
+    "deleting": "తొలగిస్తోంది...",
+    "deleteConfirm": "మీరు నిజంగా ఈ లిస్టింగ్‌ను తొలగించాలనుకుంటున్నారా?",
+    "deleteError": "లిస్టింగ్ తొలగించడం సాధ్యపడలేదు।",
     "categories": {
       "All Equipment": "అన్ని పరికరాలు",
       "Tractor": "ట్రాక్టర్",

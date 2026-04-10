@@ -328,6 +328,9 @@
     "generalJob": "General Work",
     "edit": "Edit",
     "delete": "Delete",
+    "deleting": "Deleting...",
+    "deleteConfirm": "Are you sure you want to delete this listing?",
+    "deleteError": "Unable to delete listing.",
     "categories": {
       "All Equipment": "All Equipment",
       "Tractor": "Tractor",

@@ -10,7 +10,6 @@ import {
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { STATES_DISTRICTS } from '@/utils/indiaStates';
-import { requestKrishiSarthi } from '@/lib/krishiSarthi';
 import { addToQueue } from '@/lib/offlineQueue';
 
 interface Reply {
@@ -320,35 +319,18 @@ export default function CommunityForum() {
           </h1>
           <p className="text-gray-600 mt-2 font-semibold text-sm md:text-base">{t('subtitle')}</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full md:w-auto">
-          <button
-            onClick={() =>
-              requestKrishiSarthi({
-                prompt: 'KrishiSarthi, community mein sawal kaise poochna hai batao.',
-                context: {
-                  module: 'community',
-                  summary: 'User is in farmer community section and needs help asking or engaging in discussions.'
-                }
-              })
-            }
-            className="flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-900 px-5 py-3 rounded-2xl font-black hover:bg-emerald-100 transition shadow-sm"
-          >
-            <Users className="w-5 h-5" />
-            <span>Ask KrishiSarthi</span>
-          </button>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-2 bg-agri-600 text-white px-5 py-3 rounded-2xl font-black hover:bg-agri-700 transition shadow-lg shadow-agri-600/30"
-          >
-            <PenSquare className="w-5 h-5" />
-            <span>{t('newDiscussion')}</span>
-          </button>
-        </div>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center justify-center gap-2 bg-agri-600 text-white px-5 py-3 rounded-2xl font-black hover:bg-agri-700 transition shadow-lg shadow-agri-600/30"
+        >
+          <PenSquare className="w-5 h-5" />
+          <span>{t('newDiscussion')}</span>
+        </button>
       </div>
 
       <div className="flex md:grid md:grid-cols-3 gap-2 md:gap-3 mb-6 overflow-x-auto md:overflow-visible pb-1 -mx-1 px-1">
         <div className="min-w-[140px] md:min-w-0 rounded-2xl border border-agri-200 bg-agri-50 px-3 py-3">
-          <p className="text-[11px] font-black uppercase tracking-wide text-agri-700">Discussions</p>
+          <p className="text-[11px] font-black uppercase tracking-wide text-agri-900">Discussions</p>
           <p className="mt-1 text-xl md:text-2xl font-black text-agri-900">{communityStats.totalPosts}</p>
         </div>
         <div className="min-w-[140px] md:min-w-0 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-3">
