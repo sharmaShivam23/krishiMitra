@@ -117,7 +117,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#041a13] border-t border-emerald-900/40 pt-16 relative overflow-hidden z-20 font-sans">
+    <footer className="bg-[#041a13] border-t border-emerald-900/40 pt-8 relative overflow-hidden z-20 font-sans">
       
       {/* Abstract Background Elements */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-700/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -131,7 +131,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6 }}
-          className="bg-[#06241b] border border-emerald-900/60 rounded-3xl p-8 md:p-10 mb-16 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden"
+          className="bg-[#06241b] border border-emerald-900/60 rounded-3xl p-5 md:p-7 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px]"></div>
           
@@ -220,7 +220,7 @@ export default function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6 mb-8"
         >
           <motion.div variants={itemVariants} className="lg:col-span-4">
             <div className="flex items-center space-x-3 mb-6">

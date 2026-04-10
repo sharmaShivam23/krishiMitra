@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { connectDB } from '@/lib/mongodb'; 
-import { Scan, User } from '@/models'; // Make sure User is imported!
+import { Scan, User } from '@/models'; 
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: Request) {
   try {
-    // 1. Get the data from the frontend (Make sure frontend passes userId!)
     const { imageUrl, imageBase64, audioBase64, audioMimeType, language, userId } = await req.json();
 
     if (!imageUrl && !imageBase64) {
@@ -58,33 +57,44 @@ export async function POST(req: Request) {
       payloadParts.push({ inlineData: { data: cleanAudioBase64, mimeType: cleanMimeType } });
     }
 
-    // 2. 🚀 BULLETPROOF RETRY LOGIC FOR AI
-    let responseText = "";
+    let analysisData;
+    let isMockData = false;
     let attempts = 0;
     const maxRetries = 3;
 
+    // 🚀 BULLETPROOF RETRY LOGIC FOR AI
     while (attempts < maxRetries) {
       try {
-        const modelName = attempts === maxRetries - 1 ? "gemini-1.5-flash" : "gemini-2.5-flash";
+        const modelName = attempts === maxRetries - 1 ? "gemini-2.5-flash" : "gemini-2.5-flash";
         const model = genAI.getGenerativeModel({ model: modelName });
         const result = await model.generateContent(payloadParts);
-        responseText = result.response.text();
-        break; 
+        const responseText = result.response.text();
+        const cleanedText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
+        analysisData = JSON.parse(cleanedText);
+        break; // Success! Exit loop.
       } catch (apiError: any) {
         attempts++;
-        if (attempts >= maxRetries) {
-          throw new Error("Google AI servers are currently overloaded. Please try again in a few minutes.");
+        console.warn(`⚠️ API Attempt ${attempts} failed:`, apiError.message);
+        if (attempts < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, 1500));
         }
-        await new Promise(resolve => setTimeout(resolve, 1500));
       }
     }
 
-    const cleanedText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
-    let analysisData;
-    try {
-      analysisData = JSON.parse(cleanedText);
-    } catch (parseError) {
-      return NextResponse.json({ error: "Failed to parse AI response." }, { status: 500 });
+    // 🛡️ HACKATHON MOCK FALLBACK
+    // If all 3 attempts failed (servers overloaded), use fake data so the presentation doesn't crash!
+    if (!analysisData) {
+      console.log("🚨 ALL AI ATTEMPTS FAILED. USING MOCK DATA FOR DEMO!");
+      isMockData = true;
+      analysisData = {
+        disease: "Early Blight (Simulated)",
+        confidence: 0.95,
+        harm: "This is a simulated response due to high server traffic. Early blight causes brown spots on leaves and can reduce yield.",
+        solutions: [
+          "Apply a copper-based fungicide immediately.",
+          "Ensure proper spacing between plants for airflow."
+        ]
+      };
     }
 
     // 3. 🚀 DATABASE & N8N OUTBREAK LOGIC
@@ -99,7 +109,7 @@ export async function POST(req: Request) {
         
         if (currentUser) {
           const userDistrict = currentUser.district;
-          const severity = "HIGH"; // Forced to HIGH for your testing
+          const severity = "HIGH"; // Forced to HIGH for testing
 
           // Save scan
           await Scan.create({
@@ -128,7 +138,6 @@ export async function POST(req: Request) {
               "name phone preferredLanguage"
             ).lean();
 
-            // Your Hardcoded n8n Webhook URL
             const N8N_WEBHOOK_URL = "https://n8n.sharmashivam.me/webhook/edddd3d6-2f69-4f35-9e05-2037ee8484c5";
             console.log("🔥 CRITICAL OUTBREAK: Pinging n8n at", N8N_WEBHOOK_URL);
 
@@ -160,13 +169,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ 
       success: true, 
       analysis: analysisData,
-      outbreakTriggered: outbreakTriggered 
+      outbreakTriggered: outbreakTriggered,
+      isMockData: isMockData // Let the frontend know if it was faked
     }, { status: 200 });
 
   } catch (error: any) {
-    console.error("AI Disease Detection Error:", error);
+    console.error("Critical Route Error:", error);
     return NextResponse.json(
-      { error: error.message || 'Failed to analyze image and audio' }, 
+      { error: 'Failed to process request entirely.' }, 
       { status: 500 }
     );
   }
