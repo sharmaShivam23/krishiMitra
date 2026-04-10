@@ -94,7 +94,7 @@ const QUICK_TILES = [
     labelKey: 'tiles.advisor.label',
     subKey: 'tiles.advisor.sub',
     icon: Brain,
-    href: '/dashboard/mandi-prices/mandi-advisor',
+    href: '/dashboard/mandi-prices/mandi-advisor2',
     image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800&auto=format&fit=crop',
     accent: 'from-violet-600/70 to-purple-700/70',
     glow: 'shadow-violet-900/40',

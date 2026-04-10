@@ -284,7 +284,7 @@ export default function MandiPrices() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:flex items-center gap-2">
             <button
-              onClick={() => router.push(`/${locale}/dashboard/mandi-prices/mandi-advisor`)}
+              onClick={() => router.push(`/${locale}/dashboard/mandi-prices/mandi-advisor2`)}
               className="flex items-center justify-center space-x-2 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-4 py-2.5 rounded-2xl font-bold hover:from-gray-800 hover:to-gray-700 transition shadow-sm active:scale-95"
             >
               <Bot className="w-4 h-4" />

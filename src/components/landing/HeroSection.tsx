@@ -116,7 +116,7 @@ export default function Hero() {
           {/* CTA buttons */}
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center gap-4 mb-16">
             <a
-              href={`/${locale}/dashboard/mandi-prices/mandi-advisor`}
+              href={`/${locale}/dashboard/mandi-prices/mandi-advisor2`}
               className="flex items-center justify-center px-9 py-4 bg-amber-400 text-stone-950 rounded-2xl font-black text-lg hover:bg-amber-300 transition-all shadow-[0_0_50px_-8px_rgba(251,191,36,0.7)] hover:shadow-[0_0_60px_-6px_rgba(251,191,36,0.9)] active:scale-95 group"
             >
               {t('btnAdvisor')}
