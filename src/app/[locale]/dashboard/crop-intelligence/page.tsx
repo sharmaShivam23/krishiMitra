@@ -1,7 +1,3 @@
-
-
-
-
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -10,7 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import {
   Sprout, MapPin, CloudSun, Loader2, ArrowRight, Target,
   AlertCircle, Droplets, Calendar, TrendingUp, Sparkles, Map,
-  CheckCircle2, Database, ChevronDown, ExternalLink
+  CheckCircle2, Database, ChevronDown, ExternalLink, ShieldAlert
 } from 'lucide-react';
 import { translateDBText } from '@/utils/dbTranslator';
 import { getAiLanguage } from '@/lib/localeToLanguage';
@@ -34,7 +30,7 @@ interface Crop {
 
 interface IntelligenceResult {
   crop: Crop;
-  aiAdvice: string;
+  aiAdvice: any; // Changed to 'any' to accept our new JSON object from the backend
 }
 
 interface RegionSuggestion {
@@ -45,10 +41,6 @@ interface RegionSuggestion {
   latitude: number;
   longitude: number;
 }
-
-
-
-
 
 const weatherCodeMap: Record<number, string> = {
   0: 'Clear',
@@ -72,12 +64,9 @@ const weatherCodeMap: Record<number, string> = {
   95: 'Thunderstorm'
 };
 
-
-
 export default function CropIntelligence() {
   const t = useTranslations('CropIntelligence');
   const locale = useLocale();
-
 
   const initialLang = getAiLanguage(locale);
 
@@ -154,10 +143,7 @@ export default function CropIntelligence() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const autoFillRegionDetails = async (
-    latitude?: number,
-    longitude?: number
-  ) => {
+  const autoFillRegionDetails = async (latitude?: number, longitude?: number) => {
     if (typeof latitude !== 'number' || typeof longitude !== 'number') return;
     setWeatherCoords({ lat: latitude, lon: longitude });
     setIsFetchingWeather(true);
@@ -199,7 +185,6 @@ export default function CropIntelligence() {
     setIsAutoFillingRegionData(false);
   };
 
-  // Auto-fill region + weather from the user's DB profile on mount
   useEffect(() => {
     const autoFillFromDB = async () => {
       try {
@@ -219,7 +204,6 @@ export default function CropIntelligence() {
 
         setIsAutoFillingRegionData(true);
         try {
-          // Try district first, fall back to state for better Indian location results
           const tryGeocode = async (term: string) => {
             const res = await fetch(
               `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(term)}&count=5&language=en&format=json&countryCode=IN`
@@ -229,7 +213,6 @@ export default function CropIntelligence() {
           };
 
           let results = district ? await tryGeocode(district) : [];
-          // If district search returned nothing, fall back to state
           if (results.length === 0 && state) {
             results = await tryGeocode(state);
           }
@@ -245,7 +228,6 @@ export default function CropIntelligence() {
       }
     };
     void autoFillFromDB();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCropSelect = (cropName: string) => {
@@ -253,14 +235,11 @@ export default function CropIntelligence() {
     setIsCropDropdownOpen(false);
   };
 
-
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     if (e.target.name === 'location') setShowSuggestions(true);
   };
 
-  // When user presses Enter in location field, pick the top suggestion and fetch weather
   const handleLocationKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && regionSuggestions.length > 0) {
       e.preventDefault();
@@ -294,34 +273,61 @@ export default function CropIntelligence() {
     }
   };
 
-  const renderAdvice = (text: string) => {
-    return text
-      .split('\n')
-      .filter(line => line.trim())
-      .map((line, i) => (
-        <motion.div 
-          initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} key={i} 
-          className="bg-white p-4 rounded-2xl shadow-sm border border-emerald-50 flex items-start gap-4"
-        >
-          <div className="bg-emerald-100 p-2 rounded-full shrink-0 mt-0.5">
-            <Sparkles className="w-4 h-4 text-emerald-600" />
-          </div>
-          <p className="text-gray-700 font-medium leading-relaxed">
-            {line.replace(/^[-•*]\s*/, '').trim()}
-          </p>
+  // 🚀 FIXED: Now correctly parses the JSON Object returned by our backend!
+  const renderAdvice = (advice: any) => {
+    if (!advice) return null;
+
+    // Fallback if the backend somehow returned a string instead of JSON
+    if (typeof advice === 'string') {
+      return advice.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
+        <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} key={i} className="bg-white p-4 rounded-2xl shadow-sm border border-emerald-50 flex items-start gap-4">
+          <div className="bg-emerald-100 p-2 rounded-full shrink-0 mt-0.5"><Sparkles className="w-4 h-4 text-emerald-600" /></div>
+          <p className="text-gray-700 font-medium leading-relaxed">{line.replace(/^[-•*]\s*/, '').trim()}</p>
         </motion.div>
       ));
+    }
+
+    // Render the beautiful JSON object
+    return (
+      <div className="space-y-4">
+        {advice.summary && (
+          <div className="text-emerald-900 font-medium leading-relaxed bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+            {advice.summary}
+          </div>
+        )}
+        
+        {advice.recommendations && advice.recommendations.map((rec: string, i: number) => (
+          <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} key={`rec-${i}`} className="bg-white p-4 rounded-2xl shadow-sm border border-emerald-50 flex items-start gap-4">
+            <div className="bg-emerald-100 p-2 rounded-full shrink-0 mt-0.5"><CheckCircle2 className="w-4 h-4 text-emerald-600" /></div>
+            <p className="text-gray-700 font-medium leading-relaxed">{rec}</p>
+          </motion.div>
+        ))}
+
+        {advice.risks && advice.risks.length > 0 && (
+          <div className="mt-4 p-5 bg-amber-50 rounded-2xl border border-amber-200">
+            <h5 className="font-bold text-amber-900 mb-3 flex items-center"><ShieldAlert className="w-4 h-4 mr-2" /> Risks to Monitor</h5>
+            <ul className="space-y-2">
+              {advice.risks.map((risk: string, idx: number) => (
+                <li key={`risk-${idx}`} className="flex items-start text-amber-800 text-sm font-medium">
+                  <span className="mr-2 text-amber-500">•</span> {risk}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 py-8 px-1 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-350 mx-auto">
+    <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 py-8 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="max-w-7xl mx-auto">
         
         {/* HEADER */}
         <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200/60 pb-6">
           <div className="flex items-center gap-4">
-            <div className="bg-cover to-teal-600 p-3 rounded-xl shadow-lg shadow-emerald-500/20">
-              <img src="/favicon.ico" className='h-16 w-16 bg-cover' alt="" />
+            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-xl shadow-lg shadow-emerald-500/20">
+              <img src="/favicon.ico" className='h-12 w-12 bg-cover' alt="" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{t('title')}</h1>
@@ -349,26 +355,24 @@ export default function CropIntelligence() {
               <div ref={cropDropdownRef} className="relative">
                 <label className="text-sm font-semibold text-gray-700 mb-1.5 block">{t('targetCrop')} <span className="text-red-500">*</span></label>
                 <div onClick={() => setIsCropDropdownOpen(!isCropDropdownOpen)} className={`w-full flex items-center justify-between px-4 py-3 bg-white border cursor-pointer rounded-xl transition-all ${isCropDropdownOpen ? 'border-emerald-500 ring-2 ring-emerald-500/20' : 'border-gray-200 hover:border-gray-300'}`}>
-  <div className="flex items-center gap-3">
-    <Target className="h-4 w-4 text-gray-400" />
-    <span className={formData.crop ? "text-gray-900 font-medium text-sm" : "text-gray-400 text-sm"}>
-      {formData.crop ? translateDBText(formData.crop, locale) : t('selectCrop')}
-    </span>
-  </div>
-  <ChevronDown className="w-4 h-4 text-gray-400" />
-</div>
+                  <div className="flex items-center gap-3">
+                    <Target className="h-4 w-4 text-gray-400" />
+                    <span className={formData.crop ? "text-gray-900 font-medium text-sm" : "text-gray-400 text-sm"}>
+                      {formData.crop ? translateDBText(formData.crop, locale) : t('selectCrop')}
+                    </span>
+                  </div>
+                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                </div>
 
                 <AnimatePresence>
                   {isCropDropdownOpen && (
                     <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute top-full mt-2 left-0 right-0 bg-white border border-gray-200 shadow-xl rounded-xl z-50 max-h-60 overflow-y-auto custom-scrollbar">
                       {availableCrops.map((c) => (
                         <div key={c._id} onClick={() => handleCropSelect(c.name)} className="px-4 py-3 text-sm cursor-pointer hover:bg-emerald-50 text-gray-700 flex justify-between items-center border-b border-gray-50 last:border-0">
-                          {/* <span className="font-medium">{c.name} {c.localName && <span className="text-gray-400 font-normal ml-1">({c.localName})</span>}</span> */}
                           <span className="font-medium">
-  {/* 🌟 FIX: Added translateDBText here! */}
-  {translateDBText(c.name, locale)} 
-  {c.localName && <span className="text-gray-400 font-normal ml-1">({c.localName})</span>}
-</span>
+                            {translateDBText(c.name, locale)} 
+                            {c.localName && <span className="text-gray-400 font-normal ml-1">({c.localName})</span>}
+                          </span>
                           {formData.crop === c.name && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
                         </div>
                       ))}
@@ -444,11 +448,6 @@ export default function CropIntelligence() {
                 )}
               </div>
 
-
-
-            
-
-
               {/* ─── Lifecycle CTA ─── */}
               {formData.crop && (
                 <Link
@@ -487,16 +486,15 @@ export default function CropIntelligence() {
           </div>
 
         
-          <div className="lg:col-span-8 h-full min-h-150">
+          <div className="lg:col-span-8 h-full min-h-[500px]">
             <AnimatePresence mode="wait">
 
-            
               {!result && !isAnalyzing && !error && (
-                <motion.div key="welcome" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-150 flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200/60">
+                <motion.div key="welcome" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-[500px] flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200/60">
                   {/* Hero image banner */}
                   <div className="relative h-52 overflow-hidden shrink-0"
                     style={{ backgroundImage: "url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=800&auto=format&fit=crop')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                    <div className="absolute inset-0 bg-linear-to-b from-emerald-950/30 via-emerald-900/60 to-emerald-950/85" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/30 via-emerald-900/60 to-emerald-950/85" />
                     <div className="absolute inset-0 flex flex-col justify-end p-6">
                       <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-400/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold mb-3 w-fit">
                         <Sparkles className="w-3 h-3" /> AI Crop Intelligence
@@ -556,9 +554,9 @@ export default function CropIntelligence() {
                 </motion.div>
               )}
 
-           
+            
               {isAnalyzing && (
-                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-150 flex flex-col justify-center items-center bg-gray-900 text-white rounded-2xl p-8 text-center relative overflow-hidden shadow-2xl">
+                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-[500px] flex flex-col justify-center items-center bg-gray-900 text-white rounded-2xl p-8 text-center relative overflow-hidden shadow-2xl">
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
                   <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="bg-emerald-500/20 p-6 rounded-full backdrop-blur-md mb-6 relative z-10 border border-emerald-500/30">
                     <Loader2 className="w-12 h-12 animate-spin text-emerald-400" />
@@ -571,7 +569,7 @@ export default function CropIntelligence() {
               )}
 
               {error && (
-                <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-150 flex flex-col justify-center items-center bg-red-50 border border-red-100 rounded-2xl p-8 text-center">
+                <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-[500px] flex flex-col justify-center items-center bg-red-50 border border-red-100 rounded-2xl p-8 text-center">
                   <div className="bg-white p-4 rounded-full shadow-sm mb-4">
                     <AlertCircle className="w-10 h-10 text-red-500" />
                   </div>
@@ -583,7 +581,6 @@ export default function CropIntelligence() {
         
               {result && (
                 <motion.div key="result" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
-                  
                   
                   <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200/60 relative overflow-hidden">
                     <div className="absolute top-0 right-0 bg-emerald-50 text-emerald-700 font-bold text-xs px-4 py-2 rounded-bl-xl flex items-center border-b border-l border-emerald-100">
@@ -639,15 +636,15 @@ export default function CropIntelligence() {
                   </div>
 
                   {/* AI Advice Section */}
-                  <div className="bg-linear-to-br from-emerald-50 to-teal-50/50 rounded-2xl p-6 md:p-8 border border-emerald-100 shadow-inner">
+                  <div className="bg-gradient-to-br from-emerald-50 to-teal-50/50 rounded-2xl p-6 md:p-8 border border-emerald-100 shadow-inner">
                     <h4 className="font-bold text-emerald-900 mb-6 flex items-center text-lg">
                       <Sparkles className="w-5 h-5 mr-2 text-emerald-600" />
                       {t('aiPlanTitle')}
                     </h4>
                     
-                    <div className="space-y-3">
-                      {renderAdvice(result.aiAdvice)}
-                    </div>
+                    {/* 🚀 Render the new JSON Object or String fallback */}
+                    {renderAdvice(result.aiAdvice)}
+                    
                   </div>
 
                   {/* ─── Lifecycle CTA Banner (Result Panel) ─── */}
