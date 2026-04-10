@@ -4,10 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, Variants, animate, useInView } from 'framer-motion';
 import {
   TrendingUp, TrendingDown,
-  ShieldCheck, ArrowRight, MapPin, Activity,
+  ArrowRight, MapPin,
   Loader2, IndianRupee,
   CheckCircle2, Sprout, Brain, Microscope, BarChart3, Leaf,
-  AlertTriangle, Zap, Thermometer
+  AlertTriangle, Thermometer, Camera, Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
@@ -103,24 +103,7 @@ const QUICK_TILES = [
 ];
 
 
-/* ════════════════════════════════════════════════════════
-   RADAR PULSE (for AI panel)
-═══════════════════════════════════════════════════════ */
-function RadarPulse() {
-  return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-      {[1, 2, 3].map(i => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full border border-emerald-500/20"
-          initial={{ width: 40, height: 40, opacity: 0.6 }}
-          animate={{ width: 140, height: 140, opacity: 0 }}
-          transition={{ duration: 2.5, delay: i * 0.8, repeat: Infinity, ease: 'easeOut' }}
-        />
-      ))}
-    </div>
-  );
-}
+
 
 /* ════════════════════════════════════════════════════════
    MAIN COMPONENT
@@ -260,53 +243,36 @@ export default function DashboardOverview() {
       {/* ══════════════════════════════════════════════════════
          HERO GREETING BANNER
       ═════════════════════════════════════════════════════ */}
-      <motion.div variants={item} className="relative rounded-3xl overflow-hidden min-h-[160px] md:min-h-[190px] shadow-xl">
-        {/* Background field image */}
+      <motion.div variants={item} className="relative rounded-2xl overflow-hidden min-h-[150px] md:min-h-[180px]">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2064&auto=format&fit=crop')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/95 via-emerald-950/80 to-emerald-900/50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/60 to-transparent" />
-
-        {/* Floating leaf particles */}
-        {['🌿','🍃','🌾'].map((emoji, i) => (
-          <motion.span
-            key={i}
-            className="absolute text-2xl pointer-events-none select-none"
-            style={{ right: `${15 + i * 20}%`, top: `${20 + i * 15}%` }}
-            animate={{ y: [0, -10, 0], rotate: [0, 8, -8, 0], opacity: [0.2, 0.5, 0.2] }}
-            transition={{ duration: 4 + i, repeat: Infinity, delay: i * 1.2 }}
-          >
-            {emoji}
-          </motion.span>
-        ))}
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/90 via-gray-900/75 to-gray-900/40" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 md:p-8 h-full">
           <div>
-            {/* Season badge */}
-            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest border mb-3 ${season.color}`}>
+            <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider border mb-3 ${season.color}`}>
               <span>{season.emoji}</span> {t('seasonBadge', { season: seasonName })}
             </div>
 
-            {/* Greeting */}
-            <h1 className="text-2xl md:text-4xl font-black text-white leading-tight">
+            <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
               {greeting()},{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-amber-400">
-                {userName ? `${userName}!` : `${t('greetings.fallbackName')}!`}
+              <span className="text-emerald-400">
+                {userName ? `${userName}` : t('greetings.fallbackName')}
               </span>
             </h1>
-            <p className="text-emerald-200/70 mt-1.5 flex items-center gap-1.5 font-semibold text-sm">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <p className="text-white/50 mt-1.5 flex items-center gap-1.5 text-sm">
+              <MapPin className="w-3.5 h-3.5 shrink-0" />
               {locationName} · {currentTime.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
             </p>
           </div>
 
           <Link
             href={`/${locale}/dashboard/disease-detection`}
-            className="hidden md:flex items-center gap-2 bg-emerald-400 text-emerald-950 px-6 py-3 rounded-2xl font-black hover:bg-amber-400 transition-all shadow-lg active:scale-95 shrink-0 group"
+            className="hidden md:flex items-center gap-2 bg-white text-gray-900 px-5 py-2.5 rounded-xl font-semibold hover:bg-emerald-400 hover:text-emerald-950 transition-colors shrink-0 text-sm"
           >
-            <ShieldCheck className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <Camera className="w-4 h-4" />
             <span>{t('runScan')}</span>
           </Link>
         </div>
@@ -315,30 +281,28 @@ export default function DashboardOverview() {
       {/* ══════════════════════════════════════════════════════
          QUICK ACCESS TILES
       ═════════════════════════════════════════════════════ */}
-      <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+      <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {QUICK_TILES.map(tile => (
           <Link
             key={tile.id}
             href={`/${locale}${tile.href}`}
-            className={`relative overflow-hidden rounded-2xl group shadow-lg ${tile.glow} hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 active:scale-95 min-h-[130px]`}
+            className="relative overflow-hidden rounded-xl group hover:shadow-lg transition-shadow duration-200 min-h-[120px]"
           >
-            {/* Bg image */}
             <div
-              className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
+              className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${tile.image})` }}
             />
             <div className={`absolute inset-0 bg-gradient-to-br ${tile.accent}`} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
 
             <div className="relative z-10 p-4 h-full flex flex-col justify-between">
-              {/* Chip */}
-              <span className="self-start text-[10px] font-black bg-white/15 backdrop-blur-sm border border-white/20 px-2 py-0.5 rounded-full text-white">
+              <span className="self-start text-[10px] font-medium bg-white/15 px-2 py-0.5 rounded-full text-white">
                 {t(tile.chipKey)}
               </span>
               <div>
-                <tile.icon className="w-6 h-6 text-white mb-1.5 drop-shadow-md" />
-                <div className="text-white font-black text-base leading-tight drop-shadow-md">{t(tile.labelKey)}</div>
-                <div className="text-white/70 text-[11px] font-semibold mt-0.5">{t(tile.subKey)}</div>
+                <tile.icon className="w-5 h-5 text-white/90 mb-1" />
+                <div className="text-white font-semibold text-[14px] leading-tight">{t(tile.labelKey)}</div>
+                <div className="text-white/60 text-[11px] mt-0.5">{t(tile.subKey)}</div>
               </div>
             </div>
           </Link>
@@ -350,86 +314,89 @@ export default function DashboardOverview() {
       ═════════════════════════════════════════════════════ */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
 
-        {/* ── Weather Card ── */}
-        <motion.div variants={item} className="relative overflow-hidden bg-linear-to-br from-sky-900 via-blue-800 to-indigo-900 rounded-3xl p-6 text-white shadow-[0_18px_50px_-22px_rgba(14,34,84,0.85)] border border-sky-700/40">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-sky-300/10 rounded-full blur-2xl" />
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-400/10 rounded-full blur-2xl" />
+        {/* ── Live Weather Card ── */}
+        <motion.div variants={item} className="relative overflow-hidden rounded-3xl text-white shadow-[0_18px_50px_-22px_rgba(14,34,84,0.85)] border border-sky-700/40" style={{ background: 'linear-gradient(135deg, #0c4a6e 0%, #1e3a5f 40%, #312e81 100%)' }}>
+          {/* Ambient glow */}
+          <div className="absolute top-0 right-0 w-40 h-40 bg-sky-400/8 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl" />
 
-          <div className="relative z-10 flex flex-col h-full">
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="font-bold text-emerald-100 text-sm uppercase tracking-wider">{t('soilCard.eyebrow')}</h3>
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center">
-                <Thermometer className="w-5 h-5 text-emerald-200" />
-              </div>
+          <div className="relative z-10 p-6 flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[11px] font-semibold text-sky-300/80 uppercase tracking-wider">Live Weather</span>
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </div>
-
-            <div className="text-2xl font-black leading-tight mb-2">
-              {t('soilCard.title')}
-            </div>
-            <p className="text-emerald-100/70 text-sm font-semibold mb-4">
-              {t('soilCard.description')}
+            <p className="text-[12px] text-sky-200/60 flex items-center gap-1 mb-4">
+              <MapPin className="w-3 h-3" /> {locationName}
             </p>
 
-            <div className="flex flex-wrap gap-2 text-[11px] font-bold mb-4">
-              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">{t('soilCard.tags.ph')}</span>
-              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">{t('soilCard.tags.npk')}</span>
-              <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15">{t('soilCard.tags.soilType')}</span>
-            </div>
+            {isLoadingWeather ? (
+              <div className="flex-1 flex items-center justify-center py-6">
+                <Loader2 className="w-7 h-7 animate-spin text-sky-300/50" />
+              </div>
+            ) : weather ? (
+              <>
+                {/* Main temp */}
+                <div className="flex items-start gap-3 mb-5">
+                  <span className="text-5xl leading-none select-none">{weather.emoji}</span>
+                  <div>
+                    <div className="text-[3rem] font-black leading-none tracking-tight">
+                      {weather.temp}<span className="text-2xl font-semibold text-sky-300/70">°C</span>
+                    </div>
+                    <p className="text-[13px] text-sky-200/80 font-medium mt-0.5">{weather.condition}</p>
+                  </div>
+                </div>
 
-            <Link
-              href={`/${locale}/dashboard/weather`}
-              className="mt-auto inline-flex items-center justify-center gap-2 bg-sky-400 text-sky-950 px-4 py-2.5 rounded-2xl font-black hover:bg-sky-300 transition-all shadow-lg active:scale-95"
-            >
-              {t('soilCard.cta')} <ArrowRight className="w-4 h-4" />
-            </Link>
+                {/* Stats row */}
+                <div className="flex gap-3 mt-auto">
+                  <div className="flex-1 bg-white/8 rounded-xl px-3 py-2.5 border border-white/5">
+                    <span className="text-[10px] text-sky-300/60 block">Humidity</span>
+                    <span className="text-[15px] font-semibold">{weather.humidity}%</span>
+                  </div>
+                  <div className="flex-1 bg-white/8 rounded-xl px-3 py-2.5 border border-white/5">
+                    <span className="text-[10px] text-sky-300/60 block">Wind</span>
+                    <span className="text-[15px] font-semibold">{weather.wind} km/h</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center py-4 text-sky-300/50">
+                <Thermometer className="w-8 h-8 mb-2" />
+                <span className="text-[12px]">Weather unavailable</span>
+              </div>
+            )}
           </div>
         </motion.div>
 
         {/* ── Active Crop Card ── */}
-        <motion.div variants={item} className="relative overflow-hidden bg-white rounded-3xl border border-emerald-100 shadow-[0_18px_45px_-28px_rgba(2,44,34,0.35)] col-span-1 md:col-span-2">
-
-          {/* Field bg */}
-          <div
-            className="absolute inset-0 bg-cover bg-bottom opacity-12"
-            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=800&auto=format&fit=crop')" }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/70" />
-
-          <div className="relative z-10 p-6 md:p-7 flex flex-col h-full justify-between">
-            <div className="flex justify-between items-start mb-4">
+        {/* ── Active Crop Card ── */}
+        <motion.div variants={item} className="bg-white rounded-2xl border border-gray-200 col-span-1 md:col-span-2">
+          <div className="p-6 flex flex-col h-full justify-between">
+            <div className="flex justify-between items-start mb-5">
               <div>
-                <h3 className="text-xl md:text-2xl font-black text-emerald-900 leading-tight">{t('deployment.title')}</h3>
-                <p className="text-sm text-gray-500 font-semibold mt-0.5">{t('deployment.subtitle')}</p>
+                <h3 className="text-lg font-semibold text-gray-900">{t('deployment.title')}</h3>
+                <p className="text-[13px] text-gray-400 mt-0.5">{t('deployment.subtitle')}</p>
               </div>
-              <div className="flex flex-col items-end gap-2">
-                <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-black rounded-xl border border-emerald-200/70">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[11px] font-medium rounded-lg">
                   {t('deployment.dayTracker', { current: 42, total: 120 })}
                 </span>
-                <span className={`px-2.5 py-1 text-[10px] font-black rounded-full border ${season.color}`}>
+                <span className={`px-2 py-1 text-[10px] font-medium rounded-lg border ${season.color}`}>
                   {season.emoji} {seasonName}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-5 my-2">
-              {/* Crop icon with field ring */}
-              <div className="relative w-20 h-20 shrink-0">
-                <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                  <div
-                    className="w-full h-full bg-cover bg-center opacity-30"
-                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1466629437334-b4f6603563c5?q=80&w=200&auto=format&fit=crop')" }}
-                  />
-                </div>
-                <div className="absolute inset-0 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center justify-center">
-                  <Leaf className="w-10 h-10 text-emerald-500" />
-                </div>
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-14 h-14 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
+                <Leaf className="w-7 h-7 text-emerald-600" />
               </div>
               <div>
-                <h2 className="text-[2rem] md:text-[2.1rem] leading-tight font-black text-emerald-900">
+                <h2 className="text-2xl font-bold text-gray-900">
                   {t('deployment.cropName')}
                 </h2>
-                <p className="text-emerald-600 font-black mt-1 flex items-center gap-1 text-base md:text-lg">
-                  <CheckCircle2 className="w-4 h-4" />
+                <p className="text-emerald-600 font-medium mt-0.5 flex items-center gap-1 text-sm">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                   {t('deployment.healthLabel')}: {t('deployment.healthValue')}
                 </p>
               </div>
@@ -437,15 +404,15 @@ export default function DashboardOverview() {
 
             <div className="mt-auto">
               <div className="flex justify-between items-center mb-1.5">
-                <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('growthProgress')}</span>
-                <span className="text-xs font-black text-emerald-600">{t('deployment.harvestProgress', { percent: 35 })}</span>
+                <span className="text-[11px] text-gray-400 font-medium">{t('growthProgress')}</span>
+                <span className="text-[11px] font-medium text-emerald-600">{t('deployment.harvestProgress', { percent: 35 })}</span>
               </div>
-              <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: '35%' }}
-                  transition={{ duration: 1.5, ease: 'easeOut', delay: 0.5 }}
-                  className="h-3 rounded-full bg-gradient-to-r from-emerald-500 to-green-400 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                  transition={{ duration: 1.2, ease: 'easeOut', delay: 0.4 }}
+                  className="h-2 rounded-full bg-emerald-500"
                 />
               </div>
             </div>
@@ -459,121 +426,97 @@ export default function DashboardOverview() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
 
         {/* ── Mandi Tracker ── */}
-        <motion.div variants={item} className="bg-white rounded-3xl p-6 md:p-7 border border-emerald-100 shadow-[0_18px_45px_-28px_rgba(2,44,34,0.3)]">
-          <div className="flex justify-between items-center mb-5">
-            <h3 className="text-lg font-black text-emerald-900 flex items-center gap-2">
-              <div className="p-2 bg-amber-50 rounded-xl border border-amber-100">
-                <BarChart3 className="w-4.5 h-4.5 text-amber-600" />
-              </div>
+        <motion.div variants={item} className="bg-white rounded-2xl p-5 md:p-6 border border-gray-200">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-[15px] font-semibold text-gray-900 flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-gray-400" />
               {t('mandi.title')}
             </h3>
             <Link
               href={`/${locale}/dashboard/mandi-prices`}
-              className="text-sm font-bold text-emerald-600 hover:text-emerald-800 flex items-center bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl transition-all"
+              className="text-[12px] font-medium text-emerald-600 hover:text-emerald-700 flex items-center transition-colors"
             >
-              {t('mandi.viewAll')} <ArrowRight className="w-4 h-4 ml-1" />
+              {t('mandi.viewAll')} <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
             </Link>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-1">
             {isLoadingMandi ? (
-              <div className="py-10 flex flex-col items-center text-gray-400">
-                <Loader2 className="w-8 h-8 animate-spin text-emerald-400 mb-2" />
-                <span className="text-sm">{t('mandi.loading')}</span>
+              <div className="py-8 flex flex-col items-center text-gray-400">
+                <Loader2 className="w-5 h-5 animate-spin text-gray-300 mb-2" />
+                <span className="text-[12px]">{t('mandi.loading')}</span>
               </div>
             ) : mandiAlerts.map((alert, idx) => (
-              <motion.div
+              <div
                 key={idx}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                className={`flex items-center justify-between p-4 rounded-2xl border transition-all hover:shadow-sm ${idx % 2 === 0 ? 'bg-stone-50 border-stone-100' : 'bg-emerald-50/40 border-emerald-100/60'}`}
+                className="flex items-center justify-between py-3 px-1 border-b border-gray-100 last:border-0"
               >
-                <div className="flex items-center gap-3">
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base ${idx % 2 === 0 ? 'bg-amber-100' : 'bg-emerald-100'}`}>
-                    {idx === 0 ? '🌾' : idx === 1 ? '🌽' : '🧅'}
-                  </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 text-[14px]">{alert.commodity}</h4>
+                  <p className="text-[11px] text-gray-400 flex items-center gap-0.5 mt-0.5">
+                    <MapPin className="w-2.5 h-2.5" /> {alert.market}
+                  </p>
+                </div>
+                <div className="text-right flex items-center gap-2">
                   <div>
-                    <h4 className="font-black text-gray-900 text-sm">{alert.commodity}</h4>
-                    <p className="text-[11px] text-gray-400 flex items-center gap-0.5">
-                      <MapPin className="w-2.5 h-2.5" /> {alert.market}
-                    </p>
+                    <div className="font-semibold text-gray-900 text-[15px]">
+                      ₹{alert.modalPrice}
+                    </div>
+                    <div className="text-[10px] text-gray-400 mt-0.5">
+                      ₹{alert.minPrice}–₹{alert.maxPrice}
+                    </div>
                   </div>
+                  {idx === 0
+                    ? <TrendingUp className="w-4 h-4 text-emerald-500" />
+                    : idx === 1
+                    ? <TrendingDown className="w-4 h-4 text-red-400" />
+                    : <TrendingUp className="w-4 h-4 text-emerald-500" />}
                 </div>
-                <div className="text-right">
-                  <div className="font-black text-gray-900 flex items-center gap-0.5 justify-end">
-                    <IndianRupee className="w-3.5 h-3.5" />
-                    <span className="text-lg">{alert.modalPrice}</span>
-                    {/* Trend indicator — random for now, would come from price history */}
-                    {idx === 0
-                      ? <TrendingUp className="w-4 h-4 text-emerald-500 ml-1" />
-                      : idx === 1
-                      ? <TrendingDown className="w-4 h-4 text-red-400 ml-1" />
-                      : <TrendingUp className="w-4 h-4 text-emerald-500 ml-1" />}
-                  </div>
-                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mt-0.5">
-                    ₹{alert.minPrice}–₹{alert.maxPrice}
-                  </div>
-                </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </motion.div>
 
         {/* ── AI Intelligence Panel ── */}
-        <motion.div variants={item} className="bg-gradient-to-br from-emerald-950 to-[#03261f] rounded-3xl p-6 md:p-7 text-white shadow-[0_18px_50px_-24px_rgba(2,44,34,0.8)] relative overflow-hidden border border-emerald-800/50">
-
-          {/* Field bg overlay */}
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-10"
-            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=800&auto=format&fit=crop')" }}
-          />
-
-          {/* Radar pulse behind icon */}
-          <div className="absolute top-8 right-8">
-            <RadarPulse />
-            <div className="relative z-10 w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30">
-              <Zap className="w-5 h-5 text-emerald-400" />
-            </div>
-          </div>
-
+        <motion.div variants={item} className="bg-gray-900 rounded-2xl p-5 md:p-6 text-white relative overflow-hidden border border-gray-800">
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-1">
-              <ShieldCheck className="w-5 h-5 text-emerald-400" />
-              <h3 className="text-lg font-black">{t('aiAssistant.title')}</h3>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-400" />
+                <h3 className="text-[15px] font-semibold">{t('aiAssistant.title')}</h3>
+              </div>
             </div>
-            <p className="text-emerald-100/60 text-sm mb-6">{t('aiPanel.intro')}</p>
+            <p className="text-gray-400 text-[13px] mb-5">{t('aiPanel.intro')}</p>
 
-            <div className="space-y-3">
-              <div className="bg-white/8 border border-white/10 rounded-2xl p-4 flex items-start gap-3">
-                <AlertTriangle className="w-4 h-4 text-amber-300 mt-0.5" />
+            <div className="space-y-2.5">
+              <div className="bg-white/5 border border-white/8 rounded-xl p-3.5 flex items-start gap-3">
+                <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
                 <div>
-                  <h4 className="text-sm font-black text-amber-200">{t('aiPanel.alertTitle')}</h4>
-                  <p className="text-xs text-emerald-100/60 mt-1">
+                  <h4 className="text-[13px] font-medium text-amber-200">{t('aiPanel.alertTitle')}</h4>
+                  <p className="text-[12px] text-gray-400 mt-1 leading-relaxed">
                     {t('aiPanel.alertDesc')}
                   </p>
                 </div>
               </div>
 
-              {/* AI tip card */}
-              <div className="bg-white/5 border border-white/8 rounded-2xl p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Brain className="w-4 h-4 text-violet-400" />
-                  <span className="text-xs font-black text-violet-300 uppercase tracking-wider">{t('aiPanel.insightLabel')}</span>
+              <div className="bg-white/5 border border-white/8 rounded-xl p-3.5">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <Brain className="w-3.5 h-3.5 text-violet-400" />
+                  <span className="text-[11px] font-medium text-violet-300 uppercase tracking-wider">{t('aiPanel.insightLabel')}</span>
                 </div>
-                <p className="text-xs text-emerald-100/70 leading-relaxed">
+                <p className="text-[12px] text-gray-400 leading-relaxed">
                   {t('aiPanel.insightDesc')}
                 </p>
               </div>
             </div>
-          </div>
 
-          <Link href={`/${locale}/dashboard/soil-intelligence`}>
-            <button className="relative z-10 mt-6 w-full bg-emerald-400 hover:bg-amber-400 text-emerald-950 font-black py-3.5 rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2 group">
-              <Brain className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              {t('aiPanel.cta')}
-            </button>
-          </Link>
+            <Link href={`/${locale}/dashboard/soil-intelligence`}>
+              <button className="mt-5 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-[13px]">
+                <Brain className="w-4 h-4" />
+                {t('aiPanel.cta')}
+              </button>
+            </Link>
+          </div>
         </motion.div>
       </div>
     </motion.div>
