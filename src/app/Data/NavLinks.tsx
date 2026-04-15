@@ -1,6 +1,7 @@
 import { 
   LayoutDashboard, Leaf, Thermometer, 
-  Activity, MessageSquare, FileText, Briefcase, Bug, Store 
+  Activity, MessageSquare, FileText, Briefcase, Bug, Store,
+  Map, CloudSun
 } from 'lucide-react';
 
 // Removed 'role' since DashboardLayout handles the role logic now!
@@ -12,6 +13,8 @@ export const getNavLinks = (t: any) => [
   { id: 'products', name: t('nav.products'), href: '/dashboard/products', icon: <Store className="w-5 h-5" /> },
   { id: 'services', name: t('nav.services'), href: '/dashboard/Services', icon: <Briefcase className="w-5 h-5" /> }, 
   { id: 'soil', name: t('nav.soil'), href: '/dashboard/soil-intelligence', icon: <Thermometer className="w-5 h-5" /> },
-  { id: 'community', name: t('nav.community'), href: '/dashboard/community', icon: <MessageSquare className="w-5 h-5" /> },
-  { id: 'schemes', name: t('nav.schemes'), href: '/dashboard/schemes', icon: <FileText className="w-5 h-5" /> },
+  { id: 'community', name: t('nav.community') || 'Community', href: '/dashboard/community', icon: <MessageSquare className="w-5 h-5" /> },
+  { id: 'schemes', name: t('nav.schemes') || 'Schemes', href: '/dashboard/schemes', icon: <FileText className="w-5 h-5" /> },
+  { id: 'areaCalculate', name: t('nav.areaCalculate') || 'Calculate Area', href: '/dashboard/areaCalculate', icon: <Map className="w-5 h-5" /> },
+  { id: 'weather', name: t('nav.weather') || 'Weather', href: '/dashboard/weather', icon: <CloudSun className="w-5 h-5" /> },
 ];

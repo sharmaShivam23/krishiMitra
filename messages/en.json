@@ -154,7 +154,8 @@
       "community": "Community",
       "schemes": "Schemes",
       "products": "Products",
-      "providerPanel": "Provider Panel"
+      "providerPanel": "Provider Panel",
+      "areaCalculate" : "Area Calculator"
     },
     "actions": {
       "signOut": "Sign Out",

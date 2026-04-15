@@ -46,7 +46,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     ...(userRole === 'provider'
       ? [{
       id: 'provider-panel',
-      // ✅ FIX: Added translation support here!
+      //  FIX: Added translation support here!
       name: t('nav.providerPanel') || 'Provider Panel', 
       href: '/dashboard/provider-panel',
       icon: <Store className="w-5 h-5" />

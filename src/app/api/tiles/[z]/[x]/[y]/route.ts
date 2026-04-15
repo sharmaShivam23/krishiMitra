@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * Tile proxy for Esri World Imagery.
- * MapLibre GL v5 now uses fetch() for tiles → CORS blocks browser requests to Esri.
- * This route fetches tiles server-side (no CORS) and relays them with proper headers.
+ * Tile proxy — tries Esri World Imagery first, falls back to OpenStreetMap.
+ * This avoids the "map data not available" error when Esri lacks coverage.
  *
- * MapLibre tile template:  /api/tiles/{z}/{x}/{y}
- * Esri tile URL format:    tile/{z}/{y}/{x}   ← NOTE: y and x are swapped vs XYZ standard
+ * Esri tile format: tile/{z}/{y}/{x}  ← y and x are SWAPPED vs XYZ standard
+ * OSM tile format:  {z}/{x}/{y}.png   ← standard XYZ
  */
 export async function GET(
   _req: NextRequest,
@@ -14,43 +13,60 @@ export async function GET(
 ) {
   const { z, x, y } = await params;
 
-  // Basic validation
   if (!z || !x || !y || isNaN(Number(z)) || isNaN(Number(x)) || isNaN(Number(y))) {
     return new NextResponse('Invalid tile params', { status: 400 });
   }
 
-  // Esri swaps y/x compared to standard XYZ
-  const esriUrl = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`;
-
+  // ── 1. Try Esri World Imagery (satellite) ────────────────────────────────
   try {
-    const upstream = await fetch(esriUrl, {
+    const esriUrl = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`;
+    const esriRes = await fetch(esriUrl, {
       headers: {
         'User-Agent': 'KrishiMitra-FieldSurveyor/1.0 (server-proxy)',
         Accept: 'image/jpeg,image/png,image/*',
       },
-      // Next.js route cache — revalidate every 24 hours
       next: { revalidate: 86400 },
     });
 
-    if (!upstream.ok) {
-      return new NextResponse(null, { status: upstream.status });
+    if (esriRes.ok) {
+      const buffer = await esriRes.arrayBuffer();
+      return new NextResponse(buffer, {
+        status: 200,
+        headers: {
+          'Content-Type': esriRes.headers.get('content-type') ?? 'image/jpeg',
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'public, max-age=86400, stale-while-revalidate=3600',
+          'X-Tile-Source': 'esri',
+        },
+      });
     }
+  } catch { /* fall through */ }
 
-    const buffer = await upstream.arrayBuffer();
-    const contentType = upstream.headers.get('content-type') ?? 'image/jpeg';
-
-    return new NextResponse(buffer, {
-      status: 200,
+  // ── 2. Fallback: OpenStreetMap (road map — always has India coverage) ────
+  try {
+    const osmUrl = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+    const osmRes = await fetch(osmUrl, {
       headers: {
-        'Content-Type': contentType,
-        // Allow MapLibre to read the response in the browser
-        'Access-Control-Allow-Origin': '*',
-        // Cache aggressively — satellite tiles never change
-        'Cache-Control': 'public, max-age=86400, stale-while-revalidate=3600',
+        'User-Agent': 'KrishiMitra-FieldSurveyor/1.0 (server-proxy)',
+        Accept: 'image/png',
       },
+      next: { revalidate: 3600 },
     });
-  } catch {
-    // Network error reaching upstream Esri server
-    return new NextResponse(null, { status: 502 });
-  }
+
+    if (osmRes.ok) {
+      const buffer = await osmRes.arrayBuffer();
+      return new NextResponse(buffer, {
+        status: 200,
+        headers: {
+          'Content-Type': 'image/png',
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'public, max-age=3600, stale-while-revalidate=1800',
+          'X-Tile-Source': 'osm-fallback',
+        },
+      });
+    }
+  } catch { /* fall through */ }
+
+  // ── 3. Nothing worked — return empty transparent tile ────────────────────
+  return new NextResponse(null, { status: 204 });
 }

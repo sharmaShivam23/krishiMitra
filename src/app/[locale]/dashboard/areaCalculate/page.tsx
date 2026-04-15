@@ -7,7 +7,7 @@ const FieldCalculator = dynamic(() => import('@/components/FieldCalculator'), {
   ssr: false,
   loading: () => (
     <div className="w-full rounded-2xl overflow-hidden border border-emerald-900/30 flex items-center justify-center bg-[#071a0d]"
-         style={{ height: 'clamp(620px,82vh,920px)' }}>
+         style={{ height: 'clamp(500px,72vh,800px)' }}>
       <div className="flex flex-col items-center gap-5 text-center">
         <div className="relative">
           <div className="w-20 h-20 rounded-2xl bg-emerald-900/30 border border-emerald-800/40 flex items-center justify-center text-4xl">🛰️</div>
@@ -30,7 +30,7 @@ export default function AreaCalculatePage() {
     <div className="space-y-5">
 
       {/* ── Hero Header ──────────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-2xl border border-emerald-900/40 bg-gradient-to-br from-[#071a0d] via-[#0d2116] to-[#071510] p-6 md:p-7 shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl border border-emerald-900/40 bg-gradient-to-br from-[#071a0d] via-[#0d2116] to-[#071510] p-5 md:p-7 shadow-xl">
         {/* Decorative glows */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-8 -right-8 h-48 w-48 rounded-full bg-emerald-400/8 blur-3xl" />
@@ -50,17 +50,18 @@ export default function AreaCalculatePage() {
               </div>
               <h1 className="text-2xl font-black tracking-tight text-white md:text-3xl">Khet Naapne Ka Auzaar</h1>
               <p className="mt-1 text-sm text-emerald-400/50 leading-relaxed">
-                Satellite imagery + GPS Walking · 22 Indian state units · Geodesic precision
+                Satellite map · GPS Walk · Location Search · 22 State Units
               </p>
             </div>
           </div>
 
           {/* Stat chips */}
-          <div className="flex gap-2 flex-shrink-0">
+          <div className="flex gap-2 flex-shrink-0 flex-wrap">
             {[
-              { icon:'🎯', val:'< 1m',  label:'Accuracy'  },
-              { icon:'🇮🇳', val:'22',   label:'States'    },
-              { icon:'📍', val:'GPS+Map', label:'Modes'   },
+              { icon:'🔍', val:'Search', label:'Location'  },
+              { icon:'📍', val:'1-Tap',  label:'Locate Me' },
+              { icon:'🔢', val:'Auto',   label:'Numbered'  },
+              { icon:'🇮🇳', val:'22+',   label:'States'    },
             ].map(s => (
               <div key={s.label} className="flex flex-col items-center gap-0.5 rounded-xl border border-white/8 bg-white/4 px-3 py-2.5 text-center">
                 <span className="text-xl leading-none">{s.icon}</span>
@@ -71,23 +72,32 @@ export default function AreaCalculatePage() {
           </div>
         </div>
 
-        {/* Two mode explanation cards */}
-        <div className="relative mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="flex items-start gap-3 rounded-xl border border-emerald-800/40 bg-emerald-900/15 p-4">
-            <span className="text-2xl flex-shrink-0 mt-0.5">🗺️</span>
+        {/* Mode explanation cards */}
+        <div className="relative mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="flex items-start gap-3 rounded-xl border border-emerald-800/40 bg-emerald-900/15 p-3.5">
+            <span className="text-xl flex-shrink-0 mt-0.5">🔍</span>
             <div>
-              <p className="text-sm font-black text-emerald-200">Map se Banao</p>
+              <p className="text-sm font-black text-emerald-200">Location Search</p>
               <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">
-                Satellite map par apne khet ke corners click karein. Jo apna khet upar se jaanta ho unke liye.
+                Gaon ya taluka ka naam type karein — map seedha wahan chala jaayega.
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-3 rounded-xl border border-blue-800/40 bg-blue-900/15 p-4">
-            <span className="text-2xl flex-shrink-0 mt-0.5">📍</span>
+          <div className="flex items-start gap-3 rounded-xl border border-emerald-800/40 bg-emerald-900/15 p-3.5">
+            <span className="text-xl flex-shrink-0 mt-0.5">🗺️</span>
+            <div>
+              <p className="text-sm font-black text-emerald-200">Map se Banao</p>
+              <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">
+                Satellite map par apne khet ke numbered corners click karein. Lines khud ban jaayengi.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 rounded-xl border border-blue-800/40 bg-blue-900/15 p-3.5">
+            <span className="text-xl flex-shrink-0 mt-0.5">📍</span>
             <div>
               <p className="text-sm font-black text-blue-200">GPS Walk Mode</p>
               <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">
-                Khet ke kinare chalte jao — GPS automatically trail track karega. Sabse accurate tarika.
+                Khet ke kinare chalte jao — GPS automatically trail track karega.
               </p>
             </div>
           </div>
